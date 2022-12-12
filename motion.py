@@ -1,15 +1,12 @@
 import mediapipe as mp
 import cv2
 import numpy as np
-import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 from dash import Dash
 import  dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 from scipy import signal
-from jupyter_dash import JupyterDash
 import tempfile
 import base64
 mp_drawing = mp.solutions.drawing_utils
@@ -448,7 +445,8 @@ fig6.update_layout(
 )
 
 
-app = JupyterDash(__name__)
+# Initialize the app
+app = Dash(__name__)
 server = app.server
 
 app.title = 'Swing Analysis'
