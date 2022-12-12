@@ -495,7 +495,7 @@ app.layout = html.Div(
 def process(filename):
 
     image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(filename)
-    fig = go.Figure(data=go.Image(z=image))
+    # fig = go.Figure(data=go.Image(z=image))
 
     seq, head, spine_ground, spine_tilt, balance = update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration)
 
@@ -503,4 +503,4 @@ def process(filename):
 
 
 if  __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
