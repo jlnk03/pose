@@ -211,29 +211,22 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
     shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
     wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
 
-    ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
-    ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
-    ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
+    #ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
+    #ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
+    #ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
 
-    '''ind_sort = ind[np.argpartition(hip_filt[ind], -2)[-2:]]
-    ind2_sort = ind2[np.argpartition(shoulder_filt[ind2], -2)[-2:]]
-    ind3_sort = ind3[np.argpartition(wrist_filt[ind3], -2)[-2:]]'''
+    #seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
+    #seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
 
-    #ind = np.argmax(hip_filt)
-    #ind2 = np.argmax(shoulder_filt)
-    #ind3 = np.argmax(wrist_filt)
-
-    seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
-    seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
-
-    fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip', legendrank=seq_sorted['Hip']))
+    fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip',  # legendrank=seq_sorted['Hip']
+                                    ))
 
     fig.add_trace(
         go.Scatter(
             x=timeline,
             y=shoulder_filt,
             name=f'Shoulder',
-            legendrank=seq_sorted['Shoulder']
+            # legendrank=seq_sorted['Shoulder']
         )
     )
 
@@ -242,11 +235,11 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
             x=timeline,
             y=wrist_filt,
             name=f'Wrist',
-            legendrank=seq_sorted['Wrist']
+            # legendrank=seq_sorted['Wrist']
         )
     )
 
-    fig.add_trace(
+    '''fig.add_trace(
         go.Scatter(
             x=timeline[ind],
             y=hip_filt[ind],
@@ -274,7 +267,7 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
             marker_size=10,
             showlegend=False
         )
-    )
+    )'''
 
     fig.update_layout(
         title='Sequence',
@@ -319,51 +312,27 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
 
 # Plots
 
-fig2 = go.Figure(data=go.Scatter(x=timeline, y=save))
-
-fig2.update_layout(
-    title='Angle between left wrist, elbow and shoulder',
-    yaxis_title="angle in degree",
-    xaxis_title="time in s"
-)
-
-grad = np.gradient(signal.savgol_filter(save, 5, 4))
-
-fig1 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(grad, 5, 4)))
-
-fig1.update_layout(
-    title='Angular velocity',
-    yaxis_title="angular velocity in degree/s",
-    xaxis_title="time in s"
-)
-
 hip_filt = np.array(signal.savgol_filter(save_hip, 61, 4))
 shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
 wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
 
-ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
-ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
-ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
+# ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
+# ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
+# ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
 
-'''ind_sort = ind[np.argpartition(hip_filt[ind], -2)[-2:]]
-ind2_sort = ind2[np.argpartition(shoulder_filt[ind2], -2)[-2:]]
-ind3_sort = ind3[np.argpartition(wrist_filt[ind3], -2)[-2:]]'''
 
-#ind = np.argmax(hip_filt)
-#ind2 = np.argmax(shoulder_filt)
-#ind3 = np.argmax(wrist_filt)
+# seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
+# seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
 
-seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
-seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
-
-fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip', legendrank=seq_sorted['Hip']))
+fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip',  # legendrank=seq_sorted['Hip']
+                                ))
 
 fig.add_trace(
     go.Scatter(
         x=timeline,
         y=shoulder_filt,
         name=f'Shoulder',
-        legendrank=seq_sorted['Shoulder']
+        # legendrank=seq_sorted['Shoulder']
     )
 )
 
@@ -372,11 +341,11 @@ fig.add_trace(
         x=timeline,
         y=wrist_filt,
         name=f'Wrist',
-        legendrank=seq_sorted['Wrist']
+        # legendrank=seq_sorted['Wrist']
     )
 )
 
-fig.add_trace(
+'''fig.add_trace(
     go.Scatter(
         x=timeline[ind],
         y=hip_filt[ind],
@@ -404,7 +373,7 @@ fig.add_trace(
         marker_size=10,
         showlegend=False
     )
-)
+)'''
 
 fig.update_layout(
     title='Sequence',
