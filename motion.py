@@ -502,5 +502,5 @@ def process(filename):
     return [seq, head, spine_ground, spine_tilt, balance]
 
 
-if  __name__ == '__main__':
-    app.run_server(debug=False)
+if __name__ == '__main__':
+    server.run(debug=False, port=8080)
