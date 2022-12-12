@@ -9,6 +9,9 @@ import  dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 from scipy import signal
+from jupyter_dash import JupyterDash
+import tempfile
+import base64
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
@@ -90,116 +93,117 @@ def mass_balance(foot_l, foot_r):
 
 
 def process_motion(file):
-    cap = cv2.VideoCapture(file)
+    content_type, content_string = file.split(',')
 
-    frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    fps = cap.get(cv2.CAP_PROP_FPS)
+    decoded = base64.b64decode(content_string)
 
-    # calculate duration of the video
-    duration = round(frames / fps)
+    with tempfile.NamedTemporaryFile() as temp:
+        temp.write(decoded)
 
-    save = []
-    save_hip = []
-    save_shoulder = []
-    save_wrist = []
-    save_head = []
-    save_spine = []
-    save_tilt = []
-    save_balance = []
+        cap = cv2.VideoCapture(temp.name)
 
-    rot = False
-    # meta_dict = ffmpeg.probe(file)
-    # if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
-    #    rot = True
+        frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        fps = cap.get(cv2.CAP_PROP_FPS)
 
-    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
-        while cap.isOpened():
-            ret, frame = cap.read()
+        # calculate duration of the video
+        duration = round(frames / fps)
 
-            if ret is False:
-                break
+        save = []
+        save_hip = []
+        save_shoulder = []
+        save_wrist = []
+        save_head = []
+        save_spine = []
+        save_tilt = []
+        save_balance = []
 
-            if rot:
-                frame = cv2.rotate(frame, cv2.ROTATE_180)
+        rot = False
+        #meta_dict = ffmpeg.probe(file)
+        #if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
+        #    rot = True
 
-            # Recolor image to RGB
-            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            image.flags.writeable = False
+        with mp_pose.Pose (min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
+            while cap.isOpened():
+                ret, frame = cap.read()
 
-            # Make detection
-            results = pose.process(image)
+                if ret is False:
+                    break
 
-            try:
-                landmarks = results.pose_world_landmarks.landmark
+                if rot:
+                    frame = cv2.rotate(frame, cv2.ROTATE_180)
 
-                shoulder_l = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
-                elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
-                wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
-                hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-                hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
-                shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
-                foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
-                foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
-                nose = landmarks[mp_pose.PoseLandmark.NOSE.value]
+                # Recolor image to RGB
+                image = cv2. cvtColor (frame, cv2.COLOR_BGR2RGB)
+                image.flags.writeable = False
 
-                angle = calc_angle(shoulder_l, elbow_l, wrist_l)
-                save.append(angle)
+                # Make detection
+                results = pose.process (image)
 
-                angle_h = angle_ground(hip_l, hip_r)
-                save_hip.append(angle_h)
+                try:
+                    landmarks = results.pose_world_landmarks.landmark
 
-                angle_s = angle_ground(shoulder_l, shoulder_r)
-                save_shoulder.append(angle_s)
+                    shoulder_l = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
+                    elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
+                    wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
+                    hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+                    hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+                    shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
+                    foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
+                    foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
+                    nose = landmarks[mp_pose.PoseLandmark.NOSE.value]
 
-                angle_w = angle_ground(shoulder_l, wrist_l)
-                save_wrist.append(angle_w)
+                    angle = calc_angle(shoulder_l, elbow_l, wrist_l)
+                    save.append(angle)
 
-                save_head.append(abs(nose.y - foot_r.y))
+                    angle_h = angle_ground(hip_l, hip_r)
+                    save_hip.append(angle_h)
 
-                angle_back = back_angle(shoulder_l, shoulder_r)
-                save_spine.append(abs(angle_back))
+                    angle_s = angle_ground(shoulder_l, shoulder_r)
+                    save_shoulder.append(angle_s)
 
-                save_tilt.append(tilt_angle(shoulder_l, shoulder_r))
+                    angle_w = angle_ground(shoulder_l, wrist_l)
+                    save_wrist.append(angle_w)
 
-                bal = mass_balance(foot_l, foot_r)
-                save_balance.append(bal)
+                    save_head.append(abs(nose.y-foot_r.y))
 
-                cv2.putText(image, f'Arm: {int(angle)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Hip: {int(angle_h)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Shoulder: {int(angle_s)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Wrist: {int(angle_w)}', (100, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Spine: {int(angle_back)}', (100, 260), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Bal: {bal}', (100, 300), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2,
-                            cv2.LINE_AA)
-                # cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                # cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    angle_back = back_angle(shoulder_l, shoulder_r)
+                    save_spine.append(abs(angle_back))
 
-            except:
-                pass
+                    save_tilt.append(tilt_angle(shoulder_l, shoulder_r))
 
-            # Recolor back to BGR
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                    bal = mass_balance(foot_l, foot_r)
+                    save_balance.append(bal)
 
-            # Render detections
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-            # cv2.imshow('Mediapipe Feed', image)
+                    cv2.putText(image,  f'Arm: {int(angle)}', (100,100), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Hip: {int(angle_h)}', (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Shoulder: {int(angle_s)}', (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Wrist: {int(angle_w)}', (100,220), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Spine: {int(angle_back)}', (100,260), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Bal: {bal}', (100,300), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    #cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    #cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
 
-            # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+                except:
+                    pass
 
-            if cv2.waitKey(10) & 0xFF == ord('q'):
-                break
+                # Recolor back to BGR
+                image.flags.writeable = True
+                image = cv2. cvtColor (image, cv2.COLOR_RGB2BGR)
 
-    cap.release()
-    cv2.destroyAllWindows()
-    cv2.waitKey(1)
+                # Render detections
+                mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+                #cv2. imshow('Mediapipe Feed', image)
 
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                #mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+
+                if cv2.waitKey(10) & 0xFF == ord('q'):
+                       break
+
+        cap.release ()
+        cv2. destroyAllWindows ()
+        cv2.waitKey(1)
+
+        image = cv2. cvtColor (image, cv2.COLOR_BGR2RGB)
 
     return image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration
 
@@ -444,7 +448,7 @@ fig6.update_layout(
 )
 
 
-app = Dash(__name__)
+app = JupyterDash(__name__)
 
 app.title = 'Swing Analysis'
 
@@ -517,7 +521,7 @@ app.layout = html.Div(
 
 @app.callback(
     [Output('sequence', 'figure'), Output('head', 'figure'), Output('spine_ground', 'figure'), Output('spine_tilt', 'figure'), Output('balance', 'figure')],
-    Input('upload-data', 'filename'),
+    Input('upload-data', 'contents'),
     prevent_initial_call=True
 )
 def process(filename):
@@ -531,4 +535,4 @@ def process(filename):
 
 
 if  __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
