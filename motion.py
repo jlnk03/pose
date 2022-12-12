@@ -449,6 +449,7 @@ fig6.update_layout(
 
 
 app = JupyterDash(__name__)
+server = app.server
 
 app.title = 'Swing Analysis'
 
