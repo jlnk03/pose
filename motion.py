@@ -9,8 +9,11 @@ from dash.dependencies import Input, Output
 from scipy import signal
 import tempfile
 import base64
+import io
 mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
+# mp_holistic = mp.solutions.holistic
 
 
 def square(x):
@@ -89,21 +92,30 @@ def mass_balance(foot_l, foot_r):
         return 1
 
 
-def process_motion(file):
-    content_type, content_string = file.split(',')
+def process_motion(contents, filename):
+    content_type, content_string = contents.split(',')
+    name = filename.split('.')[0]
 
     decoded = base64.b64decode(content_string)
 
     with tempfile.NamedTemporaryFile() as temp:
         temp.write(decoded)
+    # with io.BytesIO(decoded).read() as temp:
+    #     print(type(temp))
 
         cap = cv2.VideoCapture(temp.name)
+        # cap = cv2.VideoCapture(temp)
 
         frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
         fps = cap.get(cv2.CAP_PROP_FPS)
 
         # calculate duration of the video
         duration = round(frames / fps)
+
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+        writer = cv2.VideoWriter('out/' + name + '_motion.avi', fourcc, duration, (width, height))
 
         save = []
         save_hip = []
@@ -119,7 +131,7 @@ def process_motion(file):
         #if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
         #    rot = True
 
-        with mp_pose.Pose (min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
+        with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
             while cap.isOpened():
                 ret, frame = cap.read()
 
@@ -176,7 +188,7 @@ def process_motion(file):
                     cv2.putText(image, f'Shoulder: {int(angle_s)}', (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
                     cv2.putText(image, f'Wrist: {int(angle_w)}', (100,220), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
                     cv2.putText(image, f'Spine: {int(angle_back)}', (100,260), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Bal: {bal}', (100,300), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Bal.: {bal}', (100,300), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
                     #cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
                     #cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
 
@@ -188,8 +200,16 @@ def process_motion(file):
                 image = cv2. cvtColor (image, cv2.COLOR_RGB2BGR)
 
                 # Render detections
-                mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.pose_landmarks,
+                    mp_pose.POSE_CONNECTIONS,
+                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+                )
+
                 #cv2. imshow('Mediapipe Feed', image)
+                writer.write(image)
 
                 #mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
 
@@ -489,12 +509,12 @@ app.layout = html.Div(
 
 @app.callback(
     [Output('sequence', 'figure'), Output('head', 'figure'), Output('spine_ground', 'figure'), Output('spine_tilt', 'figure'), Output('balance', 'figure')],
-    Input('upload-data', 'contents'),
+    [Input('upload-data', 'contents'), Input('upload-data', 'filename')],
     prevent_initial_call=True
 )
-def process(filename):
+def process(contents, filename):
 
-    image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(filename)
+    image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(contents, filename)
     # fig = go.Figure(data=go.Image(z=image))
 
     seq, head, spine_ground, spine_tilt, balance = update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration)
@@ -503,4 +523,4 @@ def process(filename):
 
 
 if __name__ == '__main__':
-    server.run(debug=False, port=8080)
+    app.run_server(debug=True)
