@@ -538,9 +538,10 @@ fig6.update_layout(
     )
 )
 
+
 # Initialize the app
 app = Dash(__name__)
-# server = app.server
+server = app.server
 
 markdown = '''
 # Welcome back
@@ -659,4 +660,4 @@ def process(contents, filename):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    server.run(debug=False)
