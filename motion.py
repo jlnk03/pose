@@ -2,6 +2,7 @@ import mediapipe as mp
 import cv2
 import numpy as np
 import plotly.graph_objects as go
+import plotly.io as pio
 from dash import Dash
 import dash_html_components as html
 import dash_core_components as dcc
@@ -9,17 +10,26 @@ from dash.dependencies import Input, Output
 from scipy import signal
 import tempfile
 import base64
-import io
+from collections import deque
+
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
-# mp_holistic = mp.solutions.holistic
+
+# Set theme for dash
+pio.templates.default = "plotly_white"
+
+# Hide plotly logo
+config = dict({'displaylogo': False})
 
 
-def square(x):
-    return -0.1*(x ** 2)
+# Random inititalization for data
+def rand(length, size):
+    full = [np.full(length, np.random.randint(0, 30)) for _ in range(size)]
+    return full
 
-image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = np.tile(square(np.linspace(-50, 50, 200)), (9, 1))
+
+image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = rand(10, 9)
 duration = 10
 timeline = np.linspace(0, duration, len(save))
 
@@ -86,12 +96,10 @@ def mass_balance(foot_l, foot_r):
     distance_l = np.linalg.norm(left)
     distance_r = np.linalg.norm(right)
 
-    if distance_l > distance_r:
-        return -1
-    else:
-        return 1
+    return round(distance_l - distance_r, 4)
 
 
+# Read video and process frame by frame
 def process_motion(contents, filename):
     content_type, content_string = contents.split(',')
     name = filename.split('.')[0]
@@ -100,8 +108,8 @@ def process_motion(contents, filename):
 
     with tempfile.NamedTemporaryFile() as temp:
         temp.write(decoded)
-    # with io.BytesIO(decoded).read() as temp:
-    #     print(type(temp))
+        # with io.BytesIO(decoded).read() as temp:
+        #     print(type(temp))
 
         cap = cv2.VideoCapture(temp.name)
         # cap = cv2.VideoCapture(temp)
@@ -114,21 +122,23 @@ def process_motion(contents, filename):
 
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-        writer = cv2.VideoWriter('out/' + name + '_motion.avi', fourcc, duration, (width, height))
+        # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+        fourcc = cv2.VideoWriter_fourcc(*'h264')
+        # fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        # writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
 
-        save = []
-        save_hip = []
-        save_shoulder = []
-        save_wrist = []
-        save_head = []
-        save_spine = []
-        save_tilt = []
-        save_balance = []
+        save = deque([])
+        save_hip = deque([])
+        save_shoulder = deque([])
+        save_wrist = deque([])
+        save_head = deque([])
+        save_spine = deque([])
+        save_tilt = deque([])
+        save_balance = deque([])
 
         rot = False
-        #meta_dict = ffmpeg.probe(file)
-        #if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
+        # meta_dict = ffmpeg.probe(file)
+        # if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
         #    rot = True
 
         with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
@@ -142,11 +152,11 @@ def process_motion(contents, filename):
                     frame = cv2.rotate(frame, cv2.ROTATE_180)
 
                 # Recolor image to RGB
-                image = cv2. cvtColor (frame, cv2.COLOR_BGR2RGB)
+                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False
 
                 # Make detection
-                results = pose.process (image)
+                results = pose.process(image)
 
                 try:
                     landmarks = results.pose_world_landmarks.landmark
@@ -173,31 +183,40 @@ def process_motion(contents, filename):
                     angle_w = angle_ground(shoulder_l, wrist_l)
                     save_wrist.append(angle_w)
 
-                    save_head.append(abs(nose.y-foot_r.y))
+                    save_head.append(abs(nose.y - foot_r.y))
 
                     angle_back = back_angle(shoulder_l, shoulder_r)
                     save_spine.append(abs(angle_back))
 
-                    save_tilt.append(tilt_angle(shoulder_l, shoulder_r))
+                    tilt = tilt_angle(shoulder_l, shoulder_r)
+                    save_tilt.append(tilt)
 
                     bal = mass_balance(foot_l, foot_r)
                     save_balance.append(bal)
 
-                    cv2.putText(image,  f'Arm: {int(angle)}', (100,100), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Hip: {int(angle_h)}', (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Shoulder: {int(angle_s)}', (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Wrist: {int(angle_w)}', (100,220), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Spine: {int(angle_back)}', (100,260), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Bal.: {bal}', (100,300), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    #cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    #cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Arm: {int(angle)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255),
+                                2, cv2.LINE_AA)
+                    cv2.putText(image, f'Hip: {int(angle_h)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
+                                (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Shoulder: {int(angle_s)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
+                                (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Wrist: {int(angle_w)}', (100, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
+                                (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Spine: {int(angle_back)}', (100, 260), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
+                                (255, 255, 255), 2, cv2.LINE_AA)
+                    cv2.putText(image, f'Tilt: {int(tilt)}', (100, 300), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255),
+                                2, cv2.LINE_AA)
+                    cv2.putText(image, f'Bal.: {bal}', (100, 340), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2,
+                                cv2.LINE_AA)
+                    # cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
+                    # cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
 
                 except:
                     pass
 
                 # Recolor back to BGR
                 image.flags.writeable = True
-                image = cv2. cvtColor (image, cv2.COLOR_RGB2BGR)
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 # Render detections
 
@@ -208,35 +227,41 @@ def process_motion(contents, filename):
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
                 )
 
-                #cv2. imshow('Mediapipe Feed', image)
-                writer.write(image)
+                # cv2. imshow('Mediapipe Feed', image)
+                # writer.write(image)
 
-                #mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+                # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
 
                 if cv2.waitKey(10) & 0xFF == ord('q'):
-                       break
+                    break
 
-        cap.release ()
-        cv2. destroyAllWindows ()
+        cap.release()
+        cv2.destroyAllWindows()
         cv2.waitKey(1)
 
-        image = cv2. cvtColor (image, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     return image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration
 
 
+# Update plots after video is processed/callback
 def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration):
+    converted = [np.array(name) for name in
+                 [save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance]]
+    save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = converted
+
     timeline = np.linspace(0, duration, len(save))
-    hip_filt = np.array(signal.savgol_filter(save_hip, 61, 4))
-    shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
-    wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
+    hip_filt = np.array(signal.savgol_filter(save_hip, 21, 4))
+    shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 21, 4))
+    wrist_filt = np.array(signal.savgol_filter(save_wrist, 21, 4))
+    balance_filt = np.array(signal.savgol_filter(save_balance, 21, 4))
 
-    #ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
-    #ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
-    #ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
+    # ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
+    # ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
+    # ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
 
-    #seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
-    #seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
+    # seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
+    # seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
 
     fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip',  # legendrank=seq_sorted['Hip']
                                     ))
@@ -291,40 +316,80 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
 
     fig.update_layout(
         title='Sequence',
+        title_x=0.5,
+        font_size=15,
         yaxis_title="angle in degree",
-        xaxis_title="time in s"
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
     )
 
     fig3 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_head, 61, 4)))
 
     fig3.update_layout(
         title='Head movement',
+        title_x=0.5,
+        font_size=15,
         yaxis_title='position from ground in m',
-        xaxis_title="time in s"
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
     )
 
     fig4 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_spine, 31, 4)))
 
     fig4.update_layout(
         title='Angle of spine to ground',
+        title_x=0.5,
+        font_size=15,
         yaxis_title='angle in °',
-        xaxis_title="time in s"
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
     )
 
     fig5 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_tilt, 31, 4)))
 
     fig5.update_layout(
         title='Spine tilt',
+        title_x=0.5,
+        font_size=15,
         yaxis_title='angle in °',
-        xaxis_title="time in s"
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
     )
 
-    fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_balance))
+    fig6 = go.Figure(data=go.Scatter(x=timeline, y=balance_filt))
 
     fig6.update_layout(
         title='Balance',
-        yaxis_title='right left',
-        xaxis_title="time in s"
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='Right          Left',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
     )
 
     return fig, fig3, fig4, fig5, fig6
@@ -332,9 +397,9 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
 
 # Plots
 
-hip_filt = np.array(signal.savgol_filter(save_hip, 61, 4))
-shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
-wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
+# hip_filt = np.array(signal.savgol_filter(save_hip, 61, 4))
+# shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
+# wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
 
 # ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
 # ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
@@ -344,13 +409,13 @@ wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
 # seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
 # seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
 
-fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip',  # legendrank=seq_sorted['Hip']
+fig = go.Figure(data=go.Scatter(x=timeline, y=save_hip, name=f'Hip',  # legendrank=seq_sorted['Hip']
                                 ))
 
 fig.add_trace(
     go.Scatter(
         x=timeline,
-        y=shoulder_filt,
+        y=save_shoulder,
         name=f'Shoulder',
         # legendrank=seq_sorted['Shoulder']
     )
@@ -359,7 +424,7 @@ fig.add_trace(
 fig.add_trace(
     go.Scatter(
         x=timeline,
-        y=wrist_filt,
+        y=save_wrist,
         name=f'Wrist',
         # legendrank=seq_sorted['Wrist']
     )
@@ -397,51 +462,102 @@ fig.add_trace(
 
 fig.update_layout(
     title='Sequence',
-    yaxis_title="angle in degree",
-    xaxis_title="time in s"
-)
+    title_x=0.5,
+    font_size=15,
+    yaxis_title="angle in °",
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+),
 
-fig3 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_head, 61, 4)))
+fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_head))
 
 fig3.update_layout(
     title='Head movement',
+    title_x=0.5,
+    font_size=15,
     yaxis_title='position from ground in m',
-    xaxis_title="time in s"
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
 )
 
-fig4 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_spine, 31, 4)))
+fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_spine))
 
 fig4.update_layout(
     title='Angle of spine to ground',
+    title_x=0.5,
+    font_size=15,
     yaxis_title='angle in °',
-    xaxis_title="time in s"
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
 )
 
-fig5 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_tilt, 31, 4)))
+fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_tilt))
 
 fig5.update_layout(
     title='Spine tilt',
+    title_x=0.5,
+    font_size=15,
     yaxis_title='angle in °',
-    xaxis_title="time in s"
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
 )
 
 fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_balance))
 
 fig6.update_layout(
     title='Balance',
-    yaxis_title='right left',
-    xaxis_title="time in s"
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='Right Left',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
 )
-
 
 # Initialize the app
 app = Dash(__name__)
-server = app.server
+# server = app.server
+
+markdown = '''
+# Welcome back
+'''
 
 app.title = 'Swing Analysis'
 
 app.layout = html.Div(
     children=[
+        html.Div(
+            dcc.Markdown(children=markdown),
+            style={'margin-left': '5%',
+                   'margin-bottom': '2%',
+                   'margin-top': '2%',
+                   'color': 'rgba(58, 73, 99, 1)',
+                   }
+        ),
 
         html.Center(
             html.Div(children=[
@@ -449,40 +565,52 @@ app.layout = html.Div(
                     id='upload-data',
                     children=html.Div([
                         'Drag and Drop or ',
-                        html.A('Select Files')
+                        html.A('Select Video️'),
+                        ' ⛳️'
                     ]),
                     style={
                         'width': '90%',
-                        'height': '100px',
-                        'lineHeight': '100px',
-                        'borderWidth': '1px',
+                        'height': '130px',
+                        'lineHeight': '130px',
+                        'borderWidth': '4px',
                         'borderStyle': 'dashed',
-                        'borderRadius': '5px',
+                        'borderRadius': '30px',
                         'textAlign': 'center',
-                        'margin': '30px',
-                        #'margin-top':'80px',
+                        'margin-bottom': '2%',
                         'display': 'inline-block',
-                        'font-family':'sans-serif',
+                        'font-family': 'sans-serif',
+                        'font-size': '20px',
+                        'font-weight': 'bold',
+                        'color': 'rgba(58, 73, 99, 1)',
+                        'borderColor': 'rgba(58, 73, 99, 1)'
                     },
                 )]
             ),
         ),
 
+
         dcc.Loading(
-                id='loading',
-                type='graph',
-                fullscreen=True,
-                children=
-                    dcc.Graph(
-                        id='sequence',
-                        figure=fig,
-                        style={'width': '100%', 'display': 'inline-block'}
-                    ),
+            id='loading',
+            type='graph',
+            fullscreen=True,
+            children=
+            html.Div(
+                dcc.Graph(
+                    id='sequence',
+                    figure=fig,
+                    config=config,
+                    className='container'
+                )
+            ),
         ),
 
-        dcc.Graph(
-            id='head',
-            figure=fig3
+        html.Div(
+            dcc.Graph(
+                id='head',
+                figure=fig3,
+                config=config,
+                className='container'
+            )
         ),
 
         html.Div(children=[
@@ -490,37 +618,45 @@ app.layout = html.Div(
             dcc.Graph(
                 id='spine_ground',
                 figure=fig4,
-                style={'width': '50%', 'display': 'inline-block'}
+                config=config,
+                className='container_half_left'
             ),
 
             dcc.Graph(
                 id='spine_tilt',
                 figure=fig5,
-                style={'width': '50%', 'display': 'inline-block'}
+                config=config,
+                className='container_half_right'
             ),
-        ]),
+        ],
+        ),
 
         dcc.Graph(
             id='balance',
-            figure=fig6
+            figure=fig6,
+            config=config,
+            className='container'
         ),
     ]
 )
 
+
 @app.callback(
-    [Output('sequence', 'figure'), Output('head', 'figure'), Output('spine_ground', 'figure'), Output('spine_tilt', 'figure'), Output('balance', 'figure')],
+    [Output('sequence', 'figure'), Output('head', 'figure'), Output('spine_ground', 'figure'),
+     Output('spine_tilt', 'figure'), Output('balance', 'figure')],
     [Input('upload-data', 'contents'), Input('upload-data', 'filename')],
     prevent_initial_call=True
 )
 def process(contents, filename):
-
-    image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(contents, filename)
+    image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(
+        contents, filename)
     # fig = go.Figure(data=go.Image(z=image))
 
-    seq, head, spine_ground, spine_tilt, balance = update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration)
+    seq, head, spine_ground, spine_tilt, balance = update_plots(save, save_hip, save_shoulder, save_wrist, save_head,
+                                                                save_spine, save_tilt, save_balance, duration)
 
     return [seq, head, spine_ground, spine_tilt, balance]
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
