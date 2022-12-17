@@ -4,8 +4,8 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 from dash import Dash
-import dash_html_components as html
-import dash_core_components as dcc
+import dash
+from dash import html, dcc
 from dash.dependencies import Input, Output
 from scipy import signal
 import tempfile
@@ -29,7 +29,7 @@ def rand(length, size):
     return full
 
 
-image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = rand(10, 9)
+image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = rand(100, 9)
 duration = 10
 timeline = np.linspace(0, duration, len(save))
 
@@ -122,10 +122,8 @@ def process_motion(contents, filename):
 
         width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
         fourcc = cv2.VideoWriter_fourcc(*'h264')
-        # fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        # writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
+        writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
 
         save = deque([])
         save_hip = deque([])
@@ -228,7 +226,7 @@ def process_motion(contents, filename):
                 )
 
                 # cv2. imshow('Mediapipe Feed', image)
-                # writer.write(image)
+                writer.write(image)
 
                 # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
 
@@ -321,6 +319,10 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         yaxis_title="angle in degree",
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        legend_orientation="h",
+        margin=dict(
+            l=100
+        ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
             color='rgba(1,1,1,0.3)',
@@ -337,6 +339,9 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         yaxis_title='position from ground in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
             color='rgba(1,1,1,0.3)',
@@ -353,6 +358,9 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
             color='rgba(1,1,1,0.3)',
@@ -369,6 +377,9 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
             color='rgba(1,1,1,0.3)',
@@ -385,6 +396,9 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         yaxis_title='Right          Left',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
             color='rgba(1,1,1,0.3)',
@@ -467,6 +481,10 @@ fig.update_layout(
     yaxis_title="angle in °",
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    legend_orientation="h",
+    margin=dict(
+        l=100
+    ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
         color='rgba(1,1,1,0.3)',
@@ -483,6 +501,9 @@ fig3.update_layout(
     yaxis_title='position from ground in m',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
         color='rgba(1,1,1,0.3)',
@@ -499,6 +520,9 @@ fig4.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
         color='rgba(1,1,1,0.3)',
@@ -515,6 +539,9 @@ fig5.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
         color='rgba(1,1,1,0.3)',
@@ -531,6 +558,9 @@ fig6.update_layout(
     yaxis_title='Right Left',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
         color='rgba(1,1,1,0.3)',
@@ -542,6 +572,7 @@ fig6.update_layout(
 # Initialize the app
 app = Dash(__name__)
 server = app.server
+
 
 markdown = '''
 # Welcome back
@@ -560,33 +591,35 @@ app.layout = html.Div(
                    }
         ),
 
-        html.Center(
-            html.Div(children=[
-                dcc.Upload(
-                    id='upload-data',
-                    children=html.Div([
-                        'Drag and Drop or ',
-                        html.A('Select Video️'),
-                        ' ⛳️'
-                    ]),
-                    style={
-                        'width': '90%',
-                        'height': '130px',
-                        'lineHeight': '130px',
-                        'borderWidth': '4px',
-                        'borderStyle': 'dashed',
-                        'borderRadius': '30px',
-                        'textAlign': 'center',
-                        'margin-bottom': '2%',
-                        'display': 'inline-block',
-                        'font-family': 'sans-serif',
-                        'font-size': '20px',
-                        'font-weight': 'bold',
-                        'color': 'rgba(58, 73, 99, 1)',
-                        'borderColor': 'rgba(58, 73, 99, 1)'
-                    },
-                )]
+
+        html.Div(children=[
+            dcc.Markdown(
+                '''
+                ##### Upload your video
+                as mp4, mov or avi
+                '''
+                ,
+                style={
+                    'margin-top': '1%',
+                }
             ),
+            dcc.Upload(
+                id='upload-data',
+                children=html.Div([
+                    'Dop your video here or ',
+                    html.A('browse'),
+                    ' ⛳️',
+                ]),
+                multiple=False,
+                max_size=25e6,
+                style_active=(dict(
+                    backgroundColor='rgba(230, 240, 250, 1)',
+                    borderColor='rgba(115, 165, 250, 1)',
+                )),
+                className='upload'
+            )
+        ],
+            className='container',
         ),
 
 
@@ -605,14 +638,25 @@ app.layout = html.Div(
             ),
         ),
 
-        html.Div(
+
+        html.Div(children=[
+
             dcc.Graph(
                 id='head',
                 figure=fig3,
                 config=config,
-                className='container'
-            )
+                className='container_half_left'
+            ),
+
+            dcc.Graph(
+                id='balance',
+                figure=fig6,
+                config=config,
+                className='container_half_right'
+            ),
+        ],
         ),
+
 
         html.Div(children=[
 
@@ -630,13 +674,6 @@ app.layout = html.Div(
                 className='container_half_right'
             ),
         ],
-        ),
-
-        dcc.Graph(
-            id='balance',
-            figure=fig6,
-            config=config,
-            className='container'
         ),
     ]
 )
@@ -660,4 +697,4 @@ def process(contents, filename):
 
 
 if __name__ == '__main__':
-    server.run(debug=False)
+    app.run_server(debug=True)
