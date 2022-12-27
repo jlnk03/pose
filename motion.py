@@ -682,7 +682,7 @@ app = Dash(__name__)
 server = app.server
 
 markdown = '''
-# Welcome back, Julian
+# Welcome back
 '''
 
 app.title = 'Swing Analysis'
