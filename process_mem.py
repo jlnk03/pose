@@ -1,14 +1,10 @@
 import io
 import cv2
-import numpy as np
 import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
 from angles import *
-import av
-import ffmpeg
-import tempfile
 
 
 mp_drawing = mp.solutions.drawing_utils
