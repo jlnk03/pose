@@ -1,2 +1,6 @@
 /out/
 /pages/
+/assets/private.json
+/assets/firebaseui.js
+/templates/
+/motion/

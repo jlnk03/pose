@@ -1,8 +1,11 @@
 mediapipe
-numpy
-opencv-python
-plotly
-dash
-pandas
-scipy
+numpy~=1.23.3
+opencv-python~=4.6.0.66
+plotly~=5.9.0
+dash~=2.7.1
+pandas~=1.4.4
+scipy~=1.9.1
 gunicorn
+matplotlib~=3.6.1
+imageio~=2.23.0
+kaleido~=0.2.1

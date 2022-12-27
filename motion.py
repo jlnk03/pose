@@ -1,26 +1,118 @@
+import matplotlib.pyplot as plt
 import mediapipe as mp
 import cv2
 import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
+import plotly.express as px
 from dash import Dash
 import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
+import pandas as pd
 from scipy import signal
 import tempfile
 import base64
 from collections import deque
+from process_mem import process_motion
+from angles import *
+import imageio.v3 as iio
+import kaleido
+import firebase_admin
+from firebase_admin import credentials, auth
 
+# Replace the path and filename with the path to and filename of your service account key file
+# cred = credentials.Certificate('assests/private.json')
+# firebase_admin.initialize_app(cred)
+
+# Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
+# mp_pose = mp.solutions.holistic
 
 # Set theme for dash
 pio.templates.default = "plotly_white"
 
 # Hide plotly logo
 config = dict({'displaylogo': False})
+
+_PRESENCE_THRESHOLD = 0.5
+_VISIBILITY_THRESHOLD = 0.5
+
+
+def plot_landmarks(
+        landmark_list,
+        connections=None,
+        angle='connection'
+):
+    if not landmark_list:
+        return
+    plotted_landmarks = {}
+    for idx, landmark in enumerate(landmark_list.landmark):
+        if (
+                landmark.HasField("visibility")
+                and landmark.visibility < _VISIBILITY_THRESHOLD
+        ) or (
+                landmark.HasField("presence") and landmark.presence < _PRESENCE_THRESHOLD
+        ):
+            continue
+        plotted_landmarks[idx] = (-landmark.z, landmark.x, -landmark.y)
+    if connections:
+        out_cn = []
+        num_landmarks = len(landmark_list.landmark)
+        # Draws the connections if the start and end landmarks are both visible.
+        for connection in connections:
+            start_idx = connection[0]
+            end_idx = connection[1]
+            if not (0 <= start_idx < num_landmarks and 0 <= end_idx < num_landmarks):
+                raise ValueError(
+                    f"Landmark index is out of range. Invalid connection "
+                    f"from landmark #{start_idx} to landmark #{end_idx}."
+                )
+            if start_idx in plotted_landmarks and end_idx in plotted_landmarks:
+                landmark_pair = [
+                    plotted_landmarks[start_idx],
+                    plotted_landmarks[end_idx],
+                ]
+                out_cn.append(
+                    dict(
+                        xs=[landmark_pair[0][0], landmark_pair[1][0]],
+                        ys=[landmark_pair[0][1], landmark_pair[1][1]],
+                        zs=[landmark_pair[0][2], landmark_pair[1][2]],
+                    )
+                )
+        cn2 = {"xs": [], "ys": [], "zs": []}
+        for pair in out_cn:
+            for k in pair.keys():
+                cn2[k].append(pair[k][0])
+                cn2[k].append(pair[k][1])
+                cn2[k].append(None)
+
+    df = pd.DataFrame(plotted_landmarks).T.rename(columns={0: "z", 1: "x", 2: "y"})
+    df["lm"] = df.index.map(lambda s: mp_pose.PoseLandmark(s).name).values
+    fig = (
+        px.scatter_3d(df, x="z", y="x", z="y", hover_name="lm")
+        .update_traces(marker={"color": "red"})
+        .update_layout(
+            margin={"l": 0, "r": 0, "t": 0, "b": 0},
+            scene={"camera": {"eye": {"x": 2.1, "y": 0, "z": 0}}},
+        )
+    )
+    fig.add_traces(
+        [
+            go.Scatter3d(
+                x=cn2["xs"],
+                y=cn2["ys"],
+                z=cn2["zs"],
+                mode="lines",
+                line={"color": "black", "width": 5},
+                name=angle,
+            )
+        ]
+    )
+
+    return fig
 
 
 # Random inititalization for data
@@ -29,297 +121,91 @@ def rand(length, size):
     return full
 
 
-image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = rand(100, 9)
+save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+save_wrist_angle, save_wrist_tilt = rand(100, 18)
+
 duration = 10
-timeline = np.linspace(0, duration, len(save))
+timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 
-def calc_angle(a, b, c):
-    a1 = np.array([a.x, a.y, a.z])
-    b1 = np.array([b.x, b.y, b.z])
-    c1 = np.array([c.x, c.y, c.z])
-
-    v = a1 - b1
-    w = c1 - b1
-
-    angle = np.arccos(v.dot(w) / (np.linalg.norm(v) * np.linalg.norm(w)))
-    angle = np.degrees(angle)
-
-    return angle
-
-
-def angle_hip(hip_l, hip_r):
-    hip_v = np.array([hip_l.x - hip_r.x, hip_l.y - hip_r.y, hip_l.z - hip_r.z])
-    normal = np.array([0, 0, 1])
-    angle = np.arccos(normal.dot(hip_v) / (np.linalg.norm(normal) * np.linalg.norm(hip_v)))
-    angle = 90 - np.degrees(angle)
-
-    return angle
-
-
-def angle_ground(left, right):
-    vector = np.array([left.x - right.x, left.y - right.y, left.z - right.z])
-    normal = np.array([0, 1, 0])
-    angle = np.arccos(normal.dot(vector) / (np.linalg.norm(normal) * np.linalg.norm(vector)))
-    angle = 90 - np.degrees(angle)
-
-    return angle
-
-
-def back_angle(shoulder_l, shoulder_r):
-    sl = np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z])
-    sr = np.array([shoulder_r.x, shoulder_r.y, shoulder_r.z])
-    connection = np.array(sl - sr)
-    spine = sl + 0.5 * connection
-    normal = np.array([0, 1, 0])
-    angle = np.arccos(normal.dot(spine) / (np.linalg.norm(normal) * np.linalg.norm(spine)))
-    angle = 90 - np.degrees(angle)
-
-    return angle
-
-
-def tilt_angle(shoulder_l, shoulder_r):
-    sl = np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z])
-    sr = np.array([shoulder_r.x, shoulder_r.y, shoulder_r.z])
-    connection = np.array(sl - sr)
-    spine = sl + 0.5 * connection
-    normal = np.array([1, 0, 0])
-    angle = np.arccos(normal.dot(spine) / (np.linalg.norm(normal) * np.linalg.norm(spine)))
-    angle = 90 - np.degrees(angle)
-
-    return angle
-
-
-def mass_balance(foot_l, foot_r):
-    left = np.array([foot_l.x, foot_l.y, foot_l.z])
-    right = np.array([foot_r.x, foot_r.y, foot_r.z])
-    distance_l = np.linalg.norm(left)
-    distance_r = np.linalg.norm(right)
-
-    return round(distance_l - distance_r, 4)
-
-
-# Read video and process frame by frame
-def process_motion(contents, filename):
-    content_type, content_string = contents.split(',')
-    name = filename.split('.')[0]
-
-    decoded = base64.b64decode(content_string)
-
-    with tempfile.NamedTemporaryFile() as temp:
-        temp.write(decoded)
-        # with io.BytesIO(decoded).read() as temp:
-        #     print(type(temp))
-
-        cap = cv2.VideoCapture(temp.name)
-        # cap = cv2.VideoCapture(temp)
-
-        frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-        fps = cap.get(cv2.CAP_PROP_FPS)
-
-        # calculate duration of the video
-        duration = round(frames / fps)
-
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fourcc = cv2.VideoWriter_fourcc(*'h264')
-        writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
-
-        save = deque([])
-        save_hip = deque([])
-        save_shoulder = deque([])
-        save_wrist = deque([])
-        save_head = deque([])
-        save_spine = deque([])
-        save_tilt = deque([])
-        save_balance = deque([])
-
-        rot = False
-        # meta_dict = ffmpeg.probe(file)
-        # if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
-        #    rot = True
-
-        with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
-            while cap.isOpened():
-                ret, frame = cap.read()
-
-                if ret is False:
-                    break
-
-                if rot:
-                    frame = cv2.rotate(frame, cv2.ROTATE_180)
-
-                # Recolor image to RGB
-                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                image.flags.writeable = False
-
-                # Make detection
-                results = pose.process(image)
-
-                try:
-                    landmarks = results.pose_world_landmarks.landmark
-
-                    shoulder_l = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
-                    elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
-                    wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
-                    hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-                    hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
-                    shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
-                    foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
-                    foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
-                    nose = landmarks[mp_pose.PoseLandmark.NOSE.value]
-
-                    angle = calc_angle(shoulder_l, elbow_l, wrist_l)
-                    save.append(angle)
-
-                    angle_h = angle_ground(hip_l, hip_r)
-                    save_hip.append(angle_h)
-
-                    angle_s = angle_ground(shoulder_l, shoulder_r)
-                    save_shoulder.append(angle_s)
-
-                    angle_w = angle_ground(shoulder_l, wrist_l)
-                    save_wrist.append(angle_w)
-
-                    save_head.append(abs(nose.y - foot_r.y))
-
-                    angle_back = back_angle(shoulder_l, shoulder_r)
-                    save_spine.append(abs(angle_back))
-
-                    tilt = tilt_angle(shoulder_l, shoulder_r)
-                    save_tilt.append(tilt)
-
-                    bal = mass_balance(foot_l, foot_r)
-                    save_balance.append(bal)
-
-                    cv2.putText(image, f'Arm: {int(angle)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255),
-                                2, cv2.LINE_AA)
-                    cv2.putText(image, f'Hip: {int(angle_h)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                                (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Shoulder: {int(angle_s)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                                (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Wrist: {int(angle_w)}', (100, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                                (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Spine: {int(angle_back)}', (100, 260), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                                (255, 255, 255), 2, cv2.LINE_AA)
-                    cv2.putText(image, f'Tilt: {int(tilt)}', (100, 300), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255),
-                                2, cv2.LINE_AA)
-                    cv2.putText(image, f'Bal.: {bal}', (100, 340), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2,
-                                cv2.LINE_AA)
-                    # cv2.putText(image, str(hip_l), (100,140), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-                    # cv2.putText(image, str(hip_r), (100,180), cv2. FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2, cv2.LINE_AA)
-
-                except:
-                    pass
-
-                # Recolor back to BGR
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-                # Render detections
-
-                mp_drawing.draw_landmarks(
-                    image,
-                    results.pose_landmarks,
-                    mp_pose.POSE_CONNECTIONS,
-                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-                )
-
-                # cv2. imshow('Mediapipe Feed', image)
-                writer.write(image)
-
-                # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
-
-                if cv2.waitKey(10) & 0xFF == ord('q'):
-                    break
-
-        cap.release()
-        cv2.destroyAllWindows()
-        cv2.waitKey(1)
-
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    return image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration
+def filter_data(data):
+    b, a = signal.butter(3, 0.05)
+    data = signal.filtfilt(b, a, data)
+    return data
 
 
 # Update plots after video is processed/callback
-def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration):
-    converted = [np.array(name) for name in
-                 [save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance]]
-    save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance = converted
+def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+                 save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+                 save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration):
+    converted = [filter_data(np.array(name)) for name in
+                 [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+                  save_left_arm_length, save_wrist_angle, save_wrist_tilt]]
 
-    timeline = np.linspace(0, duration, len(save))
-    hip_filt = np.array(signal.savgol_filter(save_hip, 21, 4))
-    shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 21, 4))
-    wrist_filt = np.array(signal.savgol_filter(save_wrist, 21, 4))
-    balance_filt = np.array(signal.savgol_filter(save_balance, 21, 4))
+    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt = converted
 
-    # ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
-    # ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
-    # ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
+    timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
-    # seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
-    # seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
+    save_pelvis_lift = save_pelvis_lift - save_pelvis_lift[0]
+    save_pelvis_sway = save_pelvis_sway - save_pelvis_sway[0]
+    save_pelvis_thrust = save_pelvis_thrust - save_pelvis_thrust[0]
+    save_thorax_lift = save_thorax_lift - save_thorax_lift[0]
+    save_thorax_sway = save_thorax_sway - save_thorax_sway[0]
+    save_thorax_thrust = save_thorax_thrust - save_thorax_thrust[0]
 
-    fig = go.Figure(data=go.Scatter(x=timeline, y=hip_filt, name=f'Hip',  # legendrank=seq_sorted['Hip']
-                                    ))
+    fig = go.Figure(data=go.Scatter(x=timeline, y=-np.gradient(save_pelvis_rotation), name=f'Pelvis'))
 
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=shoulder_filt,
-            name=f'Shoulder',
+            y=-np.gradient(save_thorax_rotation),
+            name=f'Thorax',
             # legendrank=seq_sorted['Shoulder']
         )
     )
 
-    fig.add_trace(
-        go.Scatter(
-            x=timeline,
-            y=wrist_filt,
-            name=f'Wrist',
-            # legendrank=seq_sorted['Wrist']
-        )
-    )
-
-    '''fig.add_trace(
-        go.Scatter(
-            x=timeline[ind],
-            y=hip_filt[ind],
-            mode='markers',
-            marker_size=10,
-            showlegend=False
-        )
-    )
-
-    fig.add_trace(
-        go.Scatter(
-            x=timeline[ind2],
-            y=shoulder_filt[ind2],
-            mode='markers',
-            marker_size=10,
-            showlegend=False
-        )
-    )
-
-    fig.add_trace(
-        go.Scatter(
-            x=timeline[ind3],
-            y=wrist_filt[ind3],
-            mode='markers',
-            marker_size=10,
-            showlegend=False
-        )
-    )'''
-
     fig.update_layout(
-        title='Sequence',
+        title='Kinematic Sequence',
         title_x=0.5,
         font_size=15,
-        yaxis_title="angle in degree",
+        yaxis_title="Angular velocity in °/s",
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        legend_orientation="h",
+        legend=dict(y=1, yanchor="bottom"),
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    ),
+
+    fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis side bend'))
+
+    fig3.add_trace(
+        go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
+    )
+
+    fig3.update_layout(
+        title='Pelvis angles',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
+        legend=dict(y=1, yanchor="bottom"),
         margin=dict(
             l=100
         ),
@@ -330,34 +216,25 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         )
     )
 
-    fig3 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_head, 61, 4)))
+    fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
 
-    fig3.update_layout(
-        title='Head movement',
-        title_x=0.5,
-        font_size=15,
-        yaxis_title='position from ground in m',
-        xaxis_title="time in s",
-        paper_bgcolor='rgba(0,0,0,0)',
-        margin=dict(
-            l=100
-        ),
-        modebar=dict(
-            bgcolor='rgba(0,0,0,0)',
-            color='rgba(1,1,1,0.3)',
-            activecolor='rgba(58, 73, 99, 1)'
-        )
+    fig4.add_trace(
+        go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis_sway')
     )
 
-    fig4 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_spine, 31, 4)))
+    fig4.add_trace(
+        go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis_thrust')
+    )
 
     fig4.update_layout(
-        title='Angle of spine to ground',
+        title='Pelvis displacement',
         title_x=0.5,
         font_size=15,
-        yaxis_title='angle in °',
+        yaxis_title='Displacement in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        legend_orientation="h",
+        legend=dict(y=1, yanchor="bottom"),
         margin=dict(
             l=100
         ),
@@ -368,10 +245,68 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         )
     )
 
-    fig5 = go.Figure(data=go.Scatter(x=timeline, y=signal.savgol_filter(save_tilt, 31, 4)))
+    fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_rotation, name=f'Thorax rotation'))
+
+    fig5.add_trace(
+        go.Scatter(x=timeline, y=save_thorax_bend, name=f'Thorax bend')
+    )
+
+    fig5.add_trace(
+        go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
+    )
 
     fig5.update_layout(
-        title='Spine tilt',
+        title='Thorax angles',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='angle in °',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        legend_orientation="h",
+        legend=dict(y=1, yanchor="bottom"),
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_thrust, name=f'Thorax thrust'))
+
+    fig6.add_trace(
+        go.Scatter(x=timeline, y=save_thorax_sway, name=f'Thorax sway')
+    )
+
+    fig6.add_trace(
+        go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
+    )
+
+    fig6.update_layout(
+        title='Thorax displacement',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='Displacement in m',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        legend_orientation="h",
+        legend=dict(y=1, yanchor="bottom"),
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
+
+    fig11.update_layout(
+        title='Tilt between pelvis and shoulder',
         title_x=0.5,
         font_size=15,
         yaxis_title='angle in °',
@@ -387,13 +322,13 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         )
     )
 
-    fig6 = go.Figure(data=go.Scatter(x=timeline, y=balance_filt))
+    fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
 
-    fig6.update_layout(
-        title='Balance',
+    fig12.update_layout(
+        title='Head tilt',
         title_x=0.5,
         font_size=15,
-        yaxis_title='Right          Left',
+        yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
         margin=dict(
@@ -406,82 +341,111 @@ def update_plots(save, save_hip, save_shoulder, save_wrist, save_head, save_spin
         )
     )
 
-    return fig, fig3, fig4, fig5, fig6
+    fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
+
+    fig13.update_layout(
+        title='Head rotation',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='angle in °',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
+
+    fig14.update_layout(
+        title='Left arm length',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='length in m',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
+
+    fig15.update_layout(
+        title='Spine rotation',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='angle in °',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_wrist_angle, name=f'Wrist angle'))
+
+    fig16.add_trace(
+        go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
+    )
+
+    fig16.update_layout(
+        title='Wrist angle',
+        title_x=0.5,
+        font_size=15,
+        yaxis_title='angle in °',
+        xaxis_title="time in s",
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(
+            l=100
+        ),
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='rgba(1,1,1,0.3)',
+            activecolor='rgba(58, 73, 99, 1)'
+        )
+    )
+
+    return fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16
 
 
 # Plots
-
-# hip_filt = np.array(signal.savgol_filter(save_hip, 61, 4))
-# shoulder_filt = np.array(signal.savgol_filter(save_shoulder, 91, 4))
-# wrist_filt = np.array(signal.savgol_filter(save_wrist, 121, 4))
-
-# ind, = signal.argrelextrema(np.array(hip_filt), np.greater, order=10)
-# ind2, = signal.argrelextrema(np.array(shoulder_filt), np.greater, order=10)
-# ind3, = signal.argrelextrema(np.array(wrist_filt), np.greater, order=10)
-
-
-# seq = {'Hip':ind[0], 'Shoulder':ind2[0], 'Wrist':ind3[0]}
-# seq_sorted = dict(sorted(seq.items(), key=lambda x: x[1]))
-
-fig = go.Figure(data=go.Scatter(x=timeline, y=save_hip, name=f'Hip',  # legendrank=seq_sorted['Hip']
-                                ))
+fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
 
 fig.add_trace(
     go.Scatter(
         x=timeline,
-        y=save_shoulder,
-        name=f'Shoulder',
+        y=save_thorax_rotation,
+        name=f'Thorax',
         # legendrank=seq_sorted['Shoulder']
     )
 )
 
-fig.add_trace(
-    go.Scatter(
-        x=timeline,
-        y=save_wrist,
-        name=f'Wrist',
-        # legendrank=seq_sorted['Wrist']
-    )
-)
-
-'''fig.add_trace(
-    go.Scatter(
-        x=timeline[ind],
-        y=hip_filt[ind],
-        mode='markers',
-        marker_size=10,
-        showlegend=False
-    )
-)
-
-fig.add_trace(
-    go.Scatter(
-        x=timeline[ind2],
-        y=shoulder_filt[ind2],
-        mode='markers',
-        marker_size=10,
-        showlegend=False
-    )
-)
-
-fig.add_trace(
-    go.Scatter(
-        x=timeline[ind3],
-        y=wrist_filt[ind3],
-        mode='markers',
-        marker_size=10,
-        showlegend=False
-    )
-)'''
-
 fig.update_layout(
-    title='Sequence',
+    title=' Kinematic Sequence',
     title_x=0.5,
     font_size=15,
-    yaxis_title="angle in °",
+    yaxis_title="Angular velocity in °/s",
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
+    legend=dict(y=1, yanchor="bottom"),
     margin=dict(
         l=100
     ),
@@ -492,15 +456,21 @@ fig.update_layout(
     )
 ),
 
-fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_head))
+fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis side bend'))
+
+fig3.add_trace(
+    go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
+)
 
 fig3.update_layout(
-    title='Head movement',
+    title='Pelvis angles',
     title_x=0.5,
     font_size=15,
-    yaxis_title='position from ground in m',
+    yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    legend_orientation="h",
+    legend=dict(y=1, yanchor="bottom"),
     margin=dict(
         l=100
     ),
@@ -511,15 +481,25 @@ fig3.update_layout(
     )
 )
 
-fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_spine))
+fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
+
+fig4.add_trace(
+    go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis_sway')
+)
+
+fig4.add_trace(
+    go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis_thrust')
+)
 
 fig4.update_layout(
-    title='Angle of spine to ground',
+    title='Pelvis displacement',
     title_x=0.5,
     font_size=15,
-    yaxis_title='angle in °',
+    yaxis_title='Displacement in m',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    legend_orientation="h",
+    legend=dict(y=1, yanchor="bottom"),
     margin=dict(
         l=100
     ),
@@ -530,10 +510,68 @@ fig4.update_layout(
     )
 )
 
-fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_tilt))
+fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_rotation, name=f'Thorax rotation'))
+
+fig5.add_trace(
+    go.Scatter(x=timeline, y=save_thorax_bend, name=f'Thorax bend')
+)
+
+fig5.add_trace(
+    go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
+)
 
 fig5.update_layout(
-    title='Spine tilt',
+    title='Thorax angles',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='angle in °',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    legend_orientation="h",
+    legend=dict(y=1, yanchor="bottom"),
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
+
+fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_thrust, name=f'Thorax thrust'))
+
+fig6.add_trace(
+    go.Scatter(x=timeline, y=save_thorax_sway, name=f'Thorax sway')
+)
+
+fig6.add_trace(
+    go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
+)
+
+fig6.update_layout(
+    title='Thorax displacement',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='Displacement in m',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    legend_orientation="h",
+    legend=dict(y=1, yanchor="bottom"),
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
+
+fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
+
+fig11.update_layout(
+    title='Tilt between pelvis and shoulder',
     title_x=0.5,
     font_size=15,
     yaxis_title='angle in °',
@@ -549,13 +587,13 @@ fig5.update_layout(
     )
 )
 
-fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_balance))
+fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
 
-fig6.update_layout(
-    title='Balance',
+fig12.update_layout(
+    title='Head tilt',
     title_x=0.5,
     font_size=15,
-    yaxis_title='Right Left',
+    yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
     margin=dict(
@@ -568,14 +606,92 @@ fig6.update_layout(
     )
 )
 
+fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
+
+fig13.update_layout(
+    title='Head rotation',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='angle in °',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
+
+fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
+
+fig14.update_layout(
+    title='Left arm length',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='length in m',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
+
+fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
+
+fig15.update_layout(
+    title='Spine rotation',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='angle in °',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
+
+fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_wrist_angle, name=f'Wrist angle'))
+
+fig16.add_trace(
+    go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
+)
+
+fig16.update_layout(
+    title='Wrist angles',
+    title_x=0.5,
+    font_size=15,
+    yaxis_title='angle in °',
+    xaxis_title="time in s",
+    paper_bgcolor='rgba(0,0,0,0)',
+    margin=dict(
+        l=100
+    ),
+    modebar=dict(
+        bgcolor='rgba(0,0,0,0)',
+        color='rgba(1,1,1,0.3)',
+        activecolor='rgba(58, 73, 99, 1)'
+    )
+)
 
 # Initialize the app
 app = Dash(__name__)
 server = app.server
 
-
 markdown = '''
-# Welcome back
+# Welcome back, Julian
 '''
 
 app.title = 'Swing Analysis'
@@ -591,12 +707,11 @@ app.layout = html.Div(
                    }
         ),
 
-
         html.Div(children=[
             dcc.Markdown(
                 '''
                 ##### Upload your video
-                as mp4, mov or avi
+                as mp4, mov or avi – max. 50 MB
                 '''
                 ,
                 style={
@@ -606,12 +721,12 @@ app.layout = html.Div(
             dcc.Upload(
                 id='upload-data',
                 children=html.Div([
-                    'Dop your video here or ',
+                    'Drop your video here or ',
                     html.A('browse'),
                     ' ⛳️',
                 ]),
                 multiple=False,
-                max_size=25e6,
+                max_size=50e6,
                 style_active=(dict(
                     backgroundColor='rgba(230, 240, 250, 1)',
                     borderColor='rgba(115, 165, 250, 1)',
@@ -621,7 +736,6 @@ app.layout = html.Div(
         ],
             className='container',
         ),
-
 
         dcc.Loading(
             id='loading',
@@ -638,18 +752,35 @@ app.layout = html.Div(
             ),
         ),
 
-
         html.Div(children=[
 
             dcc.Graph(
-                id='head',
+                id='pelvis_rotation',
                 figure=fig3,
                 config=config,
                 className='container_half_left'
             ),
 
             dcc.Graph(
-                id='balance',
+                id='pelvis_displacement',
+                figure=fig4,
+                config=config,
+                className='container_half_right'
+            ),
+        ],
+        ),
+
+        html.Div(children=[
+
+            dcc.Graph(
+                id='thorax_rotation',
+                figure=fig5,
+                config=config,
+                className='container_half_left'
+            ),
+
+            dcc.Graph(
+                id='thorax_displacement',
                 figure=fig6,
                 config=config,
                 className='container_half_right'
@@ -657,43 +788,91 @@ app.layout = html.Div(
         ],
         ),
 
-
         html.Div(children=[
 
             dcc.Graph(
-                id='spine_ground',
-                figure=fig4,
+                id='h_tilt',
+                figure=fig12,
                 config=config,
                 className='container_half_left'
             ),
 
             dcc.Graph(
-                id='spine_tilt',
-                figure=fig5,
+                id='h_rotation',
+                figure=fig13,
                 config=config,
                 className='container_half_right'
             ),
         ],
+        ),
+
+        html.Div(
+            dcc.Graph(
+                id='s_tilt',
+                figure=fig11,
+                config=config,
+                className='container'
+            )
+        ),
+
+        html.Div(
+            dcc.Graph(
+                id='arm_length',
+                figure=fig14,
+                config=config,
+                className='container'
+            )
+        ),
+
+        html.Div(
+            dcc.Graph(
+                id='spine_rotation',
+                figure=fig15,
+                config=config,
+                className='container'
+            )
+        ),
+
+        html.Div(
+            dcc.Graph(
+                id='wrist_angle',
+                figure=fig16,
+                config=config,
+                className='container'
+            )
         ),
     ]
 )
 
 
 @app.callback(
-    [Output('sequence', 'figure'), Output('head', 'figure'), Output('spine_ground', 'figure'),
-     Output('spine_tilt', 'figure'), Output('balance', 'figure')],
+    [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
+     Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
+     Output('h_tilt', 'figure'),
+     Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'), Output('wrist_angle', 'figure')],
     [Input('upload-data', 'contents'), Input('upload-data', 'filename')],
     prevent_initial_call=True
 )
 def process(contents, filename):
-    image, save, save_hip, save_shoulder, save_wrist, save_head, save_spine, save_tilt, save_balance, duration = process_motion(
+    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration = process_motion(
         contents, filename)
     # fig = go.Figure(data=go.Image(z=image))
 
-    seq, head, spine_ground, spine_tilt, balance = update_plots(save, save_hip, save_shoulder, save_wrist, save_head,
-                                                                save_spine, save_tilt, save_balance, duration)
+    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
+                                                                                  save_pelvis_tilt, save_pelvis_lift,
+                                                                                  save_pelvis_sway, save_pelvis_thrust,
+                                                                                  save_thorax_lift, save_thorax_bend,
+                                                                                  save_thorax_sway,
+                                                                                  save_thorax_rotation,
+                                                                                  save_thorax_thrust,
+                                                                                  save_thorax_tilt, save_spine_rotation,
+                                                                                  save_spine_tilt, save_head_rotation,
+                                                                                  save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt,
+                                                                                  duration)
 
-    return [seq, head, spine_ground, spine_tilt, balance]
+    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16]
 
 
 if __name__ == '__main__':
