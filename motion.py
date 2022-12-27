@@ -1,25 +1,16 @@
-import matplotlib.pyplot as plt
 import mediapipe as mp
-import cv2
-import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
 from dash import Dash
-import dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
 import pandas as pd
 from scipy import signal
-import tempfile
-import base64
-from collections import deque
 from process_mem import process_motion
 from angles import *
-import imageio.v3 as iio
-import kaleido
-import firebase_admin
-from firebase_admin import credentials, auth
+# import firebase_admin
+# from firebase_admin import credentials, auth
 
 # Replace the path and filename with the path to and filename of your service account key file
 # cred = credentials.Certificate('assests/private.json')
