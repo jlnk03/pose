@@ -1,6 +1,5 @@
 /out/
 /pages/
-/assets/private.json
-/assets/firebaseui.js
+/assests_auth/
 /templates/
 /motion/

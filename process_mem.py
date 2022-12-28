@@ -16,7 +16,6 @@ def process_motion(contents, filename):
     print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
     name = filename.split('.')[0]
-    extension = filename.split('.')[1]
 
     decoded = base64.b64decode(content_string)
     vid_bytes = io.BytesIO(decoded)
@@ -30,11 +29,11 @@ def process_motion(contents, filename):
     # temp = tempfile.NamedTemporaryFile()
     # temp.write(decoded)
 
-    # meta = iio.immeta(vid_bytes, plugin='pyav')
-    # fps = meta['fps']
-    # duration = meta['duration']
+    meta = iio.immeta(decoded, plugin='pyav')
+    fps = meta['fps']
+    duration = meta['duration']
 
-    # print(meta)
+    print(meta)
 
     # height, width, _ = frames[0].shape
 
@@ -44,8 +43,8 @@ def process_motion(contents, filename):
     # fps = cap.get(cv2.CAP_PROP_FPS)
 
     # calculate duration of the video
-    fps = 30
-    duration = round(len(frames) / fps, 2)
+    # fps = 30
+    # duration = round(len(frames) / fps, 2)
 
     # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
