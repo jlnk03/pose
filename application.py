@@ -679,7 +679,7 @@ fig16.update_layout(
 
 # Initialize the app
 app = Dash(__name__)
-application = app.server
+server = app.server
 
 markdown = '''
 # Welcome back
@@ -868,4 +868,4 @@ def process(contents, filename):
 
 if __name__ == '__main__':
     # app.run_server(debug=True)
-    application.run(port=8080, debug=True)
+    server.run(debug=True, assets_folder ="static", assets_url_path="static")
