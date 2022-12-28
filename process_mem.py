@@ -48,8 +48,8 @@ def process_motion(contents, filename):
 
     # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
-    writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
+    #fourcc = cv2.VideoWriter_fourcc(*'h264')
+    # writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
 
     # save = deque([])
     # save_hip = deque([])
@@ -228,7 +228,7 @@ def process_motion(contents, filename):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
-            writer.write(image)
+            # writer.write(image)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
