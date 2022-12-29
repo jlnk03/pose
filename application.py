@@ -1,15 +1,14 @@
-import dash
 import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
+from dash import Dash
 from dash import html, dcc
 from dash.dependencies import Input, Output
 import pandas as pd
 from scipy import signal
-from code_b.process_mem import process_motion
-from code_b.angles import *
-
+from process_mem import process_motion
+from angles import *
 # import firebase_admin
 # from firebase_admin import credentials, auth
 
@@ -679,8 +678,8 @@ fig16.update_layout(
 )
 
 # Initialize the app
-app = dash.Dash(__name__, assets_folder="static", assets_url_path="static")
-application = app.server
+app = Dash(__name__, assets_folder ="static", assets_url_path="static")
+server = app.server
 
 markdown = '''
 # Welcome back
@@ -841,8 +840,7 @@ app.layout = html.Div(
     [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
      Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
      Output('h_tilt', 'figure'),
-     Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
-     Output('wrist_angle', 'figure')],
+     Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'), Output('wrist_angle', 'figure')],
     [Input('upload-data', 'contents'), Input('upload-data', 'filename')],
     prevent_initial_call=True
 )
@@ -854,29 +852,20 @@ def process(contents, filename):
     # fig = go.Figure(data=go.Image(z=image))
 
     fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
-                                                                                         save_pelvis_tilt,
-                                                                                         save_pelvis_lift,
-                                                                                         save_pelvis_sway,
-                                                                                         save_pelvis_thrust,
-                                                                                         save_thorax_lift,
-                                                                                         save_thorax_bend,
-                                                                                         save_thorax_sway,
-                                                                                         save_thorax_rotation,
-                                                                                         save_thorax_thrust,
-                                                                                         save_thorax_tilt,
-                                                                                         save_spine_rotation,
-                                                                                         save_spine_tilt,
-                                                                                         save_head_rotation,
-                                                                                         save_head_tilt,
-                                                                                         save_left_arm_length,
-                                                                                         save_wrist_angle,
-                                                                                         save_wrist_tilt,
-                                                                                         duration)
+                                                                                  save_pelvis_tilt, save_pelvis_lift,
+                                                                                  save_pelvis_sway, save_pelvis_thrust,
+                                                                                  save_thorax_lift, save_thorax_bend,
+                                                                                  save_thorax_sway,
+                                                                                  save_thorax_rotation,
+                                                                                  save_thorax_thrust,
+                                                                                  save_thorax_tilt, save_spine_rotation,
+                                                                                  save_spine_tilt, save_head_rotation,
+                                                                                  save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt,
+                                                                                  duration)
 
     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16]
 
 
 if __name__ == '__main__':
-    # app.run_server(debug=False, port=8080)
-    # server.run(debug=False)
-    application.run(debug=False, port=8080)
+    # app.run_server(debug=True)
+    server.run(debug=True, port=8080)
