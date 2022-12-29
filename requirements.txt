@@ -1,12 +1,9 @@
-mediapipe
 numpy
-opencv-python
-plotly
 dash
-pandas
 scipy
 gunicorn
-matplotlib
+mediapipe
+plotly
+pandas
+opencv-python
 imageio
-kaleido
-av

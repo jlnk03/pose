@@ -4,14 +4,13 @@ import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
-from angles import *
+from code_b.angles import *
 
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
-# TODO: install pyav=9.2.0
 def process_motion(contents, filename):
     print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
@@ -33,32 +32,8 @@ def process_motion(contents, filename):
     fps = meta['fps']
     duration = meta['duration']
 
-    print(meta)
-
-    # height, width, _ = frames[0].shape
-
-    # cap = cv2.VideoCapture(temp.name)
-    #
-    # frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    # fps = cap.get(cv2.CAP_PROP_FPS)
-
-    # calculate duration of the video
-    # fps = 30
-    # duration = round(len(frames) / fps, 2)
-
-    # width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    # height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
-    writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
-
-    # save = deque([])
-    # save_hip = deque([])
-    # save_shoulder = deque([])
-    # save_wrist = deque([])
-    # save_head = deque([])
-    # save_spine = deque([])
-    # save_tilt = deque([])
-    # save_balance = deque([])
+    # fourcc = cv2.VideoWriter_fourcc(*'h264')
+    # writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])
@@ -228,7 +203,7 @@ def process_motion(contents, filename):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
-            writer.write(image)
+            # writer.write(image)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
