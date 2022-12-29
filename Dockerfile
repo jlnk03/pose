@@ -1,12 +1,13 @@
-FROM python:3.10
+FROM python:3.9
 
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . ./
+COPY static app.py req.txt ./
 
-RUN pip install -r requirements.txt
-RUN apt-get update && apt-get install libgl1
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN pip3 install -r req.txt
 
 EXPOSE 8080
 
-CMD python application.py
+CMD python app.py

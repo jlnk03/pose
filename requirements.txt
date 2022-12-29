@@ -1,8 +1,8 @@
+mediapipe
 numpy
 dash
 scipy
-gunicorn
-mediapipe
 plotly
 pandas
 imageio
+gunicorn
