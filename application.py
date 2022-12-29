@@ -7,8 +7,8 @@ from dash import html, dcc
 from dash.dependencies import Input, Output
 import pandas as pd
 from scipy import signal
-from process_mem import process_motion
-from angles import *
+from code_b.process_mem import process_motion
+from code_b.angles import *
 # import firebase_admin
 # from firebase_admin import credentials, auth
 
