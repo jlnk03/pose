@@ -1137,7 +1137,7 @@ fig16.update_layout(
 )
 
 # Initialize the app
-external_stylesheets = ["./static/style.css"]
+external_stylesheets = ["static/style.css"]
 app = Dash(__name__, external_stylesheets=external_stylesheets)
 app.css.config.serve_locally = False
 server = app.server
