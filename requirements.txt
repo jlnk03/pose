@@ -5,5 +5,4 @@ gunicorn
 mediapipe
 plotly
 pandas
-opencv-python
 imageio

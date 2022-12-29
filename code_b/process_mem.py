@@ -1,5 +1,5 @@
 import io
-import cv2
+# import cv2
 import mediapipe as mp
 import base64
 from collections import deque
@@ -162,14 +162,14 @@ def process_motion(contents, filename):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                cv2.putText(image, f'Pelvis rotation: {int(pelvis_r)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX,
-                            1.4, (255, 255, 255),
-                            2, cv2.LINE_AA)
-                cv2.putText(image, f'Thorax tilt: {int(thorax_t)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX,
-                            1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Wrist: {int(wrist_t)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                            (255, 255, 255), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Pelvis rotation: {int(pelvis_r)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX,
+                #             1.4, (255, 255, 255),
+                #             2, cv2.LINE_AA)
+                # cv2.putText(image, f'Thorax tilt: {int(thorax_t)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX,
+                #             1.4,
+                #             (255, 255, 255), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Wrist: {int(wrist_t)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
+                #             (255, 255, 255), 2, cv2.LINE_AA)
                 # cv2.putText(image, f'Wrist: {int(angle_w)}', (100, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
                 #             (255, 255, 255), 2, cv2.LINE_AA)
                 # cv2.putText(image, f'Spine: {int(angle_back)}', (100, 260), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
@@ -183,8 +183,8 @@ def process_motion(contents, filename):
                 pass
 
             # Recolor back to BGR
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            # image.flags.writeable = True
+            # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
             # Render detections
 
