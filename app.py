@@ -1,4 +1,9 @@
 from dash import dcc, html, Dash
+import mediapipe as mp
+
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+mp_pose = mp.solutions.pose
 
 app = Dash(__name__)
 server = app.server
