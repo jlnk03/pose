@@ -12,6 +12,8 @@ import base64
 from collections import deque
 import imageio.v3 as iio
 import numpy as np
+# import xhtml2pdf.pisa as pisa
+import os
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
@@ -386,9 +388,11 @@ def process_motion(contents, filename):
 
     decoded = base64.b64decode(content_string)
     vid_bytes = io.BytesIO(decoded)
+    print('bytes')
 
     frames = iio.imread(vid_bytes, plugin='pyav')
     _, height, width, _ = frames.shape
+    print(height)
 
     # bytes = iio.imwrite('<bytes>', frames, extension='.mp4')
     # print(type(bytes))
@@ -1137,9 +1141,9 @@ fig16.update_layout(
 )
 
 # Initialize the app
-external_stylesheets = ["static/style.css"]
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__)
 app.css.config.serve_locally = False
+app.css.append_css({'external_url': './static/style.css'})
 server = app.server
 
 markdown = '''
@@ -1159,6 +1163,7 @@ app.layout = html.Div(
                    }
         ),
 
+
         html.Div(children=[
             dcc.Markdown(
                 '''
@@ -1170,6 +1175,7 @@ app.layout = html.Div(
                     'margin-top': '1%',
                 }
             ),
+
             dcc.Upload(
                 id='upload-data',
                 children=html.Div([
@@ -1306,6 +1312,7 @@ app.layout = html.Div(
     prevent_initial_call=True
 )
 def process(contents, filename):
+    # print(os.getcwd())
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration = process_motion(
@@ -1325,6 +1332,18 @@ def process(contents, filename):
                                                                                   duration)
 
     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16]
+
+
+# @app.callback(
+#     Output('report', 'children'),
+#     [Input('upload-button', 'n_clicks')]
+# )
+# def create_report(n_clicks):
+#     print(n_clicks)
+#     # print current directory
+#     print(os.getcwd())
+#     fig.write_image("reports/report.png")
+#     return f'number of clicks is {n_clicks}'
 
 
 if __name__ == '__main__':
