@@ -1348,4 +1348,4 @@ def process(contents, filename):
 
 if __name__ == '__main__':
     # app.run_server(debug=True)
-    server.run(debug=True, port=8080, host='0.0.0.0')
+    server.run(debug=False, port=8080, host='0.0.0.0')
