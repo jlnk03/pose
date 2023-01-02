@@ -6,6 +6,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY app.py req.txt ./
 COPY static/style.css /app/static/style.css
+COPY code_b/angles.py /app/code_b/angles.py
+COPY code_b/process_mem.py /app/code_b/process_mem.py
 
 #RUN wget https://storage.googleapis.com/mediapipe-assets/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite
 RUN apt-get update
