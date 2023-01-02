@@ -13,7 +13,7 @@ from collections import deque
 import imageio.v3 as iio
 import numpy as np
 from code_b.angles import *
-from code_b.process_mem import process_motion
+# from code_b.process_mem import process_motion
 import tempfile
 # import xhtml2pdf.pisa as pisa
 import os
@@ -140,11 +140,12 @@ def process_motion(contents, filename):
 
     with tempfile.NamedTemporaryFile() as temp:
         temp.write(decoded)
+        print(f'Path is: {os.path.abspath(temp.name)}')
 
         # frames = iio.imread(vid_bytes, plugin='pyav')
         frames = iio.imread(temp.name, plugin='pyav')
         _, height, width, _ = frames.shape
-        print(height)
+        print(f'Frames shape is: {frames.shape}')
 
         # bytes = iio.imwrite('<bytes>', frames, extension='.mp4')
         # print(type(bytes))
