@@ -20,6 +20,7 @@ Flask==2.2.2
 Flask-Login==0.6.2
 fonttools==4.38.0
 future==0.18.2
+gunicorn
 imageio==2.23.0
 itsdangerous==2.1.2
 jwcrypto==1.4.2
