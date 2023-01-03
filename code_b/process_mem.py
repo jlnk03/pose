@@ -5,22 +5,36 @@ import base64
 from collections import deque
 import imageio.v3 as iio
 from code_b.angles import *
+import memory_profiler
+import tempfile
+import os
 
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
+
+@memory_profiler.profile
 def process_motion(contents, filename):
     print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
+    # content_string = contents
     name = filename.split('.')[0]
 
     decoded = base64.b64decode(content_string)
     vid_bytes = io.BytesIO(decoded)
+    # print('bytes')
 
-    frames = iio.imread(vid_bytes, plugin='pyav')
-    _, height, width, _ = frames.shape
+    # with tempfile.NamedTemporaryFile() as temp:
+    #     temp.write(decoded)
+    #    print(f'Path is: {os.path.abspath(temp.name)}')
+
+    # frames = iio.imread(vid_bytes, plugin='pyav')
+    # frames = iio.imread(temp.name, plugin='pyav')
+    frames = iio.imiter(vid_bytes, plugin='pyav')
+    # _, height, width, _ = frames.shape
+    # print(f'Frames shape is: {frames.shape}')
 
     # bytes = iio.imwrite('<bytes>', frames, extension='.mp4')
     # print(type(bytes))
@@ -29,6 +43,8 @@ def process_motion(contents, filename):
     # temp.write(decoded)
 
     meta = iio.immeta(decoded, plugin='pyav')
+    print(meta)
+    # meta = iio.immeta(temp.name, plugin='pyav')
     fps = meta['fps']
     duration = meta['duration']
 
@@ -58,7 +74,7 @@ def process_motion(contents, filename):
     # meta_dict = ffmpeg.probe(file)
     # if int(meta_dict['streams'][0]['tags']['rotate']) == 180:
     #    rot = True
-    i = 0
+    # i = 0
     # fig, ax = plt.subplots(1, 1)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
         # for i, image in enumerate(frames.iter_data()):
@@ -209,7 +225,7 @@ def process_motion(contents, filename):
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # plotly save figure as png
             # fig.write_image(f"frame{i}.png")
-            i += 1
+            # i += 1
 
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
