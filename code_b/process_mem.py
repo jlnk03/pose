@@ -105,7 +105,7 @@ def process_motion(contents, filename):
                     theta = calc_angle(hip_l, hip_r)
                     c, s = np.cos(theta), np.sin(theta)
                     print(np.degrees(theta))
-                    R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]])
+                    R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]], dtype=np.float16)
                     # print(R)
                     # R = np.identity(3)
                     # R = np.flip(R, axis=1)
@@ -204,12 +204,12 @@ def process_motion(contents, filename):
 
             # Render detections
 
-            mp_drawing.draw_landmarks(
-                image,
-                results.pose_landmarks,
-                mp_pose.POSE_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-            )
+            # mp_drawing.draw_landmarks(
+            #     image,
+            #     results.pose_landmarks,
+            #     mp_pose.POSE_CONNECTIONS,
+            #     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+            # )
 
             # mp_drawing.draw_landmarks(
             #     image,
