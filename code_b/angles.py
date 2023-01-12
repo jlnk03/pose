@@ -2,13 +2,13 @@ import numpy as np
 
 
 def calc_angle(landmark1, landmark2):
-    goal_direction = np.array([landmark1.x - landmark2.x, 0, landmark1.z - landmark2.z], dtype=np.float16)
+    goal_direction = np.array([landmark1.x - landmark2.x, 0, landmark1.z - landmark2.z], dtype=np.float64)
     camera = np.array([0, 0, 1])
 
-    # angle = np.arccos(camera.dot(goal_direction) / (np.linalg.norm(camera) * np.linalg.norm(goal_direction)))
+    angle = np.arccos(camera.dot(goal_direction) / (np.linalg.norm(camera) * np.linalg.norm(goal_direction)))
     # angle = np.degrees(angle)
     # angle between goal direction and camera with atan2
-    angle = np.arctan2(goal_direction[0], goal_direction[2])
+    # angle = np.arctan2(goal_direction[0], goal_direction[2])
 
     return angle
 

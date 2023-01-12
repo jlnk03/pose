@@ -1,8 +1,12 @@
 /out/
 /pages/
 /assests_auth/
-/templates/
 /motion/
 /.ebextensions/
 /reports/
 /optimization.ipynb
+/process_thread.py
+/back.mov
+/flask_wrapper/google_refresh_token.py
+/flask_wrapper/email.json
+/instance/

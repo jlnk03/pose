@@ -678,7 +678,7 @@ fig16.update_layout(
 )
 
 # Initialize the app
-app = Dash(__name__, assets_folder ="static", assets_url_path="static")
+app = Dash(__name__, assets_folder ="assets", assets_url_path="assets")
 server = app.server
 
 markdown = '''

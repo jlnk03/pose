@@ -682,8 +682,8 @@ fig16.update_layout(
 
 # Initialize the app
 app = Dash(__name__)
-app.css.config.serve_locally = False
-app.css.append_css({'external_url': './static/style.css'})
+# app.css.config.serve_locally = False
+# app.css.append_css({'external_url': './assets/style.css'})
 server = app.server
 
 markdown = '''

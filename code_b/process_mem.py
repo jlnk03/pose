@@ -1,9 +1,11 @@
 import io
-# import cv2
+import cv2
 import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
+import numpy as np
+
 from code_b.angles import *
 import memory_profiler
 import tempfile
@@ -15,7 +17,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
 
-@memory_profiler.profile
+# @memory_profiler.profile
 def process_motion(contents, filename):
     print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
@@ -33,7 +35,6 @@ def process_motion(contents, filename):
     # frames = iio.imread(vid_bytes, plugin='pyav')
     # frames = iio.imread(temp.name, plugin='pyav')
     frames = iio.imiter(vid_bytes, plugin='pyav')
-    # _, height, width, _ = frames.shape
     # print(f'Frames shape is: {frames.shape}')
 
     # bytes = iio.imwrite('<bytes>', frames, extension='.mp4')
@@ -47,9 +48,14 @@ def process_motion(contents, filename):
     # meta = iio.immeta(temp.name, plugin='pyav')
     fps = meta['fps']
     duration = meta['duration']
+    rotation = int(meta['rotate'])
+    rot_angle = 360 - rotation
+    frame = next(frames)
+    frame = np.rot90(frame, k=rot_angle // 90)
+    height, width, _ = frame.shape
 
-    # fourcc = cv2.VideoWriter_fourcc(*'h264')
-    # writer = cv2.VideoWriter('out/' + name + '_motion.mp4', fourcc, fps, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    writer = cv2.VideoWriter('../out/' + name + '_motion.mp4', fourcc, fps, (width, height))
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])
@@ -80,6 +86,8 @@ def process_motion(contents, filename):
         # for i, image in enumerate(frames.iter_data()):
         for i, image in enumerate(frames):
 
+            image = np.rot90(image, k=rot_angle // 90)
+
             # Make detection
             results = pose.process(image)
 
@@ -102,6 +110,7 @@ def process_motion(contents, filename):
                 index_l = landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value]
 
                 if i == 0:
+                    # print(i)
                     theta = calc_angle(hip_l, hip_r)
                     c, s = np.cos(theta), np.sin(theta)
                     print(np.degrees(theta))
@@ -200,16 +209,16 @@ def process_motion(contents, filename):
 
             # Recolor back to BGR
             # image.flags.writeable = True
-            # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
             # Render detections
 
-            # mp_drawing.draw_landmarks(
-            #     image,
-            #     results.pose_landmarks,
-            #     mp_pose.POSE_CONNECTIONS,
-            #     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-            # )
+            mp_drawing.draw_landmarks(
+                image,
+                results.pose_landmarks,
+                mp_pose.POSE_CONNECTIONS,
+                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+            )
 
             # mp_drawing.draw_landmarks(
             #     image,
@@ -219,7 +228,7 @@ def process_motion(contents, filename):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
-            # writer.write(image)
+            writer.write(image)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
