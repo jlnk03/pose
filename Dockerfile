@@ -6,7 +6,7 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 #COPY app.py requirements.txt assets./
 #COPY assets/style.css /app/assets/style.css
-COPY requirements.txt
+COPY requirements.txt ./
 COPY flask_wrapper /app/flask_wrapper
 COPY code_b/angles.py /app/code_b/angles.py
 COPY code_b/process_mem.py /app/code_b/process_mem.py
