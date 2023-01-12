@@ -19,4 +19,4 @@ COPY assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.9/site-packages/
 
 EXPOSE 8080
 
-CMD exec gunicorn -b 0.0.0.0:8080 --workers 3 --threads 8 --timeout 0 app:app
+CMD exec gunicorn -b 0.0.0.0:8080 --workers 3 --threads 8 --timeout 0 flask_wrapper.wsgi:app
