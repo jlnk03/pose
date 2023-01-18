@@ -1,15 +1,12 @@
 /out/
 /pages/
-/assests_auth/
 /motion/
 /.ebextensions/
 /reports/
 /optimization.ipynb
 /process_thread.py
-/back.mov
 /flask_wrapper/google_refresh_token.py
 /flask_wrapper/email.json
-/instance/
 /db.sqlite
 /flask_wrapper/templates/input.css
 /flask_wrapper/templates/tailwind.config.js

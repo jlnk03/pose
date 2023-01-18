@@ -1,5 +1,4 @@
 import datetime
-import pickle
 import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -7,20 +6,10 @@ import plotly.express as px
 from dash import Dash, ctx, ALL, MATCH, Input, Output, State, html, dcc
 import pandas as pd
 from scipy import signal
-import io
-import base64
-from collections import deque
-import imageio.v3 as iio
-import numpy as np
 from code_b.angles import *
 from code_b.process_mem import process_motion
-import tempfile
-import memory_profiler
-# import xhtml2pdf.pisa as pisa
 import os
 from flask_login import current_user
-from flask import redirect, url_for
-from flask_wrapper.auth import logout
 from . import db
 
 # Tools for mp to draw the pose
@@ -778,12 +767,13 @@ def init_dash(server):
         files = []
 
         if current_user != None:
-            disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
-            id = current_user.id
-            if os.path.exists(f'assets/save_data/{id}'):
-                files = os.listdir(f'assets/save_data/{id}')
-                files = [file for file in files if not file.startswith('.')]
-                files.sort(reverse=True)
+            if current_user.is_authenticated:
+                disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
+                id = current_user.id
+                if os.path.exists(f'assets/save_data/{id}'):
+                    files = os.listdir(f'assets/save_data/{id}')
+                    files = [file for file in files if not file.startswith('.')]
+                    files.sort(reverse=True)
 
         layout = html.Div(
 
