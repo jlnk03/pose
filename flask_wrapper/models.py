@@ -1,6 +1,15 @@
 from flask_login import UserMixin
 from . import db
 
+
+class Transactions(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    session_id = db.Column(db.String(100), unique=True)
+    time = db.Column(db.DateTime)
+    amount = db.Column(db.Integer)
+    booked = db.Column(db.Boolean, default=False)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     email = db.Column(db.String(100), unique=True)
@@ -10,3 +19,6 @@ class User(UserMixin, db.Model):
     email_new = db.Column(db.String(1000))
     n_analyses = db.Column(db.Integer)
     unlimited = db.Column(db.Boolean)
+
+
+

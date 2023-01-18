@@ -31,9 +31,11 @@ def create_app():
     app.title = 'SwingAnalysis'
 
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db.sqlite'
 
     db.init_app(app)
+
+    from .models import Transactions, User
 
     with app.app_context():
         db.create_all()
@@ -41,8 +43,6 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
-
-    from .models import User
 
     @login_manager.user_loader
     def load_user(user_id):

@@ -18,11 +18,12 @@ mp_pose = mp.solutions.pose
 
 
 # @memory_profiler.profile
-def process_motion(contents, filename):
-    print("Processing video: " + filename)
+def process_motion(contents, filename, location):
+    # print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
     # content_string = contents
-    name = filename.split('.')[0]
+    # name = filename.split('.')[0]
+    name = filename
 
     decoded = base64.b64decode(content_string)
     vid_bytes = io.BytesIO(decoded)
@@ -55,7 +56,7 @@ def process_motion(contents, filename):
     height, width, _ = frame.shape
 
     fourcc = cv2.VideoWriter_fourcc(*'h264')
-    writer = cv2.VideoWriter('../out/' + name + '_motion.mp4', fourcc, fps, (width, height))
+    writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])

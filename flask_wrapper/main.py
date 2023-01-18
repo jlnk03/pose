@@ -1,9 +1,15 @@
 import flask
-from flask import Blueprint, render_template, flash, redirect, url_for
+import numpy as np
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 from . import db
 import stripe
-from .models import User
+from .models import User, Transactions
+import datetime
+import os
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.io as pio
 
 stripe.api_key = 'sk_test_51MOtJiGVoQxCE2O4tyBqLDo3P64ohVzHBnecrrvnJbvPMjIOc0wSklIuOBqWKpaw4HFCUlL57X1Nuwm8KbuRjgMB00Ijxr6CKq'
 
@@ -63,21 +69,43 @@ def payment(product, mode):
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
-            success_url=YOUR_DOMAIN + f'/success/{product}',
-            cancel_url=YOUR_DOMAIN + '/profile',
+            success_url=YOUR_DOMAIN + f'/success/{product}' + '?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=YOUR_DOMAIN + '/cancel' + '?session_id={CHECKOUT_SESSION_ID}',
         )
+
+        checkout_id = checkout_session.id
+        db.session.add(Transactions(session_id=checkout_id, time=datetime.datetime.now(), amount=checkout_session.amount_total))
+        db.session.commit()
+
     except Exception as e:
         return str(e)
-
-    id = checkout_session.id
 
     return redirect(checkout_session.url, code=303)
 
 
-@main.route('/success/<product>')
+@main.route('/success/<product>', methods=['GET'])
 @login_required
 def success(product):
     user = User.query.filter_by(email=current_user.email).first_or_404()
+    id = request.args.get('session_id')
+    session = db.session.query(Transactions).filter_by(session_id=id).first()
+
+    response = stripe.checkout.Session.retrieve(id)
+    # print(response)
+    # print(type(response))
+
+    if session is None:
+        abort(404)
+
+    if response['payment_status'] != 'paid':
+        db.session.delete(session)
+        db.session.commit()
+        flash('Payment failed')
+        return redirect(url_for('main.profile'))
+
+    if session.booked:
+        flash('This purchase has already been booked')
+        return redirect(url_for('main.profile'))
 
     if product == 'starter':
         user.n_analyses += 2
@@ -86,7 +114,48 @@ def success(product):
     elif product == 'professional':
         user.unlimited = True
 
-    db.session.add(user)
+    # db.session.add(user)
+    session.booked = True
     db.session.commit()
 
     return render_template('success.html')
+
+
+@main.route('/cancel', methods=['GET'])
+@login_required
+def cancel():
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    id = request.args.get('session_id')
+    session = db.session.query(Transactions).filter_by(session_id=id).first()
+
+    if session is None:
+        abort(404)
+
+    db.session.delete(session)
+    db.session.commit()
+
+    return redirect(url_for('main.profile'))
+
+
+@main.route('/history')
+@login_required
+def history():
+    id = current_user.id
+    files = []
+
+    if os.path.exists(f'../save_data/{id}'):
+        files = os.listdir(f'../save_data/{id}')
+
+    return render_template('saved.html', files=files)
+
+
+@main.route('/history_saved/<file>')
+@login_required
+def history_saved(file):
+    data = pd.read_parquet(f'../save_data/{current_user.id}/{file}')
+    duration = data['duration'][0]
+    duration = np.linspace(0, duration, len(data['duration']))
+    fig = go.Figure(data=[go.Scatter(x=duration, y=data['pelvis_rotation'])])
+    fig_json = pio.to_json(fig)
+
+    return render_template('saved_plot.html', fig_json=fig_json)

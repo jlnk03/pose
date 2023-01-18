@@ -1,0 +1,10 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<div id="my-figure"></div>
+<script>
+    Plotly.newPlot('my-figure', {{ fig_json | safe }});
+</script>
+{% endblock %}

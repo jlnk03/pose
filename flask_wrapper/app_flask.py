@@ -1,10 +1,10 @@
+import datetime
+import pickle
 import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
-from dash import Dash
-from dash import html, dcc
-from dash.dependencies import Input, Output
+from dash import Dash, ctx, ALL, MATCH, Input, Output, State, html, dcc
 import pandas as pd
 from scipy import signal
 import io
@@ -33,7 +33,7 @@ mp_pose = mp.solutions.pose
 pio.templates.default = "plotly_white"
 
 # Hide plotly logo
-config = dict({'displaylogo': False})
+config = dict({'displaylogo': False, 'displayModeBar': False})
 
 _PRESENCE_THRESHOLD = 0.5
 _VISIBILITY_THRESHOLD = 0.5
@@ -113,6 +113,62 @@ def plot_landmarks(
     return fig
 
 
+def upload_video(disabled=True, path=None):
+    layout = [
+        html.Div(children=[
+            html.Div(
+                children=[
+                    html.Span(
+                        'Upload your video',
+                        className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+                    ),
+                    html.Span(
+                        'as mp4, mov or avi – max. 20 MB',
+                        className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                    )
+                ],
+                className='flex flex-col items-start mx-10 mb-4'
+            ),
+            html.Div(
+                dcc.Upload(
+                    disabled=disabled,
+                    id='upload-data',
+                    children=html.Div(
+                        children=
+                        [
+                            'Drop your video here or ',
+                            html.A(' browse'),
+                            ' ⛳️',
+                        ],
+                    ),
+                    className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                    multiple=False,
+                    max_size=50e6,
+                    accept=['.mp4', '.mov', '.avi'],
+                    className_active='bg-[rgba(230, 240, 250, 1)]',
+                    className_reject='bg-indigo-600'
+                    # style_active=(dict(
+                    #     backgroundColor='rgba(230, 240, 250, 1)',
+                    #     borderColor='rgba(115, 165, 250, 1)',
+                    #     borderRadius='15px',
+                    # )),
+                    # className='upload'
+                ),
+                className='w-full'
+                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+            )
+        ],
+            # className='container',
+            className='bg-white shadow rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 mr-5',
+        ),
+
+        html.Video(src=path, id='video', controls=True,
+                   className='h-96 rounded-3xl shadow'),
+    ]
+
+    return layout
+
+
 # Random inititalization for data
 def rand(length, size):
     full = [np.full(length, np.random.randint(0, 30)) for _ in range(size)]
@@ -172,7 +228,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig.update_layout(
         title='Kinematic Sequence',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title="Angular velocity in °/s",
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -198,7 +254,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig3.update_layout(
         title='Pelvis angles',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -227,7 +283,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig4.update_layout(
         title='Pelvis displacement',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='Displacement in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -256,7 +312,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig5.update_layout(
         title='Thorax angles',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -285,7 +341,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig6.update_layout(
         title='Thorax displacement',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='Displacement in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -306,7 +362,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig11.update_layout(
         title='Tilt between pelvis and shoulder',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -325,7 +381,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig12.update_layout(
         title='Head tilt',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -344,7 +400,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig13.update_layout(
         title='Head rotation',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -363,7 +419,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig14.update_layout(
         title='Left arm length',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='length in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -382,7 +438,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig15.update_layout(
         title='Spine rotation',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -405,7 +461,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig16.update_layout(
         title='Wrist angle',
         title_x=0.5,
-        font_size=15,
+        font_size=12,
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -696,265 +752,290 @@ fig16.update_layout(
 )
 
 
+def render_files(files):
+    if files is None:
+        return []
+
+    template = [html.A(href='# ', children=file, className='text-white text-sm') for file in files]
+    print(template)
+    return template
+
+
 def init_dash(server):
     # Initialize the app
-    app = Dash(__name__, server=server, url_base_pathname='/dashapp/', external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}])
-    # app.css.config.serve_locally = False
-    # app.css.append_css({'external_url': './assets/style.css'})
+    app = Dash(__name__, server=server, url_base_pathname='/dashapp/',
+               # external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
+               )
+    app.css.config.serve_locally = False
+    app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
-
-    markdown = f'''
-    # Welcome back
-    '''
 
     app.title = 'Swing Analysis'
 
     def serve_layout():
         disabled = True
+        files = []
 
         if current_user != None:
-            print(current_user)
-            print(type(current_user))
-            disabled = True if current_user.n_analyses == 0 else False
+            disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
+            id = current_user.id
+            if os.path.exists(f'assets/save_data/{id}'):
+                files = os.listdir(f'assets/save_data/{id}')
+                files = [file for file in files if not file.startswith('.')]
+                files.sort(reverse=True)
 
         layout = html.Div(
 
-        className="bg-[#F6F9FFFF] h-full",
+            className="bg-[#F6F9FFFF] h-full",
 
-        children=[
-            html.Div(className='py-4 shadow bg-indigo-700 mx-0 rounded-b-2xl z-20 w-full', children=[
+            children=[
                 html.Div(
-                    html.Div(
-                        children=[
-                            html.Nav(
-                                children=[
-                                    html.A(
-                                        'Home',
-                                        href='/',
-                                        className='font-medium text-sm text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
-                                    ),
-                                    html.A(
-                                        'Profile',
-                                        href='/profile',
-                                        className='font-medium text-sm -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
-                                    ),
-                                    html.A(
-                                        'Dashboard',
-                                        href='/dash',
-                                        className='font-medium text-sm -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
-                                    ),
-                                    ],
-                                className='space-x-10 flex'
-                            ),
-                            html.Div(
-                                children=[
-                                    html.A(
-                                        'Logout',
-                                        href='/logout',
-                                        className='ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:border-amber-500 hover:text-amber-500'
-                                    )
-                                ],
-                                className='items-center justify-end flex flex-1'
-                            ),],
-                        className='flex items-center justify-between md:justify-start md:space-x-10'),
-                    className='mx-4 md:mx-16')
-            ]),
-            # html.Div(
-            #     # dcc.Markdown(children=markdown),
-            #     html.H1(children=f'Welcome back', className='text-3xl font-extrabold tracking-tight sm:text-4xl ml-16 mt-10'),
-            #     style={
-            #            'color': 'rgba(58, 73, 99, 1)',
-            #            }
-            # ),
-
-            html.Div(
-                className='md:mx-16 mx-4',
-                children=[
-                    html.Div(children=[
-                        html.Div(
-                            children=[
-                                html.Span(
-                                    'Upload your video',
-                                    className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
-                                ),
-                                html.Span(
-                                    'as mp4, mov or avi – max. 50 MB',
-                                    className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
-                                )
-                            ],
-                            className='flex flex-col'
-                        ),
-                        html.Div(
-                            dcc.Upload(
-                                disabled=disabled,
-                                id='upload-data',
-                                children=html.Div(
-                                    children=
-                                    [
-                                        'Drop your video here or ',
-                                        html.A(' browse'),
-                                        ' ⛳️',
-                                    ],
-                                ),
-                                className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-3xl flex items-center justify-center py-10 my-10 text-center inline-block text-sm border-dashed border-4 border-gray-400',
-                                multiple=False,
-                                max_size=50e6,
-                                className_active='bg-[rgba(230, 240, 250, 1)]',
-                                className_reject='bg-indigo-600'
-                                # style_active=(dict(
-                                #     backgroundColor='rgba(230, 240, 250, 1)',
-                                #     borderColor='rgba(115, 165, 250, 1)',
-                                #     borderRadius='15px',
-                                # )),
-                                # className='upload'
-                            ),
-                            className='w-full'
-                            # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                        )
-                    ],
-                        # className='container',
-                        className='bg-white shadow rounded-3xl flex items-center justify-center my-10 text-center inline-block flex-col',
-                    ),
-
-                    dcc.Loading(
-                        id='loading',
-                        type='graph',
-                        fullscreen=True,
-                        children=
-                        html.Div(
-                            dcc.Graph(
-                                id='sequence',
-                                figure=fig,
-                                config=config,
-                                # className='container'
-                                className='bg-white shadow rounded-3xl flex items-center justify-center my-10'
-                            )
-                        ),
-                    ),
-
-                    html.Div(children=[
-
-                        dcc.Graph(
-                            id='pelvis_rotation',
-                            figure=fig3,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex w-full'
-                        ),
-
-                        dcc.Graph(
-                            id='pelvis_displacement',
-                            figure=fig4,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex w-full'
-                        ),
-                    ],
-                        className='flex justify-center my-10 flex-col gap-5'
-                    ),
-
-                    html.Div(children=[
-
-                        dcc.Graph(
-                            id='thorax_rotation',
-                            figure=fig5,
-                            config=config,
-                            className='bg-white shadow rounded-3xl'
-                        ),
-
-                        dcc.Graph(
-                            id='thorax_displacement',
-                            figure=fig6,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex'
-                        ),
-                    ],
-                        className='flex justify-center my-10 flex-col gap-5'
-                    ),
-
-                    html.Div(children=[
-
-                        dcc.Graph(
-                            id='h_tilt',
-                            figure=fig12,
-                            config=config,
-                            # className='container_half_left'
-                            className='bg-white shadow rounded-3xl'
-                        ),
-
-                        dcc.Graph(
-                            id='h_rotation',
-                            figure=fig13,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex'
-                            # className='container_half_right'
-                        ),
-                    ],
-                        className='flex justify-center my-10 flex-col gap-5'
-                    ),
-
-                    html.Div(
-                        dcc.Graph(
-                            id='s_tilt',
-                            figure=fig11,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex items-center justify-center my-10'
-                        )
-                    ),
-
-                    html.Div(
-                        dcc.Graph(
-                            id='arm_length',
-                            figure=fig14,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex items-center justify-center my-10'
-                        )
-                    ),
-
-                    html.Div(
-                        dcc.Graph(
-                            id='spine_rotation',
-                            figure=fig15,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex items-center justify-center my-10'
-                        )
-                    ),
-
-                    html.Div(
-                        dcc.Graph(
-                            id='wrist_angle',
-                            figure=fig16,
-                            config=config,
-                            className='bg-white shadow rounded-3xl flex items-center justify-center my-10'
-                        )
-                    ),
-                ]
-            ),
-
-            # Footer
-            html.Div(
-                html.Div(
-                    className='bg-indigo-700 h-20 flex items-center flex-row justify-end gap-20 rounded-t-3xl',
+                    className='flex flex-col bg-indigo-700 fixed left-0 top-0 bottom-0 w-60 z-10',
                     children=[
-                        html.Span(
-                            '© 2023 JL. All rights reserved.',
-                            className='text-amber-400 text-xs'
+                        html.Div(
+                            'HISTORY',
+                            className='text-white text-xs font-medium mb-3 mt-5 px-4 ml-4'
                         ),
-                        html.A(
-                            'Privacy Policy',
-                            href='#',
-                            className='text-amber-400 text-xs hover:text-amber-500 font-normal'
+                        html.Div(
+                            className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
+                            children=[
+                                        html.Button(
+                                            children=[html.Img(src=app.get_asset_url('graph_amber.svg'), className='w-6 h-6 mr-2'), reformat_file(file)],
+                                            id={'type': 'saved-button', 'index': f'{file}'},
+                                            className='font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center')
+                                        for file in files],
+                            id='file_list',
                         ),
-                        html.A(
-                            'Contact',
-                            href='#',
-                            className='text-amber-400 text-xs hover:text-amber-500 font-normal md:mr-16 mr-4'
+                        html.Div(
+                            className='flex flex-col gap-2 mx-4 mb-4 justify-end',
+                            children=[
+                                html.A(
+                                    'HOME',
+                                    href='/',
+                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                ),
+                                html.A(
+                                    'PROFILE',
+                                    href='/profile',
+                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                ),
+                                # html.A(
+                                #     'HISTORY',
+                                #     href='/history',
+                                #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                # ),
+                                html.A(
+                                    'DASHBOARD',
+                                    href='/dash',
+                                    className='font-medium text-xs text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                ),
+                                html.A(
+                                    'LOGOUT',
+                                    href='/logout',
+                                    className='inline-flex whitespace-nowrap rounded-full border-2 border-transparent bg-indigo-700 px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500'
+                                )
+                            ]
                         )
                     ]
                 ),
-                className='w-full',
-            ),
-        ]
-    )
+
+                html.Div(
+                    className='md:mx-16 mx-4 pl-60',
+                    children=[
+                        html.Div(
+                            id='upload-video',
+                            className='flex flex-row justify-between mt-5',
+                            children=[
+
+                                html.Div(children=[
+                                    html.Div(
+                                        children=[
+                                            html.Span(
+                                                'Upload your video',
+                                                className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+                                            ),
+                                            html.Span(
+                                                'as mp4, mov or avi – max. 20 MB',
+                                                className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                                            )
+                                        ],
+                                        className='flex flex-col items-start mx-10 mb-4'
+                                    ),
+                                    html.Div(
+                                        dcc.Upload(
+                                            disabled=disabled,
+                                            id='upload-data',
+                                            children=html.Div(
+                                                children=
+                                                [
+                                                    'Drop your video here or ',
+                                                    html.A(' browse'),
+                                                    ' ⛳️',
+                                                ],
+                                            ),
+                                            className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                            multiple=False,
+                                            max_size=20e6,
+                                            accept=['.mp4', '.mov', '.avi'],
+                                            className_active='bg-[rgba(230, 240, 250, 1)]',
+                                            className_reject='bg-indigo-600'
+                                            # style_active=(dict(
+                                            #     backgroundColor='rgba(230, 240, 250, 1)',
+                                            #     borderColor='rgba(115, 165, 250, 1)',
+                                            #     borderRadius='15px',
+                                            # )),
+                                            # className='upload'
+                                        ),
+                                        className='w-full'
+                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                                    )
+                                ],
+                                    # className='container',
+                                    className='bg-white shadow rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96',
+                                ),
+                            ]),
+
+                        dcc.Loading(
+                            id='loading',
+                            type='graph',
+                            fullscreen=True,
+                            children=
+                            html.Div(
+                                dcc.Graph(
+                                    id='sequence',
+                                    figure=fig,
+                                    config=config,
+                                    # className='container'
+                                    className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                )
+                            ),
+                        ),
+
+                        html.Div(children=[
+
+                            dcc.Graph(
+                                id='pelvis_rotation',
+                                figure=fig3,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex w-full'
+                            ),
+
+                            dcc.Graph(
+                                id='pelvis_displacement',
+                                figure=fig4,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex w-full'
+                            ),
+                        ],
+                            className='flex justify-center mb-5 flex-col gap-5'
+                        ),
+
+                        html.Div(children=[
+
+                            dcc.Graph(
+                                id='thorax_rotation',
+                                figure=fig5,
+                                config=config,
+                                className='bg-white shadow rounded-3xl'
+                            ),
+
+                            dcc.Graph(
+                                id='thorax_displacement',
+                                figure=fig6,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex'
+                            ),
+                        ],
+                            className='flex justify-center mb-5 flex-col gap-5'
+                        ),
+
+                        html.Div(children=[
+
+                            dcc.Graph(
+                                id='h_tilt',
+                                figure=fig12,
+                                config=config,
+                                # className='container_half_left'
+                                className='bg-white shadow rounded-3xl'
+                            ),
+
+                            dcc.Graph(
+                                id='h_rotation',
+                                figure=fig13,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex'
+                                # className='container_half_right'
+                            ),
+                        ],
+                            className='flex justify-center mb-5 flex-col gap-5'
+                        ),
+
+                        html.Div(
+                            dcc.Graph(
+                                id='s_tilt',
+                                figure=fig11,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                            )
+                        ),
+
+                        html.Div(
+                            dcc.Graph(
+                                id='arm_length',
+                                figure=fig14,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                            )
+                        ),
+
+                        html.Div(
+                            dcc.Graph(
+                                id='spine_rotation',
+                                figure=fig15,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                            )
+                        ),
+
+                        html.Div(
+                            dcc.Graph(
+                                id='wrist_angle',
+                                figure=fig16,
+                                config=config,
+                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                            )
+                        ),
+                    ]
+                ),
+
+                # Footer
+                # html.Div(
+                #     html.Div(
+                #         className='bg-indigo-700 h-20 flex items-center flex-row justify-end gap-20 rounded-t-3xl',
+                #         children=[
+                #             html.Span(
+                #                 '© 2023 JL. All rights reserved.',
+                #                 className='text-amber-400 text-xs'
+                #             ),
+                #             html.A(
+                #                 'Privacy Policy',
+                #                 href='#',
+                #                 className='text-amber-400 text-xs hover:text-amber-500 font-normal'
+                #             ),
+                #             html.A(
+                #                 'Contact',
+                #                 href='#',
+                #                 className='text-amber-400 text-xs hover:text-amber-500 font-normal md:mr-16 mr-4'
+                #             )
+                #         ]
+                #     ),
+                #     className='w-full',
+                # ),
+                # End Footer
+
+            ]
+        )
 
         return layout
 
@@ -965,42 +1046,177 @@ def init_dash(server):
     return app
 
 
+def create_folder(name):
+    if not os.path.exists(name):
+        os.makedirs(name)
+
+
+def reformat_file(filename):
+    print(filename)
+    timestamp = datetime.datetime.strptime(filename, '%Y-%m-%d_%H-%M-%S')
+    return timestamp.strftime('%d.%m.%Y, %H:%M')
+
+
 def init_callbacks(app):
+
+    # @app.callback(
+    #     Output({'type': 'saved-button', 'index': ALL}, 'className'),
+    #     Input({'type': 'saved-button', 'index': ALL}, 'n_clicks')
+    # )
+    # def update_saved_button(n_clicks):
+    #     if n_clicks is None:
+    #         print(n_clicks)
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #     else:
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #
+    # @app.callback(
+    #     Output({'type': 'saved-button', 'index': MATCH}, 'className'),
+    #     Input({'type': 'saved-button', 'index': MATCH}, 'n_clicks')
+    # )
+    # def update_saved_button(n_clicks):
+    #     if n_clicks is None:
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #     else:
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+
+
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
          Output('h_tilt', 'figure'),
-         Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'), Output('wrist_angle', 'figure')],
-        [Input('upload-data', 'contents'), Input('upload-data', 'filename')],
+         Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
+         Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children')],
+        [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
+         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks')],
+        [State('file_list', 'children')],
         prevent_initial_call=True
     )
-    def process(contents, filename):
-        # print(os.getcwd())
+    def process(contents, filename, n_clicks, children):
+        disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
+
+        # Check if button was pressed or a file was uploaded
+        if ctx.triggered_id != 'upload-data':
+            button_id = ctx.triggered_id.index
+            file = f'{button_id}.parquet'
+            data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
+            duration = data['duration'][0]
+            data_values = data.values
+            save_pelvis_rotation = data_values[:, 0]
+            save_pelvis_tilt = data_values[:, 1]
+            save_pelvis_lift = data_values[:, 2]
+            save_pelvis_sway = data_values[:, 3]
+            save_pelvis_thrust = data_values[:, 4]
+            save_thorax_lift = data_values[:, 5]
+            save_thorax_bend = data_values[:, 6]
+            save_thorax_sway = data_values[:, 7]
+            save_thorax_rotation = data_values[:, 8]
+            save_thorax_thrust = data_values[:, 9]
+            save_thorax_tilt = data_values[:, 10]
+            save_spine_rotation = data_values[:, 11]
+            save_spine_tilt = data_values[:, 12]
+            save_head_rotation = data_values[:, 13]
+            save_head_tilt = data_values[:, 14]
+            save_left_arm_length = data_values[:, 15]
+            save_wrist_angle = data_values[:, 16]
+            save_wrist_tilt = data_values[:, 17]
+
+            # Get the video and update the video player
+            vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
+            children_upload = upload_video(disabled, path=vid_src)
+
+            # Change the background color of the presed button and reset the previously pressed button
+            for child in children:
+                if child['props']['id']['index'] == button_id:
+                    child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+                else:
+                    child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+
+            fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
+                                                                                                 save_pelvis_tilt,
+                                                                                                 save_pelvis_lift,
+                                                                                                 save_pelvis_sway,
+                                                                                                 save_pelvis_thrust,
+                                                                                                 save_thorax_lift,
+                                                                                                 save_thorax_bend,
+                                                                                                 save_thorax_sway,
+                                                                                                 save_thorax_rotation,
+                                                                                                 save_thorax_thrust,
+                                                                                                 save_thorax_tilt,
+                                                                                                 save_spine_rotation,
+                                                                                                 save_spine_tilt,
+                                                                                                 save_head_rotation,
+                                                                                                 save_head_tilt,
+                                                                                                 save_left_arm_length,
+                                                                                                 save_wrist_angle,
+                                                                                                 save_wrist_tilt,
+                                                                                                 duration)
+
+            return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+
+        # Check if folder was created and generate file name
+        filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        create_folder(f'assets/save_data/{current_user.id}/' + filename)
+        location = f'assets/save_data/{current_user.id}/' + filename
+
+        # Extracting the motion data from the video
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration = process_motion(
-            contents, filename)
-        # fig = go.Figure(data=go.Image(z=image))
+            contents, filename, location)
+
+        # Get the video and update the video player
+        vid_src = location + '/motion.mp4'
+        children_upload = upload_video(disabled, path=vid_src)
 
         fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
-                                                                                      save_pelvis_tilt, save_pelvis_lift,
-                                                                                      save_pelvis_sway, save_pelvis_thrust,
-                                                                                      save_thorax_lift, save_thorax_bend,
-                                                                                      save_thorax_sway,
-                                                                                      save_thorax_rotation,
-                                                                                      save_thorax_thrust,
-                                                                                      save_thorax_tilt, save_spine_rotation,
-                                                                                      save_spine_tilt, save_head_rotation,
-                                                                                      save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt,
-                                                                                      duration)
+                                                                                             save_pelvis_tilt,
+                                                                                             save_pelvis_lift,
+                                                                                             save_pelvis_sway,
+                                                                                             save_pelvis_thrust,
+                                                                                             save_thorax_lift,
+                                                                                             save_thorax_bend,
+                                                                                             save_thorax_sway,
+                                                                                             save_thorax_rotation,
+                                                                                             save_thorax_thrust,
+                                                                                             save_thorax_tilt,
+                                                                                             save_spine_rotation,
+                                                                                             save_spine_tilt,
+                                                                                             save_head_rotation,
+                                                                                             save_head_tilt,
+                                                                                             save_left_arm_length,
+                                                                                             save_wrist_angle,
+                                                                                             save_wrist_tilt,
+                                                                                             duration)
 
-        current_user.n_analyses -= 1
-        db.session.commit()
-        return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16]
+        # Save the motion data to a parquet file
+        df = pd.DataFrame(
+            [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+             save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+             save_left_arm_length, save_wrist_angle, save_wrist_tilt]).T
+        df.columns = ['pelvis_rotation', 'pelvis_tilt', 'pelvis_lift', 'pelvis_sway', 'pelvis_thrust',
+                      'thorax_lift', 'thorax_bend', 'thorax_sway', 'thorax_rotation', 'thorax_thrust',
+                      'thorax_tilt', 'spine_rotation', 'spine_tilt', 'head_rotation', 'head_tilt', 'left_arm_length',
+                      'wrist_angle', 'wrist_tilt']
 
-    # @app.callback(
-    #     Input('button', 'n_clicks'),)
-    # def logout_d(n_clicks):
-    #     if n_clicks > 0:
-    #         print('logout')
-    #         return redirect(url_for('auth.logout'))
+        df['duration'] = duration
+
+        df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
+
+        # Reset the background color of the buttons
+        for child in children:
+            child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+
+        # Add a new button for the new motion data
+        new_item = html.Button(
+                                            children=[html.Img(src=app.get_asset_url('graph_amber.svg'), className='w-6 h-6 mr-2'), reformat_file(filename)],
+                                            id={'type': 'saved-button', 'index': f'{filename}'},
+                                            className='font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center')
+        children.insert(0, new_item)
+
+        if not current_user.unlimited:
+            current_user.n_analyses -= 1
+            db.session.commit()
+
+        return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]

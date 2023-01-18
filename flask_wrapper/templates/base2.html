@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SwingAnalysis</title>
-<!--    <link rel="stylesheet" href="https://cdn.tailwindcss.com" />-->
-    <script src="https://cdn.tailwindcss.com"></script>
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">-->
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+    <link rel="stylesheet" href="../assets/output.css">
 </head>
 
 <body style="background-color: rgba(246, 249, 255, 1)" class="flex flex-col justify-between h-screen m-0 p-0 scroll-p-0">
@@ -18,29 +17,35 @@
             <div class="flex items-center justify-between md:justify-start md:space-x-10">
                 <nav class="space-x-10 justify-center flex flex-row">
                     {% if request.path == '/' %}
-                    <a href="{{ url_for('main.index') }}" class="font-medium text-sm text-amber-400 hover:text-amber-500 border-2 border-amber-400 hover:border-amber-500 items-center justify-center rounded-3xl px-4 py-2">Home</a>
+                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:text-amber-500 border-2 border-amber-400 hover:border-amber-500 items-center justify-center rounded-3xl px-4 py-2">HOME</a>
                     {% else %}
-                    <a href="{{ url_for('main.index') }}" class="font-medium text-sm text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">Home</a>
+                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HOME</a>
                     {% endif %}
 
                     {% if current_user.is_authenticated %}
                     {% if request.path == '/profile' %}
-                    <a href="{{ url_for('main.profile') }}" class="font-medium text-sm -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">Profile</a>
+                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>
                     {% else %}
-                    <a href="{{ url_for('main.profile') }}" class="font-medium text-sm -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">Profile</a>
+                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>
                     {% endif %}
 
-                    <a href="{{ url_for('main.dashboard') }}" class="font-medium text-sm -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">Dashboard</a>
+<!--                    {% if request.path == '/history' %}-->
+<!--                    <a href="{{ url_for('main.history') }}" class="font-medium text-xs -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HISTORY</a>-->
+<!--                    {% else %}-->
+<!--                    <a href="{{ url_for('main.history') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HISTORY</a>-->
+<!--                    {% endif %}-->
+
+                    <a href="{{ url_for('main.dashboard') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">DASHBOARD</a>
                     {% endif %}
               </nav>
 
               <div class="items-center justify-end flex flex-1">
                 {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-sm font-medium text-white hover:text-amber-500">Sign in</a>
-                <a href="{{ url_for('auth.signup') }}" class="ml-8 mr-4 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:border-amber-500 hover:text-amber-500">Sign up</a>
+                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-white hover:text-amber-500">SIGN IN</a>
+                <a href="{{ url_for('auth.signup') }}" class="ml-8 mr-4 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white bg-indigo-700 px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">GET STARTED</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:border-amber-500 hover:text-amber-500">Logout</a>
+                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white bg-indigo-700 px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">LOGOUT</a>
                 {% endif %}
               </div>
             </div>

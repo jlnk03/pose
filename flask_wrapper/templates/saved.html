@@ -1,0 +1,13 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="container mx-auto">
+  <h1 class="text-2xl font-bold mb-4">List of Files</h1>
+  <ul class="list-none">
+    {% for file in files %}
+<!--    <li class="text-lg font-medium py-2">{{ file }}</li>-->
+    <li class="text-lg font-medium py-2"><a href="{{ url_for('main.history_saved', file=file) }}">{{ file }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
