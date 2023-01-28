@@ -2,6 +2,30 @@
 ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
 */
 
+/*scrollbar*/
+/* Hide the default scrollbar */
+#file_list::-webkit-scrollbar {
+    width: 0.4em;
+    background-color: #475569;
+}
+
+/* Track */
+#file_list::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+    border-radius: 10px;
+}
+
+/* Handle */
+#file_list::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/*Prevent main content from scrolling*/
+#page-content {
+  pointer-events: none;
+}
+
+
 body {
   margin: 0;
   /*background-color: #4338ca;*/

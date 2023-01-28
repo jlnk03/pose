@@ -92,19 +92,19 @@ def pelvis_tilt(hip_l, hip_r, r):
 
 
 def pelvis_sway(foot_l, r):
-    hip_v = r @ np.array([0, 0, foot_l.z], dtype=np.float16)
+    hip_v = r @ np.array([foot_l.x, foot_l.y, foot_l.z], dtype=np.float16)
 
     return hip_v[2]
 
 
 def pelvis_thrust(foot_l, r):
-    hip_v = r @ np.array([foot_l.x, 0, 0], dtype=np.float16)
+    hip_v = r @ np.array([foot_l.x, foot_l.y, foot_l.z], dtype=np.float16)
 
     return hip_v[0]
 
 
 def pelvis_lift(foot_l, r):
-    hip_v = r @ np.array([0, foot_l.y, 0], dtype=np.float16)
+    hip_v = r @ np.array([foot_l.x, foot_l.y, foot_l.z], dtype=np.float16)
 
     return hip_v[1]
 
@@ -121,15 +121,17 @@ def thorax_rotation(shoulder_l, shoulder_r, r):
 
 def thorax_tilt(shoulder_l, shoulder_r, r):
     shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float16)
-    shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float16)
-    spine = shoulder_l - 0.5 * shoulder_v
-    spine[0] = 0
+    shoulder_v[0] = 0
+    # shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float16)
+    # spine = shoulder_l - 0.5 * shoulder_v
+    # spine[0] = 0
     normal = np.array([0, 1, 0])
-    angle = np.arccos(normal.dot(spine) / (np.linalg.norm(normal) * np.linalg.norm(spine)))
+    # angle = np.arccos(normal.dot(spine) / (np.linalg.norm(normal) * np.linalg.norm(spine)))
     # angle between shoulder vector and normal with atan2
     # angle = np.arctan2(spine[1], spine[2])
+    angle = np.arccos(normal.dot(shoulder_v) / (np.linalg.norm(normal) * np.linalg.norm(shoulder_v)))
 
-    return 180 - np.degrees(angle)
+    return np.degrees(angle) - 90
 
 
 def thorax_bend(shoulder_l, shoulder_r, r):
@@ -144,9 +146,9 @@ def thorax_bend(shoulder_l, shoulder_r, r):
 
 
 def thorax_sway(shoulder_l, shoulder_r, foot_l, r):
-    shoulder_v = r @ np.array([0, 0, shoulder_l.z - shoulder_r.z], dtype=np.float16)
-    shoulder_l = r @ np.array([0, 0, shoulder_l.z], dtype=np.float16)
-    foot_l = r @ np.array([0, 0, foot_l.z], dtype=np.float16)
+    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float16)
+    shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float16)
+    foot_l = r @ np.array([foot_l.x, foot_l.y, foot_l.z], dtype=np.float16)
     spine = shoulder_l - 0.5 * shoulder_v
     sway = spine - foot_l
 
@@ -154,9 +156,9 @@ def thorax_sway(shoulder_l, shoulder_r, foot_l, r):
 
 
 def thorax_thrust(shoulder_l, shoulder_r, foot_l, r):
-    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, 0, 0], dtype=np.float16)
-    shoulder_l = r @ np.array([shoulder_l.x, 0, 0], dtype=np.float16)
-    foot_l = r @ np.array([foot_l.x, 0, 0], dtype=np.float16)
+    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float16)
+    shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float16)
+    foot_l = r @ np.array([foot_l.x, foot_l.x, foot_l.x], dtype=np.float16)
     spine = shoulder_l - 0.5 * shoulder_v
     thrust = spine - foot_l
 
@@ -164,9 +166,9 @@ def thorax_thrust(shoulder_l, shoulder_r, foot_l, r):
 
 
 def thorax_lift(shoulder_l, shoulder_r, foot_l, r):
-    shoulder_v = r @ np.array([0, shoulder_l.y - shoulder_r.y, 0], dtype=np.float16)
-    shoulder_l = r @ np.array([0, shoulder_l.y, 0], dtype=np.float16)
-    foot_l = r @ np.array([0, foot_l.y, 0], dtype=np.float16)
+    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float16)
+    shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float16)
+    foot_l = r @ np.array([foot_l.x, foot_l.y, foot_l.z], dtype=np.float16)
     spine = shoulder_l - 0.5 * shoulder_v
     lift = spine - foot_l
 

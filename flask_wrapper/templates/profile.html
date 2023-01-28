@@ -1,7 +1,16 @@
 {% extends "base2.html" %}
 
 {% block content %}
-<div class="flex min-h-full py-8 flex-col justify-center">
+
+<script>
+    bod = document.body
+    bod.className = "bg-gradient-to-br from-amber-50 to-violet-50"
+    // bod.style.backgroundColor = "rgba(250, 247, 245, 1)"
+    // bod.style.backgroundImage = "url(assets/wallpaper.jpeg)"
+    // bod.className = "bg-camel-100"
+</script>
+
+<div class="flex min-h-full pb-8 md:py-8 flex-col justify-center">
     <div class="grid grid-cols-3">
   <h1 class="text-lg font-bold text-gray-900 sm:text-2xl block mb-5">
     Welcome, {{ name }}!
@@ -33,14 +42,14 @@
             Update your profile information here.
         </span>
     </div>
-<div class="bg-white shadow rounded-3xl px-10 py-10 lg:w-4/6 align-end">
+<div class="bg-white shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100">
 <form method="post" action="/update_profile">
   <div class="relative">
       <span class="text-sm font-medium text-gray-500 block mb-2">Name</span>
       <div class="flex flex-row">
           <label for="name" class="sr-only">Name</label>
-      <input id="name" name="name" type="text" required class="relative block w-full appearance-none rounded-l-xl border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Name" value="{{name}}">
-            <button type="submit" class="group relative flex justify-center rounded-r-xl w-60 border border-transparent bg-indigo-200 py-2 px-3 text-sm font-medium items-center text-indigo-900 hover:bg-indigo-300">Update name</button>
+      <input id="name" name="name" type="text" required class="relative block w-full appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base" placeholder="Name" value="{{name}}">
+            <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 py-2 px-3 text-xs md:text-sm font-medium items-center text-indigo-900 hover:bg-indigo-300">Update name</button>
       </div>
 </div>
 </form>
@@ -49,8 +58,8 @@
         <span class="text-sm font-medium text-gray-500 block mb-2">E-mail</span>
         <div class="flex flex-row">
         <label for="email" class="sr-only">Email address</label>
-        <input id="email" name="email" type="email" required class="relative block w-full appearance-none rounded-l-xl border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base invalid:border-red-500 invalid:text-red-500 focus:invalid:border-red-500" placeholder="E-mail" value="{{email}}">
-    <button type="submit" class="group relative flex justify-center rounded-r-xl w-60 border border-transparent bg-indigo-200 py-2 px-3 text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">Update email-address</button>
+        <input id="email" name="email" type="email" required class="relative block w-full appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base invalid:border-red-500 invalid:text-red-500 focus:invalid:border-red-500" placeholder="E-mail" value="{{email}}">
+    <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">Update email</button>
             </div>
    </div>
 </form>
@@ -60,13 +69,13 @@
            <span class="text-sm font-medium text-gray-500 block mb-2">Change Password</span>
        <div class="flex flex-row">
               <label for="password" class="sr-only">Password</label>
-              <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block mb-2 w-full appearance-none rounded-xl border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Old password" value="">
+              <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block mb-2 w-full appearance-none rounded-lg border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base" placeholder="Old password" value="">
             <div class="w-60 ml-1.5"></div>
       </div>
            <div class="flex flex-row">
               <label for="password_new" class="sr-only">Password</label>
-              <input id="password_new" name="password_new" type="password" required class="relative block w-full justify-center appearance-none rounded-l-xl border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="New password" value="">
-             <button type="submit" class="group relative flex justify-center rounded-r-xl w-60 border border-transparent bg-indigo-200 py-2 px-3 text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">
+              <input id="password_new" name="password_new" type="password" required class="relative block w-full justify-center appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 placeholder-gray-300 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base" placeholder="New password" value="">
+             <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">
             Update password
             </button>
            </div>
@@ -86,8 +95,8 @@
         </span>
     </div>
 
-<div class="rounded-3xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between">
-    <span class="text-9xl text-font-bold text-indigo-700 bg-white shadow rounded-3xl py-5 px-10 max-w-content 2xl:mr-6 mt-2 items-center flex justify-center">
+<div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between">
+    <span class="text-9xl text-font-bold text-indigo-700 bg-white shadow rounded-2xl py-5 px-10 max-w-content 2xl:mr-6 mt-2 items-center flex justify-center backdrop-blur-md bg-opacity-60 border border-gray-100">
         {% if current_user.unlimited %}
         ∞
         {% else %}
@@ -96,8 +105,8 @@
     </span>
     <div class="flex flex-col justify-center items-center w-full">
             <span class="font-medium text-sm bg-indigo-700 rounded-full text-white px-3 text-center -mb-4 py-1 z-10 mt-3 2xl:mt-0">Get more</span>
-    <div class="flex justify-between flex-end justify-end border-indigo-700 rounded-3xl border-4 py-5 px-5 flex-row w-full gap-3">
-    <div class="bg-white shadow h-full rounded-2xl py-5 px-5 w-full">
+    <div class="flex justify-between flex-end justify-end border-indigo-700 rounded-2xl border-4 py-5 px-5 flex-col md:flex-row w-full gap-3">
+    <div class="bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
             <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1">
                 Starter
@@ -118,7 +127,7 @@
         </div>
     </div>
 
-        <div class="bg-white shadow h-full rounded-2xl py-5 px-5 w-full">
+        <div class="bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
             <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1">
                 Essential
@@ -140,7 +149,7 @@
         </div>
     </div>
 
-        <div class="bg-white shadow h-full rounded-2xl py-5 px-5 w-full">
+        <div class="bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
             <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1">
                 Professional

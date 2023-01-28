@@ -49,7 +49,12 @@ def process_motion(contents, filename, location):
     # meta = iio.immeta(temp.name, plugin='pyav')
     fps = meta['fps']
     duration = meta['duration']
-    rotation = int(meta['rotate'])
+
+    try:
+        rotation = int(meta['rotate'])
+    except KeyError:
+        rotation = 360
+
     rot_angle = 360 - rotation
     frame = next(frames)
     frame = np.rot90(frame, k=rot_angle // 90)
@@ -112,7 +117,7 @@ def process_motion(contents, filename, location):
 
                 if i == 0:
                     # print(i)
-                    theta = calc_angle(hip_l, hip_r)
+                    theta = calc_angle(foot_l, foot_r)
                     c, s = np.cos(theta), np.sin(theta)
                     print(np.degrees(theta))
                     R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]], dtype=np.float16)
@@ -122,19 +127,19 @@ def process_motion(contents, filename, location):
                     print(R)
 
                 pelvis_r = pelvis_rotation(hip_l, hip_r, R)
-                save_pelvis_rotation.append(pelvis_r)
+                save_pelvis_rotation.append(-pelvis_r)
                 # print('pelvis_rotation: ', pelvis_r)
 
                 pelvis_t = pelvis_tilt(hip_l, hip_r, R)
-                save_pelvis_tilt.append(pelvis_t)
+                save_pelvis_tilt.append(-pelvis_t)
                 # print('pelvis_tilt: ', pelvis_t)
 
                 pelvis_s = pelvis_sway(foot_l, R)
-                save_pelvis_sway.append(pelvis_s)
+                save_pelvis_sway.append(-pelvis_s)
                 # print('pelvis_sway: ', pelvis_s)
 
                 pelvis_th = pelvis_thrust(foot_l, R)
-                save_pelvis_thrust.append(pelvis_th)
+                save_pelvis_thrust.append(-pelvis_th)
                 # print('pelvis_thrust: ', pelvis_th)
 
                 pelvis_l = pelvis_lift(foot_l, R)
@@ -142,7 +147,7 @@ def process_motion(contents, filename, location):
                 # print('pelvis_lift: ', pelvis_l)
 
                 thorax_r = thorax_rotation(shoulder_l, shoulder_r, R)
-                save_thorax_rotation.append(thorax_r)
+                save_thorax_rotation.append(-thorax_r)
                 # print('thorax_rotation: ', thorax_r)
 
                 thorax_b = thorax_bend(shoulder_l, shoulder_r, R)

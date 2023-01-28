@@ -11,7 +11,8 @@ COPY flask_wrapper/*.py /flask_wrapper/
 COPY flask_wrapper/templates/*.html /flask_wrapper/templates/
 COPY flask_wrapper/assets/background.png /flask_wrapper/assets/background.png
 COPY flask_wrapper/assets/output.css /flask_wrapper/assets/output.css
-COPY flask_wrapper/assets/graph_amber.svg /flask_wrapper/assets/graph_amber.svg
+COPY flask_wrapper/assets/*.svg /flask_wrapper/assets/
+COPY flask_wrapper/assets/*.js /flask_wrapper/assets/
 COPY code_b/angles.py /code_b/angles.py
 COPY code_b/process_mem.py /code_b/process_mem.py
 

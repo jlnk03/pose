@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Created with Vectornator (http://vectornator.io/) -->
+<svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 512 512" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs/>
+<g id="Ebene-1">
+<path d="M381.813 137.56L381.813 397.175C381.813 425.375 361.044 448.236 335.425 448.236L176.574 448.236C150.956 448.236 130.187 425.375 130.187 397.175L130.187 137.56" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+<path d="M209.905 221.77L209.905 364.637" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+<path d="M302.547 221.77L302.547 364.637" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+<path d="M103.53 126.895L408.47 126.895" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="30"/>
+<path d="M190.214 114.362C190.214 94.2354 206.53 77.9193 226.656 77.9193L285.344 77.9193C305.47 77.9193 321.786 94.2354 321.786 114.362" fill="none" opacity="1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="round" stroke-width="30"/>
+</g>
+</svg>

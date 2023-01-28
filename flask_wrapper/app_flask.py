@@ -1,4 +1,6 @@
 import datetime
+import shutil
+
 import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -134,25 +136,27 @@ def upload_video(disabled=True, path=None):
                     multiple=False,
                     max_size=50e6,
                     accept=['.mp4', '.mov', '.avi'],
-                    className_active='bg-[rgba(230, 240, 250, 1)]',
-                    className_reject='bg-indigo-600'
-                    # style_active=(dict(
-                    #     backgroundColor='rgba(230, 240, 250, 1)',
-                    #     borderColor='rgba(115, 165, 250, 1)',
-                    #     borderRadius='15px',
-                    # )),
-                    # className='upload'
+                    style_active=(dict(
+                        backgroundColor='rgba(230, 240, 250, 1)',
+                        borderColor='rgba(115, 165, 250, 1)',
+                        borderRadius='12px',
+                    )),
+                    style_reject=(dict(
+                        backgroundColor='bg-red-200',
+                        borderColor='bg-red-400',
+                        borderRadius='12px',
+                    )),
                 ),
                 className='w-full'
                 # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
             )
         ],
             # className='container',
-            className='bg-white shadow rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 mr-5',
+            className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100',
         ),
 
         html.Video(src=path, id='video', controls=True,
-                   className='h-96 rounded-3xl shadow'),
+                   className='h-96 rounded-2xl shadow'),
     ]
 
     return layout
@@ -183,16 +187,18 @@ def filter_data(data):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration):
-    converted = [filter_data(np.array(name)) for name in
-                 [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
-                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
-                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                  save_left_arm_length, save_wrist_angle, save_wrist_tilt]]
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration, filt=True):
 
-    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt = converted
+    if filt:
+        converted = [filter_data(np.array(name)) for name in
+                     [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+                      save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+                      save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+                      save_left_arm_length, save_wrist_angle, save_wrist_tilt]]
+
+        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt = converted
 
     timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
@@ -203,12 +209,12 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     save_thorax_sway = save_thorax_sway - save_thorax_sway[0]
     save_thorax_thrust = save_thorax_thrust - save_thorax_thrust[0]
 
-    fig = go.Figure(data=go.Scatter(x=timeline, y=-np.gradient(save_pelvis_rotation), name=f'Pelvis'))
+    fig = go.Figure(data=go.Scatter(x=timeline, y=np.gradient(save_pelvis_rotation), name=f'Pelvis'))
 
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=-np.gradient(save_thorax_rotation),
+            y=np.gradient(save_thorax_rotation),
             name=f'Thorax',
             # legendrank=seq_sorted['Shoulder']
         )
@@ -247,6 +253,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
@@ -276,6 +283,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='Displacement in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
@@ -305,6 +313,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
@@ -334,6 +343,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='Displacement in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
@@ -355,6 +365,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -374,6 +385,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -393,6 +405,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -412,6 +425,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='length in m',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -431,6 +445,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -454,6 +469,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         yaxis_title='angle in °',
         xaxis_title="time in s",
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
             l=100
         ),
@@ -513,6 +529,7 @@ fig3.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
@@ -543,6 +560,7 @@ fig4.update_layout(
     yaxis_title='Displacement in m',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
@@ -573,6 +591,7 @@ fig5.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
@@ -603,6 +622,7 @@ fig6.update_layout(
     yaxis_title='Displacement in m',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
@@ -625,6 +645,7 @@ fig11.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -645,6 +666,7 @@ fig12.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -665,6 +687,7 @@ fig13.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -685,6 +708,7 @@ fig14.update_layout(
     yaxis_title='length in m',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -705,6 +729,7 @@ fig15.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -729,6 +754,7 @@ fig16.update_layout(
     yaxis_title='angle in °',
     xaxis_title="time in s",
     paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
         l=80,
         r=50,
@@ -753,10 +779,10 @@ def render_files(files):
 def init_dash(server):
     # Initialize the app
     app = Dash(__name__, server=server, url_base_pathname='/dashapp/',
-               # external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
+               external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
                )
-    app.css.config.serve_locally = False
-    app.css.append_css({'external_url': './assets/output.css'})
+    # app.css.config.serve_locally = False
+    # app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
 
@@ -777,23 +803,51 @@ def init_dash(server):
 
         layout = html.Div(
 
-            className="bg-[#F6F9FFFF] h-full",
+            # className="bg-[#F6F9FFFF] h-full",
+            # className='bg-gradient-to-br from-amber-50 to-violet-100 h-full',
 
             children=[
+
+                # navbar top
                 html.Div(
-                    className='flex flex-col bg-indigo-700 fixed left-0 top-0 bottom-0 w-60 z-10',
+                    id='navbar-top',
+                    className='flex flex-row w-full h-12 items-center ml-4 lg:hidden z-20',
+                    children=[
+                        html.Button(
+                            className='flex flex-row w-6 h-6 items-center',
+                            id='menu-button',
+                            children=[
+                                html.Img(src=app.get_asset_url('menu_burger.svg'), className='h-4 w-4', id='menu-icon')
+                            ]
+                        )
+                    ]
+                ),
+
+                # Sidebar
+                html.Div(
+                    id='sidebar',
+                    className='flex flex-col bg-slate-600 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
                     children=[
                         html.Div(
                             'HISTORY',
-                            className='text-white text-xs font-medium mb-3 mt-5 px-4 ml-4'
+                            className='text-white text-xs font-medium mb-3 mt-12 lg:mt-5 px-4'
                         ),
                         html.Div(
                             className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
                             children=[
                                         html.Button(
-                                            children=[html.Img(src=app.get_asset_url('graph_amber.svg'), className='w-6 h-6 mr-2'), reformat_file(file)],
+                                            children=[
+                                                html.Div(
+                                                    className='flex flex-row items-center',
+                                                    children=[
+                                                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
+                                                        reformat_file(file),
+                                                    ]),
+                                                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'), id={'type': 'delete', 'index': file}, n_clicks=0, className='invisible', disabled=True
+                                                            ),
+                                                      ],
                                             id={'type': 'saved-button', 'index': f'{file}'},
-                                            className='font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center')
+                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12')
                                         for file in files],
                             id='file_list',
                         ),
@@ -803,27 +857,27 @@ def init_dash(server):
                                 html.A(
                                     'HOME',
                                     href='/',
-                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
                                 ),
                                 html.A(
                                     'PROFILE',
                                     href='/profile',
-                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
                                 ),
                                 # html.A(
                                 #     'HISTORY',
                                 #     href='/history',
-                                #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-2xl'
                                 # ),
                                 html.A(
                                     'DASHBOARD',
                                     href='/dash',
-                                    className='font-medium text-xs text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl'
+                                    className='font-medium text-xs text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
                                 ),
                                 html.A(
                                     'LOGOUT',
                                     href='/logout',
-                                    className='inline-flex whitespace-nowrap rounded-full border-2 border-transparent bg-indigo-700 px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500'
+                                    className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500'
                                 )
                             ]
                         )
@@ -831,7 +885,8 @@ def init_dash(server):
                 ),
 
                 html.Div(
-                    className='md:mx-16 mx-4 pl-60',
+                    id='body',
+                    className='lg:mx-16 mx-4 lg:pl-60 mt-0',
                     children=[
                         html.Div(
                             id='upload-video',
@@ -864,17 +919,24 @@ def init_dash(server):
                                                     ' ⛳️',
                                                 ],
                                             ),
-                                            className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                            # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                            className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
                                             multiple=False,
                                             max_size=20e6,
                                             accept=['.mp4', '.mov', '.avi'],
-                                            className_active='bg-[rgba(230, 240, 250, 1)]',
-                                            className_reject='bg-indigo-600'
-                                            # style_active=(dict(
-                                            #     backgroundColor='rgba(230, 240, 250, 1)',
-                                            #     borderColor='rgba(115, 165, 250, 1)',
-                                            #     borderRadius='15px',
-                                            # )),
+                                            # className_active='bg-[rgba(230, 240, 250, 1)]',
+                                            # className_active='bg-blue-50 mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                            # className_reject='bg-indigo-600'
+                                            style_active=(dict(
+                                                backgroundColor='rgba(230, 240, 250, 1)',
+                                                borderColor='rgba(115, 165, 250, 1)',
+                                                borderRadius='12px',
+                                            )),
+                                            style_reject=(dict(
+                                                backgroundColor='bg-red-200',
+                                                borderColor='bg-red-400',
+                                                borderRadius='12px',
+                                            )),
                                             # className='upload'
                                         ),
                                         className='w-full'
@@ -882,7 +944,7 @@ def init_dash(server):
                                     )
                                 ],
                                     # className='container',
-                                    className='bg-white shadow rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96',
+                                    className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
                                 ),
                             ]),
 
@@ -897,7 +959,7 @@ def init_dash(server):
                                     figure=fig,
                                     config=config,
                                     # className='container'
-                                    className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                    className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                                 )
                             ),
                         ),
@@ -908,14 +970,14 @@ def init_dash(server):
                                 id='pelvis_rotation',
                                 figure=fig3,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex w-full'
+                                className='bg-white shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='pelvis_displacement',
                                 figure=fig4,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex w-full'
+                                className='bg-white shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -927,14 +989,14 @@ def init_dash(server):
                                 id='thorax_rotation',
                                 figure=fig5,
                                 config=config,
-                                className='bg-white shadow rounded-3xl'
+                                className='bg-white shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='thorax_displacement',
                                 figure=fig6,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex'
+                                className='bg-white shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -947,14 +1009,14 @@ def init_dash(server):
                                 figure=fig12,
                                 config=config,
                                 # className='container_half_left'
-                                className='bg-white shadow rounded-3xl'
+                                className='bg-white shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='h_rotation',
                                 figure=fig13,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex'
+                                className='bg-white shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
                                 # className='container_half_right'
                             ),
                         ],
@@ -966,7 +1028,7 @@ def init_dash(server):
                                 id='s_tilt',
                                 figure=fig11,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -975,7 +1037,7 @@ def init_dash(server):
                                 id='arm_length',
                                 figure=fig14,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -984,7 +1046,7 @@ def init_dash(server):
                                 id='spine_rotation',
                                 figure=fig15,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -993,16 +1055,17 @@ def init_dash(server):
                                 id='wrist_angle',
                                 figure=fig16,
                                 config=config,
-                                className='bg-white shadow rounded-3xl flex items-center justify-center mb-5'
+                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
+                        html.Script('assets/dash.js'),
                     ]
                 ),
 
                 # Footer
                 # html.Div(
                 #     html.Div(
-                #         className='bg-indigo-700 h-20 flex items-center flex-row justify-end gap-20 rounded-t-3xl',
+                #         className='bg-indigo-700 h-20 flex items-center flex-row justify-end gap-20 rounded-t-2xl',
                 #         children=[
                 #             html.Span(
                 #                 '© 2023 JL. All rights reserved.',
@@ -1056,9 +1119,9 @@ def init_callbacks(app):
     # def update_saved_button(n_clicks):
     #     if n_clicks is None:
     #         print(n_clicks)
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
     #     else:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
     #
     # @app.callback(
     #     Output({'type': 'saved-button', 'index': MATCH}, 'className'),
@@ -1066,9 +1129,9 @@ def init_callbacks(app):
     # )
     # def update_saved_button(n_clicks):
     #     if n_clicks is None:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
     #     else:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
 
 
     @app.callback(
@@ -1078,71 +1141,162 @@ def init_callbacks(app):
          Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
          Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children')],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
-         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks')],
+         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'), Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
         [State('file_list', 'children')],
         prevent_initial_call=True
     )
-    def process(contents, filename, n_clicks, children):
+    def process(contents, filename, n_clicks, clicks_delete, children):
+        # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
         # Check if button was pressed or a file was uploaded
         if ctx.triggered_id != 'upload-data':
-            button_id = ctx.triggered_id.index
-            file = f'{button_id}.parquet'
-            data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
-            duration = data['duration'][0]
-            data_values = data.values
-            save_pelvis_rotation = data_values[:, 0]
-            save_pelvis_tilt = data_values[:, 1]
-            save_pelvis_lift = data_values[:, 2]
-            save_pelvis_sway = data_values[:, 3]
-            save_pelvis_thrust = data_values[:, 4]
-            save_thorax_lift = data_values[:, 5]
-            save_thorax_bend = data_values[:, 6]
-            save_thorax_sway = data_values[:, 7]
-            save_thorax_rotation = data_values[:, 8]
-            save_thorax_thrust = data_values[:, 9]
-            save_thorax_tilt = data_values[:, 10]
-            save_spine_rotation = data_values[:, 11]
-            save_spine_tilt = data_values[:, 12]
-            save_head_rotation = data_values[:, 13]
-            save_head_tilt = data_values[:, 14]
-            save_left_arm_length = data_values[:, 15]
-            save_wrist_angle = data_values[:, 16]
-            save_wrist_tilt = data_values[:, 17]
+            if ctx.triggered_id != ctx.triggered_id.type != 'delete':
+                button_id = ctx.triggered_id.index
+                file = f'{button_id}.parquet'
+                data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
+                duration = data['duration'][0]
+                data_values = data.values
+                save_pelvis_rotation = data_values[:, 0]
+                save_pelvis_tilt = data_values[:, 1]
+                save_pelvis_lift = data_values[:, 2]
+                save_pelvis_sway = data_values[:, 3]
+                save_pelvis_thrust = data_values[:, 4]
+                save_thorax_lift = data_values[:, 5]
+                save_thorax_bend = data_values[:, 6]
+                save_thorax_sway = data_values[:, 7]
+                save_thorax_rotation = data_values[:, 8]
+                save_thorax_thrust = data_values[:, 9]
+                save_thorax_tilt = data_values[:, 10]
+                save_spine_rotation = data_values[:, 11]
+                save_spine_tilt = data_values[:, 12]
+                save_head_rotation = data_values[:, 13]
+                save_head_tilt = data_values[:, 14]
+                save_left_arm_length = data_values[:, 15]
+                save_wrist_angle = data_values[:, 16]
+                save_wrist_tilt = data_values[:, 17]
 
-            # Get the video and update the video player
-            vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
-            children_upload = upload_video(disabled, path=vid_src)
+                # Get the video and update the video player
+                vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
+                children_upload = upload_video(disabled, path=vid_src)
 
-            # Change the background color of the presed button and reset the previously pressed button
-            for child in children:
-                if child['props']['id']['index'] == button_id:
-                    child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
-                else:
-                    child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+                # Change the background color of the pressed button and reset the previously pressed button
+                for child in children:
+                    if child['props']['id']['index'] == button_id:
+                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                        child['props']['disabled'] = True
+                        # Enabling the delete button
+                        child['props']['children'][1]['props']['disabled'] = False
+                        child['props']['children'][1]['props']['className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center'
+                    else:
+                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                        child['props']['disabled'] = False
+                        # Disabling the delete button
+                        child['props']['children'][1]['props']['disabled'] = True
+                        child['props']['children'][1]['props']['className'] = 'invisible'
 
-            fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
-                                                                                                 save_pelvis_tilt,
-                                                                                                 save_pelvis_lift,
-                                                                                                 save_pelvis_sway,
-                                                                                                 save_pelvis_thrust,
-                                                                                                 save_thorax_lift,
-                                                                                                 save_thorax_bend,
-                                                                                                 save_thorax_sway,
-                                                                                                 save_thorax_rotation,
-                                                                                                 save_thorax_thrust,
-                                                                                                 save_thorax_tilt,
-                                                                                                 save_spine_rotation,
-                                                                                                 save_spine_tilt,
-                                                                                                 save_head_rotation,
-                                                                                                 save_head_tilt,
-                                                                                                 save_left_arm_length,
-                                                                                                 save_wrist_angle,
-                                                                                                 save_wrist_tilt,
-                                                                                                 duration)
+                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
+                                                                                                     save_pelvis_tilt,
+                                                                                                     save_pelvis_lift,
+                                                                                                     save_pelvis_sway,
+                                                                                                     save_pelvis_thrust,
+                                                                                                     save_thorax_lift,
+                                                                                                     save_thorax_bend,
+                                                                                                     save_thorax_sway,
+                                                                                                     save_thorax_rotation,
+                                                                                                     save_thorax_thrust,
+                                                                                                     save_thorax_tilt,
+                                                                                                     save_spine_rotation,
+                                                                                                     save_spine_tilt,
+                                                                                                     save_head_rotation,
+                                                                                                     save_head_tilt,
+                                                                                                     save_left_arm_length,
+                                                                                                     save_wrist_angle,
+                                                                                                     save_wrist_tilt,
+                                                                                                     duration)
 
-            return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+
+        # Delete was pressed
+        if ctx.triggered_id != 'upload-data':
+            if ctx.triggered_id.type == 'delete':
+                button_id = ctx.triggered_id.index
+                # file = f'{button_id}.parquet'
+                for child in children:
+                    if child['props']['id']['index'] == button_id:
+                        children.remove(child)
+                path = f'assets/save_data/{current_user.id}/{button_id}'
+                shutil.rmtree(path)
+
+                # Reset plots
+
+                save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                save_wrist_angle, save_wrist_tilt = rand(100, 18)
+
+                duration = 10
+
+                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                save_wrist_angle, save_wrist_tilt, duration, filt=False)
+
+                children_upload = [
+
+                    html.Div(children=[
+                        html.Div(
+                            children=[
+                                html.Span(
+                                    'Upload your video',
+                                    className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+                                ),
+                                html.Span(
+                                    'as mp4, mov or avi – max. 20 MB',
+                                    className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                                )
+                            ],
+                            className='flex flex-col items-start mx-10 mb-4'
+                        ),
+                        html.Div(
+                            dcc.Upload(
+                                disabled=disabled,
+                                id='upload-data',
+                                children=html.Div(
+                                    children=
+                                    [
+                                        'Drop your video here or ',
+                                        html.A(' browse'),
+                                        ' ⛳️',
+                                    ],
+                                ),
+                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                multiple=False,
+                                max_size=20e6,
+                                accept=['.mp4', '.mov', '.avi'],
+                                style_active=(dict(
+                                    backgroundColor='rgba(230, 240, 250, 1)',
+                                    borderColor='rgba(115, 165, 250, 1)',
+                                    borderRadius='12px',
+                                )),
+                                style_reject=(dict(
+                                    backgroundColor='bg-red-200',
+                                    borderColor='bg-red-400',
+                                    borderRadius='12px',
+                                )),
+                                # className='upload'
+                            ),
+                            className='w-full'
+                            # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                        )
+                    ],
+                        # className='container',
+                        className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                    ),
+                ]
+
+                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1196,13 +1350,27 @@ def init_callbacks(app):
 
         # Reset the background color of the buttons
         for child in children:
-            child['props']['className'] = 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center'
+            child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+            child['props']['disabled'] = False
+            # Disabling the delete button
+            child['props']['children'][1]['props']['disabled'] = True
+            child['props']['children'][1]['props']['className'] = 'invisible'
 
         # Add a new button for the new motion data
         new_item = html.Button(
-                                            children=[html.Img(src=app.get_asset_url('graph_amber.svg'), className='w-6 h-6 mr-2'), reformat_file(filename)],
+                                            disabled=True,
+                                            children=[
+                                                html.Div(
+                                                    className='flex flex-row items-center',
+                                                    children=[
+                                                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
+                                                        reformat_file(filename),
+                                                    ]),
+                                                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'), id={'type': 'delete', 'index': filename}, n_clicks=0, className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center', disabled=False
+                                                            ),
+                                                      ],
                                             id={'type': 'saved-button', 'index': f'{filename}'},
-                                            className='font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-3xl mb-2 mx-4 items-center')
+                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
@@ -1210,3 +1378,22 @@ def init_callbacks(app):
             db.session.commit()
 
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+
+
+    # Show navbar on click
+    @app.callback(
+        [Output('sidebar', 'className'), Output('menu-icon', 'src'), Output('navbar-top', 'className'), Output('body', 'className')],
+        [Input('menu-button', 'n_clicks'), Input('navbar-top', 'className'), Input('body', 'className')],
+        prevent_initial_call=True
+    )
+    def show_navbar(n_clicks, class_name, body_class):
+        if n_clicks % 2 == 0:
+            class_name = class_name.replace(' fixed', '')
+            class_name = class_name.replace(' top-0', '')
+            body_class = body_class.replace('mt-16', 'mt-0')
+            return ['flex flex-col bg-slate-600 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex','assets/menu_burger.svg', class_name, body_class]
+
+        else:
+            class_name = class_name + ' fixed top-0'
+            body_class = body_class.replace('mt-0', 'mt-16')
+            return ['flex flex-col bg-slate-600 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', 'assets/menu_burger_white.svg', class_name, body_class]

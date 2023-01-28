@@ -1,6 +1,15 @@
 {% extends "base2.html" %}
 
 {% block content %}
+<script>
+    bod = document.body
+    bod.className = "bg-gradient-to-br from-amber-50 to-violet-200 flex flex-col justify-between h-screen m-0 p-0 scroll-p-0"
+    // bod.style.backgroundColor = "rgba(250, 247, 245, 1)"
+    // bod.style.backgroundImage = "url(assets/wallpaper.jpeg)"
+    // bod.className = "bg-camel-100"
+</script>
+
+
 <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
   <div class="w-full max-w-md space-y-8">
     <div>
@@ -8,30 +17,30 @@
     </div>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
-            <div class="group relative flex w-full justify-center rounded-xl border border-transparent bg-red-100 py-2 px-4 text-sm font-medium text-red-700">
+            <div class="group relative flex w-full justify-center rounded-lg border border-transparent bg-red-100 py-2 px-4 text-sm font-medium text-red-700">
                 {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
             </div>
       {% endif %}
       {% endwith %}
     <form class="mt-8 space-y-6" method="POST" action="/signup">
       <input type="hidden" name="remember" value="true">
-      <div class="space-y-4 rounded-xl shadow-sm">
+      <div class="space-y-4 rounded-lg shadow-sm">
         <div>
           <label for="email-address" class="sr-only">Email address</label>
-          <input id="email-address" name="email" type="email" required class="relative block w-full appearance-none rounded-xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Email address">
+          <input id="email-address" name="email" type="email" required class="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Email address">
         </div>
         <div>
           <label for="name" class="sr-only">Name</label>
-          <input id="name" name="name" type="text" required class="relative block w-full appearance-none rounded-xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Name">
+          <input id="name" name="name" type="text" required class="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Name">
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" required class="relative block w-full appearance-none rounded-xl border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Password">
+          <input id="password" name="password" type="password" required class="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Password">
         </div>
       </div>
 
       <div>
-        <button type="submit" class="group relative flex w-full justify-center rounded-xl border border-transparent bg-indigo-600 py-2 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <button type="submit" class="group relative flex w-full justify-center rounded-lg border border-transparent bg-indigo-600 py-2 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
             <!-- Heroicon name: mini/lock-closed -->
             <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
