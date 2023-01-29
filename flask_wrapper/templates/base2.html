@@ -12,21 +12,61 @@
 
 <body style="background-color: rgba(246, 249, 255, 1)" class="flex flex-col justify-between h-screen m-0 p-0 scroll-p-0">
 
-        <div class="py-4 shadow bg-slate-600 mx-0 rounded-b-2xl z-20 w-full hidden md:block">
-          <div class="mx-4 md:mx-16">
-            <div class="flex items-center justify-between md:justify-start md:space-x-10">
+<!--        <div class="py-4 shadow bg-slate-600 mx-0 rounded-b-2xl z-20 w-full hidden md:block">-->
+<!--          <div class="mx-4 md:mx-16">-->
+<!--            <div class="flex items-center justify-between md:justify-start md:space-x-10">-->
+<!--                <nav class="space-x-10 justify-center flex flex-row">-->
+<!--                    {% if request.path == '/' %}-->
+<!--                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:text-amber-500 border-2 border-amber-400 hover:border-amber-500 items-center justify-center rounded-3xl px-4 py-2">HOME</a>-->
+<!--                    {% else %}-->
+<!--                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HOME</a>-->
+<!--                    {% endif %}-->
+
+<!--                    {% if current_user.is_authenticated %}-->
+<!--                    {% if request.path == '/profile' %}-->
+<!--                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>-->
+<!--                    {% else %}-->
+<!--                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>-->
+<!--                    {% endif %}-->
+
+<!--&lt;!&ndash;                    {% if request.path == '/history' %}&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a href="{{ url_for('main.history') }}" class="font-medium text-xs -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HISTORY</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                    {% else %}&ndash;&gt;-->
+<!--&lt;!&ndash;                    <a href="{{ url_for('main.history') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HISTORY</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                    {% endif %}&ndash;&gt;-->
+
+<!--                    <a href="{{ url_for('main.dashboard') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">DASHBOARD</a>-->
+<!--                    {% endif %}-->
+<!--              </nav>-->
+
+<!--              <div class="items-center justify-end flex flex-1">-->
+<!--                {% if not current_user.is_authenticated %}-->
+<!--                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-white hover:text-amber-500">SIGN IN</a>-->
+<!--                <a href="{{ url_for('auth.signup') }}" class="ml-8 mr-4 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">GET STARTED</a>-->
+<!--                {% endif %}-->
+<!--                {% if current_user.is_authenticated %}-->
+<!--                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">LOGOUT</a>-->
+<!--                {% endif %}-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="py-4 mx-0 rounded-b-2xl z-20 w-full hidden md:flex">
+          <div class="mx-4 md:mx-16 w-full justify-center">
+            <div class="flex items-center md:space-x-10 w-full justify-center">
                 <nav class="space-x-10 justify-center flex flex-row">
+                    {% if current_user.is_authenticated %}
                     {% if request.path == '/' %}
-                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:text-amber-500 border-2 border-amber-400 hover:border-amber-500 items-center justify-center rounded-3xl px-4 py-2">HOME</a>
+                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-500 hover:text-amber-400 border-2 border-amber-500 hover:border-amber-400 items-center justify-center rounded-3xl px-4 py-2 transition">HOME</a>
                     {% else %}
-                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HOME</a>
+                    <a href="{{ url_for('main.index') }}" class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition">HOME</a>
                     {% endif %}
 
-                    {% if current_user.is_authenticated %}
                     {% if request.path == '/profile' %}
-                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>
+                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs text-amber-500 hover:text-amber-400 border-2 border-amber-500 hover:border-amber-400 items-center justify-center rounded-3xl px-4 py-2 transition">PROFILE</a>
                     {% else %}
-                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">PROFILE</a>
+                    <a href="{{ url_for('main.profile') }}" class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition">PROFILE</a>
                     {% endif %}
 
 <!--                    {% if request.path == '/history' %}-->
@@ -35,24 +75,26 @@
 <!--                    <a href="{{ url_for('main.history') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">HISTORY</a>-->
 <!--                    {% endif %}-->
 
-                    <a href="{{ url_for('main.dashboard') }}" class="font-medium text-xs -ml-4 text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-3xl">DASHBOARD</a>
+                    <a href="{{ url_for('main.dashboard') }}" class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition">DASHBOARD</a>
                     {% endif %}
               </nav>
 
-              <div class="items-center justify-end flex flex-1">
+              <div class="items-center absolute right-14 top-4">
                 {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-white hover:text-amber-500">SIGN IN</a>
-                <a href="{{ url_for('auth.signup') }}" class="ml-8 mr-4 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">GET STARTED</a>
+                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-slate-600 hover:text-slate-400 transition">SIGN IN</a>
+                <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">GET STARTED</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500">LOGOUT</a>
+                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">LOGOUT</a>
                 {% endif %}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-row ml-2 mt-2 z-10 md:hidden">
+
+        <!--menu burger-->
+        <div class="flex flex-row ml-2 mt-2 z-40 md:hidden">
          <button type="button" class="inline-flex items-center justify-center p-2 text-gray-500 hover:text-gray-600" id="open_menu">
           <span class="sr-only">Open menu</span>
           <!-- Heroicon name: outline/x-mark -->
@@ -72,11 +114,11 @@
               From: "opacity-100 scale-100"
               To: "opacity-0 scale-95"
           -->
-          <div class="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden z-50">
-            <div class="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden" id="menubar">
+          <div class="absolute inset-x-0 top-0 origin-top-right transform p-2 transition md:hidden z-40">
+            <div class="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden transition" id="menubar">
               <div class="px-5 pt-5 pb-6">
                 <div class="flex items-center justify-end">
-                  <div class="-mr-2">
+                  <div class="-mr-2 -mt-2">
                     <button type="button" class="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" id="close_menu">
                       <span class="sr-only">Close menu</span>
                       <!-- Heroicon name: outline/x-mark -->
@@ -86,7 +128,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="mt-6">
+                <div class="mt-4">
                   <nav class="grid gap-y-8">
 
                     <a href="{{ url_for('main.index') }}" class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
@@ -100,12 +142,12 @@
                     <a href="{{ url_for('main.profile') }}" class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
                       <!-- Heroicon name: outline/squares-2x2 -->
                       <svg class="h-6 w-6 flex-shrink-0 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.39946 15.609C4.39946 12.5159 6.90691 10.0084 10 10.0084C13.0931 10.0084 15.6005 12.5159 15.6005 15.609C15.6005 18.7021 4.39946 18.7021 4.39946 15.609Z M7.56084 4.96403C7.56084 3.36636 8.65289 2.0712 10 2.0712C11.3471 2.0712 12.4392 3.36636 12.4392 4.96403C12.4392 6.56169 11.3471 7.85686 10 7.85686C8.65289 7.85686 7.56084 6.56169 7.56084 4.96403Z" />
                       </svg>
                       <span class="ml-3 text-sm font-medium text-gray-900">Profile</span>
                     </a>
 
-                                          <a href="{{ url_for('main.dashboard') }}" class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
+                      <a href="{{ url_for('main.dashboard') }}" class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50">
                       <!-- Heroicon name: outline/chart-bar -->
                       <svg class="h-6 w-6 flex-shrink-0 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
@@ -116,10 +158,8 @@
                   </nav>
                 </div>
               </div>
-              <div class="space-y-6 py-6 px-5">
+              <div class="space-y-6 py-5 px-5">
                 <div class="grid grid-cols-2 gap-y-4 gap-x-8">
-                  <a href="#" class="text-sm font-medium text-gray-900 hover:text-gray-700">Pricing</a>
-
                   <a href="#" class="text-sm font-medium text-gray-900 hover:text-gray-700">Privacy Policy</a>
 
                   <a href="#" class="text-sm font-medium text-gray-900 hover:text-gray-700">Contact</a>
