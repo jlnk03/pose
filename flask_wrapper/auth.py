@@ -10,12 +10,6 @@ import json
 auth = Blueprint('auth', __name__)
 
 
-json_mail = {"google_client_id":"590493054130-b63dsfr6e80blnnqdoqfbm4ub4f3ag71.apps.googleusercontent.com",
-                        "google_client_secret":"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",
-                        "google_refresh_token": "1//09XJYYStIB9RyCgYIARAAGAkSNwF-L9IrsQEE52ph9q-Ww3GTDBMVxZ1BiNdMXGYpUL2d8KwiMrPviJuncio_-syKwkTcI6u9WNw"
-}
-
-
 def send_email(email, subject, message):
     yag  = yagmail.SMTP('swing.analysis23@gmail.com', oauth2_file='email.json')
     body = render_template('mail_mail_verification.html', url=message)

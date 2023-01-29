@@ -8,6 +8,7 @@ ENV PYTHONUNBUFFERED True
 #COPY assets/style.css /app/assets/style.css
 COPY requirements.txt ./
 COPY flask_wrapper/*.py /flask_wrapper/
+COPY flask_wrapper/email.json /flask_wrapper/
 COPY flask_wrapper/templates/*.html /flask_wrapper/templates/
 COPY flask_wrapper/assets/background.png /flask_wrapper/assets/background.png
 COPY flask_wrapper/assets/output.css /flask_wrapper/assets/output.css
