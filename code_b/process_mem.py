@@ -60,8 +60,8 @@ def process_motion(contents, filename, location):
     frame = np.rot90(frame, k=rot_angle // 90)
     height, width, _ = frame.shape
 
-    # fourcc = cv2.VideoWriter_fourcc(*'avc1')
-    fourcc = -1
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    # fourcc = -1
     writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
 
     save_pelvis_rotation = deque([])
