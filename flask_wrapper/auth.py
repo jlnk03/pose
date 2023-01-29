@@ -6,8 +6,12 @@ from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
 import yagmail
 import json
+import os
 
 auth = Blueprint('auth', __name__)
+
+if 'flask_wrapper' not in os.getcwd():
+    os.chdir('flask_wrapper')
 
 
 def send_email(email, subject, message):

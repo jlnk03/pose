@@ -42,7 +42,7 @@ def dashboard():
 @main.route('/payment/<product>/<mode>')
 def payment(product, mode):
 
-    YOUR_DOMAIN = 'http://127.0.0.1:8080'
+    # YOUR_DOMAIN = 'http://127.0.0.1:8080'
     if mode == 'subscription':
         methods = ['card', 'sepa_debit']
     else:
@@ -69,8 +69,8 @@ def payment(product, mode):
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
-            success_url=YOUR_DOMAIN + f'/success/{product}' + '?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=YOUR_DOMAIN + '/cancel' + '?session_id={CHECKOUT_SESSION_ID}',
+            success_url=url_for('main.success') + f'/{product}' + '?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=url_for('main.cancel') + '?session_id={CHECKOUT_SESSION_ID}',
         )
 
         checkout_id = checkout_session.id
