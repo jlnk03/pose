@@ -26,3 +26,4 @@ webencodings
 Werkzeug
 yagmail
 av
+pyarrow
