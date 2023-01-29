@@ -828,9 +828,14 @@ def init_dash(server):
                     id='sidebar',
                     className='flex flex-col bg-slate-600 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
                     children=[
+                        html.Button(
+                            id='sidebar-header',
+                            className='flex-row items-center ml-4 hidden',
+                            children=[html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
+                        ),
                         html.Div(
                             'HISTORY',
-                            className='text-white text-xs font-medium mb-3 mt-12 lg:mt-5 px-4'
+                            className='text-white text-xs font-medium mb-3 mt-5 px-4'
                         ),
                         html.Div(
                             className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
@@ -847,7 +852,7 @@ def init_dash(server):
                                                             ),
                                                       ],
                                             id={'type': 'saved-button', 'index': f'{file}'},
-                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12')
+                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
                             id='file_list',
                         ),
@@ -857,12 +862,12 @@ def init_dash(server):
                                 html.A(
                                     'HOME',
                                     href='/',
-                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
+                                    className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                 ),
                                 html.A(
                                     'PROFILE',
                                     href='/profile',
-                                    className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
+                                    className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                 ),
                                 # html.A(
                                 #     'HISTORY',
@@ -872,12 +877,12 @@ def init_dash(server):
                                 html.A(
                                     'DASHBOARD',
                                     href='/dash',
-                                    className='font-medium text-xs text-amber-400 border-amber-400 hover:border-amber-500 border-2 hover:text-amber-500 items-center justify-center px-4 py-2 rounded-lg'
+                                    className='font-medium text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                 ),
                                 html.A(
                                     'LOGOUT',
                                     href='/logout',
-                                    className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-amber-500 hover:text-amber-500'
+                                    className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-gray-200 hover:text-gray-200 transition'
                                 )
                             ]
                         )
@@ -1183,13 +1188,13 @@ def init_callbacks(app):
                 # Change the background color of the pressed button and reset the previously pressed button
                 for child in children:
                     if child['props']['id']['index'] == button_id:
-                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = True
                         # Enabling the delete button
                         child['props']['children'][1]['props']['disabled'] = False
                         child['props']['children'][1]['props']['className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center'
                     else:
-                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = False
                         # Disabling the delete button
                         child['props']['children'][1]['props']['disabled'] = True
@@ -1370,7 +1375,7 @@ def init_callbacks(app):
                                                             ),
                                                       ],
                                             id={'type': 'saved-button', 'index': f'{filename}'},
-                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12')
+                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
@@ -1382,18 +1387,20 @@ def init_callbacks(app):
 
     # Show navbar on click
     @app.callback(
-        [Output('sidebar', 'className'), Output('menu-icon', 'src'), Output('navbar-top', 'className'), Output('body', 'className')],
-        [Input('menu-button', 'n_clicks'), Input('navbar-top', 'className'), Input('body', 'className')],
+        [Output('sidebar', 'className'), Output('sidebar-header', 'className')],
+        [Input('menu-button', 'n_clicks'), Input('body', 'className'), Input('sidebar-header', 'n_clicks')],
         prevent_initial_call=True
     )
-    def show_navbar(n_clicks, class_name, body_class):
-        if n_clicks % 2 == 0:
-            class_name = class_name.replace(' fixed', '')
-            class_name = class_name.replace(' top-0', '')
-            body_class = body_class.replace('mt-16', 'mt-0')
-            return ['flex flex-col bg-slate-600 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex','assets/menu_burger.svg', class_name, body_class]
+    def show_navbar(n_clicks, body_class, header_clicks):
+        if ctx.triggered_id != 'menu-button':
+            # class_name = class_name.replace(' fixed', '')
+            # class_name = class_name.replace(' top-0', '')
+            # body_class = body_class.replace('mt-16', 'mt-0')
+            body_class = body_class.replace('hidden', 'flex')
+            return ['flex flex-col bg-slate-600 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex', body_class]
 
         else:
-            class_name = class_name + ' fixed top-0'
-            body_class = body_class.replace('mt-0', 'mt-16')
-            return ['flex flex-col bg-slate-600 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', 'assets/menu_burger_white.svg', class_name, body_class]
+            # class_name = class_name + ' fixed top-0'
+            # body_class = body_class.replace('mt-0', 'mt-16')
+            body_class = body_class.replace('flex', 'hidden')
+            return ['flex flex-col bg-slate-600 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
