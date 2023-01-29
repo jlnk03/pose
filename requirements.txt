@@ -15,7 +15,7 @@ matplotlib
 mediapipe
 mkdocs-material-extensions
 msgpack
-opencv-python
+opencv-python=<4.6.0.66
 pandas
 protobuf<3.20
 scipy
@@ -25,6 +25,6 @@ tqdm
 webencodings
 Werkzeug
 yagmail
-av
+av==9.2.0
 pyarrow
-ffmpeg-python
+ffmpeg-python==0.2.0
