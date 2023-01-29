@@ -69,7 +69,7 @@ def payment(product, mode):
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
-            success_url=url_for('main.success', _external=True) + f'/{product}' + '?session_id={CHECKOUT_SESSION_ID}',
+            success_url=url_for('main.success', product=product+'?session_id={CHECKOUT_SESSION_ID}', _external=True),
             cancel_url=url_for('main.cancel', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
         )
 
