@@ -27,3 +27,4 @@ Werkzeug
 yagmail
 av
 pyarrow
+ffmpeg-python
