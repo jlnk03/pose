@@ -5,7 +5,7 @@ import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
-from dash import Dash, ctx, ALL, MATCH, Input, Output, State, html, dcc
+from dash import Dash, ctx, ALL, Input, Output, State, html, dcc
 import pandas as pd
 from scipy import signal
 from code_b.angles import *

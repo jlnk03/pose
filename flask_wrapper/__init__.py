@@ -57,7 +57,8 @@ def create_app():
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from flask_wrapper.app_flask import init_dash
+    # from flask_wrapper.app_flask import init_dash
+    from .app_flask import init_dash
     app = init_dash(app)
 
     app = protect_dashviews(app)

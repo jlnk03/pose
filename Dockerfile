@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED True
 #WORKDIR $APP_HOME
 #COPY app.py requirements.txt assets./
 #COPY assets/style.css /app/assets/style.css
-COPY requirements.txt ./
+COPY flask_wrapper/requirements.txt ./
 COPY flask_wrapper/*.py /flask_wrapper/
 COPY flask_wrapper/email.json /flask_wrapper/email.json
 COPY flask_wrapper/templates/*.html /flask_wrapper/templates/
@@ -14,8 +14,8 @@ COPY flask_wrapper/assets/background.png /flask_wrapper/assets/background.png
 COPY flask_wrapper/assets/output.css /flask_wrapper/assets/output.css
 COPY flask_wrapper/assets/*.svg /flask_wrapper/assets/
 COPY flask_wrapper/assets/*.js /flask_wrapper/assets/
-COPY code_b/angles.py /code_b/angles.py
-COPY code_b/process_mem.py /code_b/process_mem.py
+COPY flask_wrapper/code_b/angles.py /code_b/angles.py
+COPY flask_wrapper/code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y

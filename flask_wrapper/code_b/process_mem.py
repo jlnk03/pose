@@ -4,12 +4,9 @@ import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
-import numpy as np
 
-from code_b.angles import *
+from .angles import *
 # import memory_profiler
-import tempfile
-import os
 
 
 mp_drawing = mp.solutions.drawing_utils

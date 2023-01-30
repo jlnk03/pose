@@ -159,3 +159,8 @@ def history_saved(file):
     fig_json = pio.to_json(fig)
 
     return render_template('saved_plot.html', fig_json=fig_json)
+
+
+@main.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
