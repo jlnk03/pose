@@ -12,7 +12,7 @@ from code_b.angles import *
 from code_b.process_mem import process_motion
 import os
 from flask_login import current_user
-from . import db
+from __init__ import db
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils

@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from . import db
+from flask_wrapper import db
 
 
 class Transactions(db.Model):

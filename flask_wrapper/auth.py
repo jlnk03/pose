@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
-from . import db
+from models import User
+from flask_wrapper import db
 from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
 import yagmail
-import json
 import os
 
 auth = Blueprint('auth', __name__)
@@ -87,6 +86,7 @@ def signup_post():
 
     return redirect(url_for('auth.send_mail'))
 
+
 @auth.route('/logout')
 @login_required
 def logout():
@@ -105,7 +105,7 @@ def send_mail():
     subject = 'Confirm your email'
     confirm_url = url_for('auth.verify_mail', token=token, _external=True)
 
-    send_email(email, subject, (confirm_url))
+    send_email(email, subject, confirm_url)
 
     return redirect(url_for('auth.verify'))
 
