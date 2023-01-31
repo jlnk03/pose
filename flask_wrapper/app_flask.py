@@ -785,7 +785,7 @@ def init_dash(server):
     # server = app.server
     app.app_context = server.app_context
 
-    app.title = 'Swing Analysis'
+    app.title = 'swinglab'
 
     def serve_layout():
         disabled = True
