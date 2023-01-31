@@ -1,6 +1,6 @@
 from flask_login import UserMixin
+# from flask_wrapper import db
 from flask_wrapper import db
-
 
 class Transactions(db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
