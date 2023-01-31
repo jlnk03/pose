@@ -2,9 +2,9 @@ import flask
 import numpy as np
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
-from __init__ import db
+from . import db
 import stripe
-from models import User, Transactions
+from .models import User, Transactions
 import datetime
 import os
 import pandas as pd

@@ -1,4 +1,4 @@
-# from flask_wrapper import create_app
+# import flask_wrapper as wrapper
 from flask_wrapper import create_app
 from flask_login import login_required
 from flask import render_template

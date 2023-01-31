@@ -17,6 +17,9 @@ COPY ./code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
+
+RUN pip install --upgrade pip
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY /assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.9/site-packages/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite

@@ -1,6 +1,5 @@
 import datetime
 import shutil
-
 import mediapipe as mp
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -12,7 +11,7 @@ from code_b.angles import *
 from code_b.process_mem import process_motion
 import os
 from flask_login import current_user
-from __init__ import db
+from . import db
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
