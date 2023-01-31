@@ -5,8 +5,8 @@ services:
     container_name: flask_wrapper
     restart: always
     build: ./flask_wrapper
-    ports:
-      - "8080:8080"
+#    ports:
+#      - "8080:8080"
 #    command: gunicorn -w 3 -b 0.0.0.0:8080 --timeout 0 wsgi:app
 
   nginx:
