@@ -33,7 +33,7 @@ def test():
 @auth.route('/login')
 def login():
     logout_user()
-    return render_template('login.html')
+    return render_template('login.html', title='Login – swinglab')
 
 @auth.route('/login', methods=['POST'])
 def login_post():
@@ -56,7 +56,7 @@ def login_post():
 
 @auth.route('/signup')
 def signup():
-    return render_template('signup.html')
+    return render_template('signup.html', title='Get started – swinglab')
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
@@ -112,7 +112,7 @@ def send_mail():
 
 @auth.route('/verify_mail')
 def verify():
-    return render_template('verify_mail.html')
+    return render_template('verify_mail.html', title='Verify your email-address – swinglab')
 
 
 @auth.route('/verify/<token>')
@@ -150,7 +150,7 @@ def verify_mail_update(token):
 
 @auth.route('/reset_password')
 def reset_password():
-    return render_template('reset_password.html')
+    return render_template('reset_password.html', title='Reset Password – swinglab')
 
 
 @auth.route('/reset_password', methods=['POST'])
@@ -178,7 +178,6 @@ def reset_password_post():
         return redirect(url_for('auth.reset_password'))
 
 
-
 @auth.route('/reset_password_mail/<token>')
 def reset_password_mail(token):
     ts = URLSafeTimedSerializer('key')
@@ -187,7 +186,7 @@ def reset_password_mail(token):
     except:
         abort(404)
 
-    return render_template('new_password.html', token=token)
+    return render_template('new_password.html', token=token, title='New Password – swinglab')
 
 
 @auth.route('/reset_password_mail/<token>', methods=['POST'])
@@ -207,6 +206,7 @@ def reset_password_mail_post(token):
     # print('You have reset your password.')
 
     return redirect(url_for('auth.login'))
+
 
 @auth.route('/update_profile', methods=['POST'])
 @login_required

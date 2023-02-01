@@ -23,7 +23,7 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name, email=current_user.email)
+    return render_template('profile.html', name=current_user.name, email=current_user.email, title='Profile – swinglab')
 
 
 @main.route('/dash')
@@ -118,7 +118,7 @@ def success(product):
     session.booked = True
     db.session.commit()
 
-    return render_template('success.html')
+    return render_template('success.html', title='Thank you for your purchase – swinglab')
 
 
 @main.route('/cancel', methods=['GET'])
@@ -163,4 +163,4 @@ def history_saved(file):
 
 @main.route('/privacy')
 def privacy():
-    return render_template('privacy.html')
+    return render_template('privacy.html', title='Privacy Policy – swinglab')

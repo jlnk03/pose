@@ -785,7 +785,7 @@ def init_dash(server):
     # server = app.server
     app.app_context = server.app_context
 
-    app.title = 'Analyze your swing'
+    app.title = 'Analyze your swing – swinglab'
 
     def serve_layout():
         disabled = True
