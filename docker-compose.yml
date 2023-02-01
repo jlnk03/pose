@@ -6,8 +6,8 @@ services:
     restart: always
     build: ./flask_wrapper
     volumes:
-      - ./db:/storage/db
-      - ./flask_wrapper/assets/save_data:/storage/save_data
+      - ./storage/db:/db
+      - ./storage/save_data:/flask_wrapper/assets/save_data
 
   nginx:
     image: nginx:1.15-alpine
