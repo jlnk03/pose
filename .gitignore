@@ -7,7 +7,7 @@
 /process_thread.py
 /flask_wrapper/google_refresh_token.py
 /flask_wrapper/email.json
-/db.sqlite
+/db/db.sqlite
 /flask_wrapper/templates/input.css
 /flask_wrapper/templates/tailwind.config.js
 /flask_wrapper/assets/output.css

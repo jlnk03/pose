@@ -31,7 +31,7 @@ def create_app():
     app.title = 'swinglab'
 
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db/db.sqlite'
 
     db.init_app(app)
 

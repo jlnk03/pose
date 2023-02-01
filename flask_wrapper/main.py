@@ -1,6 +1,6 @@
 import flask
 import numpy as np
-from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_required, current_user
 from . import db
 import stripe
@@ -10,6 +10,7 @@ import os
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
+from wsgi import app
 
 stripe.api_key = 'sk_test_51MOtJiGVoQxCE2O4tyBqLDo3P64ohVzHBnecrrvnJbvPMjIOc0wSklIuOBqWKpaw4HFCUlL57X1Nuwm8KbuRjgMB00Ijxr6CKq'
 
@@ -164,3 +165,8 @@ def history_saved(file):
 @main.route('/privacy')
 def privacy():
     return render_template('privacy.html')
+
+
+@main.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
