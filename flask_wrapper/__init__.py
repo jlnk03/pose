@@ -28,7 +28,7 @@ def protect_dashviews(dashapp):
 
 def create_app():
     app = Flask(__name__, static_folder='assets')
-    app.title = 'SwingAnalysis'
+    app.title = 'swinglab'
 
     app.config['SECRET_KEY'] = 'secret-key-goes-here'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../db.sqlite'
