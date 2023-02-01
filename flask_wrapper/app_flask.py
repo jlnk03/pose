@@ -778,14 +778,14 @@ def render_files(files):
 def init_dash(server):
     # Initialize the app
     app = Dash(__name__, server=server, url_base_pathname='/dashapp/',
-               external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
+               # external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
                )
-    # app.css.config.serve_locally = False
-    # app.css.append_css({'external_url': './assets/output.css'})
+    app.css.config.serve_locally = False
+    app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
 
-    app.title = 'swinglab'
+    app.title = 'Analyze your swing'
 
     def serve_layout():
         disabled = True
@@ -1109,7 +1109,7 @@ def create_folder(name):
 
 
 def reformat_file(filename):
-    print(filename)
+    # print(filename)
     timestamp = datetime.datetime.strptime(filename, '%Y-%m-%d_%H-%M-%S')
     return timestamp.strftime('%d.%m.%Y, %H:%M')
 

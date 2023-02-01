@@ -10,6 +10,5 @@
 /db/db.sqlite
 /flask_wrapper/templates/input.css
 /flask_wrapper/templates/tailwind.config.js
-/flask_wrapper/assets/output.css
 /flask_wrapper/assets/save_data/
 /flask_wrapper/db.sqlite
