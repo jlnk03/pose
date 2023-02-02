@@ -9,6 +9,7 @@ import os
 
 auth = Blueprint('auth', __name__)
 
+# change directory to access files correctly
 if 'flask_wrapper' not in os.getcwd():
     os.chdir('flask_wrapper')
 
