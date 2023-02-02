@@ -10,6 +10,7 @@ COPY ./email.json /flask_wrapper/email.json
 COPY ./templates/*.html /flask_wrapper/templates/
 COPY ./assets/background.png /flask_wrapper/assets/background.png
 COPY ./assets/output.css /flask_wrapper/assets/output.css
+COPY ./assets/robots.txt /flask_wrapper/assets/robots.txt
 COPY ./assets/*.svg /flask_wrapper/assets/
 COPY ./assets/*.js /flask_wrapper/assets/
 COPY ./code_b/angles.py /code_b/angles.py
