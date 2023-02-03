@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
+from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from flask_wrapper import db
@@ -6,6 +6,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
 import yagmail
 import os
+import stripe
 
 auth = Blueprint('auth', __name__)
 
@@ -73,7 +74,7 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), active=False, n_analyses=2)
+    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), active=False, n_analyses=2, unlimited=False, admin=False)
 
     # add the new user to the database
     db.session.add(new_user)
@@ -273,3 +274,36 @@ def delete_profile_final():
     db.session.commit()
     logout_user()
     return redirect(url_for('main.index'))
+
+
+@auth.route('/console')
+@login_required
+def console():
+    if not current_user.admin:
+        abort(403)
+
+    users = User.query
+    return render_template('console.html', users=users)
+
+
+@auth.route('/webhook', methods=['POST'])
+def webhook():
+    event = None
+    payload = request.data
+    sig_header = request.headers['STRIPE_SIGNATURE']
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        raise e
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        raise e
+
+    # Handle the event
+    print('Handled event type {}'.format(event['type']))
+
+    return jsonify(success=True)

@@ -4,8 +4,8 @@ import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
-
 from .angles import *
+from PIL import ImageFont, ImageDraw, Image
 # import memory_profiler
 
 
@@ -91,6 +91,7 @@ def process_motion(contents, filename, location):
         for i, image in enumerate(frames):
 
             image = np.rot90(image, k=rot_angle // 90)
+            image = np.ascontiguousarray(image)
 
             # Make detection
             results = pose.process(image)
@@ -191,9 +192,30 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                # cv2.putText(image, f'Pelvis rotation: {int(pelvis_r)}', (100, 100), cv2.FONT_HERSHEY_SIMPLEX,
-                #             1.4, (255, 255, 255),
-                #             2, cv2.LINE_AA)
+                # image =
+                # draw = ImageDraw.Draw(image)
+
+                draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
+                # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
+                cv2.putText(image, f'Head', (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Rotation: {int(head_r)}', (80, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Tilt: {int(head_t)}', (80, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+
+                # Thorax
+                draw_rounded_rectangle(image, (60, 280), (430, 490), (255, 255, 255), 30)
+                # cv2.rectangle(image, (80, 280), (450, 490), (255, 255, 255), -1)
+                cv2.putText(image, f'Thorax', (80, 330), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Rotation: {int(thorax_r)}', (80, 390), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Tilt: {int(thorax_t)}', (80, 430), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Bend: {int(thorax_b)}', (80, 470), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+
+                # Head
+                draw_rounded_rectangle(image, (60, 510), (430, 680), (255, 255, 255), 30)
+                # cv2.rectangle(image, (80, 510), (450, 680), (255, 255, 255), -1)
+                cv2.putText(image, f'Pelvis', (80, 560), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Rotation: {int(pelvis_r)}', (80, 620), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                cv2.putText(image, f'Tilt: {int(pelvis_t)}', (80, 660), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+
                 # cv2.putText(image, f'Thorax tilt: {int(thorax_t)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX,
                 #             1.4,
                 #             (255, 255, 255), 2, cv2.LINE_AA)
@@ -245,3 +267,15 @@ def process_motion(contents, filename, location):
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration
+
+
+def draw_rounded_rectangle(img, pt1, pt2, color, radius):
+    x1, y1 = pt1
+    x2, y2 = pt2
+    thickness = -1
+    cv2.rectangle(img, (x1 + radius, y1), (x2 - radius, y2), color, thickness)
+    cv2.rectangle(img, (x1, y1 + radius), (x2, y2 - radius), color, thickness)
+    cv2.circle(img, (x1 + radius, y1 + radius), radius, color, thickness)
+    cv2.circle(img, (x2 - radius, y1 + radius), radius, color, thickness)
+    cv2.circle(img, (x1 + radius, y2 - radius), radius, color, thickness)
+    cv2.circle(img, (x2 - radius, y2 - radius), radius, color, thickness)

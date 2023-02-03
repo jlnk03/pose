@@ -12,3 +12,6 @@
 /flask_wrapper/templates/tailwind.config.js
 /flask_wrapper/assets/save_data/
 /flask_wrapper/db.sqlite
+/flask_wrapper/assets/package-lock.json
+/flask_wrapper/assets/package.json
+/flask_wrapper/assets/node_modules/
