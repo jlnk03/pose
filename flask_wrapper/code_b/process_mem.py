@@ -68,7 +68,7 @@ def process_motion(contents, filename, location):
     height, width, _ = frame.shape
     width += 450
 
-    fourcc = cv2.VideoWriter_fourcc(*'h264')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     # fourcc = -1
     writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
 
