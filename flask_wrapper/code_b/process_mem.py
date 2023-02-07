@@ -14,6 +14,16 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
 
+# Add padding to image
+def add_padding(img, padding_size, padding_color=(0, 0, 0)):
+    print(img.shape)
+    height, width, _ = img.shape
+    padding = np.full((height, width + padding_size, 3), padding_color, dtype=np.uint8)
+    padding[:, padding_size:width + padding_size, :] = img
+    print(padding.shape)
+    return padding
+
+
 # @memory_profiler.profile
 def process_motion(contents, filename, location):
     # print("Processing video: " + filename)
@@ -56,8 +66,9 @@ def process_motion(contents, filename, location):
     frame = next(frames)
     frame = np.rot90(frame, k=rot_angle // 90)
     height, width, _ = frame.shape
+    width += 450
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'h264')
     # fourcc = -1
     writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
 
@@ -192,8 +203,17 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                # image =
-                # draw = ImageDraw.Draw(image)
+                # Render detections
+
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.pose_landmarks,
+                    mp_pose.POSE_CONNECTIONS,
+                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+                )
+
+
+                image = add_padding(image, 450, (0, 0, 0))
 
                 draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
                 # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
@@ -236,15 +256,6 @@ def process_motion(contents, filename, location):
             # Recolor back to BGR
             # image.flags.writeable = True
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-            # Render detections
-
-            mp_drawing.draw_landmarks(
-                image,
-                results.pose_landmarks,
-                mp_pose.POSE_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-            )
 
             # mp_drawing.draw_landmarks(
             #     image,

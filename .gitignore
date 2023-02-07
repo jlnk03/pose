@@ -15,3 +15,8 @@
 /flask_wrapper/assets/package-lock.json
 /flask_wrapper/assets/package.json
 /flask_wrapper/assets/node_modules/
+/flask_wrapper/templates/3D.html
+/instance/
+/node/
+/node/detection.html
+/node/detection.js

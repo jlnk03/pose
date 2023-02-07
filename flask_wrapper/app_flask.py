@@ -103,59 +103,71 @@ def plot_landmarks(
     return fig
 
 
+# Return the video view
 def upload_video(disabled=True, path=None):
     layout = [
-        html.Div(children=[
-            html.Div(
-                children=[
-                    html.Span(
-                        'Upload your video',
-                        className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+        html.Div(
+            id='video-view',
+            className='flex flex-col sm:flex-row w-full h-full',
+            children=[
+                html.Div(children=[
+                    html.Div(
+                        children=[
+                            html.Span(
+                                'Upload your video',
+                                className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                            ),
+                            html.Span(
+                                'as mp4, mov or avi – max. 20 MB',
+                                className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                            )
+                        ],
+                        className='flex flex-col items-start mx-10 mb-4'
                     ),
-                    html.Span(
-                        'as mp4, mov or avi – max. 20 MB',
-                        className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                    html.Div(
+                        dcc.Upload(
+                            disabled=disabled,
+                            id='upload-data',
+                            children=html.Div(
+                                className='text-slate-900 dark:text-gray-100',
+                                children=
+                                [
+                                    'Drop your video here or ',
+                                    html.A(' browse'),
+                                    ' ⛳️',
+                                ],
+                            ),
+                            className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                            multiple=False,
+                            max_size=50e6,
+                            accept=['.mp4', '.mov', '.avi'],
+                            style_active=(dict(
+                                backgroundColor='rgba(230, 240, 250, 1)',
+                                borderColor='rgba(115, 165, 250, 1)',
+                                borderRadius='12px',
+                            )),
+                            style_reject=(dict(
+                                backgroundColor='bg-red-200',
+                                borderColor='bg-red-400',
+                                borderRadius='12px',
+                            )),
+                        ),
+                        className='w-full'
+                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                     )
                 ],
-                className='flex flex-col items-start mx-10 mb-4'
-            ),
-            html.Div(
-                dcc.Upload(
-                    disabled=disabled,
-                    id='upload-data',
-                    children=html.Div(
-                        children=
-                        [
-                            'Drop your video here or ',
-                            html.A(' browse'),
-                            ' ⛳️',
-                        ],
-                    ),
-                    className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                    multiple=False,
-                    max_size=50e6,
-                    accept=['.mp4', '.mov', '.avi'],
-                    style_active=(dict(
-                        backgroundColor='rgba(230, 240, 250, 1)',
-                        borderColor='rgba(115, 165, 250, 1)',
-                        borderRadius='12px',
-                    )),
-                    style_reject=(dict(
-                        backgroundColor='bg-red-200',
-                        borderColor='bg-red-400',
-                        borderRadius='12px',
-                    )),
+                    # className='container',
+                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100',
                 ),
-                className='w-full'
-                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-            )
-        ],
-            # className='container',
-            className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100',
-        ),
 
-        html.Video(src=path, id='video', controls=True,
-                   className='h-96 rounded-2xl shadow'),
+                html.Div(
+                    className="sm:hidden relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100",
+                    children=[
+                        html.Video(src=path, id='video', controls=True, className="h-full w-full object-cover"),
+                    ]
+                ),
+                html.Video(src=path, id='video', controls=True, className="h-96 rounded-2xl mb-5 sm:block hidden"),
+        ])
     ]
 
     return layout
@@ -220,17 +232,21 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig.update_layout(
-        title='Kinematic Sequence',
+        title='Kinematic Sequence/Angular velocity',
         title_x=0.5,
         font_size=12,
         yaxis_title="Angular velocity in °/s",
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        xaxis_ticksuffix="s",
+        yaxis_ticksuffix="°/s",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -249,14 +265,17 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title='Pelvis angles',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # yaxis_title='angle in °',
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
-        legend=dict(y=1, yanchor="bottom"),
+        # legend=dict(y=1, yanchor="bottom"),
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -280,13 +299,16 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='Displacement in m',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -310,13 +332,16 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -340,13 +365,16 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='Displacement in m',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         legend_orientation="h",
         legend=dict(y=1, yanchor="bottom"),
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -362,11 +390,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -382,11 +413,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -402,11 +436,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -422,11 +459,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='length in m',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -442,11 +482,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -466,11 +509,14 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
-        xaxis_title="time in s",
+        # xaxis_title="time in s",
+        yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         margin=dict(
-            l=100
+            l=10,
+            r=10,
+            pad=5
         ),
         modebar=dict(
             bgcolor='rgba(0,0,0,0)',
@@ -495,18 +541,20 @@ fig.add_trace(
 )
 
 fig.update_layout(
-    title=' Kinematic Sequence',
+    title=' Kinematic Sequence/Angular velocity',
     title_x=0.5,
     font_size=12,
     yaxis_title="Angular velocity in °/s",
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°/s",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -526,14 +574,16 @@ fig3.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -557,14 +607,16 @@ fig4.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='Displacement in m',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -588,14 +640,16 @@ fig5.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -619,14 +673,16 @@ fig6.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='Displacement in m',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
     legend=dict(y=1, yanchor="bottom"),
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -642,12 +698,14 @@ fig11.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -663,12 +721,14 @@ fig12.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -684,12 +744,14 @@ fig13.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -705,12 +767,14 @@ fig14.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='length in m',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -726,12 +790,14 @@ fig15.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -751,12 +817,14 @@ fig16.update_layout(
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
-    xaxis_title="time in s",
+    # xaxis_title="time in s",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     margin=dict(
-        l=80,
-        r=50,
+        l=10,
+        r=10,
+        pad=5
     ),
     modebar=dict(
         bgcolor='rgba(0,0,0,0)',
@@ -825,7 +893,7 @@ def init_dash(server):
                 # Sidebar
                 html.Div(
                     id='sidebar',
-                    className='flex flex-col bg-slate-600 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
+                    className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
                     children=[
                         html.Button(
                             id='sidebar-header',
@@ -902,11 +970,11 @@ def init_dash(server):
                                         children=[
                                             html.Span(
                                                 'Upload your video',
-                                                className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+                                                className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
                                             ),
                                             html.Span(
                                                 'as mp4, mov or avi – max. 20 MB',
-                                                className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                                                className='text-sm font-medium text-slate-900 dark:text-gray-100'
                                             )
                                         ],
                                         className='flex flex-col items-start mx-10 mb-4'
@@ -916,6 +984,7 @@ def init_dash(server):
                                             disabled=disabled,
                                             id='upload-data',
                                             children=html.Div(
+                                                className='text-slate-900 dark:text-gray-100',
                                                 children=
                                                 [
                                                     'Drop your video here or ',
@@ -948,7 +1017,7 @@ def init_dash(server):
                                     )
                                 ],
                                     # className='container',
-                                    className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
                                 ),
                             ]),
 
@@ -963,7 +1032,7 @@ def init_dash(server):
                                     figure=fig,
                                     config=config,
                                     # className='container'
-                                    className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                                 )
                             ),
                         ),
@@ -974,14 +1043,14 @@ def init_dash(server):
                                 id='pelvis_rotation',
                                 figure=fig3,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='pelvis_displacement',
                                 figure=fig4,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -993,14 +1062,14 @@ def init_dash(server):
                                 id='thorax_rotation',
                                 figure=fig5,
                                 config=config,
-                                className='bg-white shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='thorax_displacement',
                                 figure=fig6,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -1013,14 +1082,14 @@ def init_dash(server):
                                 figure=fig12,
                                 config=config,
                                 # className='container_half_left'
-                                className='bg-white shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
                             ),
 
                             dcc.Graph(
                                 id='h_rotation',
                                 figure=fig13,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
                                 # className='container_half_right'
                             ),
                         ],
@@ -1032,7 +1101,7 @@ def init_dash(server):
                                 id='s_tilt',
                                 figure=fig11,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -1041,7 +1110,7 @@ def init_dash(server):
                                 id='arm_length',
                                 figure=fig14,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -1050,7 +1119,7 @@ def init_dash(server):
                                 id='spine_rotation',
                                 figure=fig15,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
 
@@ -1059,9 +1128,10 @@ def init_dash(server):
                                 id='wrist_angle',
                                 figure=fig16,
                                 config=config,
-                                className='bg-white shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
                             )
                         ),
+
                         html.Script('assets/dash.js'),
                     ]
                 ),
@@ -1253,11 +1323,11 @@ def init_callbacks(app):
                             children=[
                                 html.Span(
                                     'Upload your video',
-                                    className='text-lg font-medium text-[#3A4963FF] hover:text-gray-900 pt-4'
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
                                 ),
                                 html.Span(
                                     'as mp4, mov or avi – max. 20 MB',
-                                    className='text-sm font-medium text-[#3A4963FF] hover:text-gray-900'
+                                    className='text-sm font-medium text-slate-900 dark:text-gray-100'
                                 )
                             ],
                             className='flex flex-col items-start mx-10 mb-4'
@@ -1267,6 +1337,7 @@ def init_callbacks(app):
                                 disabled=disabled,
                                 id='upload-data',
                                 children=html.Div(
+                                    className='text-slate-900 dark:text-gray-100',
                                     children=
                                     [
                                         'Drop your video here or ',
@@ -1296,7 +1367,7 @@ def init_callbacks(app):
                         )
                     ],
                         # className='container',
-                        className='bg-white shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                        className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
                     ),
                 ]
 
@@ -1403,3 +1474,4 @@ def init_callbacks(app):
             # body_class = body_class.replace('mt-0', 'mt-16')
             body_class = body_class.replace('flex', 'hidden')
             return ['flex flex-col bg-slate-600 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
+

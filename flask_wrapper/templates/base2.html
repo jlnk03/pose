@@ -12,12 +12,14 @@
     <title>swinglab</title>
     {% endif %}
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
 <!--    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">-->
-<!--    <link rel="stylesheet" href="../assets/output.css">-->
+    <link rel="stylesheet" href="../assets/output.css">
 </head>
 
-<body style="background-color: rgba(246, 249, 255, 1)" class="flex flex-col justify-between h-screen m-0 p-0 scroll-p-0">
+<!--background-color: rgba(246, 249, 255, 1)-->
+
+<body class="bg-[#FAF7F5] dark:bg-slate-600 flex flex-col justify-between h-screen m-0 p-0 scroll-p-0">
 
 <!--        <div class="py-4 shadow bg-slate-600 mx-0 rounded-b-2xl z-20 w-full hidden md:block">-->
 <!--          <div class="mx-4 md:mx-16">-->
@@ -92,7 +94,7 @@
                 <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">GET STARTED</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">LOGOUT</a>
+                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 dark:border-gray-100 px-4 py-2 text-xs font-medium text-slate-600 dark:text-gray-100 hover:border-slate-400 hover:text-slate-400 transition">LOGOUT</a>
                 {% endif %}
               </div>
             </div>
