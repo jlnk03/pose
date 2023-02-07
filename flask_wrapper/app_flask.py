@@ -157,11 +157,11 @@ def upload_video(disabled=True, path=None):
                     )
                 ],
                     # className='container',
-                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                 ),
 
                 html.Div(
-                    className="sm:hidden relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100",
+                    className="sm:hidden relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
                         html.Video(src=path, id='video', controls=True, className="h-full w-full object-cover"),
                     ]
@@ -1017,7 +1017,7 @@ def init_dash(server):
                                     )
                                 ],
                                     # className='container',
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                 ),
                             ]),
 
@@ -1032,7 +1032,7 @@ def init_dash(server):
                                     figure=fig,
                                     config=config,
                                     # className='container'
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                                 )
                             ),
                         ),
@@ -1043,14 +1043,14 @@ def init_dash(server):
                                 id='pelvis_rotation',
                                 figure=fig3,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             ),
 
                             dcc.Graph(
                                 id='pelvis_displacement',
                                 figure=fig4,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -1062,14 +1062,14 @@ def init_dash(server):
                                 id='thorax_rotation',
                                 figure=fig5,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             ),
 
                             dcc.Graph(
                                 id='thorax_displacement',
                                 figure=fig6,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -1082,14 +1082,14 @@ def init_dash(server):
                                 figure=fig12,
                                 config=config,
                                 # className='container_half_left'
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             ),
 
                             dcc.Graph(
                                 id='h_rotation',
                                 figure=fig13,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                                 # className='container_half_right'
                             ),
                         ],
@@ -1101,7 +1101,7 @@ def init_dash(server):
                                 id='s_tilt',
                                 figure=fig11,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             )
                         ),
 
@@ -1110,7 +1110,7 @@ def init_dash(server):
                                 id='arm_length',
                                 figure=fig14,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             )
                         ),
 
@@ -1119,7 +1119,7 @@ def init_dash(server):
                                 id='spine_rotation',
                                 figure=fig15,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             )
                         ),
 
@@ -1128,7 +1128,7 @@ def init_dash(server):
                                 id='wrist_angle',
                                 figure=fig16,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
                             )
                         ),
 
@@ -1367,7 +1367,7 @@ def init_callbacks(app):
                         )
                     ],
                         # className='container',
-                        className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100',
+                        className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                     ),
                 ]
 
