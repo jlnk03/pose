@@ -163,10 +163,10 @@ def upload_video(disabled=True, path=None):
                 html.Div(
                     className="sm:hidden relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
-                        html.Video(src=path, id='video', controls=True, className="h-full w-full object-cover"),
+                        html.Video(src=f'{path}#t=0.001', id='video', controls=True, className="h-full w-full object-cover"),
                     ]
                 ),
-                html.Video(src=path, id='video', controls=True, className="h-96 rounded-2xl mb-5 sm:block hidden"),
+                html.Video(src=f'{path}#t=0.001', id='video', controls=True, className="h-96 rounded-2xl mb-5 sm:block hidden"),
         ])
     ]
 
@@ -641,7 +641,7 @@ fig5.update_layout(
     font_size=12,
     yaxis_title='angle in °',
     # xaxis_title="time in s",
-    yaxis_ticksuffix="",
+    yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     legend_orientation="h",
@@ -1025,6 +1025,7 @@ def init_dash(server):
                             id='loading',
                             type='graph',
                             fullscreen=True,
+                            # parent_className="dark:bg-slate-600 bg-[#FAF7F5]",
                             children=
                             html.Div(
                                 dcc.Graph(
@@ -1467,11 +1468,11 @@ def init_callbacks(app):
             # class_name = class_name.replace(' top-0', '')
             # body_class = body_class.replace('mt-16', 'mt-0')
             body_class = body_class.replace('hidden', 'flex')
-            return ['flex flex-col bg-slate-600 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex', body_class]
+            return ['flex flex-col bg-slate-600 dark:bg-gray-700 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex', body_class]
 
         else:
             # class_name = class_name + ' fixed top-0'
             # body_class = body_class.replace('mt-0', 'mt-16')
             body_class = body_class.replace('flex', 'hidden')
-            return ['flex flex-col bg-slate-600 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
+            return ['flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
 

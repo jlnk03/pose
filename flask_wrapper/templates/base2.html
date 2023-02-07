@@ -90,8 +90,8 @@
 
               <div class="items-center absolute right-14 top-4">
                 {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-slate-600 hover:text-slate-400 transition">SIGN IN</a>
-                <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">GET STARTED</a>
+                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-slate-600 hover:text-slate-400 dark:text-gray-100 transition">SIGN IN</a>
+                <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition">GET STARTED</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
                 <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 dark:border-gray-100 px-4 py-2 text-xs font-medium text-slate-600 dark:text-gray-100 hover:border-slate-400 hover:text-slate-400 transition">LOGOUT</a>
@@ -113,11 +113,11 @@
         </button>
               <div class="items-center">
                 {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-slate-600 hover:text-slate-400 transition">SIGN IN</a>
-                <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">GET STARTED</a>
+                <a href="{{ url_for('auth.login') }}" class="whitespace-nowrap text-xs font-medium text-slate-600 hover:text-slate-400 transition dark:text-gray-100">SIGN IN</a>
+                <a href="{{ url_for('auth.signup') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition dark:border-gray-100 dark:text-gray-100">GET STARTED</a>
                 {% endif %}
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition">LOGOUT</a>
+                <a href="{{ url_for('auth.logout') }}" class="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-full border-2 border-slate-600 px-4 py-2 text-xs font-medium text-slate-600 hover:border-slate-400 hover:text-slate-400 transition dark:border-gray-100 dark:text-gray-100">LOGOUT</a>
                 {% endif %}
               </div>
         </div>
