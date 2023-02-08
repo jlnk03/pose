@@ -1229,6 +1229,14 @@ def init_callbacks(app):
             if ctx.triggered_id != ctx.triggered_id.type != 'delete':
                 button_id = ctx.triggered_id.index
                 file = f'{button_id}.parquet'
+
+                if not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}'):
+                    shutil.rmtree(f'assets/save_data/{current_user.id}/{button_id}')
+
+                    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(children, button_id, disabled)
+
+                    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
                 data_values = data.values
@@ -1476,3 +1484,100 @@ def init_callbacks(app):
             body_class = body_class.replace('flex', 'hidden')
             return ['flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
 
+
+
+
+
+# Reset plots
+def reset_plots(children, button_id, disabled):
+    for child in children:
+        if child['props']['id']['index'] == button_id:
+            children.remove(child)
+    path = f'assets/save_data/{current_user.id}/{button_id}'
+    shutil.rmtree(path)
+
+    # Reset plots
+
+    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+    save_wrist_angle, save_wrist_tilt = rand(100, 18)
+
+    duration = 10
+
+    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
+                                                                                         save_pelvis_tilt,
+                                                                                         save_pelvis_lift,
+                                                                                         save_pelvis_sway,
+                                                                                         save_pelvis_thrust, \
+                                                                                         save_thorax_lift,
+                                                                                         save_thorax_bend,
+                                                                                         save_thorax_sway,
+                                                                                         save_thorax_rotation,
+                                                                                         save_thorax_thrust, \
+                                                                                         save_thorax_tilt,
+                                                                                         save_spine_rotation,
+                                                                                         save_spine_tilt,
+                                                                                         save_head_rotation,
+                                                                                         save_head_tilt,
+                                                                                         save_left_arm_length, \
+                                                                                         save_wrist_angle,
+                                                                                         save_wrist_tilt, duration,
+                                                                                         filt=False)
+
+    children_upload = [
+
+        html.Div(children=[
+            html.Div(
+                children=[
+                    html.Span(
+                        'Upload your video',
+                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                    ),
+                    html.Span(
+                        'as mp4, mov or avi – max. 20 MB',
+                        className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                    )
+                ],
+                className='flex flex-col items-start mx-10 mb-4'
+            ),
+            html.Div(
+                dcc.Upload(
+                    disabled=disabled,
+                    id='upload-data',
+                    children=html.Div(
+                        className='text-slate-900 dark:text-gray-100',
+                        children=
+                        [
+                            'Drop your video here or ',
+                            html.A(' browse'),
+                            ' ⛳️',
+                        ],
+                    ),
+                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                    className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                    multiple=False,
+                    max_size=20e6,
+                    accept=['.mp4', '.mov', '.avi'],
+                    style_active=(dict(
+                        backgroundColor='rgba(230, 240, 250, 1)',
+                        borderColor='rgba(115, 165, 250, 1)',
+                        borderRadius='12px',
+                    )),
+                    style_reject=(dict(
+                        backgroundColor='bg-red-200',
+                        borderColor='bg-red-400',
+                        borderRadius='12px',
+                    )),
+                    # className='upload'
+                ),
+                className='w-full'
+                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+            )
+        ],
+            # className='container',
+            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+        ),
+    ]
+
+    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
