@@ -216,7 +216,7 @@ def process_motion(contents, filename, location):
                 image = add_padding(image, 450, (0, 0, 0))
 
                 image = Image.fromarray(np.uint8(image))
-                print(type(image))
+                # print(type(image))
 
                 # create an ImageDraw object
                 draw = ImageDraw.Draw(image)
@@ -229,58 +229,58 @@ def process_motion(contents, filename, location):
                 draw.rounded_rectangle((20, 680, 430, 930), radius=radius, fill=(255, 255, 255))
 
                 # add text on top of the rounded rectangle
-                # font = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Regular.otf'), 50)
-                # font_bold = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Semibold.otf'), 60)
+                font = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Regular.otf'), 50)
+                font_bold = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Semibold.otf'), 60)
                 # print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
-                #
-                #
-                # text = "Head"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((450 - textwidth) / 2), 30)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(head_r)}°"
-                # textposition = (30, 110)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Tilt: {int(head_t)}°"
-                # textposition = (30, 190)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = "Thorax"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((450 - textwidth) / 2), 320)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(thorax_r)}°"
-                # textposition = (30, 400)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Tilt: {int(thorax_t)}°"
-                # textposition = (30, 480)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Bend: {int(thorax_b)}°"
-                # textposition = (30, 560)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = "Pelvis"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((450 - textwidth) / 2), 690)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(pelvis_r)}°"
-                # textposition = (30, 770)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Tilt: {int(pelvis_t)}°"
-                # textposition = (30, 850)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+
+                text = "Head"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 30)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(head_r)}°"
+                textposition = (30, 110)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(head_t)}°"
+                textposition = (30, 190)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = "Thorax"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 320)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(thorax_r)}°"
+                textposition = (30, 400)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(thorax_t)}°"
+                textposition = (30, 480)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Bend: {int(thorax_b)}°"
+                textposition = (30, 560)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = "Pelvis"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 690)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(pelvis_r)}°"
+                textposition = (30, 770)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(pelvis_t)}°"
+                textposition = (30, 850)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
 
                 # convert the image to numpy array
                 img = np.asarray(image)
-                print(f'img: {type(img)}')
+                # print(f'img: {type(img)}')
                 #
                 # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
                 # # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)

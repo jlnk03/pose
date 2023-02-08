@@ -13,6 +13,7 @@ COPY ./assets/output.css /flask_wrapper/assets/output.css
 COPY ./assets/robots.txt /flask_wrapper/assets/robots.txt
 COPY ./assets/*.svg /flask_wrapper/assets/
 COPY ./assets/*.js /flask_wrapper/assets/
+COPY ./assets/*.otf /flask_wrapper/assets/
 COPY ./code_b/angles.py /code_b/angles.py
 COPY ./code_b/process_mem.py /code_b/process_mem.py
 
