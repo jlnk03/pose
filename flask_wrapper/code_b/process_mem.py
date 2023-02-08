@@ -243,6 +243,10 @@ def process_motion(contents, filename, location):
                     print(os.path.exists('/assets/SF-Pro-Text-Regular.otf'))
                     print(os.path.exists('/assets/robots.txt'))
                     print(os.getcwd())
+                    print(os.listdir())
+                    os.chdir('/assets')
+                    print(os.getcwd())
+                    print(os.listdir())
                     print(e)
 
 
