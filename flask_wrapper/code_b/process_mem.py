@@ -240,6 +240,7 @@ def process_motion(contents, filename, location):
                     print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
                     print(os.path.exists(url_for('static', filename='SF-Pro-Text-Regular.otf')))
                     print(os.path.exists('static/SF-Pro-Text-Regular.otf'))
+                    print(os.getcwd())
                     print(e)
 
 
