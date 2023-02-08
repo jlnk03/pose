@@ -229,8 +229,8 @@ def process_motion(contents, filename, location):
                 draw.rounded_rectangle((20, 680, 430, 930), radius=radius, fill=(255, 255, 255))
 
                 # add text on top of the rounded rectangle
-                font = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Regular.otf'), 50)
-                font_bold = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Semibold.otf'), 60)
+                # font = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Regular.otf'), 50)
+                # font_bold = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Semibold.otf'), 60)
 
 
                 text = "Head"
