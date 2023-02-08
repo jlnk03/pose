@@ -276,7 +276,8 @@ def process_motion(contents, filename, location):
 
 
                 # convert the image to numpy array
-                image = np.array(image)
+                image = np.asarray(image)
+                print(type(image))
 
                 #
                 # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
