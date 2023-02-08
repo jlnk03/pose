@@ -278,8 +278,8 @@ def process_motion(contents, filename, location):
 
 
                 # convert the image to numpy array
-                image = np.asarray(image)
-                print(type(image))
+                img = np.asarray(image)
+                print(f'img: {type(img)}')
                 #
                 # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
                 # # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
@@ -319,8 +319,8 @@ def process_motion(contents, filename, location):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            writer.write(image)
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            writer.write(img)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
