@@ -232,13 +232,14 @@ def process_motion(contents, filename, location):
 
                 try:
                     # add text on top of the rounded rectangle
-                    font = ImageFont.truetype('../assets/SF-Pro-Text-Regular.otf', 50)
-                    font_bold = ImageFont.truetype('../assets/SF-Pro-Text-Semibold.otf', 60)
+                    font = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Regular.otf'), 50)
+                    font_bold = ImageFont.truetype(url_for('static', filename='SF-Pro-Text-Semibold.otf'), 60)
                     # print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
                 except Exception as e:
                     print("Error loading font")
                     print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
-                    print(os.path.exists('../assets/SF-Pro-Text-Regular.otf'))
+                    print(os.path.exists(url_for('static', filename='SF-Pro-Text-Regular.otf')))
+                    print(os.path.exists('static/SF-Pro-Text-Regular.otf'))
                     print(e)
 
 
