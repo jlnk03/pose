@@ -216,6 +216,7 @@ def process_motion(contents, filename, location):
                 image = add_padding(image, 450, (0, 0, 0))
 
                 image = Image.fromarray(np.uint8(image))
+                print(type(image))
 
                 # create an ImageDraw object
                 draw = ImageDraw.Draw(image)
@@ -278,6 +279,7 @@ def process_motion(contents, filename, location):
 
                 # convert the image to numpy array
                 image = np.asarray(image)
+                print(type(image))
                 #
                 # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
                 # # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
