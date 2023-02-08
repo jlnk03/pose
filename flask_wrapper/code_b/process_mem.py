@@ -7,6 +7,7 @@ import imageio.v3 as iio
 from .angles import *
 from PIL import ImageFont, ImageDraw, Image
 from flask import url_for
+import shutil
 # import memory_profiler
 
 
@@ -303,7 +304,8 @@ def process_motion(contents, filename, location):
 
             except Exception as e:
                 print(e)
-                pass
+                shutil.rmtree(location)
+                # pass
 
             # Recolor back to BGR
             # image.flags.writeable = True
