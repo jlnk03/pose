@@ -9,6 +9,12 @@
     background-color: #475569;
 }
 
+@media (prefers-color-scheme: dark) {
+    #file_list::-webkit-scrollbar {
+        background-color: #374151;
+    }
+}
+
 /* Track */
 #file_list::-webkit-scrollbar-thumb {
   background-color: #94a3b8;

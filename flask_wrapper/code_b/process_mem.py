@@ -16,11 +16,11 @@ mp_pose = mp.solutions.pose
 
 # Add padding to image
 def add_padding(img, padding_size, padding_color=(0, 0, 0)):
-    print(img.shape)
+    # print(img.shape)
     height, width, _ = img.shape
     padding = np.full((height, width + padding_size, 3), padding_color, dtype=np.uint8)
     padding[:, padding_size:width + padding_size, :] = img
-    print(padding.shape)
+    # print(padding.shape)
     return padding
 
 
@@ -52,7 +52,7 @@ def process_motion(contents, filename, location):
     # temp.write(decoded)
 
     meta = iio.immeta(decoded, plugin='pyav')
-    print(meta)
+    # print(meta)
     # meta = iio.immeta(temp.name, plugin='pyav')
     fps = meta['fps']
     duration = meta['duration']
@@ -126,15 +126,11 @@ def process_motion(contents, filename, location):
                 index_l = landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value]
 
                 if i == 0:
-                    # print(i)
                     theta = calc_angle(foot_l, foot_r)
                     c, s = np.cos(theta), np.sin(theta)
-                    print(np.degrees(theta))
+                    # print(np.degrees(theta))
                     R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]], dtype=np.float16)
                     # print(R)
-                    # R = np.identity(3)
-                    # R = np.flip(R, axis=1)
-                    print(R)
 
                 pelvis_r = pelvis_rotation(hip_l, hip_r, R)
                 save_pelvis_rotation.append(-pelvis_r)
@@ -203,7 +199,7 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                # Render detections
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 mp_drawing.draw_landmarks(
                     image,
@@ -212,50 +208,104 @@ def process_motion(contents, filename, location):
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
                 )
 
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
 
                 image = add_padding(image, 450, (0, 0, 0))
 
-                draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
-                # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
-                cv2.putText(image, f'Head', (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Rotation: {int(head_r)}', (80, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Tilt: {int(head_t)}', (80, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                image = Image.fromarray(np.uint8(image))
 
-                # Thorax
-                draw_rounded_rectangle(image, (60, 280), (430, 490), (255, 255, 255), 30)
-                # cv2.rectangle(image, (80, 280), (450, 490), (255, 255, 255), -1)
-                cv2.putText(image, f'Thorax', (80, 330), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Rotation: {int(thorax_r)}', (80, 390), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Tilt: {int(thorax_t)}', (80, 430), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Bend: {int(thorax_b)}', (80, 470), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # create an ImageDraw object
+                draw = ImageDraw.Draw(image)
 
-                # Head
-                draw_rounded_rectangle(image, (60, 510), (430, 680), (255, 255, 255), 30)
-                # cv2.rectangle(image, (80, 510), (450, 680), (255, 255, 255), -1)
-                cv2.putText(image, f'Pelvis', (80, 560), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Rotation: {int(pelvis_r)}', (80, 620), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
-                cv2.putText(image, f'Tilt: {int(pelvis_t)}', (80, 660), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                radius = 40
 
-                # cv2.putText(image, f'Thorax tilt: {int(thorax_t)}', (100, 140), cv2.FONT_HERSHEY_SIMPLEX,
-                #             1.4,
-                #             (255, 255, 255), 2, cv2.LINE_AA)
-                # cv2.putText(image, f'Wrist: {int(wrist_t)}', (100, 180), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                #             (255, 255, 255), 2, cv2.LINE_AA)
-                # cv2.putText(image, f'Wrist: {int(angle_w)}', (100, 220), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                #             (255, 255, 255), 2, cv2.LINE_AA)
-                # cv2.putText(image, f'Spine: {int(angle_back)}', (100, 260), cv2.FONT_HERSHEY_SIMPLEX, 1.4,
-                #             (255, 255, 255), 2, cv2.LINE_AA)
-                # cv2.putText(image, f'Tilt: {int(tilt)}', (100, 300), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255),
-                #             2, cv2.LINE_AA)
-                # cv2.putText(image, f'Bal.: {bal}', (100, 340), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (255, 255, 255), 2,
-                #             cv2.LINE_AA)
+                # draw the rounded rectangle
+                draw.rounded_rectangle((20, 20, 430, 270), radius=radius, fill=(255, 255, 255))
+                draw.rounded_rectangle((20, 310, 430, 640), radius=radius, fill=(255, 255, 255))
+                draw.rounded_rectangle((20, 680, 430, 930), radius=radius, fill=(255, 255, 255))
 
-            except:
+                # add text on top of the rounded rectangle
+                font = ImageFont.truetype("SF-Pro-Text-Regular.otf", 50)
+                font_bold = ImageFont.truetype("SF-Pro-Text-Semibold.otf", 60)
+
+
+                text = "Head"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 30)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(head_r)}°"
+                textposition = (30, 110)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(head_t)}°"
+                textposition = (30, 190)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = "Thorax"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 320)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(thorax_r)}°"
+                textposition = (30, 400)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(thorax_t)}°"
+                textposition = (30, 480)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Bend: {int(thorax_b)}°"
+                textposition = (30, 560)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = "Pelvis"
+                textwidth, textheight = draw.textsize(text, font=font_bold)
+                textposition = (int((450 - textwidth) / 2), 690)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+
+                text = f"Rotation: {int(pelvis_r)}°"
+                textposition = (30, 770)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+                text = f"Tilt: {int(pelvis_t)}°"
+                textposition = (30, 850)
+                draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
+
+                # convert the image to numpy array
+                image = np.array(image)
+
+                #
+                # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
+                # # cv2.rectangle(image, (80, 90), (450, 260), (255, 255, 255), -1)
+                # cv2.putText(image, f'Head', (80, 140), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Rotation: {int(head_r)}', (80, 200), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Tilt: {int(head_t)}', (80, 240), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                #
+                # # Thorax
+                # draw_rounded_rectangle(image, (60, 280), (430, 490), (255, 255, 255), 30)
+                # # cv2.rectangle(image, (80, 280), (450, 490), (255, 255, 255), -1)
+                # cv2.putText(image, f'Thorax', (80, 330), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Rotation: {int(thorax_r)}', (80, 390), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Tilt: {int(thorax_t)}', (80, 430), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Bend: {int(thorax_b)}', (80, 470), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                #
+                # # Head
+                # draw_rounded_rectangle(image, (60, 510), (430, 680), (255, 255, 255), 30)
+                # # cv2.rectangle(image, (80, 510), (450, 680), (255, 255, 255), -1)
+                # cv2.putText(image, f'Pelvis', (80, 560), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Rotation: {int(pelvis_r)}', (80, 620), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+                # cv2.putText(image, f'Tilt: {int(pelvis_t)}', (80, 660), cv2.FONT_HERSHEY_SIMPLEX, 1.4, (0, 0, 0), 2, cv2.LINE_AA)
+
+            except Exception as e:
+                print(e)
                 pass
 
             # Recolor back to BGR
             # image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
 
             # mp_drawing.draw_landmarks(
             #     image,
@@ -265,6 +315,7 @@ def process_motion(contents, filename, location):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             writer.write(image)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
