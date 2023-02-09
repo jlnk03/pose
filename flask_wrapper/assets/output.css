@@ -38,6 +38,7 @@ body, html {
   background-color: rgba(246, 249, 255, 1)
 }
 
+
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -1266,6 +1267,11 @@ video {
   background-color: rgb(79 70 229 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#FAF7F5\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(250 247 245 / var(--tw-bg-opacity));
+}
+
 .bg-indigo-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(67 56 202 / var(--tw-bg-opacity));
@@ -1274,11 +1280,6 @@ video {
 .bg-slate-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(100 116 139 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#FAF7F5\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(250 247 245 / var(--tw-bg-opacity));
 }
 
 .bg-gray-50 {
@@ -1938,6 +1939,20 @@ video {
   .dark\:bg-indigo-500 {
     --tw-bg-opacity: 1;
     background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+  }
+
+  .dark\:from-slate-700 {
+    --tw-gradient-from: #334155;
+    --tw-gradient-to: rgb(51 65 85 / 0);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .dark\:to-violet-300 {
+    --tw-gradient-to: #c4b5fd;
   }
 
   .dark\:text-gray-100 {
