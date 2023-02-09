@@ -248,9 +248,10 @@ def process_motion(contents, filename, location):
 
                 try:
                     # add text on top of the rounded rectangle
+                    os.chdir('assets')
                     font = ImageFont.truetype('SF-Pro-Text-Regular.otf', 50)
                     font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', 60)
-                    # print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
+                    os.chdir('..')
                 except Exception as e:
                     print(e)
 
