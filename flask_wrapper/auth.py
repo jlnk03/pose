@@ -10,6 +10,7 @@ import stripe
 import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.utils import formataddr
 import smtplib, ssl
 
 auth = Blueprint('auth', __name__)
@@ -23,7 +24,7 @@ def send_mail_smtp(toaddr, subject, message, name=None):
     # create message
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
-    msg['From'] = 'info@swinglab.app'
+    msg['From'] = formataddr(('Swinglab', 'info@swinglab.app'))
     msg['To'] = toaddr
     html = render_template('mail_mail_verification.html', url=message, name=name)
     msg.attach(MIMEText(message, 'plain'))
