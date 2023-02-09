@@ -31,7 +31,6 @@ def send_mail_smtp(toaddr, subject, message, name=None):
 
     port = 465  # For SSL
     password = os.getenv('MAIL_AUTH')
-    print(password)
 
     # Create a secure SSL context
     context = ssl.create_default_context()
