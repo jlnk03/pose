@@ -41,13 +41,13 @@ def send_mail_smtp(toaddr, subject, message, name=None):
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
 
 
-def send_email_pw(toaddr, subject, message, name=None):
+def send_email_pw(toaddr, subject, message):
     # create message
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = formataddr(('Swinglab', 'info@swinglab.app'))
     msg['To'] = toaddr
-    html = render_template('mail_mail_verification.html', url=message, name=name)
+    html = render_template('mail_reset_pw.html', url=message)
     msg.attach(MIMEText(message, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
@@ -205,7 +205,7 @@ def reset_password_post():
         subject = 'Reset your password'
         confirm_url = url_for('auth.reset_password_mail', token=token, _external=True)
 
-        send_email_pw(email, subject, (confirm_url), name=current_user.name)
+        send_email_pw(email, subject, (confirm_url))
 
         # flash('Please check your email to confirm your account')
 
