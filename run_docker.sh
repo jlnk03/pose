@@ -1,5 +1,3 @@
-echo killing old docker processes
-docker compose rm -fs
-
-echo building docker containers
-docker compose up --build -d
+git pull https://github.com/jlnk03/pose.git
+docker-compose build
+docker-compose up

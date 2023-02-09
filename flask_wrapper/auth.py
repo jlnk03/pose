@@ -7,6 +7,10 @@ from itsdangerous import URLSafeTimedSerializer
 import yagmail
 import os
 import stripe
+import base64
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import smtplib, ssl
 
 auth = Blueprint('auth', __name__)
 
@@ -15,16 +19,45 @@ if 'flask_wrapper' not in os.getcwd():
     os.chdir('flask_wrapper')
 
 
-def send_email(email, subject, message):
-    yag  = yagmail.SMTP('swing.analysis23@gmail.com', oauth2_file='email.json')
-    body = render_template('mail_mail_verification.html', url=message)
-    yag.send(to=email, subject=subject, contents=body)
+def send_mail_smtp(toaddr, subject, message, name=None):
+    # create message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = 'info@swinglab.app'
+    msg['To'] = toaddr
+    html = render_template('mail_mail_verification.html', url=message, name=name)
+    msg.attach(MIMEText(message, 'plain'))
+    msg.attach(MIMEText(html, 'html'))
+
+    port = 465  # For SSL
+    password = os.getenv('MAIL_AUTH')
+    print(password)
+
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL("mail.privateemail.com", port, context=context) as server:
+        server.login('info@swinglab.app', password)
+        server.sendmail('info@swinglab.app', toaddr, msg.as_string())
 
 
-def send_email_pw(email, subject, message):
-    yag  = yagmail.SMTP('swing.analysis23@gmail.com', oauth2_file='email.json')
-    # body = render_template('mail_mail_verification.html', url=message)
-    yag.send(to=email, subject=subject, contents=message)
+def send_email_pw(toaddr, subject, message):
+    # create message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = 'info@swinglab.app'
+    msg['To'] = toaddr
+    msg.attach(MIMEText(message, 'plain'))
+
+    port = 465  # For SSL
+    password = os.getenv('MAIL_AUTH')
+
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL("mail.privateemail.com", port, context=context) as server:
+        server.login('info@swinglab.app', password)
+        server.sendmail('info@swinglab.app', toaddr, msg.as_string())
 
 
 @auth.route('/test')
@@ -104,10 +137,11 @@ def send_mail():
 
     token = ts.dumps(email, salt='email-confirm-key')
 
-    subject = 'Confirm your email'
+    subject = 'swinglab – Verify your email'
     confirm_url = url_for('auth.verify_mail', token=token, _external=True)
 
-    send_email(email, subject, confirm_url)
+    # send_email(email, subject, confirm_url)
+    send_mail_smtp(email, subject, confirm_url, name=current_user.name)
 
     return redirect(url_for('auth.verify'))
 

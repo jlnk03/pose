@@ -10,6 +10,7 @@ from .angles import *
 from PIL import ImageFont, ImageDraw, Image
 from flask import url_for
 import shutil
+from scipy.ndimage.filters import gaussian_filter
 # import memory_profiler
 
 
@@ -18,12 +19,28 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_pose = mp.solutions.pose
 
 
+def gradient(shape, start_color, end_color):
+    gradient = np.ones(shape + (3,), dtype=np.uint8)
+    for i in range(3):
+        gradient[:, :, i] = np.linspace(start_color[i], end_color[i], shape[0]).reshape(-1, 1)
+    return gradient
+
+
+def blurred_gradient(shape, start_color, end_color, sigma=5):
+    gradient_array = gradient(shape, start_color, end_color)
+    # return gaussian_filter(gradient_array, sigma=sigma)
+    return gradient_array
+
+
 # Add padding to image
 def add_padding(img, padding_size, padding_color=(0, 0, 0)):
     # print(img.shape)
     height, width, _ = img.shape
+    # lin_grad = blurred_gradient((height, padding_size), (255, 251, 235), (221, 214, 254)) (233, 213, 255) (236, 252, 203) (255, 251, 235)
+    # lin_grad = blurred_gradient((height, padding_size), (31, 41, 55), (31, 41, 55))
     padding = np.full((height, width + padding_size, 3), padding_color, dtype=np.uint8)
     padding[:, padding_size:width + padding_size, :] = img
+    # padding[:, :padding_size, :] = lin_grad
     # print(padding.shape)
     return padding
 
@@ -215,7 +232,7 @@ def process_motion(contents, filename, location):
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 
-                image = add_padding(image, 450, (0, 0, 0))
+                image = add_padding(image, 450, (55, 65, 81))
 
                 image = Image.fromarray(np.uint8(image))
                 # print(type(image))
@@ -231,12 +248,10 @@ def process_motion(contents, filename, location):
                 draw.rounded_rectangle((20, 680, 430, 930), radius=radius, fill=(255, 255, 255))
 
                 try:
-                    os.chdir('assets')
                     # add text on top of the rounded rectangle
                     font = ImageFont.truetype('SF-Pro-Text-Regular.otf', 50)
                     font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', 60)
                     # print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
-                    os.chdir('..')
                 except Exception as e:
                     print("Error loading font")
                     print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
@@ -297,7 +312,7 @@ def process_motion(contents, filename, location):
 
 
                 # convert the image to numpy array
-                img = np.asarray(image)
+                image = np.asarray(image)
                 # print(f'img: {type(img)}')
                 #
                 # draw_rounded_rectangle(image, (60, 90), (430, 260), (255, 255, 255), 30)
@@ -338,8 +353,8 @@ def process_motion(contents, filename, location):
             # )
 
             # cv2. imshow('Mediapipe Feed', image)
-            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-            writer.write(img)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            writer.write(image)
 
             # mp_drawing.plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
             # fig = plot_landmarks(results.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)

@@ -5,6 +5,8 @@ services:
     container_name: flask_wrapper
     restart: always
     build: ./flask_wrapper
+    environment:
+      - MAIL_AUTH
     volumes:
       - ./storage/db:/db
       - ./storage/save_data:/flask_wrapper/assets/save_data
