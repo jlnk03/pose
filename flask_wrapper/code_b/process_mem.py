@@ -1,6 +1,5 @@
 import io
 import os.path
-
 import cv2
 import mediapipe as mp
 import base64
@@ -253,17 +252,6 @@ def process_motion(contents, filename, location):
                     font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', 60)
                     # print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
                 except Exception as e:
-                    print("Error loading font")
-                    print(url_for('static', filename='SF-Pro-Text-Regular.otf'))
-                    print(os.path.exists(url_for('static', filename='SF-Pro-Text-Regular.otf')))
-                    print(os.path.exists('/static/SF-Pro-Text-Regular.otf'))
-                    print(os.path.exists('/assets/SF-Pro-Text-Regular.otf'))
-                    print(os.path.exists('/assets/robots.txt'))
-                    print(os.getcwd())
-                    print(os.listdir())
-                    os.chdir('assets')
-                    print(os.getcwd())
-                    print(os.listdir())
                     print(e)
 
 
@@ -339,6 +327,7 @@ def process_motion(contents, filename, location):
             except Exception as e:
                 print(e)
                 shutil.rmtree(location)
+                break
                 # pass
 
             # Recolor back to BGR
