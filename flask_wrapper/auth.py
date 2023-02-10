@@ -202,10 +202,10 @@ def reset_password_post():
 
         token = ts.dumps(email, salt='password-reset-key')
 
-        subject = 'Reset your password'
+        subject = 'Swinglab – Reset your password'
         confirm_url = url_for('auth.reset_password_mail', token=token, _external=True)
 
-        send_email_pw(email, subject, (confirm_url))
+        send_email_pw(email, subject, confirm_url)
 
         # flash('Please check your email to confirm your account')
 
@@ -224,7 +224,7 @@ def reset_password_mail(token):
     except:
         abort(404)
 
-    return render_template('new_password.html', token=token, title='New Password – swinglab')
+    return render_template('new_password.html', token=token, title='New Password – Swinglab')
 
 
 @auth.route('/reset_password_mail/<token>', methods=['POST'])
@@ -264,17 +264,17 @@ def update_profile():
             flash('Email address already exists', 'error')
             # return redirect(url_for('main.profile'))
         else:
-            flash('Check your inbox to confirm your email-address', 'success')
+            flash('Check your inbox to confirm your email address', 'success')
             user.email_new = email_new
 
             ts = URLSafeTimedSerializer('key')
 
             token = ts.dumps(email_new, salt='email-confirm-key')
 
-            subject = 'Confirm your email'
+            subject = 'Swinglab – Confirm your email'
             confirm_url = url_for('auth.verify_mail_update', token=token, _external=True)
 
-            send_email(email_new, subject, (confirm_url))
+            send_mail_smtp(email_new, subject, (confirm_url), name=current_user.name)
 
     if name_new != current_user.name and name_new is not None:
         user.name = name_new

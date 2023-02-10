@@ -29,6 +29,17 @@ _PRESENCE_THRESHOLD = 0.5
 _VISIBILITY_THRESHOLD = 0.5
 
 
+def find_closest_zero_intersection_left_of_max(array):
+    max_index = np.argmax(array)
+    indices = np.where(np.diff(np.sign(array)))[0]
+    zero_intersections = [i for i in indices if i < max_index]
+    if zero_intersections:
+        closest_intersection = zero_intersections[np.argmin(np.abs(np.array(zero_intersections) - max_index))]
+        return closest_intersection
+    else:
+        return None
+
+
 # Return the video view
 def upload_video(disabled=True, path=None):
     layout = [
@@ -48,7 +59,7 @@ def upload_video(disabled=True, path=None):
                                 className='text-sm font-medium text-slate-900 dark:text-gray-100'
                             )
                         ],
-                        className='flex flex-col items-start mx-10 mb-4'
+                        className='flex flex-col items-start sm:mx-10 mx-4 mb-4'
                     ),
                     html.Div(
                         dcc.Upload(
@@ -63,7 +74,7 @@ def upload_video(disabled=True, path=None):
                                     ' ⛳️',
                                 ],
                             ),
-                            className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                            className='bg-[rgba(251, 252, 254, 1)] sm:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 sm:h-60 h-20',
                             multiple=False,
                             max_size=50e6,
                             accept=['.mp4', '.mov', '.avi'],
@@ -83,7 +94,7 @@ def upload_video(disabled=True, path=None):
                     )
                 ],
                     # className='container',
-                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                 ),
 
                 html.Div(
@@ -774,7 +785,7 @@ def render_files(files):
 def init_dash(server):
     # Initialize the app
     app = Dash(__name__, server=server, url_base_pathname='/dashapp/',
-               # external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
+               external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
                )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
@@ -905,7 +916,7 @@ def init_dash(server):
                                                 className='text-sm font-medium text-slate-900 dark:text-gray-100'
                                             )
                                         ],
-                                        className='flex flex-col items-start mx-10 mb-4'
+                                        className='flex flex-col items-start mx-4 sm:mx-10 mb-4'
                                     ),
                                     html.Div(
                                         dcc.Upload(
@@ -921,7 +932,7 @@ def init_dash(server):
                                                 ],
                                             ),
                                             # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                            className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                            className='mx-4 sm:mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-20 sm:h-60',
                                             multiple=False,
                                             max_size=20e6,
                                             accept=['.mp4', '.mov', '.avi'],
@@ -945,7 +956,7 @@ def init_dash(server):
                                     )
                                 ],
                                     # className='container',
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                 ),
                             ]),
 
@@ -960,8 +971,7 @@ def init_dash(server):
                                     id='sequence',
                                     figure=fig,
                                     config=config,
-                                    # className='container'
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                                 )
                             ),
                         ),
@@ -972,14 +982,14 @@ def init_dash(server):
                                 id='pelvis_rotation',
                                 figure=fig3,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             ),
 
                             dcc.Graph(
                                 id='pelvis_displacement',
                                 figure=fig4,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -991,14 +1001,14 @@ def init_dash(server):
                                 id='thorax_rotation',
                                 figure=fig5,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             ),
 
                             dcc.Graph(
                                 id='thorax_displacement',
                                 figure=fig6,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             ),
                         ],
                             className='flex justify-center mb-5 flex-col gap-5'
@@ -1011,14 +1021,14 @@ def init_dash(server):
                                 figure=fig12,
                                 config=config,
                                 # className='container_half_left'
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             ),
 
                             dcc.Graph(
                                 id='h_rotation',
                                 figure=fig13,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                                 # className='container_half_right'
                             ),
                         ],
@@ -1030,7 +1040,7 @@ def init_dash(server):
                                 id='s_tilt',
                                 figure=fig11,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             )
                         ),
 
@@ -1039,7 +1049,7 @@ def init_dash(server):
                                 id='arm_length',
                                 figure=fig14,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             )
                         ),
 
@@ -1048,7 +1058,7 @@ def init_dash(server):
                                 id='spine_rotation',
                                 figure=fig15,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             )
                         ),
 
@@ -1057,7 +1067,7 @@ def init_dash(server):
                                 id='wrist_angle',
                                 figure=fig16,
                                 config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900'
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
                             )
                         ),
 
