@@ -815,7 +815,7 @@ def init_dash(server):
     app.app_context = server.app_context
     # app._favicon = './assets/favicon.png'
 
-    app.title = 'Analyze your swing – swinglab'
+    app.title = 'Analyze your swing – Swinglab'
 
     def serve_layout():
         disabled = True

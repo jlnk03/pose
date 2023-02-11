@@ -30,9 +30,9 @@ def profile():
 @login_required
 def dashboard():
     # print(f'url is{flask.request.host_url}')
-    # return render_template('dashboard.html', name=current_user.name, url=f'{flask.request.host_url}/dashapp')
+    # return render_template('dashboard.html', name=current_user.name, url=f'{flask.request.host_url}/dashboard')
     if current_user.active:
-        return flask.redirect('/dashapp')
+        return flask.redirect('/dashboard')
 
     # flash('Please confirm your email to access the dashboard')
     # return render_template('verify_mail.html')
