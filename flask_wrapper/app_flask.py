@@ -806,7 +806,7 @@ def render_files(files):
 
 def init_dash(server):
     # Initialize the app
-    app = Dash(__name__, server=server, url_base_pathname='/dashapp/',
+    app = Dash(__name__, server=server, url_base_pathname='/dashboard/',
                external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
                )
     app.css.config.serve_locally = False
