@@ -1231,12 +1231,12 @@ def init_callbacks(app):
                     fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(
                         children, button_id, disabled)
 
-                    sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                    sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-                    sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                    sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                    sequence_second = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                    sequence_third = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
-                            children_upload, sequence_first, sequence_second]
+                            children_upload, sequence_first, sequence_second, sequence_third]
 
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
@@ -1272,25 +1272,16 @@ def init_callbacks(app):
                 arm_index = find_closest_zero_intersection_left_of_max(
                     np.gradient(filter_data(save_arm_rotation, duration)))
 
-                # Update colors of the sequence
-                if hip_index < thorax_index:
-                    if thorax_index < arm_index:
-                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                    else:
-                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-                else:
-                    if thorax_index < arm_index:
-                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
-                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                    else:
-                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+                # Colors for hip, thorax and arm
+                sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+
+                # Colors sorted by index
+                sequence = sorted(sequence.items(), key=lambda item: item[1])
+
+                # Update colors
+                sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
+                sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
+                sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
 
 
                 # Get the video and update the video player
@@ -1366,9 +1357,9 @@ def init_callbacks(app):
                     save_left_arm_length, \
                     save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
 
-                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
                 children_upload = [
 
@@ -1487,25 +1478,16 @@ def init_callbacks(app):
         arm_index = find_closest_zero_intersection_left_of_max(
             np.gradient(filter_data(save_arm_rotation, duration)))
 
-        # Update colors of the sequence
-        if hip_index < thorax_index:
-            if thorax_index < arm_index:
-                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-            else:
-                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
-        else:
-            if thorax_index < arm_index:
-                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
-                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-            else:
-                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
-                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+        # Colors for hip, thorax and arm
+        sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+
+        # Colors sorted by index
+        sequence = sorted(sequence.items(), key=lambda item: item[1])
+
+        # Update colors
+        sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
+        sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
+        sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
 
         # Reset the background color of the buttons
         for child in children:
