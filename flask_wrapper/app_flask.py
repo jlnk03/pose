@@ -35,9 +35,14 @@ def find_closest_zero_intersection_left_of_max(array):
     zero_intersections = [i for i in indices if i < max_index]
     if zero_intersections:
         closest_intersection = zero_intersections[np.argmin(np.abs(np.array(zero_intersections) - max_index))]
-        return closest_intersection
+        x1, x2 = closest_intersection, closest_intersection + 1
+        y1, y2 = array[x1], array[x2]
+        m = (y2 - y1) / (x2 - x1)
+        b = y1 - m * x1
+        x_intersection = -b / m
+        return x_intersection
     else:
-        return None
+        return len(array)
 
 
 # Return the video view
@@ -100,11 +105,13 @@ def upload_video(disabled=True, path=None):
                 html.Div(
                     className="sm:hidden relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
-                        html.Video(src=f'{path}#t=0.001', id='video', controls=True, className="h-full w-full object-cover"),
+                        html.Video(src=f'{path}#t=0.001', id='video', controls=True,
+                                   className="h-full w-full object-cover"),
                     ]
                 ),
-                html.Video(src=f'{path}#t=0.001', id='video', controls=True, className="h-96 rounded-2xl mb-5 sm:block hidden"),
-        ])
+                html.Video(src=f'{path}#t=0.001', id='video', controls=True,
+                           className="h-96 rounded-2xl mb-5 sm:block hidden"),
+            ])
     ]
 
     return layout
@@ -117,9 +124,9 @@ def rand(length, size):
 
 
 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-save_wrist_angle, save_wrist_tilt = rand(100, 18)
+    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
 duration = 10
 timeline = np.linspace(0, duration, len(save_pelvis_rotation))
@@ -137,18 +144,17 @@ def filter_data(data, duration):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration, filt=True):
-
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=True):
     if filt:
         converted = [filter_data(np.array(name), duration) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                       save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                       save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                      save_left_arm_length, save_wrist_angle, save_wrist_tilt]]
+                      save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation]]
 
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt = converted
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = converted
 
     timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
@@ -166,12 +172,19 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
             x=timeline,
             y=np.gradient(save_thorax_rotation),
             name=f'Thorax',
-            # legendrank=seq_sorted['Shoulder']
+        )
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=timeline,
+            y=np.gradient(save_arm_rotation),
+            name=f'Arm',
         )
     )
 
     fig.update_layout(
-        title='Kinematic Sequence/Angular velocity',
+        title='Angular velocity',
         title_x=0.5,
         font_size=12,
         yaxis_title="Angular velocity in °/s",
@@ -479,8 +492,16 @@ fig.add_trace(
     )
 )
 
+fig.add_trace(
+    go.Scatter(
+        x=timeline,
+        y=np.gradient(save_arm_rotation),
+        name=f'Arm',
+    )
+)
+
 fig.update_layout(
-    title=' Kinematic Sequence/Angular velocity',
+    title='Angular velocity',
     title_x=0.5,
     font_size=12,
     yaxis_title="Angular velocity in °/s",
@@ -846,20 +867,23 @@ def init_dash(server):
                         html.Div(
                             className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
                             children=[
-                                        html.Button(
+                                html.Button(
+                                    children=[
+                                        html.Div(
+                                            className='flex flex-row items-center',
                                             children=[
-                                                html.Div(
-                                                    className='flex flex-row items-center',
-                                                    children=[
-                                                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
-                                                        reformat_file(file),
-                                                    ]),
-                                                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'), id={'type': 'delete', 'index': file}, n_clicks=0, className='invisible', disabled=True
-                                                            ),
-                                                      ],
-                                            id={'type': 'saved-button', 'index': f'{file}'},
-                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
-                                        for file in files],
+                                                html.Img(src=app.get_asset_url('graph_gray.svg'),
+                                                         className='w-6 h-6 mr-2'),
+                                                reformat_file(file),
+                                            ]),
+                                        html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
+                                                    id={'type': 'delete', 'index': file}, n_clicks=0,
+                                                    className='invisible', disabled=True
+                                                    ),
+                                    ],
+                                    id={'type': 'saved-button', 'index': f'{file}'},
+                                    className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                for file in files],
                             id='file_list',
                         ),
                         html.Div(
@@ -967,12 +991,47 @@ def init_dash(server):
                             # parent_className="dark:bg-slate-600 bg-[#FAF7F5]",
                             children=
                             html.Div(
-                                dcc.Graph(
-                                    id='sequence',
-                                    figure=fig,
-                                    config=config,
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                                )
+                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                children=[
+                                    dcc.Graph(
+                                        id='sequence',
+                                        figure=fig,
+                                        config=config,
+                                        className='h-[500px] w-full'
+                                    ),
+                                        html.Div(
+                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                            children=[
+                                                'Kinematic Sequence',
+                                            ]
+                                        ),
+                                    html.Div(
+                                        className='flex flex-row items-center w-full px-10 py-10',
+                                        children=[
+                                            html.Div(
+                                                '1',
+                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                id='sequence_first'
+                                            ),
+                                            html.Div(
+                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                            ),
+                                            html.Div(
+                                                '2',
+                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                id='sequence_second'
+                                            ),
+                                            html.Div(
+                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                            ),
+                                            html.Div(
+                                                '3',
+                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                id='sequence_third'
+                                            )
+                                        ]
+                                    )
+                                ]
                             ),
                         ),
 
@@ -1124,7 +1183,6 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
-
     # @app.callback(
     #     Output({'type': 'saved-button', 'index': ALL}, 'className'),
     #     Input({'type': 'saved-button', 'index': ALL}, 'n_clicks')
@@ -1146,15 +1204,16 @@ def init_callbacks(app):
     #     else:
     #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
 
-
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
          Output('h_tilt', 'figure'),
          Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
-         Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children')],
+         Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
+         Output('sequence_first', 'className'), Output('sequence_second', 'className'), Output('sequence_third', 'className')],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
-         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'), Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
+         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
+         Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
         [State('file_list', 'children')],
         prevent_initial_call=True
     )
@@ -1169,9 +1228,15 @@ def init_callbacks(app):
                 file = f'{button_id}.parquet'
 
                 if not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}'):
-                    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(children, button_id, disabled)
+                    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(
+                        children, button_id, disabled)
 
-                    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+                    sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                    sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                    sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+
+                    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
+                            children_upload, sequence_first, sequence_second]
 
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
@@ -1194,6 +1259,39 @@ def init_callbacks(app):
                 save_left_arm_length = data_values[:, 15]
                 save_wrist_angle = data_values[:, 16]
                 save_wrist_tilt = data_values[:, 17]
+                try:
+                    save_arm_rotation = data_values[:, 18]
+                except:
+                    save_arm_rotation = np.zeros(len(save_wrist_angle))
+
+                # Get the kinematic sequence
+                hip_index = find_closest_zero_intersection_left_of_max(
+                    np.gradient(filter_data(save_pelvis_rotation, duration)))
+                thorax_index = find_closest_zero_intersection_left_of_max(
+                    np.gradient(filter_data(save_thorax_rotation, duration)))
+                arm_index = find_closest_zero_intersection_left_of_max(
+                    np.gradient(filter_data(save_arm_rotation, duration)))
+
+                # Update colors of the sequence
+                if hip_index < thorax_index:
+                    if thorax_index < arm_index:
+                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                    else:
+                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                else:
+                    if thorax_index < arm_index:
+                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                    else:
+                        sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                        sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                        sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1202,39 +1300,45 @@ def init_callbacks(app):
                 # Change the background color of the pressed button and reset the previously pressed button
                 for child in children:
                     if child['props']['id']['index'] == button_id:
-                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                        child['props'][
+                            'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = True
                         # Enabling the delete button
                         child['props']['children'][1]['props']['disabled'] = False
-                        child['props']['children'][1]['props']['className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center'
+                        child['props']['children'][1]['props'][
+                            'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center'
                     else:
-                        child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                        child['props'][
+                            'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = False
                         # Disabling the delete button
                         child['props']['children'][1]['props']['disabled'] = True
                         child['props']['children'][1]['props']['className'] = 'invisible'
 
-                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation,
-                                                                                                     save_pelvis_tilt,
-                                                                                                     save_pelvis_lift,
-                                                                                                     save_pelvis_sway,
-                                                                                                     save_pelvis_thrust,
-                                                                                                     save_thorax_lift,
-                                                                                                     save_thorax_bend,
-                                                                                                     save_thorax_sway,
-                                                                                                     save_thorax_rotation,
-                                                                                                     save_thorax_thrust,
-                                                                                                     save_thorax_tilt,
-                                                                                                     save_spine_rotation,
-                                                                                                     save_spine_tilt,
-                                                                                                     save_head_rotation,
-                                                                                                     save_head_tilt,
-                                                                                                     save_left_arm_length,
-                                                                                                     save_wrist_angle,
-                                                                                                     save_wrist_tilt,
-                                                                                                     duration)
+                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
+                    save_pelvis_rotation,
+                    save_pelvis_tilt,
+                    save_pelvis_lift,
+                    save_pelvis_sway,
+                    save_pelvis_thrust,
+                    save_thorax_lift,
+                    save_thorax_bend,
+                    save_thorax_sway,
+                    save_thorax_rotation,
+                    save_thorax_thrust,
+                    save_thorax_tilt,
+                    save_spine_rotation,
+                    save_spine_tilt,
+                    save_head_rotation,
+                    save_head_tilt,
+                    save_left_arm_length,
+                    save_wrist_angle,
+                    save_wrist_tilt,
+                    save_arm_rotation,
+                    duration)
 
-                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
+                        children_upload, sequence_first, sequence_second, sequence_third]
 
         # Delete was pressed
         if ctx.triggered_id != 'upload-data':
@@ -1248,18 +1352,23 @@ def init_callbacks(app):
                 shutil.rmtree(path)
 
                 # Reset plots
-
                 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                save_wrist_angle, save_wrist_tilt = rand(100, 18)
+                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
                 duration = 10
 
-                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                save_wrist_angle, save_wrist_tilt, duration, filt=False)
+                fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
+                    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+                    save_left_arm_length, \
+                    save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
+
+                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
                 children_upload = [
 
@@ -1316,7 +1425,8 @@ def init_callbacks(app):
                     ),
                 ]
 
-                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+                return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
+                        children_upload, sequence_first, sequence_second, sequence_third]
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1326,7 +1436,7 @@ def init_callbacks(app):
         # Extracting the motion data from the video
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration = process_motion(
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = process_motion(
             contents, filename, location)
 
         # Get the video and update the video player
@@ -1351,6 +1461,7 @@ def init_callbacks(app):
                                                                                              save_left_arm_length,
                                                                                              save_wrist_angle,
                                                                                              save_wrist_tilt,
+                                                                                             save_arm_rotation,
                                                                                              duration)
 
         # Save the motion data to a parquet file
@@ -1358,19 +1469,48 @@ def init_callbacks(app):
             [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
              save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
              save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-             save_left_arm_length, save_wrist_angle, save_wrist_tilt]).T
+             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation]).T
         df.columns = ['pelvis_rotation', 'pelvis_tilt', 'pelvis_lift', 'pelvis_sway', 'pelvis_thrust',
                       'thorax_lift', 'thorax_bend', 'thorax_sway', 'thorax_rotation', 'thorax_thrust',
                       'thorax_tilt', 'spine_rotation', 'spine_tilt', 'head_rotation', 'head_tilt', 'left_arm_length',
-                      'wrist_angle', 'wrist_tilt']
+                      'wrist_angle', 'wrist_tilt', 'arm_rotation']
 
         df['duration'] = duration
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
+        # Get the kinematic sequence
+        hip_index = find_closest_zero_intersection_left_of_max(
+            np.gradient(filter_data(save_pelvis_rotation, duration)))
+        thorax_index = find_closest_zero_intersection_left_of_max(
+            np.gradient(filter_data(save_thorax_rotation, duration)))
+        arm_index = find_closest_zero_intersection_left_of_max(
+            np.gradient(filter_data(save_arm_rotation, duration)))
+
+        # Update colors of the sequence
+        if hip_index < thorax_index:
+            if thorax_index < arm_index:
+                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+            else:
+                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+        else:
+            if thorax_index < arm_index:
+                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+            else:
+                sequence_first = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third = 'text-2xl font-medium text-slate-900 dark:text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center'
+
         # Reset the background color of the buttons
         for child in children:
-            child['props']['className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+            child['props'][
+                'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
             child['props']['disabled'] = False
             # Disabling the delete button
             child['props']['children'][1]['props']['disabled'] = True
@@ -1378,27 +1518,30 @@ def init_callbacks(app):
 
         # Add a new button for the new motion data
         new_item = html.Button(
-                                            disabled=True,
-                                            children=[
-                                                html.Div(
-                                                    className='flex flex-row items-center',
-                                                    children=[
-                                                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
-                                                        reformat_file(filename),
-                                                    ]),
-                                                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'), id={'type': 'delete', 'index': filename}, n_clicks=0, className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center', disabled=False
-                                                            ),
-                                                      ],
-                                            id={'type': 'saved-button', 'index': f'{filename}'},
-                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            disabled=True,
+            children=[
+                html.Div(
+                    className='flex flex-row items-center',
+                    children=[
+                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
+                        reformat_file(filename),
+                    ]),
+                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
+                            id={'type': 'delete', 'index': filename}, n_clicks=0,
+                            className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center',
+                            disabled=False
+                            ),
+            ],
+            id={'type': 'saved-button', 'index': f'{filename}'},
+            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
             current_user.n_analyses -= 1
             db.session.commit()
 
-        return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
-
+        return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
+                sequence_first, sequence_second, sequence_third]
 
     # Show navbar on click
     @app.callback(
@@ -1412,16 +1555,17 @@ def init_callbacks(app):
             # class_name = class_name.replace(' top-0', '')
             # body_class = body_class.replace('mt-16', 'mt-0')
             body_class = body_class.replace('hidden', 'flex')
-            return ['flex flex-col bg-slate-600 dark:bg-gray-700 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex', body_class]
+            return [
+                'flex flex-col bg-slate-600 dark:bg-gray-700 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
+                body_class]
 
         else:
             # class_name = class_name + ' fixed top-0'
             # body_class = body_class.replace('mt-0', 'mt-16')
             body_class = body_class.replace('flex', 'hidden')
-            return ['flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5', body_class]
-
-
-
+            return [
+                'flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5',
+                body_class]
 
 
 # Reset plots

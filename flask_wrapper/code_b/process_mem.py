@@ -110,6 +110,7 @@ def process_motion(contents, filename, location):
     save_left_arm_length = deque([])
     save_wrist_angle = deque([])
     save_wrist_tilt = deque([])
+    save_arm_rotation = deque([])
 
     rot = False
     # meta_dict = ffmpeg.probe(file)
@@ -218,6 +219,8 @@ def process_motion(contents, filename, location):
 
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
+
+                save_arm_rotation.append(arm_rotation(wrist_l, R))
 
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
@@ -356,7 +359,7 @@ def process_motion(contents, filename, location):
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, duration
+           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration
 
 
 def draw_rounded_rectangle(img, pt1, pt2, color, radius):
