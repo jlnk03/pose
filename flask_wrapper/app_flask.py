@@ -1006,7 +1006,7 @@ def init_dash(server):
                                             ]
                                         ),
                                     html.Div(
-                                        className='flex flex-row items-center w-full px-10 py-10',
+                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
                                         children=[
                                             html.Div(
                                                 '1',
