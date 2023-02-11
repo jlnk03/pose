@@ -813,7 +813,7 @@ def init_dash(server):
     app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
-    app._favicon = './assets/favicon.png'
+    # app._favicon = './assets/favicon.png'
 
     app.title = 'Analyze your swing – swinglab'
 
