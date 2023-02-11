@@ -11,6 +11,7 @@ from code_b.angles import *
 from code_b.process_mem import process_motion
 import os
 from flask_login import current_user
+from flask import url_for
 from . import db
 
 # Tools for mp to draw the pose
@@ -812,6 +813,7 @@ def init_dash(server):
     app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
+    app._favicon = 'favicon.png'
 
     app.title = 'Analyze your swing – swinglab'
 
@@ -1183,26 +1185,6 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
-    # @app.callback(
-    #     Output({'type': 'saved-button', 'index': ALL}, 'className'),
-    #     Input({'type': 'saved-button', 'index': ALL}, 'n_clicks')
-    # )
-    # def update_saved_button(n_clicks):
-    #     if n_clicks is None:
-    #         print(n_clicks)
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
-    #     else:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
-    #
-    # @app.callback(
-    #     Output({'type': 'saved-button', 'index': MATCH}, 'className'),
-    #     Input({'type': 'saved-button', 'index': MATCH}, 'n_clicks')
-    # )
-    # def update_saved_button(n_clicks):
-    #     if n_clicks is None:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row hover:bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
-    #     else:
-    #         return 'font-medium max-w-full text-xs text-amber-400 flex flex-row bg-indigo-600 px-4 py-2 rounded-2xl mb-2 mx-4 items-center'
 
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
