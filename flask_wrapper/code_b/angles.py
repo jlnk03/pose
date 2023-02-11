@@ -266,4 +266,4 @@ def arm_rotation(wrist_l, r):
     # angle between wrist vector and normal with atan2
     angle = (np.arctan2(wrist_v[0], wrist_v[2]))
 
-    return np.degrees(angle)
+    return -np.degrees(angle)
