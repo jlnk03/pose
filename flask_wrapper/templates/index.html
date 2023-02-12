@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!--video-->
 <div class="flex relative w-full justify-end">
-<div class="relative flex flex-col mt-40 z-20 mr-0 lg:mr-24 justify-end backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-30 dark:bg-slate-600 dark:bg-opacity-30 px-4 py-4 pb-14 md:pb-36 pr-12">
+<div class="relative flex flex-col mt-40 z-20 mr-0 lg:mr-24 sm:justify-end backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-30 dark:bg-slate-600 dark:bg-opacity-30 px-4 py-4 pb-14 md:pb-36 pr-12">
     <div class="flex flex-col relative">
     <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-medium justify-center">Get 3D data for your swing –</div>
     <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-medium mb-10 justify-center">Anytime, Anywhere</div>
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="flex flex-row relative">
         <img src="{{url_for('static', filename='sequence_rory.png')}}" class="rounded-2xl w-96 absolute top-24 left-24" alt="sequence Rory McIlroy">
         <div class="relative">
-        <video class="w-60  rounded-2xl relative object-cover" autoplay muted id="video" src="{{url_for('static', filename='motion-2.mp4')}}"></video>
+        <video class="w-60  rounded-2xl relative object-cover" autoplay muted playsinline id="video" src="{{url_for('static', filename='motion-2.mp4')}}"></video>
         <button class="bg-gray-200 w-6 h-6 rounded-full hidden absolute top-2 right-2 py-1 px-1" id="video-replay">
             <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" version="1.1" viewBox="0 0 20 20" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs/>
