@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
-<div class="relative md:mx-10 lg:ml-40 flex flex-col mt-40 z-20 md:w-1/2 px-4 py-4 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-30 dark:bg-slate-600 dark:bg-opacity-30">
+<div class="relative md:mx-10 lg:ml-40 flex flex-col mt-40 z-20 md:w-1/2 px-4 py-4 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-30">
         <span class="text-gray-900 dark:text-gray-100 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Your AI powered</span>
     <span class="text-gray-900 dark:text-gray-100 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Swing Analysis</span>
     <div class="flex">
@@ -65,19 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <div class="flex-col flex mt-4">
-        <span class="text-2xl text-gray-500 dark:text-gray-200 font-medium z-10">Simply upload your swing video and get instant feedback – No equipment needed</span>
+        <span class="text-2xl text-gray-600 dark:text-gray-200 font-medium z-10">Simply upload your swing video and get instant feedback – No equipment needed</span>
     </div>
 
     <div class="relative flex lg:flex-row flex-col mt-8 z-10 items-center">
    {% if not current_user.is_authenticated %}
         <div class="bg-gradient-to-br from-indigo-700 to-orange-500 rounded-full px-1 py-1 hover:bg-indigo-600 mb-4 lg:mb-0">
-            <a href="{{ url_for('auth.signup') }}" class="bg-[#FAF7F5] dark:bg-slate-600 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition">GET STARTED</a>
+            <a href="{{ url_for('auth.signup') }}" class="bg-[#FAF7F5] dark:bg-slate-600 dark:bg-opacity-80 bg-opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition">GET STARTED</a>
         </div>
         <div class="flex flex-row">
-        <div class="text-2xl text-gray-500 dark:text-gray-200 font-medium z-10 lg:ml-6">With&nbsp;</div>
-        <div class="text-2xl text-gray-500 dark:text-gray-200 font-medium z-10">two&nbsp;</div>
+        <div class="text-2xl text-gray-600 dark:text-gray-200 font-medium z-10 lg:ml-6">With&nbsp;</div>
+        <div class="text-2xl text-gray-600 dark:text-gray-200 font-medium z-10">two&nbsp;</div>
         <div class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-700 to-orange-500 text-2xl font-medium z-10">free&nbsp;</div>
-        <div class="text-2xl text-gray-500 dark:text-gray-200 font-medium z-10">analyses</div>
+        <div class="text-2xl text-gray-600 dark:text-gray-200 font-medium z-10">analyses</div>
         </div>
     {% endif %}
 </div>
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!--video-->
 <div class="flex relative w-full justify-end">
-<div class="relative flex flex-col mt-40 z-20 mr-0 lg:mr-24 sm:justify-end backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-30 dark:bg-slate-600 dark:bg-opacity-30 px-4 py-4 pb-14 md:pb-36 pr-12">
+<div class="relative flex flex-col mt-40 z-20 mr-0 lg:mr-24 sm:justify-end backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-30 px-4 py-4 pb-14 md:pb-36 pr-12">
     <div class="flex flex-col relative">
     <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-medium justify-center">Get 3D data for your swing –</div>
     <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-medium mb-10 justify-center">Anytime, Anywhere</div>
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!--payment-->
 <div class="relative flex justify-center mb-20">
-<div class="flex  rounded-2xl flex-col w-full  z-20 mt-44 xl:w-1/2 w-full relative backdrop-blur-md rounded-2xl px-4 py-4 dark:bg-slate-600 dark:bg-opacity-30 bg-[#FAF7F5] bg-opacity-30">
+<div class="flex  rounded-2xl flex-col w-full  z-20 mt-44 xl:w-2/3 w-full relative backdrop-blur-md rounded-2xl px-4 py-4 dark:bg-black dark:bg-opacity-40 bg-[#FAF7F5] bg-opacity-30">
 
 <div class="w-full flex flex-row relative justify-center flex-wrap mb-10">
     <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-medium justify-center">Start&nbsp;</div>
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <div class="flex flex-col md:flex-row justify-between gap-3">
-<div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-70">
+<div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
     <div class="flex flex-col h-full">
         <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
             Starter
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-70">
+    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
     <div class="flex flex-col h-full">
         <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
             Essential
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-70">
+    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
     <div class="flex flex-col h-full">
         <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
             Professional
