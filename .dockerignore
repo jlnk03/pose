@@ -5,7 +5,6 @@
 /reports/
 /optimization.ipynb
 /process_thread.py
-/flask_wrapper/google_refresh_token.py
 /db.sqlite
 /flask_wrapper/templates/input.css
 /flask_wrapper/templates/tailwind.config.js
