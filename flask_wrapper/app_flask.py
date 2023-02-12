@@ -13,6 +13,7 @@ import os
 from flask_login import current_user
 from flask import url_for
 from . import db
+import requests
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
@@ -1412,6 +1413,20 @@ def init_callbacks(app):
         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = process_motion(
             contents, filename, location)
 
+        # Send the video to the server
+        # response = requests.post('http://127.0.0.1:8080/predict', json={'contents': contents, 'filename': filename, 'location': location})
+        #
+        # if response.status_code == 200:
+        #
+        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+        #     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        #     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = response.json().get('prediction').values()
+        #
+        # else:
+        #     print('Error in response')
+        #     print(response.status_code)
+        #     print(response.text)
+
         # Get the video and update the video player
         vid_src = location + '/motion.mp4'
         children_upload = upload_video(disabled, path=vid_src)
@@ -1515,17 +1530,12 @@ def init_callbacks(app):
     )
     def show_navbar(n_clicks, body_class, header_clicks):
         if ctx.triggered_id != 'menu-button':
-            # class_name = class_name.replace(' fixed', '')
-            # class_name = class_name.replace(' top-0', '')
-            # body_class = body_class.replace('mt-16', 'mt-0')
             body_class = body_class.replace('hidden', 'flex')
             return [
                 'flex flex-col bg-slate-600 dark:bg-gray-700 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
                 body_class]
 
         else:
-            # class_name = class_name + ' fixed top-0'
-            # body_class = body_class.replace('mt-0', 'mt-16')
             body_class = body_class.replace('flex', 'hidden')
             return [
                 'flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5',
@@ -1541,7 +1551,6 @@ def reset_plots(children, button_id, disabled):
     shutil.rmtree(path)
 
     # Reset plots
-
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
@@ -1566,7 +1575,9 @@ def reset_plots(children, button_id, disabled):
                                                                                          save_head_tilt,
                                                                                          save_left_arm_length, \
                                                                                          save_wrist_angle,
-                                                                                         save_wrist_tilt, duration,
+                                                                                         save_wrist_tilt,
+                                                                                         save_arm_rotation,
+                                                                                         duration,
                                                                                          filt=False)
 
     children_upload = [
