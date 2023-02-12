@@ -7,10 +7,12 @@
     let darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 
     if (darkMode) {
-        bod.style.backgroundColor = "#475569"
+        bod.style.backgroundColor = "#000000"
+        bod.className = "bgDark overflow-y-auto"
     }
     else {
         bod.style.backgroundColor = "#FAF7F5"
+        bod.className = "bg overflow-y-auto"
     }
 
     window
@@ -19,10 +21,12 @@
         darkMode = e.matches;
 
         if (darkMode) {
-        bod.style.backgroundColor = "#475569"
+            bod.style.backgroundColor = "#475569"
+            bod.className = "bgDark overflow-y-auto"
         }
         else {
             bod.style.backgroundColor = "#FAF7F5"
+            bod.className = "bg overflow-y-auto"
         }
     })
 
@@ -30,7 +34,7 @@
     // bod.style.backgroundRepeat = "no-repeat"
     // bod.style.backgroundPosition = "center"
     // bod.className = "bg-fixed"
-    bod.className = "bg overflow-y-auto"
+
     bod.style.height = "100%"
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -54,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <div class="relative md:mx-10 lg:ml-40 flex flex-col mt-40 z-20 md:w-1/2 px-4 py-4 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-30 dark:bg-slate-600 dark:bg-opacity-30">
-        <span class="text-gray-900 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Your AI powered</span>
-    <span class="text-gray-900 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Swing Analysis</span>
+        <span class="text-gray-900 dark:text-gray-100 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Your AI powered</span>
+    <span class="text-gray-900 dark:text-gray-100 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">Swing Analysis</span>
     <div class="flex">
 <!--        <span class="text-gray-900 font-medium text-4xl lg:text-6xl xl:text-7xl z-10">AI powered</span>-->
     </div>
