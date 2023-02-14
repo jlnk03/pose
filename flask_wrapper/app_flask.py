@@ -1389,7 +1389,7 @@ def init_callbacks(app):
         token = ts.dumps(email, salt='verification-key')
         print(url_for('main.predict', token=token, _external=True))
 
-        response = requests.post(url_for('main.predict', token=token, _external=True), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
