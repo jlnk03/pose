@@ -14,6 +14,7 @@ from flask_login import current_user
 from flask import url_for
 from . import db
 import requests
+from itsdangerous import URLSafeTimedSerializer
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
@@ -1136,32 +1137,6 @@ def init_dash(server):
                         html.Script('assets/dash.js'),
                     ]
                 ),
-
-                # Footer
-                # html.Div(
-                #     html.Div(
-                #         className='bg-indigo-700 h-20 flex items-center flex-row justify-end gap-20 rounded-t-2xl',
-                #         children=[
-                #             html.Span(
-                #                 '© 2023 JL. All rights reserved.',
-                #                 className='text-amber-400 text-xs'
-                #             ),
-                #             html.A(
-                #                 'Privacy Policy',
-                #                 href='#',
-                #                 className='text-amber-400 text-xs hover:text-amber-500 font-normal'
-                #             ),
-                #             html.A(
-                #                 'Contact',
-                #                 href='#',
-                #                 className='text-amber-400 text-xs hover:text-amber-500 font-normal md:mr-16 mr-4'
-                #             )
-                #         ]
-                #     ),
-                #     className='w-full',
-                # ),
-                # End Footer
-
             ]
         )
 
@@ -1407,25 +1382,27 @@ def init_callbacks(app):
         create_folder(f'assets/save_data/{current_user.id}/' + filename)
         location = f'assets/save_data/{current_user.id}/' + filename
 
-        # Extracting the motion data from the video
-        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = process_motion(
-            contents, filename, location)
+        # Send the video to the server and extract motion data
+        # Send token to server to verify user
+        email = current_user.email
+        ts = URLSafeTimedSerializer('key')
+        token = ts.dumps(email, salt='verification-key')
 
-        # Send the video to the server
-        # response = requests.post('http://127.0.0.1:8080/predict', json={'contents': contents, 'filename': filename, 'location': location})
-        #
-        # if response.status_code == 200:
-        #
-        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        #     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        #     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = response.json().get('prediction').values()
-        #
-        # else:
-        #     print('Error in response')
-        #     print(response.status_code)
-        #     print(response.text)
+        response = requests.post(url_for('main.predict', token=token, _external=True), json={'contents': contents, 'filename': filename, 'location': location})
+
+        if response.status_code == 200:
+            save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = response.json().values()
+
+        else:
+            save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 18)
+            duration = 10
+
+            print('Error in response')
+            print(response.status_code)
 
         # Get the video and update the video player
         vid_src = location + '/motion.mp4'

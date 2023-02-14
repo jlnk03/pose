@@ -1,3 +1,5 @@
+import json
+
 import flask
 import numpy as np
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify
@@ -11,6 +13,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 from code_b.process_mem import process_motion
+from itsdangerous import URLSafeTimedSerializer
 
 stripe.api_key = 'sk_test_51MOtJiGVoQxCE2O4tyBqLDo3P64ohVzHBnecrrvnJbvPMjIOc0wSklIuOBqWKpaw4HFCUlL57X1Nuwm8KbuRjgMB00Ijxr6CKq'
 
@@ -167,20 +170,28 @@ def privacy():
     return render_template('privacy.html', title='Privacy Policy – swinglab')
 
 
-@main.route('/predict', methods=['POST'])
-@login_required
-def predict():
-    print('here')
-    print(request.get_json())
-    data = request.get_json()
-    print(data)
-    # contents, filename, location = request.get_json().values()
+@main.route('/predict/<token>', methods=['POST'])
+def predict(token):
+
+    ts = URLSafeTimedSerializer('key')
+    try:
+        email = ts.loads(token, salt='verification-key', max_age=1200)
+    except:
+        abort(403)
+
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if user.n_analyses == 0 and not user.unlimited:
+        abort(403)
+
+    contents, filename, location = request.get_json().values()
 
     # Extracting the motion data from the video
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = process_motion(
         contents, filename, location)
+
 
     keys = [
         'save_pelvis_rotation',
@@ -206,28 +217,30 @@ def predict():
     ]
 
     values = [
-        save_pelvis_rotation,
-        save_pelvis_tilt,
-        save_pelvis_lift,
-        save_pelvis_sway,
-        save_pelvis_thrust,
-        save_thorax_lift,
-        save_thorax_bend,
-        save_thorax_sway,
-        save_thorax_rotation,
-        save_thorax_thrust,
-        save_thorax_tilt,
-        save_spine_rotation,
-        save_spine_tilt,
-        save_head_rotation,
-        save_head_tilt,
-        save_left_arm_length,
-        save_wrist_angle,
-        save_wrist_tilt,
-        save_arm_rotation,
+        list(save_pelvis_rotation),
+        list(save_pelvis_tilt),
+        list(save_pelvis_lift),
+        list(save_pelvis_sway),
+        list(save_pelvis_thrust),
+        list(save_thorax_lift),
+        list(save_thorax_bend),
+        list(save_thorax_sway),
+        list(save_thorax_rotation),
+        list(save_thorax_thrust),
+        list(save_thorax_tilt),
+        list(save_spine_rotation),
+        list(save_spine_tilt),
+        list(save_head_rotation),
+        list(save_head_tilt),
+        list(save_left_arm_length),
+        list(save_wrist_angle),
+        list(save_wrist_tilt),
+        list(save_arm_rotation),
         duration
     ]
 
     prediction = dict(zip(keys, values))
 
-    return jsonify({'prediction': prediction})
+    prediction = json.dumps(prediction)
+
+    return prediction, 200, {'ContentType': 'application/json'}

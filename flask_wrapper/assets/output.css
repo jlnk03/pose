@@ -49,7 +49,7 @@ body, html {
 }
 
 .bgDark {
-  background-image: url("background_dark.png");
+  background-image: url("background_black_1024.png");
   background-repeat: no-repeat;
   background-position: center;
   position: fixed;

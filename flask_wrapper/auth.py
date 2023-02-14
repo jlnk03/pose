@@ -1,17 +1,18 @@
+import os
+import smtplib
+import ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formataddr
+
+import stripe
 from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
-from flask_wrapper import db
 from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
-import yagmail
-import os
-import stripe
-import base64
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.utils import formataddr
-import smtplib, ssl
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from flask_wrapper import db
+from .models import User
 
 auth = Blueprint('auth', __name__)
 
