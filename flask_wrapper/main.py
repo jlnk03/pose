@@ -173,6 +173,9 @@ def privacy():
 @main.route('/predict/<token>', methods=['POST'])
 def predict(token):
 
+    print(token)
+    print(request.get_json()
+
     ts = URLSafeTimedSerializer('key')
     try:
         email = ts.loads(token, salt='verification-key', max_age=1200)
