@@ -174,7 +174,7 @@ def privacy():
 def predict(token):
 
     print(token)
-    print(request.get_json()
+    print(request.get_json())
 
     ts = URLSafeTimedSerializer('key')
     try:
