@@ -242,5 +242,6 @@ def predict(token):
     prediction = dict(zip(keys, values))
 
     prediction = json.dumps(prediction)
+    print(prediction)
 
     return prediction, 200, {'ContentType': 'application/json'}
