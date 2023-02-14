@@ -173,9 +173,6 @@ def privacy():
 @main.route('/predict/<token>', methods=['POST'])
 def predict(token):
 
-    print(token)
-    print(request.get_json())
-
     ts = URLSafeTimedSerializer('key')
     try:
         email = ts.loads(token, salt='verification-key', max_age=1200)
@@ -245,6 +242,5 @@ def predict(token):
     prediction = dict(zip(keys, values))
 
     prediction = json.dumps(prediction)
-    print(prediction)
 
     return prediction, 200, {'ContentType': 'application/json'}
