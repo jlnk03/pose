@@ -1405,6 +1405,7 @@ def init_callbacks(app):
 
             print('Error in response')
             print(response.status_code)
+            print(response.text)
 
         # Get the video and update the video player
         vid_src = location + '/motion.mp4'
