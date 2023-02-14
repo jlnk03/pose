@@ -1387,6 +1387,8 @@ def init_callbacks(app):
         email = current_user.email
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
+        print(token)
+        print(email)
 
         response = requests.post(url_for('main.predict', token=token, _external=True), json={'contents': contents, 'filename': filename, 'location': location})
 
