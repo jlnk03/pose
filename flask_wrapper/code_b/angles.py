@@ -264,6 +264,16 @@ def arm_rotation(wrist_l, r):
     normal = np.array([1, 0, 0])
     # angle = np.arccos(normal.dot(wrist_v) / (np.linalg.norm(normal) * np.linalg.norm(wrist_v)))
     # angle between wrist vector and normal with atan2
-    angle = (np.arctan2(wrist_v[0], wrist_v[2]))
+    angle = (np.arctan2(-wrist_v[2], wrist_v[0]))
 
     return -np.degrees(angle)
+
+
+def arm_to_ground(wrist_l, shoulder_l, r):
+    shoulder_v = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
+    wrist_v = r @ np.array([wrist_l.x, wrist_l.y, wrist_l.z], dtype=np.float64)
+    arm = wrist_v - shoulder_v
+    normal = np.array([0, 1, 0])
+    angle = np.arccos(normal.dot(arm) / (np.linalg.norm(normal) * np.linalg.norm(arm)))
+
+    return 90 - np.degrees(angle)

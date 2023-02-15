@@ -48,6 +48,38 @@ def find_closest_zero_intersection_left_of_max(array):
         return len(array)
 
 
+def find_closest_zero_intersection_right_of_max(array):
+    max_index = np.argmax(array)
+    indices = np.where(np.diff(np.sign(array)))[0]
+    zero_intersections = [i for i in indices if i > max_index]
+    if zero_intersections:
+        closest_intersection = zero_intersections[np.argmin(np.abs(np.array(zero_intersections) - max_index))]
+        x1, x2 = closest_intersection, closest_intersection + 1
+        y1, y2 = array[x1], array[x2]
+        m = (y2 - y1) / (x2 - x1)
+        b = y1 - m * x1
+        x_intersection = -b / m
+        return x_intersection
+    else:
+        return len(array)
+
+    
+def find_closest_zero_intersection_left_of_min(array):
+    min_index = np.argmin(array)
+    indices = np.where(np.diff(np.sign(array)))[0]
+    zero_intersections = [i for i in indices if i < min_index]
+    if zero_intersections:
+        closest_intersection = zero_intersections[np.argmin(np.abs(np.array(zero_intersections) - min_index))]
+        x1, x2 = closest_intersection, closest_intersection + 1
+        y1, y2 = array[x1], array[x2]
+        m = (y2 - y1) / (x2 - x1)
+        b = y1 - m * x1
+        x_intersection = -b / m
+        return x_intersection
+    else:
+        return 0
+
+
 # Return the video view
 def upload_video(disabled=True, path=None):
     layout = [
@@ -137,7 +169,7 @@ timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 def filter_data(data, duration):
     sample_rate = len(data) / duration
-    Wn = 1
+    Wn = 2
     b, a = signal.butter(3, Wn / (sample_rate / 2), 'low')
     data = signal.filtfilt(b, a, data)
     return data
@@ -187,7 +219,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig.update_layout(
-        title='Angular velocity',
+        # title='Angular velocity',
         title_x=0.5,
         font_size=12,
         yaxis_title="Angular velocity in °/s",
@@ -201,6 +233,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -217,7 +250,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig3.update_layout(
-        title='Pelvis angles',
+        # title='Pelvis angles',
         title_x=0.5,
         font_size=12,
         # yaxis_title='angle in °',
@@ -230,6 +263,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -250,7 +284,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig4.update_layout(
-        title='Pelvis displacement',
+        # title='Pelvis displacement',
         title_x=0.5,
         font_size=12,
         yaxis_title='Displacement in m',
@@ -263,6 +297,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -283,7 +318,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig5.update_layout(
-        title='Thorax angles',
+        # title='Thorax angles',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -296,6 +331,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -316,7 +352,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig6.update_layout(
-        title='Thorax displacement',
+        # title='Thorax displacement',
         title_x=0.5,
         font_size=12,
         yaxis_title='Displacement in m',
@@ -329,6 +365,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -341,7 +378,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
 
     fig11.update_layout(
-        title='Tilt between pelvis and shoulder',
+        # title='Tilt between pelvis and shoulder',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -352,6 +389,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -364,7 +402,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
 
     fig12.update_layout(
-        title='Head tilt',
+        # title='Head tilt',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -375,6 +413,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -387,7 +426,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
 
     fig13.update_layout(
-        title='Head rotation',
+        # title='Head rotation',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -398,6 +437,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -410,7 +450,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
 
     fig14.update_layout(
-        title='Left arm length',
+        # title='Left arm length',
         title_x=0.5,
         font_size=12,
         yaxis_title='length in m',
@@ -421,6 +461,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -433,7 +474,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
 
     fig15.update_layout(
-        title='Spine rotation',
+        # title='Spine rotation',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -444,6 +485,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -460,7 +502,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig16.update_layout(
-        title='Wrist angle',
+        # title='Wrist angle',
         title_x=0.5,
         font_size=12,
         yaxis_title='angle in °',
@@ -471,6 +513,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         margin=dict(
             l=10,
             r=10,
+            t=20,
             pad=5
         ),
         modebar=dict(
@@ -504,7 +547,7 @@ fig.add_trace(
 )
 
 fig.update_layout(
-    title='Angular velocity',
+    # title='Angular velocity',
     title_x=0.5,
     font_size=12,
     yaxis_title="Angular velocity in °/s",
@@ -517,6 +560,7 @@ fig.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -533,7 +577,7 @@ fig3.add_trace(
 )
 
 fig3.update_layout(
-    title='Pelvis angles',
+    # title='Pelvis angles',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -546,6 +590,7 @@ fig3.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -566,7 +611,7 @@ fig4.add_trace(
 )
 
 fig4.update_layout(
-    title='Pelvis displacement',
+    # title='Pelvis displacement',
     title_x=0.5,
     font_size=12,
     yaxis_title='Displacement in m',
@@ -579,6 +624,7 @@ fig4.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -599,7 +645,7 @@ fig5.add_trace(
 )
 
 fig5.update_layout(
-    title='Thorax angles',
+    # title='Thorax angles',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -612,6 +658,7 @@ fig5.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -632,7 +679,7 @@ fig6.add_trace(
 )
 
 fig6.update_layout(
-    title='Thorax displacement',
+    # title='Thorax displacement',
     title_x=0.5,
     font_size=12,
     yaxis_title='Displacement in m',
@@ -645,6 +692,7 @@ fig6.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -657,7 +705,7 @@ fig6.update_layout(
 fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
 
 fig11.update_layout(
-    title='Tilt between pelvis and shoulder',
+    # title='Tilt between pelvis and shoulder',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -668,6 +716,7 @@ fig11.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -680,7 +729,7 @@ fig11.update_layout(
 fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
 
 fig12.update_layout(
-    title='Head tilt',
+    # title='Head tilt',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -691,6 +740,7 @@ fig12.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -703,7 +753,7 @@ fig12.update_layout(
 fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
 
 fig13.update_layout(
-    title='Head rotation',
+    # title='Head rotation',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -714,6 +764,7 @@ fig13.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -726,7 +777,7 @@ fig13.update_layout(
 fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
 
 fig14.update_layout(
-    title='Left arm length',
+    # title='Left arm length',
     title_x=0.5,
     font_size=12,
     yaxis_title='length in m',
@@ -737,6 +788,7 @@ fig14.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -749,7 +801,7 @@ fig14.update_layout(
 fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
 
 fig15.update_layout(
-    title='Spine rotation',
+    # title='Spine rotation',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -760,6 +812,7 @@ fig15.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -776,7 +829,7 @@ fig16.add_trace(
 )
 
 fig16.update_layout(
-    title='Wrist angles',
+    # title='Wrist angles',
     title_x=0.5,
     font_size=12,
     yaxis_title='angle in °',
@@ -787,6 +840,7 @@ fig16.update_layout(
     margin=dict(
         l=10,
         r=10,
+        t=20,
         pad=5
     ),
     modebar=dict(
@@ -997,142 +1051,326 @@ def init_dash(server):
                             html.Div(
                                 className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                 children=[
+
+                                    # Row for sequences
+                                    html.Div(
+                                        className='flex flex-row justify-between items-center w-full flex-wrap',
+                                        children=[
+                                            # Column for sequence
+                                            html.Div(
+                                                className='flex flex-col',
+                                                children=[
+                                                    html.Div(
+                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                                        children=[
+                                                            'Transition Sequence',
+                                                        ]
+                                                    ),
+                                                    html.Div(
+                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                        children=[
+                                                            html.Div(
+                                                                '1',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='sequence_first'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '2',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='sequence_second'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '3',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='sequence_third'
+                                                            )
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+
+                                            # Column for sequence
+                                            html.Div(
+                                                className='flex flex-col',
+                                                children=[
+                                                    html.Div(
+                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                                        children=[
+                                                            'Start Sequence',
+                                                        ]
+                                                    ),
+                                                    html.Div(
+                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                        children=[
+                                                            html.Div(
+                                                                '1',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='start_sequence_first'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '2',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='start_sequence_second'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '3',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='start_sequence_third'
+                                                            )
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+
+                                            # Column for sequence
+                                            html.Div(
+                                                className='flex flex-col',
+                                                children=[
+                                                    html.Div(
+                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                                        children=[
+                                                            'Finish Sequence',
+                                                        ]
+                                                    ),
+                                                    html.Div(
+                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                        children=[
+                                                            html.Div(
+                                                                '1',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='end_sequence_first'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '2',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='end_sequence_second'
+                                                            ),
+                                                            html.Div(
+                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                            ),
+                                                            html.Div(
+                                                                '3',
+                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                id='end_sequence_third'
+                                                            )
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+
+                                    html.Div(
+                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                        children=[
+                                            'Angular Velocity',
+                                        ]
+                                    ),
+
                                     dcc.Graph(
                                         id='sequence',
                                         figure=fig,
                                         config=config,
                                         className='h-[500px] w-full'
                                     ),
-                                        html.Div(
-                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                            children=[
-                                                'Kinematic Sequence',
-                                            ]
-                                        ),
-                                    html.Div(
-                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                        children=[
-                                            html.Div(
-                                                '1',
-                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                                                id='sequence_first'
-                                            ),
-                                            html.Div(
-                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                            ),
-                                            html.Div(
-                                                '2',
-                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                                                id='sequence_second'
-                                            ),
-                                            html.Div(
-                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                            ),
-                                            html.Div(
-                                                '3',
-                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
-                                                id='sequence_third'
-                                            )
-                                        ]
-                                    )
                                 ]
                             ),
                         ),
 
-                        html.Div(children=[
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Pelvis Angles',
+                                    ]
+                                ),
 
-                            dcc.Graph(
-                                id='pelvis_rotation',
-                                figure=fig3,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            ),
-
-                            dcc.Graph(
-                                id='pelvis_displacement',
-                                figure=fig4,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex w-full backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            ),
-                        ],
-                            className='flex justify-center mb-5 flex-col gap-5'
-                        ),
-
-                        html.Div(children=[
-
-                            dcc.Graph(
-                                id='thorax_rotation',
-                                figure=fig5,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            ),
-
-                            dcc.Graph(
-                                id='thorax_displacement',
-                                figure=fig6,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            ),
-                        ],
-                            className='flex justify-center mb-5 flex-col gap-5'
-                        ),
-
-                        html.Div(children=[
-
-                            dcc.Graph(
-                                id='h_tilt',
-                                figure=fig12,
-                                config=config,
-                                # className='container_half_left'
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            ),
-
-                            dcc.Graph(
-                                id='h_rotation',
-                                figure=fig13,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                                # className='container_half_right'
-                            ),
-                        ],
-                            className='flex justify-center mb-5 flex-col gap-5'
-                        ),
+                                dcc.Graph(
+                                    id='pelvis_rotation',
+                                    figure=fig3,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
 
                         html.Div(
-                            dcc.Graph(
-                                id='s_tilt',
-                                figure=fig11,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            )
-                        ),
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Pelvis Displacement',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='pelvis_displacement',
+                                    figure=fig4,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
 
                         html.Div(
-                            dcc.Graph(
-                                id='arm_length',
-                                figure=fig14,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            )
-                        ),
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Thorax Angles',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='thorax_rotation',
+                                    figure=fig5,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
 
                         html.Div(
-                            dcc.Graph(
-                                id='spine_rotation',
-                                figure=fig15,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            )
-                        ),
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Thorax Displacement',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='thorax_displacement',
+                                    figure=fig6,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
 
                         html.Div(
-                            dcc.Graph(
-                                id='wrist_angle',
-                                figure=fig16,
-                                config=config,
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 h-[500px]'
-                            )
-                        ),
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Head Tilt',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='h_tilt',
+                                    figure=fig12,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
+
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Head Rotation',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='h_rotation',
+                                    figure=fig13,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                ),
+                            ]),
+
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Spine Tilt',
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='s_tilt',
+                                    figure=fig11,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                )
+                            ]),
+
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Left Arm Length'
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='arm_length',
+                                    figure=fig14,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                )
+                            ]),
+
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Spine Rotation'
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='spine_rotation',
+                                    figure=fig15,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                )
+                            ]),
+
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        'Wrist Angles'
+                                    ]
+                                ),
+
+                                dcc.Graph(
+                                    id='wrist_angle',
+                                    figure=fig16,
+                                    config=config,
+                                    className='w-full h-[500px]'
+                                )
+                            ]),
 
                         html.Script('assets/dash.js'),
                     ]
@@ -1168,7 +1406,10 @@ def init_callbacks(app):
          Output('h_tilt', 'figure'),
          Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
          Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
-         Output('sequence_first', 'className'), Output('sequence_second', 'className'), Output('sequence_third', 'className')],
+         Output('sequence_first', 'className'), Output('sequence_second', 'className'), Output('sequence_third', 'className'),
+         Output('start_sequence_first', 'className'), Output('start_sequence_second', 'className'), Output('start_sequence_third', 'className'),
+         Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'), Output('end_sequence_third', 'className')
+         ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
          Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
@@ -1222,24 +1463,14 @@ def init_callbacks(app):
                 except:
                     save_arm_rotation = np.zeros(len(save_wrist_angle))
 
-                # Get the kinematic sequence
-                hip_index = find_closest_zero_intersection_left_of_max(
-                    np.gradient(filter_data(save_pelvis_rotation, duration)))
-                thorax_index = find_closest_zero_intersection_left_of_max(
-                    np.gradient(filter_data(save_thorax_rotation, duration)))
-                arm_index = find_closest_zero_intersection_left_of_max(
-                    np.gradient(filter_data(save_arm_rotation, duration)))
+                # Get the kinematic transition  sequence
+                sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
-                # Colors for hip, thorax and arm
-                sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+                # Get the kinematic start sequence
+                sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
-                # Colors sorted by index
-                sequence = sorted(sequence.items(), key=lambda item: item[1])
-
-                # Update colors
-                sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
-                sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
-                sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+                # Get the kinematic end sequence
+                sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
 
                 # Get the video and update the video player
@@ -1287,7 +1518,10 @@ def init_callbacks(app):
                     duration)
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
-                        children_upload, sequence_first, sequence_second, sequence_third]
+                        children_upload, sequence_first, sequence_second, sequence_third,
+                        sequence_first_start, sequence_second_start, sequence_third_start,
+                        sequence_first_end, sequence_second_end, sequence_third_end
+                        ]
 
         # Delete was pressed
         if ctx.triggered_id != 'upload-data':
@@ -1315,9 +1549,18 @@ def init_callbacks(app):
                     save_left_arm_length, \
                     save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
 
+                # Reset sequence colors
                 sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
                 sequence_second = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
                 sequence_third = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+
+                sequence_first_start = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second_start = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third_start = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
+
+                sequence_first_end = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                sequence_second_end = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
+                sequence_third_end = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
                 children_upload = [
 
@@ -1375,7 +1618,9 @@ def init_callbacks(app):
                 ]
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
-                        children_upload, sequence_first, sequence_second, sequence_third]
+                        children_upload, sequence_first, sequence_second, sequence_third,
+                        sequence_first_start, sequence_second_start, sequence_third_start,
+                        sequence_first_end, sequence_second_end, sequence_third_end]
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1388,7 +1633,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1441,24 +1687,19 @@ def init_callbacks(app):
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
-        # Get the kinematic sequence
-        hip_index = find_closest_zero_intersection_left_of_max(
-            np.gradient(filter_data(save_pelvis_rotation, duration)))
-        thorax_index = find_closest_zero_intersection_left_of_max(
-            np.gradient(filter_data(save_thorax_rotation, duration)))
-        arm_index = find_closest_zero_intersection_left_of_max(
-            np.gradient(filter_data(save_arm_rotation, duration)))
+        # Get the kinematic transition  sequence
+        sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
+                                                                             save_arm_rotation, duration)
 
-        # Colors for hip, thorax and arm
-        sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+        # Get the kinematic start sequence
+        sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(
+            save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
-        # Colors sorted by index
-        sequence = sorted(sequence.items(), key=lambda item: item[1])
-
-        # Update colors
-        sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
-        sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
-        sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+        # Get the kinematic end sequence
+        sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(save_pelvis_rotation,
+                                                                                             save_thorax_rotation,
+                                                                                             save_arm_rotation,
+                                                                                             duration)
 
         # Reset the background color of the buttons
         for child in children:
@@ -1494,7 +1735,9 @@ def init_callbacks(app):
             db.session.commit()
 
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
-                sequence_first, sequence_second, sequence_third]
+                sequence_first, sequence_second, sequence_third,
+                sequence_first_start, sequence_second_start, sequence_third_start,
+                sequence_first_end, sequence_second_end, sequence_third_end,]
 
     # Show navbar on click
     @app.callback(
@@ -1610,3 +1853,72 @@ def reset_plots(children, button_id, disabled):
     ]
 
     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+
+
+def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+    # Get the kinematic transition  sequence
+    hip_index = find_closest_zero_intersection_left_of_max(
+        np.gradient(filter_data(pelvis_rotation, duration)))
+    thorax_index = find_closest_zero_intersection_left_of_max(
+        np.gradient(filter_data(thorax_rotation, duration)))
+    arm_index = find_closest_zero_intersection_left_of_max(
+        np.gradient(filter_data(arm_rotation, duration)))
+
+    # Colors for hip, thorax and arm
+    sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+
+    # Colors sorted by index
+    sequence = sorted(sequence.items(), key=lambda item: item[1])
+
+    # Update colors
+    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third
+
+
+def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+    # Get the kinematic transition  sequence
+    hip_index = find_closest_zero_intersection_left_of_min(
+        np.gradient(filter_data(pelvis_rotation, duration)))
+    thorax_index = find_closest_zero_intersection_left_of_min(
+        np.gradient(filter_data(thorax_rotation, duration)))
+    arm_index = find_closest_zero_intersection_left_of_min(
+        np.gradient(filter_data(arm_rotation, duration)))
+
+    # Colors for hip, thorax and arm
+    sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+
+    # Colors sorted by index
+    sequence = sorted(sequence.items(), key=lambda item: item[1])
+
+    # Update colors
+    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third
+
+
+def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+    # Get the kinematic transition  sequence
+    hip_index = find_closest_zero_intersection_right_of_max(
+        np.gradient(filter_data(pelvis_rotation, duration)))
+    thorax_index = find_closest_zero_intersection_right_of_max(
+        np.gradient(filter_data(thorax_rotation, duration)))
+    arm_index = find_closest_zero_intersection_right_of_max(
+        np.gradient(filter_data(arm_rotation, duration)))
+
+    # Colors for hip, thorax and arm
+    sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
+
+    # Colors sorted by index
+    sequence = sorted(sequence.items(), key=lambda item: item[1])
+
+    # Update colors
+    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third
