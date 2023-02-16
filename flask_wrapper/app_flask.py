@@ -172,7 +172,7 @@ timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 def filter_data(data, duration):
     sample_rate = len(data) / duration
-    Wn = 1
+    Wn = 2
     b, a = signal.butter(3, Wn / (sample_rate / 2), 'low')
     data = signal.filtfilt(b, a, data)
     return data
@@ -1732,8 +1732,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1787,7 +1787,7 @@ def init_callbacks(app):
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
-        path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'], z=arm_position['z'], mode='lines', line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
+        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration*2), y=filter_data(arm_position['y'], duration*2), z=filter_data(arm_position['z'], duration*2), mode='lines', line=dict(color=filter_data(arm_position['y'], duration*2), width=6, colorscale='Viridis')))
         path_fig.update_layout(
             scene = dict(
                     xaxis_title='Down the line',
