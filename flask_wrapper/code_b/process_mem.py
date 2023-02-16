@@ -98,6 +98,7 @@ def process_motion(contents, filename, location):
     save_wrist_angle = deque([])
     save_wrist_tilt = deque([])
     save_arm_rotation = deque([])
+    arm_position = {'x': [], 'y': [], 'z': []}
 
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
         # for i, image in enumerate(frames.iter_data()):
@@ -204,7 +205,14 @@ def process_motion(contents, filename, location):
                 arm_rotation_l = arm_rotation(wrist_l, R)
                 save_arm_rotation.append(arm_rotation_l)
 
-                arm_ground = arm_to_ground(wrist_l, shoulder_l,R)
+                arm_ground = arm_to_ground(wrist_l, shoulder_l, R)
+
+                arm_v = [foot_l.x - wrist_l.x, foot_l.y - wrist_l.y, foot_l.z - wrist_l.z]
+                arm_v = R@arm_v
+
+                arm_position['x'].append(arm_v[0])
+                arm_position['y'].append(arm_v[2])
+                arm_position['z'].append(arm_v[1])
 
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
@@ -316,7 +324,7 @@ def process_motion(contents, filename, location):
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration
+           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration
 
 
 def draw_rounded_rectangle_agg(img, pt1, pt2, color, radius):

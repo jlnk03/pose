@@ -1,6 +1,7 @@
 import datetime
 import shutil
 import mediapipe as mp
+import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
@@ -162,6 +163,8 @@ save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
     save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+
+arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
 duration = 10
 timeline = np.linspace(0, duration, len(save_pelvis_rotation))
@@ -527,6 +530,25 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
 
 # Plots
+path_fig = go.Figure(
+    data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'],
+                      z=arm_position['z'], mode='lines',
+                      line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
+path_fig.update_layout(
+    scene=dict(
+        xaxis_title='Down the line',
+        yaxis_title='Front on',
+        zaxis_title='Height',
+        camera=dict(
+            up=dict(x=0, y=0, z=1),
+            center=dict(x=0, y=0, z=-0.1),
+            eye=dict(x=-2.5, y=0.1, z=0.2)
+        )
+    ),
+    margin=dict(r=10, b=10, l=10, t=10),
+    # paper_bgcolor='rgba(0,0,0,0)',
+)
+
 fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
 
 fig.add_trace(
@@ -1042,6 +1064,28 @@ def init_dash(server):
                                 ),
                             ]),
 
+                        html.Div(
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                            children=[
+                                html.Div(
+                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                    children=[
+                                        '3D Arm Path',
+                                    ]
+                                ),
+                                html.Div(
+                                    # 3D arm path
+                                    id='arm_path',
+                                    children=[
+                                        dcc.Graph(
+                                            figure=path_fig,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        )
+                                    ]),
+                            ]
+                        ),
+
                         dcc.Loading(
                             id='loading',
                             type='graph',
@@ -1408,7 +1452,8 @@ def init_callbacks(app):
          Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
          Output('sequence_first', 'className'), Output('sequence_second', 'className'), Output('sequence_third', 'className'),
          Output('start_sequence_first', 'className'), Output('start_sequence_second', 'className'), Output('start_sequence_third', 'className'),
-         Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'), Output('end_sequence_third', 'className')
+         Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'), Output('end_sequence_third', 'className'),
+         Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
@@ -1435,8 +1480,9 @@ def init_callbacks(app):
                     sequence_third = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
-                            children_upload, sequence_first, sequence_second, sequence_third]
+                            children_upload, sequence_first, sequence_second, sequence_third, []]
 
+                # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
                 data_values = data.values
@@ -1460,8 +1506,14 @@ def init_callbacks(app):
                 save_wrist_tilt = data_values[:, 17]
                 try:
                     save_arm_rotation = data_values[:, 18]
+                    arm_x = data_values[:, 19]
+                    arm_y = data_values[:, 20]
+                    arm_z = data_values[:, 21]
                 except:
                     save_arm_rotation = np.zeros(len(save_wrist_angle))
+                    arm_x = np.linspace(0, 9, len(save_wrist_angle))
+                    arm_y = np.linspace(0, 9, len(save_wrist_angle))
+                    arm_z = np.linspace(0, 9, len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
                 sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
@@ -1517,10 +1569,32 @@ def init_callbacks(app):
                     save_arm_rotation,
                     duration)
 
+                path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_x, duration * 2),
+                                                       y=filter_data(arm_y, duration * 2),
+                                                       z=filter_data(arm_z, duration * 2), mode='lines',
+                                                       line=dict(color=filter_data(arm_y, duration * 2),
+                                                                 width=6, colorscale='Viridis')))
+                path_fig.update_layout(
+                    scene=dict(
+                        xaxis_title='Down the line',
+                        yaxis_title='Front on',
+                        zaxis_title='Height',
+                        camera=dict(
+                            up=dict(x=0, y=0, z=1),
+                            center=dict(x=0, y=0, z=-0.1),
+                            eye=dict(x=-2.5, y=0.1, z=0.2)
+                        )
+                    ),
+                    margin=dict(r=10, b=10, l=10, t=10),
+                    # paper_bgcolor='rgba(0,0,0,0)',
+                )
+
+                path = dcc.Graph(figure=path_fig, config=config, className='w-full h-[500px]')
+
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end
+                        sequence_first_end, sequence_second_end, sequence_third_end, path
                         ]
 
         # Delete was pressed
@@ -1540,6 +1614,9 @@ def init_callbacks(app):
                     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
                     save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
+                arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                                'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+
                 duration = 10
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
@@ -1548,6 +1625,28 @@ def init_callbacks(app):
                     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
                     save_left_arm_length, \
                     save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
+
+                path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2),
+                                                       y=filter_data(arm_position['y'], duration * 2),
+                                                       z=filter_data(arm_position['z'], duration * 2), mode='lines',
+                                                       line=dict(color=filter_data(arm_position['y'], duration * 2),
+                                                                 width=6, colorscale='Viridis')))
+                path_fig.update_layout(
+                    scene=dict(
+                        xaxis_title='Down the line',
+                        yaxis_title='Front on',
+                        zaxis_title='Height',
+                        camera=dict(
+                            up=dict(x=0, y=0, z=1),
+                            center=dict(x=0, y=0, z=-0.1),
+                            eye=dict(x=-2.5, y=0.1, z=0.2)
+                        )
+                    ),
+                    margin=dict(r=10, b=10, l=10, t=10),
+                    # paper_bgcolor='rgba(0,0,0,0)',
+                )
+
+                path = dcc.Graph(figure=path_fig, config=config, className='w-full h-[500px]')
 
                 # Reset sequence colors
                 sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
@@ -1620,7 +1719,7 @@ def init_callbacks(app):
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end]
+                        sequence_first_end, sequence_second_end, sequence_third_end, path]
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1633,19 +1732,20 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration = response.json().values()
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration = response.json().values()
 
         else:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
             save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
             duration = 10
+            arm_position = {'x':[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
         # Get the video and update the video player
         vid_src = location + '/motion.mp4'
@@ -1677,15 +1777,33 @@ def init_callbacks(app):
             [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
              save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
              save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation]).T
+             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position['x'], arm_position['y'], arm_position['z']]).T
         df.columns = ['pelvis_rotation', 'pelvis_tilt', 'pelvis_lift', 'pelvis_sway', 'pelvis_thrust',
                       'thorax_lift', 'thorax_bend', 'thorax_sway', 'thorax_rotation', 'thorax_thrust',
                       'thorax_tilt', 'spine_rotation', 'spine_tilt', 'head_rotation', 'head_tilt', 'left_arm_length',
-                      'wrist_angle', 'wrist_tilt', 'arm_rotation']
+                      'wrist_angle', 'wrist_tilt', 'arm_rotation', 'arm_x', 'arm_y', 'arm_z']
 
         df['duration'] = duration
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
+
+        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration*2), y=filter_data(arm_position['y'], duration*2), z=filter_data(arm_position['z'], duration*2), mode='lines', line=dict(color=filter_data(arm_position['y'], duration*2), width=6, colorscale='Viridis')))
+        path_fig.update_layout(
+            scene = dict(
+                    xaxis_title='Down the line',
+                    yaxis_title='Front on',
+                    zaxis_title='Height',
+                    camera=dict(
+                        up=dict(x=0, y=0, z=1),
+                        center=dict(x=0, y=0, z=-0.1),
+                        eye=dict(x=-2.5, y=0.1, z=0.2)
+                    )
+            ),
+            margin=dict(r=10, b=10, l=10, t=10),
+            # paper_bgcolor='rgba(0,0,0,0)',
+        )
+
+        path = dcc.Graph(figure=path_fig, config=config, className='w-full h-[500px]')
 
         # Get the kinematic transition  sequence
         sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
@@ -1737,7 +1855,7 @@ def init_callbacks(app):
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
                 sequence_first, sequence_second, sequence_third,
                 sequence_first_start, sequence_second_start, sequence_third_start,
-                sequence_first_end, sequence_second_end, sequence_third_end,]
+                sequence_first_end, sequence_second_end, sequence_third_end, path]
 
     # Show navbar on click
     @app.callback(
@@ -1852,7 +1970,7 @@ def reset_plots(children, button_id, disabled):
         ),
     ]
 
-    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload]
+    return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload, []]
 
 
 def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration):
