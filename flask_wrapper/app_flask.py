@@ -172,7 +172,7 @@ timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 def filter_data(data, duration):
     sample_rate = len(data) / duration
-    Wn = 2
+    Wn = 1
     b, a = signal.butter(3, Wn / (sample_rate / 2), 'low')
     data = signal.filtfilt(b, a, data)
     return data
