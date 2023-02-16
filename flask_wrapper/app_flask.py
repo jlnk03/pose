@@ -1080,7 +1080,7 @@ def init_dash(server):
                                         dcc.Graph(
                                             figure=path_fig,
                                             config=config,
-                                            className='w-[350px] sm:w-full h-[500px] relative',
+                                            className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',
                                         )
                                     ]),
                             ]
@@ -1589,7 +1589,7 @@ def init_callbacks(app):
                     # paper_bgcolor='rgba(0,0,0,0)',
                 )
 
-                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] sm:w-full h-[500px] relative',)
+                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
@@ -1646,7 +1646,7 @@ def init_callbacks(app):
                     # paper_bgcolor='rgba(0,0,0,0)',
                 )
 
-                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] sm:w-full h-[500px] relative',)
+                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
 
                 # Reset sequence colors
                 sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
@@ -1803,7 +1803,7 @@ def init_callbacks(app):
             # paper_bgcolor='rgba(0,0,0,0)',
         )
 
-        path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] sm:w-full h-[500px] relative',)
+        path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
 
         # Get the kinematic transition  sequence
         sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
