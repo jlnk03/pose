@@ -539,14 +539,18 @@ path_fig.update_layout(
         xaxis_title='Down the line',
         yaxis_title='Front on',
         zaxis_title='Height',
+        xaxis_showticklabels=False,
+        yaxis_showticklabels=False,
+        zaxis_showticklabels=False,
         camera=dict(
             up=dict(x=0, y=0, z=1),
             center=dict(x=0, y=0, z=-0.1),
             eye=dict(x=-2.5, y=0.1, z=0.2)
-        )
+        ),
     ),
+    font_color="#94a3b8",
     margin=dict(r=10, b=10, l=10, t=10),
-    # paper_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
 )
 
 fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
@@ -1574,19 +1578,24 @@ def init_callbacks(app):
                                                        z=filter_data(arm_z, duration * 2), mode='lines',
                                                        line=dict(color=filter_data(arm_y, duration * 2),
                                                                  width=6, colorscale='Viridis')))
+
                 path_fig.update_layout(
                     scene=dict(
                         xaxis_title='Down the line',
                         yaxis_title='Front on',
                         zaxis_title='Height',
+                        xaxis_showticklabels=False,
+                        yaxis_showticklabels=False,
+                        zaxis_showticklabels=False,
                         camera=dict(
                             up=dict(x=0, y=0, z=1),
                             center=dict(x=0, y=0, z=-0.1),
                             eye=dict(x=-2.5, y=0.1, z=0.2)
-                        )
+                        ),
                     ),
+                    font_color="#94a3b8",
                     margin=dict(r=10, b=10, l=10, t=10),
-                    # paper_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
                 )
 
                 path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
@@ -1631,19 +1640,24 @@ def init_callbacks(app):
                                                        z=arm_position['z'], mode='lines',
                                                        line=dict(color=arm_position['y'],
                                                                  width=6, colorscale='Viridis')))
+
                 path_fig.update_layout(
                     scene=dict(
                         xaxis_title='Down the line',
                         yaxis_title='Front on',
                         zaxis_title='Height',
+                        xaxis_showticklabels=False,
+                        yaxis_showticklabels=False,
+                        zaxis_showticklabels=False,
                         camera=dict(
                             up=dict(x=0, y=0, z=1),
                             center=dict(x=0, y=0, z=-0.1),
                             eye=dict(x=-2.5, y=0.1, z=0.2)
-                        )
+                        ),
                     ),
+                    font_color="#94a3b8",
                     margin=dict(r=10, b=10, l=10, t=10),
-                    # paper_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
                 )
 
                 path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
@@ -1789,18 +1803,22 @@ def init_callbacks(app):
 
         path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration*2), y=filter_data(arm_position['y'], duration*2), z=filter_data(arm_position['z'], duration*2), mode='lines', line=dict(color=filter_data(arm_position['y'], duration*2), width=6, colorscale='Viridis')))
         path_fig.update_layout(
-            scene = dict(
-                    xaxis_title='Down the line',
-                    yaxis_title='Front on',
-                    zaxis_title='Height',
-                    camera=dict(
-                        up=dict(x=0, y=0, z=1),
-                        center=dict(x=0, y=0, z=-0.1),
-                        eye=dict(x=-2.5, y=0.1, z=0.2)
-                    )
+            scene=dict(
+                xaxis_title='Down the line',
+                yaxis_title='Front on',
+                zaxis_title='Height',
+                xaxis_showticklabels=False,
+                yaxis_showticklabels=False,
+                zaxis_showticklabels=False,
+                camera=dict(
+                    up=dict(x=0, y=0, z=1),
+                    center=dict(x=0, y=0, z=-0.1),
+                    eye=dict(x=-2.5, y=0.1, z=0.2)
+                ),
             ),
+            font_color="#94a3b8",
             margin=dict(r=10, b=10, l=10, t=10),
-            # paper_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
         )
 
         path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
