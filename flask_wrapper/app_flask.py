@@ -1787,7 +1787,7 @@ def init_callbacks(app):
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
-        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration*2), y=filter_data(arm_position['y'], duration*2), z=filter_data(arm_position['z'], duration*2), mode='lines', line=dict(color=filter_data(arm_position['y'], duration*2), width=6, colorscale='Viridis')))
+        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration), y=filter_data(arm_position['y'], duration), z=filter_data(arm_position['z'], duration), mode='lines', line=dict(color=filter_data(arm_position['y'], duration), width=6, colorscale='Viridis')))
         path_fig.update_layout(
             scene = dict(
                     xaxis_title='Down the line',
