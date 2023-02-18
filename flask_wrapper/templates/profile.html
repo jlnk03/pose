@@ -11,7 +11,7 @@
 <script src="{{ url_for('static', filename='spinner.js') }}"></script>
 
 <div class="flex min-h-full pb-8 md:py-8 flex-col justify-center">
-    <div class="grid grid-cols-3">
+    <div class="sm:grid grid-cols-3 grid-cols-2">
   <h1 class="text-lg font-bold text-gray-900 sm:text-2xl block mb-5 dark:text-gray-100">
     Welcome, {{ name }}!
   </h1>
@@ -49,7 +49,7 @@
       <div class="flex flex-row">
           <label for="name" class="sr-only">Name</label>
       <input id="name" name="name" type="text" required class="dark:bg-gray-600 relative block w-full appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base" placeholder="Name" value="{{name}}">
-            <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 py-2 px-3 text-xs md:text-sm font-medium items-center text-indigo-900 hover:bg-indigo-300">Update name</button>
+            <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 dark:hover:bg-indigo-400 py-2 px-3 text-xs md:text-sm font-medium items-center text-indigo-900 hover:bg-indigo-300">Update name</button>
       </div>
 </div>
 </form>
@@ -59,7 +59,7 @@
         <div class="flex flex-row">
         <label for="email" class="sr-only">Email address</label>
         <input id="email" name="email" type="email" required class="dark:bg-gray-600 relative block w-full appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base invalid:border-red-500 invalid:text-red-500 focus:invalid:border-red-500" placeholder="E-mail" value="{{email}}">
-    <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">Update email</button>
+    <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 dark:hover:bg-indigo-400 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">Update email</button>
             </div>
    </div>
 </form>
@@ -75,7 +75,7 @@
            <div class="flex flex-row">
               <label for="password_new" class="sr-only">Password</label>
               <input id="password_new" name="password_new" type="password" required class="dark:bg-gray-600 relative block w-full justify-center appearance-none rounded-l-lg border border-gray-300 px-2 py-2 text-gray-900 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm md:text-base" placeholder="New password" value="">
-             <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">
+             <button type="submit" class="group relative flex justify-center rounded-r-lg w-60 border border-transparent bg-indigo-200 dark:bg-indigo-300 dark:hover:bg-indigo-400 py-2 px-3 text-xs md:text-sm items-center font-medium text-indigo-900 hover:bg-indigo-300">
             Update password
             </button>
            </div>
@@ -108,7 +108,7 @@
     <div class="flex justify-between flex-end justify-end border-indigo-700 dark:border-indigo-500 rounded-2xl border-4 py-5 px-5 flex-col md:flex-row w-full gap-3">
     <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
-            <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
+            <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Starter
             </span>
 
@@ -116,11 +116,11 @@
                 2 Analyses
             </span>
             <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
-                One time payment
+                One time purchase
             </span>
 
             <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
-                2€
+                3€
             </span>
 
             <a href="payment/starter/payment" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-200 dark:bg-indigo-300 px-3 py-2 text-base font-medium text-indigo-900 shadow-sm hover:bg-indigo-300 dark:hover:bg-indigo-400">Buy</a>
@@ -129,20 +129,20 @@
 
         <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
-            <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
+            <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Essential
             </span>
 
             <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
-                5 Analyses
+                10 Analyses
             </span>
 
             <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
-                One time payment
+                One time purchase
             </span>
 
             <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
-                5€
+                10€
             </span>
 
             <a href="/payment/essential/payment" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-200 dark:bg-indigo-300 px-3 py-2 text-base font-medium text-indigo-900 shadow-sm hover:bg-indigo-300 dark:hover:bg-indigo-400">Buy</a>
@@ -151,7 +151,7 @@
 
         <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
         <div class="flex flex-col h-full">
-            <span class="text-lg font-bold text-indigo-700 sm:text-lg block mb-1 dark:text-indigo-500">
+            <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Professional
             </span>
 
@@ -165,7 +165,7 @@
 
             <div class="flex flex-row items-baseline">
                 <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
-                    10€
+                    20€
                 </span>
                 <span class="font-medium text-gray-500 text-base block ml-1 dark:text-gray-400">
                     /month

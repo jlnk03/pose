@@ -15,7 +15,7 @@ import plotly.io as pio
 from code_b.process_mem import process_motion
 from itsdangerous import URLSafeTimedSerializer
 
-stripe.api_key = 'sk_test_51MOtJiGVoQxCE2O4tyBqLDo3P64ohVzHBnecrrvnJbvPMjIOc0wSklIuOBqWKpaw4HFCUlL57X1Nuwm8KbuRjgMB00Ijxr6CKq'
+stripe.api_key = os.getenv('STRIPE_API_KEY')
 
 main = Blueprint('main', __name__)
 
@@ -52,11 +52,11 @@ def payment(product, mode):
         methods = ['card', 'klarna', 'sepa_debit', 'giropay']
 
     if product == 'starter':
-        price = 'price_1MP78iGVoQxCE2O44gaPjRcu'
+        price = os.getenv('STRIPE_PRICE_STARTER')
     elif product == 'essential':
-        price = 'price_1MP79AGVoQxCE2O41nDTF4xu'
+        price = os.getenv('STRIPE_PRICE_ESSENTIAL')
     elif product == 'professional':
-        price = 'price_1MP79lGVoQxCE2O4ZGQSEnTz'
+        price = os.getenv('STRIPE_PRICE_PROFESSIONAL')
     else:
         return redirect(url_for('main.profile'))
 
@@ -190,7 +190,7 @@ def predict(token):
     # Extracting the motion data from the video
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration = process_motion(
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration, fps = process_motion(
         contents, filename, location)
 
 
@@ -215,7 +215,8 @@ def predict(token):
         'save_wrist_tilt',
         'save_arm_rotation',
         'arm_path',
-        'duration'
+        'duration',
+        'fps'
     ]
 
     values = [
@@ -239,7 +240,8 @@ def predict(token):
         list(save_wrist_tilt),
         list(save_arm_rotation),
         arm_path,
-        duration
+        duration,
+        fps
     ]
 
     prediction = dict(zip(keys, values))

@@ -312,6 +312,26 @@ def delete_profile():
 @login_required
 def delete_profile_final():
     user = User.query.filter_by(email=current_user.email).first()
+
+    if current_user.subscription is not None:
+        stripe.Subscription.delete(current_user.subscription)
+
+        # check if subscription is canceled
+        for i in range(20):
+            # Getting database updates
+            db.session.refresh(user)
+
+            time.sleep(0.5)
+
+            # Refresh the user
+            user = User.query.filter_by(email=current_user.email).first_or_404()
+            if user.subscription is None:
+                break
+
+            if i == 19:
+                flash('Something went wrong, please try again', 'error')
+                return redirect(url_for('main.profile'))
+
     db.session.delete(user)
     db.session.commit()
     logout_user()
@@ -437,7 +457,7 @@ def unsubscribe():
         if user.canceled:
             break
 
-        if i == 9:
+        if i == 19:
             flash('Something went wrong, please try again', 'error')
 
     return redirect(url_for('main.profile'))
@@ -465,7 +485,7 @@ def reactivate():
         if not user.canceled:
             break
 
-        if i == 9:
+        if i == 19:
             flash('Something went wrong, please try again', 'error')
 
     return redirect(url_for('main.profile'))

@@ -182,7 +182,7 @@ def filter_data(data, duration):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=True):
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, fps=1, filt=True):
     if filt:
         converted = [filter_data(np.array(name), duration) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
@@ -203,12 +203,12 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     save_thorax_sway = save_thorax_sway - save_thorax_sway[0]
     save_thorax_thrust = save_thorax_thrust - save_thorax_thrust[0]
 
-    fig = go.Figure(data=go.Scatter(x=timeline, y=np.gradient(save_pelvis_rotation), name=f'Pelvis'))
+    fig = go.Figure(data=go.Scatter(x=timeline, y=np.gradient(save_pelvis_rotation, 1/fps), name=f'Pelvis'))
 
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=np.gradient(save_thorax_rotation),
+            y=np.gradient(save_thorax_rotation, 1/fps),
             name=f'Thorax',
         )
     )
@@ -216,7 +216,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=np.gradient(save_arm_rotation),
+            y=np.gradient(save_arm_rotation, 1/fps),
             name=f'Arm',
         )
     )
@@ -1072,9 +1072,29 @@ def init_dash(server):
                             className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                             children=[
                                 html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full relative',
+                                    className='flex flex-row w-full justify-start',
                                     children=[
-                                        '3D Arm Path',
+                                        html.Button(
+                                            id='arm_path_title',
+                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 relative text-left',
+                                            children=[
+                                                '3D Arm Path',
+                                            ]
+                                        ),
+                                    ]
+                                ),
+                                html.Div(
+                                    id='arm_path_help',
+                                  className='absolute bottom-3 right-3 w-96 bg-gray-300 rounded-2xl backdrop-blur-md bg-opacity-80 hidden z-10',
+                                    children=[
+                                        html.Div(
+                                            className='flex flex-row px-4 py-4 text-sm text-gray-900',
+                                            children=[
+                                                '''The line represents the 3D trace of the hands while the color of the line represents the beginning and end of the swing.
+                                                Front on is the view facing the player. Down the line is the view in direction of the target.
+                                                ''',
+                                            ]
+                                        )
                                     ]
                                 ),
                                 html.Div(
@@ -1573,10 +1593,11 @@ def init_callbacks(app):
                     save_arm_rotation,
                     duration)
 
+                # Update the 3D plot
                 path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_x, duration * 2),
                                                        y=filter_data(arm_y, duration * 2),
                                                        z=filter_data(arm_z, duration * 2), mode='lines',
-                                                       line=dict(color=filter_data(arm_y, duration * 2),
+                                                       line=dict(color=np.linspace(0, 1, len(arm_x)),
                                                                  width=6, colorscale='Viridis')))
 
                 path_fig.update_layout(
@@ -1638,7 +1659,7 @@ def init_callbacks(app):
                 path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
                                                        y=arm_position['y'],
                                                        z=arm_position['z'], mode='lines',
-                                                       line=dict(color=arm_position['y'],
+                                                       line=dict(color=np.linspace(0, 1, len(arm_position['x'])),
                                                                  width=6, colorscale='Viridis')))
 
                 path_fig.update_layout(
@@ -1752,7 +1773,7 @@ def init_callbacks(app):
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration = response.json().values()
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps = response.json().values()
 
         else:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1893,6 +1914,20 @@ def init_callbacks(app):
             return [
                 'flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5',
                 body_class]
+
+    # Show help on click
+    @app.callback(
+        Output('arm_path_help', 'className'),
+        [Input('arm_path_title', 'n_clicks'), Input('arm_path_help', 'className')],
+        prevent_initial_call=True
+    )
+    def show_help(n_clicks, help_class):
+        if n_clicks % 2 == 1:
+            help_class = help_class.replace('hidden', 'flex')
+            return help_class
+        else:
+            help_class = help_class.replace('flex', 'hidden')
+            return help_class
 
 
 # Reset plots
@@ -2058,3 +2093,13 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third
+
+def velocity(path):
+    # Get the velocity of the path
+    print(np.shape(path))
+    velocity = np.gradient(path, axis=1)
+    print(np.shape(velocity))
+    speed = np.sqrt(velocity[0] ** 2 + velocity[1] ** 2 + velocity[2] ** 2)
+    print(np.shape(speed))
+
+    return speed
