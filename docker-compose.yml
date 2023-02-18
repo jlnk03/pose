@@ -7,6 +7,11 @@ services:
     build: ./flask_wrapper
     environment:
       - MAIL_AUTH
+      - STRIPE_API_KEY
+      - ENDPOINT_SECRET
+      - STRIPE_PRICE_STARTER
+      - STRIPE_PRICE_ESSENTIAL
+      - STRIPE_PRICE_PROFESSIONAL
     volumes:
       - ./storage/db:/db
       - ./storage/save_data:/flask_wrapper/assets/save_data

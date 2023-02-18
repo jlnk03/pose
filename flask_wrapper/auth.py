@@ -438,9 +438,6 @@ def webhook():
 @auth.route('/unsubscribe')
 @login_required
 def unsubscribe():
-    print(stripe.api_key)
-    print(os.getenv('STRIPE_API_KEY'))
-    print(os.environ)
     user = User.query.filter_by(email=current_user.email).first_or_404()
     subscription = user.subscription
     if subscription is not None:
