@@ -279,11 +279,11 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
 
     fig4.add_trace(
-        go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis_sway')
+        go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis sway')
     )
 
     fig4.add_trace(
-        go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis_thrust')
+        go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
     )
 
     fig4.update_layout(
@@ -629,11 +629,11 @@ fig3.update_layout(
 fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
 
 fig4.add_trace(
-    go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis_sway')
+    go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis sway')
 )
 
 fig4.add_trace(
-    go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis_thrust')
+    go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
 )
 
 fig4.update_layout(

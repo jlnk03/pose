@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     n_analyses = db.Column(db.Integer)
     unlimited = db.Column(db.Boolean)
     admin = db.Column(db.Boolean)
+    subscription = db.Column(db.String(100))
+    canceled = db.Column(db.Boolean)
 
 
 

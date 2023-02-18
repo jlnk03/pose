@@ -4,9 +4,11 @@ import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
+import time
 
 import stripe
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify
+import json
+from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify, g
 from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,6 +17,9 @@ from flask_wrapper import db
 from .models import User
 
 auth = Blueprint('auth', __name__)
+
+stripe.api_key = os.getenv('STRIPE_API_KEY')
+endpoint_secret = os.getenv('ENDPOINT_SECRET')
 
 # change directory to access files correctly
 if 'flask_wrapper' not in os.getcwd():
@@ -327,20 +332,140 @@ def console():
 def webhook():
     event = None
     payload = request.data
-    sig_header = request.headers['STRIPE_SIGNATURE']
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError as e:
-        # Invalid payload
-        raise e
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        raise e
+        event = json.loads(payload)
+    except Exception as e:
+        print('⚠️  Webhook error while parsing basic request.' + str(e))
+        return jsonify(success=False)
+
+    if endpoint_secret:
+        # Only verify the event if there is an endpoint secret defined
+        # Otherwise use the basic event deserialized with json
+        sig_header = request.headers.get('stripe-signature')
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, endpoint_secret
+            )
+        except stripe.error.SignatureVerificationError as e:
+            print('⚠️  Webhook signature verification failed.' + str(e))
+            return jsonify(success=False)
 
     # Handle the event
-    print('Handled event type {}'.format(event['type']))
+    if event['type'] == 'checkout.session.completed':
+        email = event['data']['object']['customer_details']['email']
+        product = event['data']['object']['metadata']['product']
+        user = User.query.filter_by(email=email).first_or_404()
+
+        if product == 'starter':
+            user.n_analyses += 2
+            db.session.commit()
+        elif product == 'essential':
+            user.n_analyses += 5
+            db.session.commit()
+
+    elif event['type'] == 'customer.subscription.updated':
+        # print('Subscription updated')
+        # get the customer id
+        customer_id = event['data']['object']['customer']
+        # retrieve the customer
+        customer = stripe.Customer.retrieve(customer_id)
+        # get the email
+        email = customer['email']
+        user = User.query.filter_by(email=email).first_or_404()
+        # check if the subscription is active
+        if event['data']['object']['status'] == 'active':
+            # print('Subscription active')
+            user.unlimited = True
+            user.subscription = event['data']['object']['id']
+            db.session.commit()
+
+        # Unsubscribe
+        if event['data']['object']['cancel_at_period_end']:
+            user.canceled = True
+            db.session.commit()
+
+        # Reactivate
+        if event['data']['object']['cancel_at_period_end'] is False:
+            # print('Reactivated')
+            user.canceled = False
+            db.session.commit()
+
+    # Delete subscription
+    elif event['type'] == 'customer.subscription.deleted':
+        # print('Subscription deleted')
+        # get the customer id
+        customer_id = event['data']['object']['customer']
+        # retrieve the customer
+        customer = stripe.Customer.retrieve(customer_id)
+        # get the email
+        email = customer['email']
+        user = User.query.filter_by(email=email).first_or_404()
+        # check if the subscription is active
+        if event['data']['object']['status'] == 'canceled':
+            user.unlimited = False
+            user.subscription = None
+            user.canceled = False
+            db.session.commit()
+
+    else:
+        # Unexpected event type
+        print('Unhandled event type {}'.format(event['type']))
 
     return jsonify(success=True)
+
+
+@auth.route('/unsubscribe')
+@login_required
+def unsubscribe():
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    subscription = user.subscription
+    if subscription is not None:
+        stripe.Subscription.modify(
+            subscription,
+            cancel_at_period_end=True,
+        )
+    # check if canceled is false
+    for i in range(20):
+        # Getting database updates
+        db.session.refresh(user)
+
+        time.sleep(0.5)
+
+        # Refresh the user
+        user = User.query.filter_by(email=current_user.email).first_or_404()
+        if user.canceled:
+            break
+
+        if i == 9:
+            flash('Something went wrong, please try again', 'error')
+
+    return redirect(url_for('main.profile'))
+
+
+@auth.route('/reactivate')
+@login_required
+def reactivate():
+    user = User.query.filter_by(email=current_user.email).first_or_404()
+    subscription = user.subscription
+    if subscription is not None:
+        stripe.Subscription.modify(
+            subscription,
+            cancel_at_period_end=False,
+        )
+    # check if canceled is false
+    for i in range(20):
+        # Getting database updates
+        db.session.refresh(user)
+
+        time.sleep(0.5)
+
+        # Refresh the user
+        user = User.query.filter_by(email=current_user.email).first_or_404()
+        if not user.canceled:
+            break
+
+        if i == 9:
+            flash('Something went wrong, please try again', 'error')
+
+    return redirect(url_for('main.profile'))

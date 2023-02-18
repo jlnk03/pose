@@ -46,7 +46,6 @@ def dashboard():
 @main.route('/payment/<product>/<mode>')
 def payment(product, mode):
 
-    # YOUR_DOMAIN = 'http://127.0.0.1:8080'
     if mode == 'subscription':
         methods = ['card', 'sepa_debit']
     else:
@@ -75,6 +74,9 @@ def payment(product, mode):
             mode=mode,
             success_url=url_for('main.success', product=product, _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=url_for('main.cancel', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+            metadata={
+                'product': product,
+            }
         )
 
         checkout_id = checkout_session.id
@@ -95,7 +97,6 @@ def success(product):
     session = db.session.query(Transactions).filter_by(session_id=id).first()
 
     response = stripe.checkout.Session.retrieve(id)
-    # print(response)
     # print(type(response))
 
     if session is None:
@@ -111,12 +112,12 @@ def success(product):
         flash('This purchase has already been booked')
         return redirect(url_for('main.profile'))
 
-    if product == 'starter':
-        user.n_analyses += 2
-    elif product == 'essential':
-        user.n_analyses += 5
-    elif product == 'professional':
-        user.unlimited = True
+    # if product == 'starter':
+    #     user.n_analyses += 2
+    # elif product == 'essential':
+    #     user.n_analyses += 5
+    # elif product == 'professional':
+    #     user.unlimited = True
 
     # db.session.add(user)
     session.booked = True

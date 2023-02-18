@@ -123,8 +123,8 @@ def process_motion(contents, filename, location):
                 foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
                 foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
                 nose = landmarks[mp_pose.PoseLandmark.NOSE.value]
-                eye_l = landmarks[mp_pose.PoseLandmark.LEFT_EYE.value]
-                eye_r = landmarks[mp_pose.PoseLandmark.RIGHT_EYE.value]
+                eye_l = landmarks[mp_pose.PoseLandmark.LEFT_EAR.value]
+                eye_r = landmarks[mp_pose.PoseLandmark.RIGHT_EAR.value]
                 pinky_l = landmarks[mp_pose.PoseLandmark.LEFT_PINKY.value]
                 index_l = landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value]
 

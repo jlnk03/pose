@@ -74,7 +74,7 @@ def mass_balance(foot_l, foot_r):
 
 
 def pelvis_rotation(hip_l, hip_r, r):
-    hip_v = r @ np.array([hip_l.x - hip_r.x, 0, hip_l.z - hip_r.z], dtype=np.float64)
+    hip_v = r @ np.array([hip_l.x - hip_r.x, hip_l.y - hip_r.y, hip_l.z - hip_r.z], dtype=np.float64)
     normal = np.array([0, 0, 1])
     # angle = np.arccos(normal.dot(hip_v) / (np.linalg.norm(normal) * np.linalg.norm(hip_v)))
     # angle between hip vector and normal with atan2
@@ -110,7 +110,7 @@ def pelvis_lift(foot_l, r):
 
 
 def thorax_rotation(shoulder_l, shoulder_r, r):
-    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, 0, shoulder_l.z - shoulder_r.z], dtype=np.float64)
+    shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float64)
     normal = np.array([0, 0, 1])
     # angle = np.arccos(normal.dot(shoulder_v) / (np.linalg.norm(normal) * np.linalg.norm(shoulder_v)))
     # angle between shoulder vector and normal with atan2
@@ -121,7 +121,7 @@ def thorax_rotation(shoulder_l, shoulder_r, r):
 
 def thorax_tilt(shoulder_l, shoulder_r, r):
     shoulder_v = r @ np.array([shoulder_l.x - shoulder_r.x, shoulder_l.y - shoulder_r.y, shoulder_l.z - shoulder_r.z], dtype=np.float64)
-    shoulder_v[0] = 0
+    # shoulder_v[0] = 0
     # shoulder_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
     # spine = shoulder_l - 0.5 * shoulder_v
     # spine[0] = 0
@@ -198,7 +198,7 @@ def spine_tilt(hip_l, hip_r, shoulder_l, shoulder_r, r):
 
 # head rotation
 def head_rotation(eye_l, eye_r, r):
-    eye_v = r @ np.array([eye_l.x - eye_r.x, 0, eye_l.z - eye_r.z], dtype=np.float64)
+    eye_v = r @ np.array([eye_l.x - eye_r.x, eye_l.y - eye_r.y, eye_l.z - eye_r.z], dtype=np.float64)
     normal = np.array([0, 0, 1])
     # angle = np.arccos(normal.dot(eye_v) / (np.linalg.norm(normal) * np.linalg.norm(eye_v)))
     # angle between eye vector and normal with atan2
@@ -210,11 +210,11 @@ def head_rotation(eye_l, eye_r, r):
 # head tilt
 def head_tilt(eye_l, eye_r, r):
     eye_v = r @ np.array([eye_l.x - eye_r.x, eye_l.y - eye_r.y, eye_l.z - eye_r.z], dtype=np.float64)
-    eye_v[0] = 0
-    normal = np.array([0, 0, 1])
+    # eye_v[0] = 0
+    normal = np.array([0, 1, 0])
     angle = np.arccos(normal.dot(eye_v) / (np.linalg.norm(normal) * np.linalg.norm(eye_v)))
 
-    return np.degrees(angle)
+    return np.degrees(angle) - 90
 
 
 # distance from spine to left wrist
