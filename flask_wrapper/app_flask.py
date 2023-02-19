@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
-from dash import Dash, ctx, ALL, Input, Output, State, html, dcc
+from dash import Dash, ctx, ALL, Input, Output, State, html, dcc, MATCH
 import pandas as pd
 from scipy import signal
 from code_b.angles import *
@@ -64,7 +64,7 @@ def find_closest_zero_intersection_right_of_max(array):
     else:
         return len(array)
 
-    
+
 def find_closest_zero_intersection_left_of_min(array):
     min_index = np.argmin(array)
     indices = np.where(np.diff(np.sign(array)))[0]
@@ -160,11 +160,12 @@ def rand(length, size):
 
 
 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
-arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
 duration = 10
 timeline = np.linspace(0, duration, len(save_pelvis_rotation))
@@ -182,7 +183,8 @@ def filter_data(data, duration):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, fps=1, filt=True):
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, fps=1,
+                 filt=True):
     if filt:
         converted = [filter_data(np.array(name), duration) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
@@ -203,12 +205,12 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     save_thorax_sway = save_thorax_sway - save_thorax_sway[0]
     save_thorax_thrust = save_thorax_thrust - save_thorax_thrust[0]
 
-    fig = go.Figure(data=go.Scatter(x=timeline, y=np.gradient(save_pelvis_rotation, 1/fps), name=f'Pelvis'))
+    fig = go.Figure(data=go.Scatter(x=timeline, y=np.gradient(save_pelvis_rotation, 1 / fps), name=f'Pelvis'))
 
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=np.gradient(save_thorax_rotation, 1/fps),
+            y=np.gradient(save_thorax_rotation, 1 / fps),
             name=f'Thorax',
         )
     )
@@ -216,7 +218,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=np.gradient(save_arm_rotation, 1/fps),
+            y=np.gradient(save_arm_rotation, 1 / fps),
             name=f'Arm',
         )
     )
@@ -225,7 +227,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Angular velocity',
         title_x=0.5,
         font_size=12,
-        yaxis_title="Angular velocity in °/s",
+        # yaxis_title="Angular velocity in °/s",
         # xaxis_title="time in s",
         xaxis_ticksuffix="s",
         yaxis_ticksuffix="°/s",
@@ -290,7 +292,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Pelvis displacement',
         title_x=0.5,
         font_size=12,
-        yaxis_title='Displacement in m',
+        # yaxis_title='Displacement in m',
         # xaxis_title="time in s",
         yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -324,7 +326,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Thorax angles',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -358,7 +360,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Thorax displacement',
         title_x=0.5,
         font_size=12,
-        yaxis_title='Displacement in m',
+        # yaxis_title='Displacement in m',
         # xaxis_title="time in s",
         yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -384,7 +386,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Tilt between pelvis and shoulder',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -408,7 +410,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Head tilt',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -432,7 +434,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Head rotation',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -456,7 +458,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Left arm length',
         title_x=0.5,
         font_size=12,
-        yaxis_title='length in m',
+        # yaxis_title='length in m',
         # xaxis_title="time in s",
         yaxis_ticksuffix="m",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -480,7 +482,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Spine rotation',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -508,7 +510,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         # title='Wrist angle',
         title_x=0.5,
         font_size=12,
-        yaxis_title='angle in °',
+        # yaxis_title='angle in °',
         # xaxis_title="time in s",
         yaxis_ticksuffix="°",
         paper_bgcolor='rgba(0,0,0,0)',
@@ -537,7 +539,7 @@ path_fig = go.Figure(
 path_fig.update_layout(
     scene=dict(
         xaxis_title='Down the line',
-        yaxis_title='Front on',
+        # yaxis_title='Front on',
         zaxis_title='Height',
         xaxis_showticklabels=False,
         yaxis_showticklabels=False,
@@ -576,7 +578,7 @@ fig.update_layout(
     # title='Angular velocity',
     title_x=0.5,
     font_size=12,
-    yaxis_title="Angular velocity in °/s",
+    # yaxis_title="Angular velocity in °/s",
     # xaxis_title="time in s",
     yaxis_ticksuffix="°/s",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -606,7 +608,7 @@ fig3.update_layout(
     # title='Pelvis angles',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -640,7 +642,7 @@ fig4.update_layout(
     # title='Pelvis displacement',
     title_x=0.5,
     font_size=12,
-    yaxis_title='Displacement in m',
+    # yaxis_title='Displacement in m',
     # xaxis_title="time in s",
     yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -674,7 +676,7 @@ fig5.update_layout(
     # title='Thorax angles',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -708,7 +710,7 @@ fig6.update_layout(
     # title='Thorax displacement',
     title_x=0.5,
     font_size=12,
-    yaxis_title='Displacement in m',
+    # yaxis_title='Displacement in m',
     # xaxis_title="time in s",
     yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -734,7 +736,7 @@ fig11.update_layout(
     # title='Tilt between pelvis and shoulder',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -758,7 +760,7 @@ fig12.update_layout(
     # title='Head tilt',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -782,7 +784,7 @@ fig13.update_layout(
     # title='Head rotation',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -806,7 +808,7 @@ fig14.update_layout(
     # title='Left arm length',
     title_x=0.5,
     font_size=12,
-    yaxis_title='length in m',
+    # yaxis_title='length in m',
     # xaxis_title="time in s",
     yaxis_ticksuffix="m",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -830,7 +832,7 @@ fig15.update_layout(
     # title='Spine rotation',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -858,7 +860,7 @@ fig16.update_layout(
     # title='Wrist angles',
     title_x=0.5,
     font_size=12,
-    yaxis_title='angle in °',
+    # yaxis_title='angle in °',
     # xaxis_title="time in s",
     yaxis_ticksuffix="°",
     paper_bgcolor='rgba(0,0,0,0)',
@@ -914,533 +916,457 @@ def init_dash(server):
 
         layout = html.Div(
 
-            # className="bg-[#F6F9FFFF] h-full",
-            # className='bg-gradient-to-br from-amber-50 to-violet-100 h-full',
-
             children=[
 
-                # navbar top
+                # Loader
                 html.Div(
-                    id='navbar-top',
-                    className='flex flex-row w-full h-12 items-center ml-4 lg:hidden z-20',
-                    children=[
-                        html.Button(
-                            className='flex flex-row w-6 h-6 items-center',
-                            id='menu-button',
-                            children=[
-                                html.Img(src=app.get_asset_url('menu_burger.svg'), className='h-4 w-4', id='menu-icon')
-                            ]
-                        )
-                    ]
+                    id='loader',
+                    className='hidden w-full',
+                    children=loader
                 ),
 
-                # Sidebar
+                # Main wrapper
                 html.Div(
-                    id='sidebar',
-                    className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
+                    id='main_wrapper',
                     children=[
-                        html.Button(
-                            id='sidebar-header',
-                            className='flex-row items-center ml-4 hidden',
-                            children=[html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
-                        ),
+
+                        # navbar top
                         html.Div(
-                            'HISTORY',
-                            className='text-white text-xs font-medium mb-3 mt-5 px-4'
-                        ),
-                        html.Div(
-                            className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
+                            id='navbar-top',
+                            className='flex flex-row w-full h-12 items-center ml-4 lg:hidden z-20',
                             children=[
                                 html.Button(
+                                    className='flex flex-row w-6 h-6 items-center',
+                                    id='menu-button',
                                     children=[
-                                        html.Div(
-                                            className='flex flex-row items-center',
+                                        html.Img(src=app.get_asset_url('menu_burger.svg'), className='h-4 w-4',
+                                                 id='menu-icon')
+                                    ]
+                                )
+                            ]
+                        ),
+
+                        # Sidebar
+                        html.Div(
+                            id='sidebar',
+                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
+                            children=[
+                                html.Button(
+                                    id='sidebar-header',
+                                    className='flex-row items-center ml-4 hidden',
+                                    children=[
+                                        html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
+                                ),
+                                html.Div(
+                                    'HISTORY',
+                                    className='text-white text-xs font-medium mb-3 mt-5 px-4'
+                                ),
+                                html.Div(
+                                    className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
+                                    children=[
+                                        html.Button(
                                             children=[
-                                                html.Img(src=app.get_asset_url('graph_gray.svg'),
-                                                         className='w-6 h-6 mr-2'),
-                                                reformat_file(file),
-                                            ]),
-                                        html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
+                                                html.Div(
+                                                    className='flex flex-row items-center',
+                                                    children=[
+                                                        html.Img(src=app.get_asset_url('graph_gray.svg'),
+                                                                 className='w-6 h-6 mr-2'),
+                                                        reformat_file(file),
+                                                    ]),
+                                                html.Button(
+                                                    html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                                                     id={'type': 'delete', 'index': file}, n_clicks=0,
                                                     className='invisible', disabled=True
                                                     ),
-                                    ],
-                                    id={'type': 'saved-button', 'index': f'{file}'},
-                                    className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
-                                for file in files],
-                            id='file_list',
-                        ),
-                        html.Div(
-                            className='flex flex-col gap-2 mx-4 mb-4 justify-end',
-                            children=[
-                                html.A(
-                                    'HOME',
-                                    href='/',
-                                    className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            ],
+                                            id={'type': 'saved-button', 'index': f'{file}'},
+                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                        for file in files],
+                                    id='file_list',
                                 ),
-                                html.A(
-                                    'PROFILE',
-                                    href='/profile',
-                                    className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
-                                ),
-                                # html.A(
-                                #     'HISTORY',
-                                #     href='/history',
-                                #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-2xl'
-                                # ),
-                                html.A(
-                                    'DASHBOARD',
-                                    href='/dash',
-                                    className='font-medium text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
-                                ),
-                                html.A(
-                                    'LOGOUT',
-                                    href='/logout',
-                                    className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-gray-200 hover:text-gray-200 transition'
+                                html.Div(
+                                    className='flex flex-col gap-2 mx-4 mb-4 justify-end',
+                                    children=[
+                                        html.A(
+                                            'HOME',
+                                            href='/',
+                                            className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                        ),
+                                        html.A(
+                                            'PROFILE',
+                                            href='/profile',
+                                            className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                        ),
+                                        # html.A(
+                                        #     'HISTORY',
+                                        #     href='/history',
+                                        #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-2xl'
+                                        # ),
+                                        html.A(
+                                            'DASHBOARD',
+                                            href='/dash',
+                                            className='font-medium text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                        ),
+                                        html.A(
+                                            'LOGOUT',
+                                            href='/logout',
+                                            className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-gray-200 hover:text-gray-200 transition'
+                                        )
+                                    ]
                                 )
                             ]
-                        )
-                    ]
-                ),
+                        ),
 
-                html.Div(
-                    id='body',
-                    className='lg:mx-16 mx-4 lg:pl-60 mt-0',
-                    children=[
                         html.Div(
-                            id='upload-video',
-                            className='flex flex-row justify-between mt-5',
+                            id='body',
+                            className='lg:mx-16 mx-4 lg:pl-60 mt-0',
                             children=[
+                                html.Div(
+                                    id='upload-video',
+                                    className='flex flex-row justify-between mt-5',
+                                    children=[
 
-                                html.Div(children=[
-                                    html.Div(
-                                        children=[
-                                            html.Span(
-                                                'Upload your video',
-                                                className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                                        html.Div(children=[
+                                            html.Div(
+                                                children=[
+                                                    html.Span(
+                                                        'Upload your video',
+                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                                                    ),
+                                                    html.Span(
+                                                        'as mp4, mov or avi – max. 20 MB',
+                                                        className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                                                    )
+                                                ],
+                                                className='flex flex-col items-start mx-4 sm:mx-10 mb-4'
                                             ),
-                                            html.Span(
-                                                'as mp4, mov or avi – max. 20 MB',
-                                                className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                                            html.Div(
+                                                dcc.Upload(
+                                                    disabled=disabled,
+                                                    id='upload-data',
+                                                    children=html.Div(
+                                                        className='text-slate-900 dark:text-gray-100',
+                                                        children=
+                                                        [
+                                                            'Drop your video here or ',
+                                                            html.A(' browse'),
+                                                            ' ⛳️',
+                                                        ],
+                                                    ),
+                                                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                                    className='mx-4 sm:mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-20 sm:h-60',
+                                                    multiple=False,
+                                                    max_size=20e6,
+                                                    accept=['.mp4', '.mov', '.avi'],
+                                                    # className_active='bg-[rgba(230, 240, 250, 1)]',
+                                                    # className_active='bg-blue-50 mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                                    # className_reject='bg-indigo-600'
+                                                    style_active=(dict(
+                                                        backgroundColor='rgba(230, 240, 250, 1)',
+                                                        borderColor='rgba(115, 165, 250, 1)',
+                                                        borderRadius='12px',
+                                                    )),
+                                                    style_reject=(dict(
+                                                        backgroundColor='bg-red-200',
+                                                        borderColor='bg-red-400',
+                                                        borderRadius='12px',
+                                                    )),
+                                                    # className='upload'
+                                                ),
+                                                className='w-full'
+                                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                             )
                                         ],
-                                        className='flex flex-col items-start mx-4 sm:mx-10 mb-4'
-                                    ),
-                                    html.Div(
-                                        dcc.Upload(
-                                            disabled=disabled,
-                                            id='upload-data',
-                                            children=html.Div(
-                                                className='text-slate-900 dark:text-gray-100',
-                                                children=
-                                                [
-                                                    'Drop your video here or ',
-                                                    html.A(' browse'),
-                                                    ' ⛳️',
-                                                ],
-                                            ),
-                                            # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                            className='mx-4 sm:mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-20 sm:h-60',
-                                            multiple=False,
-                                            max_size=20e6,
-                                            accept=['.mp4', '.mov', '.avi'],
-                                            # className_active='bg-[rgba(230, 240, 250, 1)]',
-                                            # className_active='bg-blue-50 mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                            # className_reject='bg-indigo-600'
-                                            style_active=(dict(
-                                                backgroundColor='rgba(230, 240, 250, 1)',
-                                                borderColor='rgba(115, 165, 250, 1)',
-                                                borderRadius='12px',
-                                            )),
-                                            style_reject=(dict(
-                                                backgroundColor='bg-red-200',
-                                                borderColor='bg-red-400',
-                                                borderRadius='12px',
-                                            )),
-                                            # className='upload'
+                                            # className='container',
+                                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                         ),
-                                        className='w-full'
-                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                                    )
-                                ],
-                                    # className='container',
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                                ),
-                            ]),
+                                    ]),
 
-                        html.Div(
-                            className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
                                 html.Div(
-                                    className='flex flex-row w-full justify-start',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
-                                        html.Button(
-                                            id='arm_path_title',
-                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 relative text-left',
+
+                                        html.Div(info_text('arm_path'), className='w-full'),
+
+                                        html.Div(
+                                            # 3D arm path
+                                            id='arm_path',
                                             children=[
-                                                '3D Arm Path',
+                                                dcc.Graph(
+                                                    figure=path_fig,
+                                                    config=config,
+                                                    className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',
+                                                )
+                                            ]),
+                                    ]
+                                ),
+
+                                html.Div(
+                                    id='parent_sequence',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+
+                                        # Row for sequences
+                                        html.Div(
+                                            className='flex flex-row justify-between items-center w-full flex-wrap relative',
+                                            children=[
+                                                # Column for sequence
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('transition_sequence'),
+                                                                 className='relative w-full'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                            children=[
+                                                                html.Div(
+                                                                    '1',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '2',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '3',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+
+                                                # Column for sequence
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('start_sequence'),
+                                                                 className='relative w-full'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                            children=[
+                                                                html.Div(
+                                                                    '1',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='start_sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '2',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='start_sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '3',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='start_sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+
+                                                # Column for sequence
+                                                html.Div(
+                                                    className='relative flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('finish_sequence'),
+                                                                 className=' relative w-full'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                            children=[
+                                                                html.Div(
+                                                                    '1',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='end_sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '2',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='end_sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    '3',
+                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    id='end_sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
                                             ]
+                                        ),
+
+                                        html.Div(info_text('angular_velocity'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='sequence',
+                                            figure=fig,
+                                            config=config,
+                                            className='h-[500px] w-full relative'
                                         ),
                                     ]
                                 ),
+
                                 html.Div(
-                                    id='arm_path_help',
-                                  className='absolute bottom-3 right-3 w-96 bg-gray-300 rounded-2xl backdrop-blur-md bg-opacity-80 hidden z-10',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
-                                        html.Div(
-                                            className='flex flex-row px-4 py-4 text-sm text-gray-900',
-                                            children=[
-                                                '''The line represents the 3D trace of the hands while the color of the line represents the beginning and end of the swing.
-                                                Front on is the view facing the player. Down the line is the view in direction of the target.
-                                                ''',
-                                            ]
-                                        )
-                                    ]
-                                ),
-                                html.Div(
-                                    # 3D arm path
-                                    id='arm_path',
-                                    children=[
+                                        html.Div(info_text('pelvis_rotation'), className='relative w-full'),
+
                                         dcc.Graph(
-                                            figure=path_fig,
+                                            id='pelvis_rotation',
+                                            figure=fig3,
                                             config=config,
-                                            className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',
+                                            className='w-full h-[500px]',
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('pelvis_displacement'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='pelvis_displacement',
+                                            figure=fig4,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('thorax_angles'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='thorax_rotation',
+                                            figure=fig5,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('thorax_displacement'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='thorax_displacement',
+                                            figure=fig6,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('head_tilt'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='h_tilt',
+                                            figure=fig12,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('head_rotation'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='h_rotation',
+                                            figure=fig13,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        ),
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('spine_tilt'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='s_tilt',
+                                            figure=fig11,
+                                            config=config,
+                                            className='w-full h-[500px]'
                                         )
                                     ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('left_arm'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='arm_length',
+                                            figure=fig14,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        )
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(info_text('spine_rotation'), className=' relative w-full'),
+
+                                        dcc.Graph(
+                                            id='spine_rotation',
+                                            figure=fig15,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        )
+                                    ]),
+
+                                html.Div(
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    children=[
+                                        html.Div(
+                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                            children=[
+                                                'Wrist Angles'
+                                            ]
+                                        ),
+
+                                        dcc.Graph(
+                                            id='wrist_angle',
+                                            figure=fig16,
+                                            config=config,
+                                            className='w-full h-[500px]'
+                                        )
+                                    ]),
+
+                                html.Script('assets/dash.js'),
                             ]
                         ),
 
-                        dcc.Loading(
-                            id='loading',
-                            type='graph',
-                            fullscreen=True,
-                            # parent_className="dark:bg-slate-600 bg-[#FAF7F5]",
-                            children=
-                            html.Div(
-                                className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                children=[
-
-                                    # Row for sequences
-                                    html.Div(
-                                        className='flex flex-row justify-between items-center w-full flex-wrap',
-                                        children=[
-                                            # Column for sequence
-                                            html.Div(
-                                                className='flex flex-col',
-                                                children=[
-                                                    html.Div(
-                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                                        children=[
-                                                            'Transition Sequence',
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                        children=[
-                                                            html.Div(
-                                                                '1',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='sequence_first'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '2',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='sequence_second'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '3',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='sequence_third'
-                                                            )
-                                                        ]
-                                                    ),
-                                                ]
-                                            ),
-
-                                            # Column for sequence
-                                            html.Div(
-                                                className='flex flex-col',
-                                                children=[
-                                                    html.Div(
-                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                                        children=[
-                                                            'Start Sequence',
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                        children=[
-                                                            html.Div(
-                                                                '1',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='start_sequence_first'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '2',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='start_sequence_second'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '3',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='start_sequence_third'
-                                                            )
-                                                        ]
-                                                    ),
-                                                ]
-                                            ),
-
-                                            # Column for sequence
-                                            html.Div(
-                                                className='flex flex-col',
-                                                children=[
-                                                    html.Div(
-                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                                        children=[
-                                                            'Finish Sequence',
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                        children=[
-                                                            html.Div(
-                                                                '1',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='end_sequence_first'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '2',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='end_sequence_second'
-                                                            ),
-                                                            html.Div(
-                                                                className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                            ),
-                                                            html.Div(
-                                                                '3',
-                                                                className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
-                                                                id='end_sequence_third'
-                                                            )
-                                                        ]
-                                                    ),
-                                                ]
-                                            ),
-                                        ]
-                                    ),
-
-                                    html.Div(
-                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                        children=[
-                                            'Angular Velocity',
-                                        ]
-                                    ),
-
-                                    dcc.Graph(
-                                        id='sequence',
-                                        figure=fig,
-                                        config=config,
-                                        className='h-[500px] w-full'
-                                    ),
-                                ]
-                            ),
-                        ),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Pelvis Angles',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='pelvis_rotation',
-                                    figure=fig3,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Pelvis Displacement',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='pelvis_displacement',
-                                    figure=fig4,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Thorax Angles',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='thorax_rotation',
-                                    figure=fig5,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Thorax Displacement',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='thorax_displacement',
-                                    figure=fig6,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Head Tilt',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='h_tilt',
-                                    figure=fig12,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Head Rotation',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='h_rotation',
-                                    figure=fig13,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                ),
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Spine Tilt',
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='s_tilt',
-                                    figure=fig11,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                )
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Left Arm Length'
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='arm_length',
-                                    figure=fig14,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                )
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Spine Rotation'
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='spine_rotation',
-                                    figure=fig15,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                )
-                            ]),
-
-                        html.Div(
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                            children=[
-                                html.Div(
-                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
-                                    children=[
-                                        'Wrist Angles'
-                                    ]
-                                ),
-
-                                dcc.Graph(
-                                    id='wrist_angle',
-                                    figure=fig16,
-                                    config=config,
-                                    className='w-full h-[500px]'
-                                )
-                            ]),
-
-                        html.Script('assets/dash.js'),
                     ]
                 ),
             ]
@@ -1467,16 +1393,18 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
-
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
          Output('h_tilt', 'figure'),
          Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
          Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
-         Output('sequence_first', 'className'), Output('sequence_second', 'className'), Output('sequence_third', 'className'),
-         Output('start_sequence_first', 'className'), Output('start_sequence_second', 'className'), Output('start_sequence_third', 'className'),
-         Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'), Output('end_sequence_third', 'className'),
+         Output('sequence_first', 'className'), Output('sequence_second', 'className'),
+         Output('sequence_third', 'className'),
+         Output('start_sequence_first', 'className'), Output('start_sequence_second', 'className'),
+         Output('start_sequence_third', 'className'),
+         Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'),
+         Output('end_sequence_third', 'className'),
          Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
@@ -1540,14 +1468,17 @@ def init_callbacks(app):
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
-                sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+                sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation,
+                                                                                     save_thorax_rotation,
+                                                                                     save_arm_rotation, duration)
 
                 # Get the kinematic start sequence
-                sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+                sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(
+                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the kinematic end sequence
-                sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
-
+                sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(
+                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1619,7 +1550,8 @@ def init_callbacks(app):
                     paper_bgcolor='rgba(0,0,0,0)',
                 )
 
-                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
+                path = dcc.Graph(figure=path_fig, config=config,
+                                 className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
@@ -1640,9 +1572,9 @@ def init_callbacks(app):
 
                 # Reset plots
                 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
                 arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -1681,7 +1613,8 @@ def init_callbacks(app):
                     paper_bgcolor='rgba(0,0,0,0)',
                 )
 
-                path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
+                path = dcc.Graph(figure=path_fig, config=config,
+                                 className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                 # Reset sequence colors
                 sequence_first = 'text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
@@ -1767,8 +1700,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1778,9 +1711,11 @@ def init_callbacks(app):
         else:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(
+                100, 19)
             duration = 10
-            arm_position = {'x':[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ], 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+            arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                            'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
         # Get the video and update the video player
         vid_src = location + '/motion.mp4'
@@ -1812,7 +1747,8 @@ def init_callbacks(app):
             [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
              save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
              save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position['x'], arm_position['y'], arm_position['z']]).T
+             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position['x'],
+             arm_position['y'], arm_position['z']]).T
         df.columns = ['pelvis_rotation', 'pelvis_tilt', 'pelvis_lift', 'pelvis_sway', 'pelvis_thrust',
                       'thorax_lift', 'thorax_bend', 'thorax_sway', 'thorax_rotation', 'thorax_thrust',
                       'thorax_tilt', 'spine_rotation', 'spine_tilt', 'head_rotation', 'head_tilt', 'left_arm_length',
@@ -1822,7 +1758,11 @@ def init_callbacks(app):
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
-        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration*2), y=filter_data(arm_position['y'], duration*2), z=filter_data(arm_position['z'], duration*2), mode='lines', line=dict(color=filter_data(arm_position['y'], duration*2), width=6, colorscale='Viridis')))
+        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2),
+                                               y=filter_data(arm_position['y'], duration * 2),
+                                               z=filter_data(arm_position['z'], duration * 2), mode='lines',
+                                               line=dict(color=np.linspace(0, 1, len(arm_position['x'])), width=6,
+                                                         colorscale='Viridis')))
         path_fig.update_layout(
             scene=dict(
                 xaxis_title='Down the line',
@@ -1842,7 +1782,8 @@ def init_callbacks(app):
             paper_bgcolor='rgba(0,0,0,0)',
         )
 
-        path = dcc.Graph(figure=path_fig, config=config, className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',)
+        path = dcc.Graph(figure=path_fig, config=config,
+                         className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         # Get the kinematic transition  sequence
         sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
@@ -1916,18 +1857,32 @@ def init_callbacks(app):
                 body_class]
 
     # Show help on click
+    # @app.callback(
+    #     Output('arm_path_help', 'className'),
+    #     [Input('arm_path_title', 'n_clicks'), Input('arm_path_help', 'className')],
+    #     prevent_initial_call=True
+    # )
+    # def show_help(n_clicks, help_class):
+    #     if n_clicks % 2 == 1:
+    #         help_class = help_class.replace('hidden', 'flex')
+    #         return help_class
+    #     else:
+    #         help_class = help_class.replace('flex', 'hidden')
+    #         return help_class
+
     @app.callback(
-        Output('arm_path_help', 'className'),
-        [Input('arm_path_title', 'n_clicks'), Input('arm_path_help', 'className')],
+        Output({'type': 'help_box', 'index': MATCH}, 'className'),
+        [Input({'type': 'info_button', 'index': MATCH}, 'n_clicks'),
+         Input({'type': 'help_box', 'index': MATCH}, 'className')],
         prevent_initial_call=True
     )
     def show_help(n_clicks, help_class):
         if n_clicks % 2 == 1:
             help_class = help_class.replace('hidden', 'flex')
-            return help_class
         else:
             help_class = help_class.replace('flex', 'hidden')
-            return help_class
+
+        return help_class
 
 
 # Reset plots
@@ -2094,6 +2049,7 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
 
     return sequence_first, sequence_second, sequence_third
 
+
 def velocity(path):
     # Get the velocity of the path
     print(np.shape(path))
@@ -2103,3 +2059,167 @@ def velocity(path):
     print(np.shape(speed))
 
     return speed
+
+
+def info_text(plot_type):
+    # Get the info text for the plot
+    match plot_type:
+        case 'arm_path':
+            text = '''
+                        The 3D line shows the trace of the hands while the color of the line represents the beginning and end of the swing.
+                        This visualization can help you to understand the movement of your arms and hands. For example you can see how steep or shallow your backswing is and in which direction you transition on the downswing.
+                        Front on is the view facing the player. Down the line is the view in direction of the target.
+            '''
+            title = '3D Hand Path'
+
+        case 'transition_sequence':
+            text = '''
+                            The transition sequence shows the order of the body parts that initiate the downswing. The color of the circle represents the body part and the order of the circles represents the order of the body parts.
+                '''
+            title = 'Transition Sequence'
+
+        case 'start_sequence':
+            text = '''
+                            The start sequence shows the order of the body parts that initiate the backswing. The color of the circle represents the body part and the order of the circles represents the order of the body parts.
+                '''
+            title = 'Start Sequence'
+
+        case 'finish_sequence':
+            text = '''
+                            The finish sequence shows the order of the body parts that finish the swing. The color of the circle represents the body part and the order of the circles represents the order of the body parts.
+                '''
+            title = 'Finish Sequence'
+
+        case 'pelvis_rotation':
+            text = '''
+                            The pelvis rotation shows the rotation of the pelvis around the x-axis. The rotation is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+            title = 'Pelvis Rotation'
+
+        case 'angular_velocity':
+            text = '''
+                            The angular velocity shows the angular velocity of the pelvis around the x-axis. The angular velocity is measured in degrees per second and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Angular Velocity'
+
+        case 'pelvis_displacement':
+            text = '''
+                            The pelvis displacement shows the displacement of the pelvis in the x-direction. The displacement is measured in meters and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Pelvis Displacement'
+
+        case 'thorax_angles':
+            text = '''
+                            The thorax rotation shows the rotation of the thorax around the x-axis. The rotation is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Thorax Angles'
+
+        case 'thorax_displacement':
+            text = '''
+                            The thorax displacement shows the displacement of the thorax in the x-direction. The displacement is measured in meters and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Thorax Displacement'
+
+        case 'head_tilt':
+            text = '''
+                            The head tilt shows the tilt of the head around the y-axis. The tilt is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Head Tilt'
+
+        case 'head_rotation':
+            text = '''
+                            The head rotation shows the rotation of the head around the z-axis. The rotation is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Head Rotation'
+
+        case 'spine_rotation':
+            text = '''
+                            The spine rotation shows the rotation of the spine around the x-axis. The rotation is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Spine Rotation'
+
+        case 'spine_tilt':
+            text= '''
+                            The spine tilt shows the tilt of the spine around the y-axis. The tilt is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Spine Tilt'
+
+        case 'left_arm':
+            text= '''
+                            The left arm shows the rotation of the left arm around the x-axis. The rotation is measured in degrees and the color of the line represents the beginning and end of the swing.
+                '''
+
+            title = 'Left Arm Length'
+
+        case _:  # default
+            text = ''
+            title = ''
+
+    layout = [
+        html.Div(
+            className='flex flex-row w-full justify-start',
+            children=[
+                html.Button(
+                    # id=f'{plot_type}_title',
+                    id={'type': 'info_button', 'index': plot_type},
+                    className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mt-10 mx-4 sm:mx-10 relative text-left',
+                    children=[
+                        title
+                    ]
+                ),
+            ]
+        ),
+        html.Div(
+            # id=f'{plot_type}_help',
+            id={'type': 'help_box', 'index': plot_type},
+            className='absolute top-20 right-3 left-4 sm:left-10 sm:w-96 bg-gray-300 rounded-2xl backdrop-blur-md bg-opacity-80 hidden z-10',
+            children=[
+                html.Div(
+                    className='flex flex-row px-4 py-4 text-sm text-gray-900',
+                    children=[text]
+                )
+            ]
+        ),
+    ]
+
+    return layout
+
+
+loader = html.Div(className="w-full flex flex-row relative", children=[
+    # Sidebar
+    html.Div(className="w-72 h-vh ml-5 my-5 rounded-2xl bg-slate-600 relative", children=[
+        html.Div(className="bg-slate-400 w-28 h-4 rounded-lg ml-4 mt-4 animate-pulse mb-4"),
+        html.Div(className="relative", children=[
+            html.Div(className="bg-slate-400 h-12 rounded-lg mx-4 mt-2 animate-pulse"),
+            html.Div(className="bg-slate-400 h-12 rounded-lg mx-4 mt-2 animate-pulse"),
+            html.Div(className="bg-slate-400 h-12 rounded-lg mx-4 mt-2 animate-pulse"),
+            html.Div(className="bg-slate-400 h-12 rounded-lg mx-4 mt-2 animate-pulse"),
+            html.Div(className="bg-slate-400 h-12 rounded-lg mx-4 mt-2 animate-pulse")
+        ]),
+        html.Div(className="absolute bottom-4 left-4 right-4", children=[
+            html.Div(className="bg-orange-200 h-10 rounded-lg mt-2 animate-pulse"),
+            html.Div(className="bg-orange-200 h-10 rounded-lg mt-2 animate-pulse"),
+            html.Div(className="bg-orange-200 h-10 rounded-lg mt-2 animate-pulse"),
+            html.Div(className="bg-orange-200 h-10 rounded-lg mt-2 animate-pulse")
+        ])
+    ]),
+    # Main
+    html.Div(className="w-full h-full", children=[
+        html.Div(className="h-96 mx-4 my-4 bg-white rounded-2xl relative mb-4", children=[
+            html.Div(className="bg-slate-200 w-28 h-8 rounded-lg ml-4 mt-8 absolute animate-pulse"),
+            html.Div(className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute")
+        ]),
+        html.Div(className="h-[500px] mx-4 my-4 bg-white rounded-2xl relative mb-4", children=[
+            html.Div(className="bg-slate-200 w-28 h-8 rounded-lg ml-4 mt-8 absolute animate-pulse"),
+            html.Div(className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute")
+        ])
+    ])
+])

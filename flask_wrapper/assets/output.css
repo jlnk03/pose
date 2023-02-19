@@ -31,6 +31,17 @@
   pointer-events: none;
 }
 
+/*#sequence[data-dash-is-loading="true"] {*/
+/*    visibility: hidden;*/
+/*}*/
+
+/*#sequence[data-dash-is-loading="true"]::before {*/
+/*    content: "Loading...";*/
+/*    display: inline-block;*/
+/*    color: magenta;*/
+/*    visibility: visible;*/
+/*}*/
+
 body, html {
   overflow-x: hidden;
     margin: 0;

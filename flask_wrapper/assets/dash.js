@@ -130,28 +130,39 @@ window
         switchColorMode()
     })
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
     let interval = setInterval(function () {
-    let navbar = document.getElementById("file_list")
-    // console.log(navbar)
-    if (navbar) {
-        clearInterval(interval);
+        let ancestor = document.getElementById("parent_sequence")
+        let main = document.getElementById("main_wrapper")
+        let loader = document.getElementById("loader")
 
-        const observer = new MutationObserver(function (mutations) {
-            // console.log("mutation detected")
-            mutations.forEach(function (mutation) {
-                // console.log(mutation.type);
-                switchColorMode()
+        if (ancestor) {
+            // console.log("ancestor detected")
+
+            const observerOptions = {
+                attributes: true,
+                subtree: true
+            }
+
+            const ancestorObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target === document.getElementById("sequence")) {
+                        if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
+                            // console.log("loading")
+                            main.style.visibility = 'hidden';
+                            loader.classList.remove('hidden');
+                        } else {
+                            // console.log("not loading")
+                            main.style.visibility = 'visible';
+                            loader.classList.add('hidden');
+                        }
+                    }
+                });
             });
-        });
 
-        const observerOptions = {
-            attributes: true,
-            childList: true,
-            characterData: true
-        };
+            ancestorObserver.observe(ancestor, observerOptions);
 
-        observer.observe(navbar, observerOptions);
-    }
+            clearInterval(interval);
+        }
     }, 100);
-});
+})
