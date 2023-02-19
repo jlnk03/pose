@@ -130,6 +130,34 @@ window
         switchColorMode()
     })
 
+
+document.addEventListener('DOMContentLoaded', function() {
+     let interval = setInterval(function () {
+     let navbar = document.getElementById("file_list")
+     // console.log(navbar)
+     if (navbar) {
+         clearInterval(interval);
+
+         const observer = new MutationObserver(function (mutations) {
+             // console.log("mutation detected")
+             mutations.forEach(function (mutation) {
+                 // console.log(mutation.type);
+                 switchColorMode()
+             });
+         });
+
+         const observerOptions = {
+             attributes: true,
+             childList: true,
+             characterData: true
+         };
+
+         observer.observe(navbar, observerOptions);
+     }
+     }, 100);
+ });
+
+
 document.addEventListener("DOMContentLoaded", function() {
     let interval = setInterval(function () {
         let ancestor = document.getElementById("parent_sequence")
@@ -149,11 +177,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (mutation.target === document.getElementById("sequence")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
-                            main.style.visibility = 'hidden';
+                            main.classList.add('hidden');
                             loader.classList.remove('hidden');
                         } else {
                             // console.log("not loading")
-                            main.style.visibility = 'visible';
+                            main.classList.remove('hidden');
                             loader.classList.add('hidden');
                         }
                     }
