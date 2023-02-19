@@ -75,7 +75,7 @@ def process_motion(contents, filename, location):
     normalized_padding = int(450 * normalized_height)
     width += normalized_padding
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'h264')
     # fourcc = -1
     writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
 
