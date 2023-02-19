@@ -84,7 +84,7 @@ def payment(product, mode):
         db.session.commit()
 
     except Exception as e:
-        return str(e)
+        return 'Sorry, something went wrong. Please try again later.'
 
     return redirect(checkout_session.url, code=303)
 
