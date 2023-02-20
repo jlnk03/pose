@@ -460,6 +460,7 @@ def unsubscribe():
         if i == 19:
             flash('Something went wrong, please try again', 'error')
 
+    flash('You have successfully unsubscribed. The subscription will be terminated by the end of the billing period.', 'success')
     return redirect(url_for('main.profile'))
 
 
@@ -488,4 +489,5 @@ def reactivate():
         if i == 19:
             flash('Something went wrong, please try again', 'error')
 
+    flash('You have successfully reactivated your subscription.', 'success')
     return redirect(url_for('main.profile'))
