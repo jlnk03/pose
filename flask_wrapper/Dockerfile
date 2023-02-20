@@ -18,7 +18,7 @@ COPY ./code_b/angles.py /code_b/angles.py
 COPY ./code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
-RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 -y
+RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 ubuntu-restricted-extras -y
 
 RUN pip install --upgrade pip
 
