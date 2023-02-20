@@ -51,7 +51,7 @@ body, html {
 
 /*background image*/
 .bg {
-  background-image: url("background.png");
+  background-image: url("background.svg");
   background-repeat: no-repeat;
   background-position: center;
   position: fixed;
@@ -60,7 +60,7 @@ body, html {
 }
 
 .bgDark {
-  background-image: url("background_black_1024.png");
+  background-image: url("background_dark.svg");
   background-repeat: no-repeat;
   background-position: center;
   position: fixed;

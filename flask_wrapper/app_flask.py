@@ -897,7 +897,7 @@ def init_dash(server):
     app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
     app.app_context = server.app_context
-    # app._favicon = './assets/favicon.png'
+    app._favicon = 'favicon.png'
 
     app.title = 'Analyze your swing – Swinglab'
 
@@ -1703,8 +1703,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2250,6 +2250,7 @@ loader = html.Div(
                                             className='dark:text-gray-100 text-gray-800 md:text-xl sm:text-md text-sm font-medium text-left flex flex flex-col animate-none justify-center items-center flex-col w-full h-full',
                                             children=[
                                                 html.Div(
+                                                    id='quote',
                                                     className='animate-none',
                                                     children=[
                                                         html.Div('No matter how good you get', className='animate-none'),

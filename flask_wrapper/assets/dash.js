@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let ancestor = document.getElementById("parent_sequence")
         let main = document.getElementById("main_wrapper")
         let loader = document.getElementById("loader")
+        let quote = document.getElementById("quote")
 
         if (ancestor) {
             // console.log("ancestor detected")
@@ -183,6 +184,57 @@ document.addEventListener("DOMContentLoaded", function() {
                             // console.log("not loading")
                             main.classList.remove('hidden');
                             loader.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+            ancestorObserver.observe(ancestor, observerOptions);
+
+            clearInterval(interval);
+        }
+    }, 100);
+})
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    let interval = setInterval(function () {
+        let ancestor = document.getElementById("parent_sequence")
+        let main = document.getElementById("main_wrapper")
+        let loader = document.getElementById("loader")
+        let quote = document.getElementById("quote")
+        let sequence = document.getElementById("sequence")
+
+        if (ancestor) {
+            // console.log("ancestor detected")
+
+            const observerOptions = {
+                attributes: true,
+                subtree: true
+            }
+
+            const ancestorObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target === document.getElementById("sequence")) {
+                        if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
+                            // console.log("loading")
+                            i = 0
+                            let alternate = setInterval(function () {
+                                if (quote) {
+                                    if (i % 2 === 0) {
+                                        quote.children[4].innerHTML = 'Just a few more seconds...'
+                                        i += 1
+                                    } else {
+                                        quote.children[4].innerHTML = 'Extracting motion data...'
+                                        i += 1
+                                    }
+                                }
+
+                                if (loader.classList.contains('hidden')) {
+                                    clearInterval(alternate)
+                                }
+
+                            }, 5000)
                         }
                     }
                 });
