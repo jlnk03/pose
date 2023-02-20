@@ -19,7 +19,7 @@ COPY ./code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 -y
-RUN #apt install ubuntu-restricted-extras
+RUN apt install ubuntu-restricted-extras -y
 
 RUN pip install --upgrade pip
 
