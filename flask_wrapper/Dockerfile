@@ -19,13 +19,13 @@ COPY ./code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev -y
+RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev python3-opencv -y
 
 RUN pip install --upgrade pip
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-#COPY /assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.9/site-packages/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite
+COPY /assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.10/site-packages/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite
 
 EXPOSE 8080
 

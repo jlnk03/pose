@@ -15,7 +15,6 @@ matplotlib
 mediapipe
 mkdocs-material-extensions
 msgpack
-opencv-python>=4.6.0.66
 pandas
 protobuf<3.20
 scipy
