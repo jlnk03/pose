@@ -83,7 +83,7 @@ def process_motion(contents, filename, location):
     stream = container.add_stream('libx264', rate=fps)
     stream.width = width
     stream.height = height
-    stream.pix_fmt = 'yuv420p'
+    # stream.pix_fmt = 'yuv420p'
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])
