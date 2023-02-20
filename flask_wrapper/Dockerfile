@@ -19,7 +19,16 @@ COPY ./code_b/process_mem.py /code_b/process_mem.py
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev python3-opencv -y
+RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev -y
+
+RUN git clone https://github.com/opencv/opencv.git
+RUN cd opencv
+RUN mkdir build
+RUN cd build
+RUN cmake -D WITH_FFMPEG=ON -D WITH_X264=ON -D ENABLE_NEON=ON ..
+RUN make -j$(nproc)
+RUN sudo make install
+
 
 RUN pip install --upgrade pip
 
