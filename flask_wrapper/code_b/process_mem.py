@@ -5,6 +5,7 @@ import mediapipe as mp
 import base64
 from collections import deque
 import imageio.v3 as iio
+import imageio
 from .angles import *
 from PIL import ImageFont, ImageDraw, Image
 from flask import url_for
@@ -80,10 +81,12 @@ def process_motion(contents, filename, location):
     # writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
     # Open a new video stream for writing
     container = av.open(location + '/motion.mp4', 'w')
-    stream = container.add_stream('libx264', rate=fps)
+    stream = container.add_stream('libx265', rate=np.floor(fps))
     stream.width = width
     stream.height = height
     # stream.pix_fmt = 'yuv420p'
+    # writer = imageio.get_writer(location + '/motion.mp4', fps=fps)
+
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])
@@ -328,17 +331,21 @@ def process_motion(contents, filename, location):
             image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
             # writer.write(image)
 
+            # imageio
+            # writer.append_data(image)
+
             # Write with pyav
             frame = av.VideoFrame.from_ndarray(image, format='bgr24')
             for packet in stream.encode(frame):
                 container.mux(packet)
-
-
-    # Flush the stream to make sure all frames have been written
+    #
+    #
+    # # Flush the stream to make sure all frames have been written
     for packet in stream.encode():
         container.mux(packet)
     stream.close()
     container.close()
+    # writer.close()
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
