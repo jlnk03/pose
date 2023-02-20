@@ -21,14 +21,6 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev cmake -y
 
-RUN git clone https://github.com/opencv/opencv.git
-RUN cd opencv
-RUN cd cmake
-RUN cmake -D WITH_FFMPEG=ON -D WITH_X264=ON -D ENABLE_NEON=ON ..
-RUN make -j$(nproc)
-RUN sudo make install
-
-
 RUN pip install --upgrade pip
 
 RUN pip install --no-cache-dir -r requirements.txt
