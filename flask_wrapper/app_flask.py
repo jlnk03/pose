@@ -1873,19 +1873,35 @@ def init_callbacks(app):
     #         help_class = help_class.replace('flex', 'hidden')
     #         return help_class
 
-    @app.callback(
+    # @app.callback(
+    #     Output({'type': 'help_box', 'index': MATCH}, 'className'),
+    #     [Input({'type': 'info_button', 'index': MATCH}, 'n_clicks'),
+    #      Input({'type': 'help_box', 'index': MATCH}, 'className')],
+    #     prevent_initial_call=True
+    # )
+    # def show_help(n_clicks, help_class):
+    #     if n_clicks % 2 == 1:
+    #         help_class = help_class.replace('hidden', 'flex')
+    #     else:
+    #         help_class = help_class.replace('flex', 'hidden')
+    #
+    #     return help_class
+
+    app.clientside_callback(
+        '''
+        function(n_clicks, help_class) {
+            if (n_clicks % 2 == 1) {
+                return help_class.replace('hidden', 'flex');
+            } else {
+                return help_class.replace('flex', 'hidden');
+            }
+        }
+        ''',
         Output({'type': 'help_box', 'index': MATCH}, 'className'),
         [Input({'type': 'info_button', 'index': MATCH}, 'n_clicks'),
          Input({'type': 'help_box', 'index': MATCH}, 'className')],
         prevent_initial_call=True
     )
-    def show_help(n_clicks, help_class):
-        if n_clicks % 2 == 1:
-            help_class = help_class.replace('hidden', 'flex')
-        else:
-            help_class = help_class.replace('flex', 'hidden')
-
-        return help_class
 
 
 # Reset plots
