@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
-from dash import Dash, ctx, ALL, Input, Output, State, html, dcc, MATCH
+from dash import Dash, ctx, ALL, Input, Output, State, html, dcc, MATCH, dash
 import pandas as pd
 from scipy import signal
 from code_b.angles import *
@@ -147,7 +147,8 @@ def upload_video(disabled=True, path=None):
                 ),
                 html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                            className="h-96 rounded-2xl mb-5 sm:block hidden"),
-            ])
+            ]),
+
     ]
 
     return layout
@@ -1367,6 +1368,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Script('assets/dash.js'),
+                                # html.Script(src='video_update.js')
                             ]
                         ),
 
@@ -1902,6 +1904,26 @@ def init_callbacks(app):
          Input({'type': 'help_box', 'index': MATCH}, 'className')],
         prevent_initial_call=True
     )
+
+    # Define a callback to update the position of the line trace based on the video time
+    # @app.callback(
+    #     Output('sequence', 'figure'),
+    #     [Input('my-video', 'currentTime')],
+    #     State('sequence', 'figure'),
+    # )
+    # def update_graph(currentTime, fig):
+    #     # Find the index of the line trace
+    #     lineIndex = None
+    #     for i, trace in enumerate(fig['data']):
+    #         if trace['mode'] == 'lines':
+    #             lineIndex = i
+    #             break
+    #
+    #     # Update the position of the line trace
+    #     if lineIndex is not None:
+    #         fig['data'][lineIndex]['x'] = [currentTime]
+    #
+    #     return fig
 
 
 # Reset plots

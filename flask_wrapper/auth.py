@@ -36,13 +36,15 @@ def send_mail_smtp(toaddr, subject, message, name=None):
     msg.attach(MIMEText(message, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
-    port = 465  # For SSL
+    port = 587  # For TLS
     password = os.getenv('MAIL_AUTH')
 
     # Create a secure SSL context
     context = ssl.create_default_context()
 
-    with smtplib.SMTP_SSL("mail.privateemail.com", port, context=context) as server:
+    with smtplib.SMTP("smtp.zoho.eu", port) as server:
+        server.ehlo()  # Can be omitted
+        server.starttls(context=context)
         server.login('info@swinglab.app', password)
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
 
@@ -57,13 +59,15 @@ def send_email_pw(toaddr, subject, message):
     msg.attach(MIMEText(message, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
-    port = 465  # For SSL
+    port = 587  # For TLS
     password = os.getenv('MAIL_AUTH')
 
     # Create a secure SSL context
     context = ssl.create_default_context()
 
-    with smtplib.SMTP_SSL("mail.privateemail.com", port, context=context) as server:
+    with smtplib.SMTP("smtp.zoho.eu", port) as server:
+        server.ehlo()  # Can be omitted
+        server.starttls(context=context)
         server.login('info@swinglab.app', password)
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
 
