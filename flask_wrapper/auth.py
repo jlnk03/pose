@@ -43,7 +43,6 @@ def send_mail_smtp(toaddr, subject, message, name=None):
     context = ssl.create_default_context()
 
     with smtplib.SMTP("smtp.zoho.eu", port) as server:
-        server.ehlo()  # Can be omitted
         server.starttls(context=context)
         server.login('info@swinglab.app', password)
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
@@ -66,7 +65,6 @@ def send_email_pw(toaddr, subject, message):
     context = ssl.create_default_context()
 
     with smtplib.SMTP("smtp.zoho.eu", port) as server:
-        server.ehlo()  # Can be omitted
         server.starttls(context=context)
         server.login('info@swinglab.app', password)
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
@@ -149,7 +147,7 @@ def send_mail():
 
     token = ts.dumps(email, salt='email-confirm-key')
 
-    subject = 'swinglab – Verify your email'
+    subject = 'Swinglab – Verify your email'
     confirm_url = url_for('auth.verify_mail', token=token, _external=True)
 
     # send_email(email, subject, confirm_url)
