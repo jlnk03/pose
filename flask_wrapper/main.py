@@ -171,6 +171,11 @@ def privacy():
     return render_template('privacy.html', title='Privacy Policy – Swinglab')
 
 
+@main.route('/terms')
+def terms():
+    return render_template('terms.html', title='Terms of use – Swinglab')
+
+
 @main.route('/predict/<token>', methods=['POST'])
 def predict(token):
 
