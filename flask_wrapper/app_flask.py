@@ -1124,24 +1124,24 @@ def init_dash(server):
                                                             className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
                                                             children=[
                                                                 html.Div(
-                                                                    '1',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Hip',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='sequence_first'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '2',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Thorax',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='sequence_second'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '3',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Arms',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='sequence_third'
                                                                 )
                                                             ]
@@ -1159,24 +1159,24 @@ def init_dash(server):
                                                             className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
                                                             children=[
                                                                 html.Div(
-                                                                    '1',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Hip',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='start_sequence_first'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '2',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Thorax',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='start_sequence_second'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '3',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Arms',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='start_sequence_third'
                                                                 )
                                                             ]
@@ -1194,24 +1194,24 @@ def init_dash(server):
                                                             className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
                                                             children=[
                                                                 html.Div(
-                                                                    '1',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#6266F6] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Hip',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='end_sequence_first'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '2',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Thorax',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='end_sequence_second'
                                                                 ),
                                                                 html.Div(
-                                                                    className='sm:w-24 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
                                                                 ),
                                                                 html.Div(
-                                                                    '3',
-                                                                    className='text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center',
+                                                                    'Arms',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='end_sequence_third'
                                                                 )
                                                             ]
@@ -1410,6 +1410,12 @@ def init_callbacks(app):
          Output('start_sequence_third', 'className'),
          Output('end_sequence_first', 'className'), Output('end_sequence_second', 'className'),
          Output('end_sequence_third', 'className'),
+         Output('sequence_first', 'children'), Output('sequence_second', 'children'),
+         Output('sequence_third', 'children'),
+         Output('start_sequence_first', 'children'), Output('start_sequence_second', 'children'),
+         Output('start_sequence_third', 'children'),
+         Output('end_sequence_first', 'children'), Output('end_sequence_second', 'children'),
+         Output('end_sequence_third', 'children'),
          Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
@@ -1473,16 +1479,16 @@ def init_callbacks(app):
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
-                sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation,
+                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp = kinematic_sequence(save_pelvis_rotation,
                                                                                      save_thorax_rotation,
                                                                                      save_arm_rotation, duration)
 
                 # Get the kinematic start sequence
-                sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(
+                sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s = kinematic_sequence_start(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the kinematic end sequence
-                sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(
+                sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e = kinematic_sequence_end(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the video and update the video player
@@ -1561,7 +1567,7 @@ def init_callbacks(app):
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end, path
+                        sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e, path
                         ]
 
         # Delete was pressed
@@ -1634,6 +1640,11 @@ def init_callbacks(app):
                 sequence_second_end = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
                 sequence_third_end = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
+                # Reset sequence text
+                sequence_first_text = 'Hip'
+                sequence_second_text = 'Thorax'
+                sequence_third_text = 'Arm'
+
                 children_upload = [
 
                     html.Div(children=[
@@ -1692,7 +1703,10 @@ def init_callbacks(app):
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end, path]
+                        sequence_first_end, sequence_second_end, sequence_third_end, sequence_first_text,
+                        sequence_second_text, sequence_third_text, sequence_first_text, sequence_second_text,
+                        sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text, path
+                        ]
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1791,15 +1805,15 @@ def init_callbacks(app):
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         # Get the kinematic transition  sequence
-        sequence_first, sequence_second, sequence_third = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
+        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
                                                                              save_arm_rotation, duration)
 
         # Get the kinematic start sequence
-        sequence_first_start, sequence_second_start, sequence_third_start = kinematic_sequence_start(
+        sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s = kinematic_sequence_start(
             save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
         # Get the kinematic end sequence
-        sequence_first_end, sequence_second_end, sequence_third_end = kinematic_sequence_end(save_pelvis_rotation,
+        sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e = kinematic_sequence_end(save_pelvis_rotation,
                                                                                              save_thorax_rotation,
                                                                                              save_arm_rotation,
                                                                                              duration)
@@ -1840,7 +1854,9 @@ def init_callbacks(app):
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
                 sequence_first, sequence_second, sequence_third,
                 sequence_first_start, sequence_second_start, sequence_third_start,
-                sequence_first_end, sequence_second_end, sequence_third_end, path]
+                sequence_first_end, sequence_second_end, sequence_third_end,
+                first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e, path
+                ]
 
     # Show navbar on click
     @app.callback(
@@ -2037,12 +2053,16 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     # Colors sorted by index
     sequence = sorted(sequence.items(), key=lambda item: item[1])
 
-    # Update colors
-    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+    # Body parrt sorted by index
+    body_part = {'Pelvis': hip_index, 'Thorax': thorax_index, 'Arm': arm_index}
+    body_part = sorted(body_part.items(), key=lambda item: item[1])
 
-    return sequence_first, sequence_second, sequence_third
+    # Update colors
+    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2060,12 +2080,16 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     # Colors sorted by index
     sequence = sorted(sequence.items(), key=lambda item: item[1])
 
-    # Update colors
-    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+    # Body parrt sorted by index
+    body_part = {'Pelvis': hip_index, 'Thorax': thorax_index, 'Arm': arm_index}
+    body_part = sorted(body_part.items(), key=lambda item: item[1])
 
-    return sequence_first, sequence_second, sequence_third
+    # Update colors
+    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2083,12 +2107,16 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     # Colors sorted by index
     sequence = sorted(sequence.items(), key=lambda item: item[1])
 
-    # Update colors
-    sequence_first = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-2xl font-medium text-gray-100 rounded-full w-8 h-8 flex items-center justify-center {sequence[2][0]}'
+    # Body parrt sorted by index
+    body_part = {'Pelvis': hip_index, 'Thorax': thorax_index, 'Arm': arm_index}
+    body_part = sorted(body_part.items(), key=lambda item: item[1])
 
-    return sequence_first, sequence_second, sequence_third
+    # Update colors
+    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
 
 
 def velocity(path):

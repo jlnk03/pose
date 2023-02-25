@@ -293,31 +293,32 @@ def process_motion(contents, filename, location):
                 textposition = (text_offset, int(560*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
-                text = "Pelvis"
+                text = "Arm"
                 textwidth, textheight = draw.textsize(text, font=font_bold)
                 textposition = (int((normalized_padding - textwidth) / 2), int(690*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
-                text = f"Rotation: {int(pelvis_r)}°"
+                text = f"Rotation: {int(arm_rotation_l)}°"
                 textposition = (text_offset, int(770*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
-                text = f"Tilt: {int(pelvis_t)}°"
+                text = f"To Ground: {int(arm_ground)}°"
                 textposition = (text_offset, int(850*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
-                text = 'Arm'
+                text = 'Pelvis'
                 textwidth, textheight = draw.textsize(text, font=font_bold)
                 textposition = (int((normalized_padding - textwidth) / 2), int(970*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
-                text = f"Rotation: {int(arm_rotation_l)}°"
+                text = f"Rotation: {int(pelvis_r)}°"
                 textposition = (text_offset, int(1050*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
-                text = f'To Ground: {int(arm_ground)}°'
+                text = f'Tilt: {int(pelvis_t)}°'
                 textposition = (text_offset, int(1130*normalized_height))
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
+
 
                 # convert the image to numpy array
                 image = np.asarray(image)
