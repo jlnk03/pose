@@ -1087,26 +1087,26 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='flex flex-row w-full justify-between mb-5 gap-5',
+                                    className='flex flex-row w-full justify-between mb-5 sm:gap-5 gap-2',
                                     children=[
                                         html.Div(
                                             children=[
-                                                html.Div('Backswing', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('2 s', id='backswing')
+                                                html.Div('Backswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('2 s', id='backswing', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
-                                                html.Div('Downswing', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('2 s', id='downswing')
+                                                html.Div('Downswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('2 s', id='downswing', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
-                                                html.Div('Tempo', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('1', id='tempo')
+                                                html.Div('Tempo', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('1', id='tempo', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
