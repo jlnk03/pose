@@ -1087,6 +1087,33 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
+                                    className='flex flex-row w-full justify-between mb-5 gap-5',
+                                    children=[
+                                        html.Div(
+                                            children=[
+                                                html.Div('Backswing', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('2 s', id='backswing')
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Downswing', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('2 s', id='downswing')
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Tempo', className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('1', id='tempo')
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                    ]
+                                ),
+
+                                html.Div(
                                     className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
@@ -1416,6 +1443,7 @@ def init_callbacks(app):
          Output('start_sequence_third', 'children'),
          Output('end_sequence_first', 'children'), Output('end_sequence_second', 'children'),
          Output('end_sequence_third', 'children'),
+         Output('tempo', 'children'), Output('backswing', 'children'), Output('downswing', 'children'),
          Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
@@ -1442,8 +1470,23 @@ def init_callbacks(app):
                     sequence_second = 'text-2xl font-medium text-gray-100 bg-[#E74D39] rounded-full w-8 h-8 flex items-center justify-center'
                     sequence_third = 'text-2xl font-medium text-gray-100 bg-[#2BC48C] rounded-full w-8 h-8 flex items-center justify-center'
 
+                    # Reset sequence text
+                    sequence_first_text = 'Hip'
+                    sequence_second_text = 'Thorax'
+                    sequence_third_text = 'Arm'
+
+                    # Tempo
+                    temp, time_back, time_down = ('1', '2 s', '2 s')
+
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
-                            children_upload, sequence_first, sequence_second, sequence_third, []]
+                            children_upload, sequence_first, sequence_second, sequence_third,
+                            sequence_first, sequence_second, sequence_third,
+                            sequence_first, sequence_second, sequence_third,
+                            sequence_first_text, sequence_second_text, sequence_third_text,
+                            sequence_first_text, sequence_second_text, sequence_third_text,
+                            sequence_first_text, sequence_second_text, sequence_third_text,
+                            temp, time_back, time_down,
+                            []]
 
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
@@ -1479,17 +1522,20 @@ def init_callbacks(app):
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
-                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp = kinematic_sequence(save_pelvis_rotation,
+                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(save_pelvis_rotation,
                                                                                      save_thorax_rotation,
                                                                                      save_arm_rotation, duration)
 
                 # Get the kinematic start sequence
-                sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s = kinematic_sequence_start(
+                sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the kinematic end sequence
-                sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e = kinematic_sequence_end(
+                sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+
+                # Tempo
+                temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle)/duration)
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1567,7 +1613,9 @@ def init_callbacks(app):
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e, path
+                        sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
+                        temp, time_back, time_down,
+                        path
                         ]
 
         # Delete was pressed
@@ -1645,6 +1693,9 @@ def init_callbacks(app):
                 sequence_second_text = 'Thorax'
                 sequence_third_text = 'Arm'
 
+                # Tempo
+                temp, time_back, time_down = ('1', '2 s', '2 s')
+
                 children_upload = [
 
                     html.Div(children=[
@@ -1705,7 +1756,9 @@ def init_callbacks(app):
                         sequence_first_start, sequence_second_start, sequence_third_start,
                         sequence_first_end, sequence_second_end, sequence_third_end, sequence_first_text,
                         sequence_second_text, sequence_third_text, sequence_first_text, sequence_second_text,
-                        sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text, path
+                        sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text,
+                        temp, time_back, time_down,
+                        path
                         ]
 
         # Check if folder was created and generate file name
@@ -1805,18 +1858,20 @@ def init_callbacks(app):
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         # Get the kinematic transition  sequence
-        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
+        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
                                                                              save_arm_rotation, duration)
 
         # Get the kinematic start sequence
-        sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s = kinematic_sequence_start(
+        sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
             save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
         # Get the kinematic end sequence
-        sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e = kinematic_sequence_end(save_pelvis_rotation,
+        sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(save_pelvis_rotation,
                                                                                              save_thorax_rotation,
                                                                                              save_arm_rotation,
                                                                                              duration)
+
+        temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle)/duration)
 
         # Reset the background color of the buttons
         for child in children:
@@ -1855,7 +1910,9 @@ def init_callbacks(app):
                 sequence_first, sequence_second, sequence_third,
                 sequence_first_start, sequence_second_start, sequence_third_start,
                 sequence_first_end, sequence_second_end, sequence_third_end,
-                first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e, path
+                first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
+                temp, time_back, time_down,
+                path
                 ]
 
     # Show navbar on click
@@ -1877,34 +1934,7 @@ def init_callbacks(app):
                 'flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5',
                 body_class]
 
-    # Show help on click
-    # @app.callback(
-    #     Output('arm_path_help', 'className'),
-    #     [Input('arm_path_title', 'n_clicks'), Input('arm_path_help', 'className')],
-    #     prevent_initial_call=True
-    # )
-    # def show_help(n_clicks, help_class):
-    #     if n_clicks % 2 == 1:
-    #         help_class = help_class.replace('hidden', 'flex')
-    #         return help_class
-    #     else:
-    #         help_class = help_class.replace('flex', 'hidden')
-    #         return help_class
-
-    # @app.callback(
-    #     Output({'type': 'help_box', 'index': MATCH}, 'className'),
-    #     [Input({'type': 'info_button', 'index': MATCH}, 'n_clicks'),
-    #      Input({'type': 'help_box', 'index': MATCH}, 'className')],
-    #     prevent_initial_call=True
-    # )
-    # def show_help(n_clicks, help_class):
-    #     if n_clicks % 2 == 1:
-    #         help_class = help_class.replace('hidden', 'flex')
-    #     else:
-    #         help_class = help_class.replace('flex', 'hidden')
-    #
-    #     return help_class
-
+    # Help box on click
     app.clientside_callback(
         '''
         function(n_clicks, help_class) {
@@ -2062,7 +2092,7 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2089,7 +2119,7 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2116,7 +2146,20 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0]
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
+
+
+def tempo(start, back, end, fps):
+    # Get the tempo of the swing
+    time_back = (back - start) / fps
+    time_down = (end - back) / fps
+    temp = time_back / time_down
+    temp = f'{round(temp, 2)}'
+
+    time_back = f'{round(time_back, 2)} s'
+    time_down = f'{round(time_down, 2)} s'
+
+    return temp, time_back, time_down
 
 
 def velocity(path):
@@ -2227,6 +2270,16 @@ def info_text(plot_type):
                 '''
 
             title = 'Left Arm Length'
+
+        case 'backswing':
+
+            text = 'Duration of the backswing in seconds'
+            title = 'Backswing'
+
+        case 'downswing':
+
+            text = 'Duration of the downswing in seconds'
+            title = 'Downswing'
 
         case _:  # default
             text = ''
