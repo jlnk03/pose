@@ -69,6 +69,9 @@ def payment(product, mode):
                     'quantity': 1,
                 },
             ],
+            automatic_tax={
+                'enabled': True
+            },
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
