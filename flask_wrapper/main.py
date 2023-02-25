@@ -69,12 +69,13 @@ def payment(product, mode):
                     'quantity': 1,
                 },
             ],
-            automatic_tax={
-                'enabled': True
-            },
+            # automatic_tax={
+            #     'enabled': True
+            # },
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
+            allow_promotion_codes=True,
             success_url=url_for('main.success', product=product, _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=url_for('main.cancel', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
             metadata={
