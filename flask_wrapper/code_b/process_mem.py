@@ -211,7 +211,7 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                arm_rotation_l = arm_rotation(wrist_l, R)
+                arm_rotation_l = arm_rotation(wrist_l, shoulder_l, R)
                 save_arm_rotation.append(arm_rotation_l)
 
                 arm_ground = arm_to_ground(wrist_l, shoulder_l, R)
@@ -248,10 +248,11 @@ def process_motion(contents, filename, location):
                 left = int(20*normalized_height)
                 right = int(430*normalized_height)
                 text_offset = int(30*normalized_height)
-                draw_rounded_rectangle_agg(image, (left, int(20*normalized_height)), (right, int(270*normalized_height)), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(310*normalized_height)), (right, int(640*normalized_height)), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(680*normalized_height)), (right, int(930*normalized_height)), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(970*normalized_height)), (right, int(1220*normalized_height)), color=(255, 255, 255), radius=radius)
+                center_offset = int(height / 2 - (1220*normalized_height - 20*normalized_height) / 2 + 20*normalized_height)
+                draw_rounded_rectangle_agg(image, (left, int(20*normalized_height) + center_offset), (right, int(270*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
+                draw_rounded_rectangle_agg(image, (left, int(310*normalized_height) + center_offset), (right, int(640*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
+                draw_rounded_rectangle_agg(image, (left, int(680*normalized_height) + center_offset), (right, int(930*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
+                draw_rounded_rectangle_agg(image, (left, int(970*normalized_height) + center_offset), (right, int(1220*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
 
                 try:
                     # add text on top of the rounded rectangle
@@ -265,58 +266,58 @@ def process_motion(contents, filename, location):
 
                 text = "Head"
                 textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(30*normalized_height))
+                textposition = (int((normalized_padding - textwidth) / 2), int(30*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
                 text = f"Rotation: {int(head_r)}°"
-                textposition = (text_offset, int(110*normalized_height))
+                textposition = (text_offset, int(110*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = f"Tilt: {int(head_t)}°"
-                textposition = (text_offset, int(190*normalized_height))
+                textposition = (text_offset, int(190*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = "Thorax"
                 textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(320*normalized_height))
+                textposition = (int((normalized_padding - textwidth) / 2), int(320*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
                 text = f"Rotation: {int(thorax_r)}°"
-                textposition = (text_offset, int(400*normalized_height))
+                textposition = (text_offset, int(400*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = f"Tilt: {int(thorax_t)}°"
-                textposition = (text_offset, int(480*normalized_height))
+                textposition = (text_offset, int(480*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = f"Bend: {int(thorax_b)}°"
-                textposition = (text_offset, int(560*normalized_height))
+                textposition = (text_offset, int(560*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = "Arm"
                 textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(690*normalized_height))
+                textposition = (int((normalized_padding - textwidth) / 2), int(690*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
                 text = f"Rotation: {int(arm_rotation_l)}°"
-                textposition = (text_offset, int(770*normalized_height))
+                textposition = (text_offset, int(770*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = f"To Ground: {int(arm_ground)}°"
-                textposition = (text_offset, int(850*normalized_height))
+                textposition = (text_offset, int(850*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = 'Pelvis'
                 textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(970*normalized_height))
+                textposition = (int((normalized_padding - textwidth) / 2), int(980*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
 
                 text = f"Rotation: {int(pelvis_r)}°"
-                textposition = (text_offset, int(1050*normalized_height))
+                textposition = (text_offset, int(1060*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 text = f'Tilt: {int(pelvis_t)}°'
-                textposition = (text_offset, int(1130*normalized_height))
+                textposition = (text_offset, int(1140*normalized_height) + center_offset)
                 draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
 

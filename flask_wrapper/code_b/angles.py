@@ -258,12 +258,11 @@ def wrist_tilt(pinky_l, index_l, wrist_l, elbow_l, r):
     return np.degrees(angle)
 
 
-def arm_rotation(wrist_l, r):
+def arm_rotation(wrist_l, shoulder_l, r):
+    shoulder_v = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
     wrist_v = r @ np.array([wrist_l.x, wrist_l.y, wrist_l.z], dtype=np.float64)
     wrist_v[1] = 0
     normal = np.array([1, 0, 0])
-    # angle = np.arccos(normal.dot(wrist_v) / (np.linalg.norm(normal) * np.linalg.norm(wrist_v)))
-    # angle between wrist vector and normal with atan2
     angle = (np.arctan2(-wrist_v[2], wrist_v[0]))
 
     return -np.degrees(angle)

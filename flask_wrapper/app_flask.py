@@ -1092,21 +1092,21 @@ def init_dash(server):
                                         html.Div(
                                             children=[
                                                 html.Div('Backswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('2 s', id='backswing', className='mt-2')
+                                                html.Div('- s', id='backswing', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
                                                 html.Div('Downswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('2 s', id='downswing', className='mt-2')
+                                                html.Div('- s', id='downswing', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
                                                 html.Div('Tempo', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
-                                                html.Div('1', id='tempo', className='mt-2')
+                                                html.Div('-', id='tempo', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
@@ -1476,7 +1476,7 @@ def init_callbacks(app):
                     sequence_third_text = 'Arm'
 
                     # Tempo
-                    temp, time_back, time_down = ('1', '2 s', '2 s')
+                    temp, time_back, time_down = ('-', '- s', '- s')
 
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                             children_upload, sequence_first, sequence_second, sequence_third,
@@ -1694,7 +1694,7 @@ def init_callbacks(app):
                 sequence_third_text = 'Arm'
 
                 # Tempo
-                temp, time_back, time_down = ('1', '2 s', '2 s')
+                temp, time_back, time_down = ('-', '- s', '- s')
 
                 children_upload = [
 
@@ -2092,7 +2092,7 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2119,7 +2119,7 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2146,7 +2146,7 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], arm_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
 
 
 def tempo(start, back, end, fps):

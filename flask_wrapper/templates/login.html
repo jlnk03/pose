@@ -7,9 +7,10 @@
 </head>
 <body class="bg-gradient-to-br from-amber-50 to-violet-200 dark:bg-gradient-to-br dark:from-slate-700 dark:to-violet-300 flex flex-col justify-between h-screen m-0 p-0 scroll-p-0">
 <div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="w-full max-w-md space-y-8">
+  <div class="w-full items-center justify-center flex flex-col max-w-md">
+  <div class="w-full max-w-md px-8 py-8 bg-white dark:bg-gray-700 shadow rounded-2xl">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">Sign in to your account</h2>
+      <h2 class="text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-8">Sign in to your account</h2>
     </div>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -23,22 +24,22 @@
       <div class="space-y-4 rounded-lg shadow-sm">
         <div>
           <label for="email-address" class="sr-only">Email address</label>
-          <input id="email-address" name="email" type="email" autocomplete="email" required class="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Email address">
+          <input id="email-address" name="email" type="email" autocomplete="email" required class="dark:bg-gray-600 dark:border-gray-900 dark:text-gray-100 relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Email address">
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Password">
+          <input id="password" name="password" type="password" autocomplete="current-password" required class="dark:bg-gray-600 dark:border-gray-900 dark:text-gray-100 relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-base" placeholder="Password">
         </div>
       </div>
 
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <input id="remember-me" name="remember" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+          <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-100">Remember me</label>
         </div>
 
         <div class="text-sm">
-          <a href="{{url_for('auth.reset_password')}}" class="font-medium text-sm text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+          <a href="{{url_for('auth.reset_password')}}" class="font-medium text-sm text-indigo-500 hover:text-indigo-400">Forgot your password?</a>
         </div>
       </div>
 
@@ -54,11 +55,17 @@
         </button>
       </div>
     </form>
+
+
+
   </div>
 
-  <div class="absolute bottom-4 text-xs text-gray-100 dark:text-gray-700 bg-slate-600 dark:bg-slate-200 rounded-full px-6 py-3 mx-4 flex flex-wrap items-center w-96 sm:w-fit">
-    🍪 This website uses cookies to handle authentication. By using this website, you agree to our <a href=" {{  url_for('main.privacy') }} " class="underline">Privacy Policy&nbsp;</a> and&nbsp;<a href=" {{  url_for('main.terms') }} " class="underline">Terms of Use</a>.
+  <div class="bottom-4 text-xs text-gray-100 dark:text-gray-700 bg-slate-600 dark:bg-slate-200 rounded-lg px-6 py-3 flex flex-wrap items-center justify-center w-full text-center mt-20">
+    🍪 This website uses cookies to handle authentication. By using this website, you agree to our <a href=" {{  url_for('main.privacy') }} " class="underline">Privacy Policy</a>&nbsp;and&nbsp;<a href=" {{  url_for('main.terms') }} " class="underline">Terms of Use</a>.
   </div>
+
+    </div>
+
 </div>
 </body>
 </html>
