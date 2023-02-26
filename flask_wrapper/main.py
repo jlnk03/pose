@@ -27,7 +27,7 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name, email=current_user.email, title='Profile – swinglab')
+    return render_template('profile.html', name=current_user.name, email=current_user.email, title='Profile – Swinglab')
 
 
 @main.route('/dash')
@@ -127,7 +127,7 @@ def success(product):
     session.booked = True
     db.session.commit()
 
-    return render_template('success.html', title='Thank you for your purchase – swinglab')
+    return render_template('success.html', title='Thank you for your purchase – Swinglab')
 
 
 @main.route('/cancel', methods=['GET'])
