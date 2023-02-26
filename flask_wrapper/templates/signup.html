@@ -70,11 +70,11 @@
 
     if (darkMode) {
         bod.style.backgroundColor = "#000000"
-        bod.className = "bgDark overflow-y-auto"
+        bod.className.concat("bgDark overflow-y-auto")
     }
     else {
         bod.style.backgroundColor = "#FAF7F5"
-        bod.className = "bg overflow-y-auto"
+        bod.className.concat("bg overflow-y-auto")
     }
 
     window
@@ -85,11 +85,11 @@
         // bg image in css class
         if (darkMode) {
             bod.style.backgroundColor = "#000000"
-            bod.className = "bgDark overflow-y-auto"
+            bod.className.concat("bgDark overflow-y-auto")
         }
         else {
             bod.style.backgroundColor = "#FAF7F5"
-            bod.className = "bg overflow-y-auto"
+            bod.className.concat("bg overflow-y-auto")
         }
     })
 
