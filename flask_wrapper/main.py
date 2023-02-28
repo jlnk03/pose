@@ -14,10 +14,38 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from code_b.process_mem import process_motion
 from itsdangerous import URLSafeTimedSerializer
+import smtplib
+import ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formataddr
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 
 main = Blueprint('main', __name__)
+
+
+def send_mail_smtp(toaddr, subject, message):
+    # create message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = f'Contact form – {subject}'
+    msg['From'] = formataddr(('Swinglab', 'info@swinglab.app'))
+    msg['To'] = toaddr
+    html = render_template('mail_mail_verification.html', message=message)
+    msg.attach(MIMEText(message, 'plain'))
+    msg.attach(MIMEText(html, 'html'))
+
+    port = 587  # For TLS
+    password = os.getenv('MAIL_AUTH')
+
+    # Create a secure SSL context
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP("smtp.zoho.eu", port) as server:
+        server.starttls(context=context)
+        server.login('info@swinglab.app', password)
+        server.sendmail('info@swinglab.app', toaddr, msg.as_string())
+
 
 @main.route('/')
 def index():
@@ -189,6 +217,22 @@ def impressum():
 @login_required
 def guide():
     return render_template('guide.html', title='Guide – Swinglab')
+
+
+@main.route('/contact')
+def contact():
+    return render_template('contact.html', title='Contact Us – Swinglab')
+
+
+@main.route('/contact', methods=['POST'])
+def contact():
+
+    subject = request.form.get('subject')
+    message = request.form.get('message')
+
+    send_mail_smtp('info@swinglab.app', subject, message)
+
+    return render_template('contact.html', title='Contact Us – Swinglab')
 
 
 @main.route('/predict/<token>', methods=['POST'])
