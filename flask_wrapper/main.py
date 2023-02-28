@@ -180,6 +180,17 @@ def terms():
     return render_template('terms.html', title='Terms of use – Swinglab')
 
 
+@main.route('/impressum')
+def impressum():
+    return render_template('impressum.html', title='Impressum – Swinglab')
+
+
+@main.route('/guide')
+@login_required
+def guide():
+    return render_template('guide.html', title='Guide – Swinglab')
+
+
 @main.route('/predict/<token>', methods=['POST'])
 def predict(token):
 

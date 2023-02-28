@@ -40,6 +40,12 @@
 
                     <a href="{{ url_for('main.dashboard') }}" class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition">DASHBOARD</a>
                     {% endif %}
+
+                    {% if request.path == '/guide' %}
+                    <a href="{{ url_for('main.guide') }}" class="font-medium text-xs text-amber-500 hover:text-amber-400 border-2 border-amber-500 hover:border-amber-400 items-center justify-center rounded-3xl px-4 py-2 transition">GUIDE</a>
+                    {% else %}
+                    <a href="{{ url_for('main.guide') }}" class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition">GUIDE</a>
+                    {% endif %}
               </nav>
 
               <div class="items-center absolute right-14 top-4">
@@ -137,13 +143,14 @@
                     <a href="/terms" class="text-sm font-medium text-gray-900  dark:text-gray-100 hover:text-gray-700">Terms of use</a>
 
                   <a href="/privacy#contact" class="text-sm font-medium text-gray-900  dark:text-gray-100 hover:text-gray-700">Contact</a>
+                    <a href="/impressum" class="text-amber-400 text-xs hover:text-amber-500">Impressum</a>
                 </div>
               </div>
             </div>
           </div>
 
 
-        <div class="mx-4 md:mx-16 grow">
+        <div class="mx-4 md:mx-16 grow" id="container">
 <!--            <div class="container has-text-centered">-->
                {% block content %}
                {% endblock %}
@@ -151,17 +158,17 @@
         </div>
 
 <div class="w-full z-30 block hidden md:block">
-<div class="flex flex-col gap-4 bg-gray-700 h-32 flex items-start pl-24 justify-center">
+<div class="flex flex-col gap-4 bg-gray-700 h-32 flex items-start pl-16 justify-center">
 
-   <span class="text-amber-400 text-xs opacity-90 mb-4">© 2023 Swinglab. All rights reserved.</span>
+   <span class="text-amber-500 text-xs opacity-90 mb-4">© 2023 Swinglab. All rights reserved.</span>
 
 <div class="flex flex-row  gap-20 mx-0">
 
     <div class="flex flex-row gap-10">
-        <a href="/privacy" class="text-amber-400 text-xs hover:text-amber-500">Privacy Policy</a>
-        <a href="/terms" class="text-amber-400 text-xs hover:text-amber-500">Terms of use</a>
-                <a href="/privacy#contact" class="text-amber-400 text-xs hover:text-amber-500">Contact</a>
-        <a href="/terms" class="text-amber-400 text-xs hover:text-amber-500">Impressum</a>
+        <a href="/privacy" class="text-amber-500 text-xs hover:text-amber-400">Privacy Policy</a>
+        <a href="/terms" class="text-amber-500 text-xs hover:text-amber-400">Terms of use</a>
+                <a href="/privacy#contact" class="text-amber-500 text-xs hover:text-amber-400">Contact</a>
+        <a href="/impressum" class="text-amber-500 text-xs hover:text-amber-400">Impressum</a>
     </div>
 
 </div>

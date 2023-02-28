@@ -8,6 +8,49 @@
     bod.style.height = "100%"
 </script>
 
+<div class="flex flex-col w-full w-max-lg h-full mb-4">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 my-10">Swinglab Guide</h1>
 
+    <span class="text-gray-900 dark:text-gray-100 mb-10">Our goal is to make 3D golf analyses accessible to anyone and therefore make the process as easy as possible.
+        After uploading a swing video, our AI will automatically analyse the swing and provide you with detailed insights.
+        The following guide will help you to record your swing video for the best possible results.
+    </span>
+
+    <div class="text-2xl font-medium text-gray-900 dark:text-gray-100 mb-4">The perfect angle</div>
+
+    <div class="relative justify-center">
+        <img src="{{ url_for('static', filename='ideal_angle.svg') }}" class="w-48 h-48 float-right" alt="ideal angle">
+        <span class="text-gray-900 dark:text-gray-100">Swinglab uses AI technology to extract the motion from your swing video. As the technology relies on a single video the quality of the analysis is influenced by the recording angle
+        and the quality of the video. Even if a body part is occluded or not visible in the video, the AI will still predict the motion of the body part.
+        However, the accuracy of the prediction might be lower. The best overall results can be achieved by recording the swing from an angle between 30° and 50°.
+        Depending on which swing characteristic you want to analyze, the angle of the camera might vary. For the arm path you should record the video from the direction you want to analyze it.
+        </span>
+    </div>
+
+    <div class="text-2xl font-medium text-gray-900 dark:text-gray-100 mt-4 mb-4">Camera Settings</div>
+
+    <span class="text-gray-900 dark:text-gray-100">
+        The best results are achieved by recording the swing video with 60 fps. To reduce calculation time and prevent a false analysis, the video should be cut to the length of the swing.
+        Avoid recordings that capture alot of the setup without movement and stop the recording as soon as the swing is finished. The duration of the video should be around 3 seconds.
+    </span>
+
+    <div class="flex sm:flex-row flex-col items-center justify-center sm:gap-24 gap-8 mt-10 mb-4">
+
+        <div class="flex flex-col items-center justify-center gap-4">
+            <video class="h-96" controls autoplay>
+                <source src="{{ url_for('static', filename='motion-2.mp4') }}" type="video/mp4">
+            </video>
+            <span class="text-gray-900 dark:text-gray-100">Optimal duration</span>
+        </div>
+
+        <div class="flex flex-col items-center justify-center gap-4">
+            <video class="h-96" controls autoplay>
+                <source src="{{ url_for('static', filename='johnson.mp4') }}" type="video/mp4">
+            </video>
+            <span class="text-gray-900 dark:text-gray-100">Suboptimal duration</span>
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}
