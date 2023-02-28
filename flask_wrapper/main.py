@@ -225,7 +225,7 @@ def contact():
 
 
 @main.route('/contact', methods=['POST'])
-def contact():
+def contact_post():
 
     subject = request.form.get('subject')
     message = request.form.get('message')
