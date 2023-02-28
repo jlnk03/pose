@@ -229,7 +229,6 @@ def contact_post():
 
     subject = request.form.get('subject')
     message = request.form.get('message')
-    print(subject, message)
 
     send_mail_smtp('info@swinglab.app', subject, message)
 
