@@ -99,9 +99,11 @@ def login_post():
     # if the above check passes, then we know the user has the right credentials
     return redirect(url_for('main.profile'))
 
+
 @auth.route('/signup')
 def signup():
     return render_template('signup.html', title='Get started – swinglab')
+
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():

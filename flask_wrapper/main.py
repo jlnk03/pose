@@ -31,7 +31,7 @@ def send_mail_smtp(toaddr, subject, message):
     msg['Subject'] = f'Contact form – {subject}'
     msg['From'] = formataddr(('Swinglab', 'info@swinglab.app'))
     msg['To'] = toaddr
-    html = render_template('mail_mail_verification.html', message=message)
+    html = render_template('contact_form_mail.html', message=message)
     msg.attach(MIMEText(message, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
@@ -229,6 +229,7 @@ def contact_post():
 
     subject = request.form.get('subject')
     message = request.form.get('message')
+    print(subject, message)
 
     send_mail_smtp('info@swinglab.app', subject, message)
 
