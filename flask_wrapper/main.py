@@ -214,7 +214,6 @@ def impressum():
 
 
 @main.route('/guide')
-@login_required
 def guide():
     return render_template('guide.html', title='Guide – Swinglab')
 

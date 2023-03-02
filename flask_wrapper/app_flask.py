@@ -219,7 +219,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=np.gradient(save_arm_rotation, 1 / fps),
+            y=-np.gradient(save_arm_rotation, 1 / fps),
             name=f'Arm',
         )
     )
@@ -1772,8 +1772,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2069,13 +2069,15 @@ def reset_plots(children, button_id, disabled):
 
 
 def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration):
-    # Get the kinematic transition  sequence
+    # Get the kinematic transition sequence
     hip_index = find_closest_zero_intersection_left_of_max(
         np.gradient(filter_data(pelvis_rotation, duration)))
     thorax_index = find_closest_zero_intersection_left_of_max(
         np.gradient(filter_data(thorax_rotation, duration)))
     arm_index = find_closest_zero_intersection_left_of_max(
-        np.gradient(filter_data(arm_rotation, duration)))
+        -np.gradient(filter_data(arm_rotation, duration)))
+
+    print(hip_index, thorax_index, arm_index)
 
     # Colors for hip, thorax and arm
     sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
@@ -2096,13 +2098,14 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
-    # Get the kinematic transition  sequence
+    # Get the kinematic start sequence
+    argmax = np.argmax(arm_rotation)
     hip_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(pelvis_rotation, duration)))
+        np.gradient(filter_data(pelvis_rotation[:argmax], duration)))
     thorax_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(thorax_rotation, duration)))
+        np.gradient(filter_data(thorax_rotation[:argmax], duration)))
     arm_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(arm_rotation, duration)))
+        np.gradient(filter_data(arm_rotation[:argmax], duration)))
 
     # Colors for hip, thorax and arm
     sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
@@ -2123,7 +2126,7 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
-    # Get the kinematic transition  sequence
+    # Get the kinematic end sequence
     hip_index = find_closest_zero_intersection_right_of_max(
         np.gradient(filter_data(pelvis_rotation, duration)))
     thorax_index = find_closest_zero_intersection_right_of_max(

@@ -258,32 +258,37 @@ def wrist_tilt(pinky_l, index_l, wrist_l, elbow_l, r):
     return np.degrees(angle)
 
 
-def arm_rotation(wrist_l, shoulder_l, r):
+def arm_rotation(wrist_l, shoulder_l, shoulder_r, r):
+    shoulder_v_l = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
+    shoulder_v_r = r @ np.array([shoulder_r.x, shoulder_r.y, shoulder_r.z], dtype=np.float64)
+    shoulder_v = (shoulder_v_l + shoulder_v_r) / 2
+    wrist_v = r @ np.array([wrist_l.x, wrist_l.y, wrist_l.z], dtype=np.float64)
+    arm = wrist_v - shoulder_v
+    arm[0] = 0
+    normal = np.array([0, 1, 0])
+    angle = np.arccos(normal.dot(arm) / (np.linalg.norm(normal) * np.linalg.norm(arm)))
+    angle = np.degrees(angle)
+
+    # if arm[1] > 0:
+    # print("wrist below shoulder")
+
+    if arm[2] < 0:
+        # print("wrist to the right")
+        angle = angle
+
+    else:
+        # print("wrist to the left")
+        angle = -angle
+
+    return angle
+
     # shoulder_v = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
     # wrist_v = r @ np.array([wrist_l.x, wrist_l.y, wrist_l.z], dtype=np.float64)
-    # arm = wrist_v - shoulder_v
-    # arm[0] = 0
-    # normal = np.array([0, 0, -1])
-    # angle = np.arccos(normal.dot(arm) / (np.linalg.norm(normal) * np.linalg.norm(arm)))
-    # angle = np.degrees(angle)
-    # # print(angle)
+    # wrist_v[1] = 0
+    # normal = np.array([1, 0, 0])
+    # angle = (np.arctan2(-wrist_v[2], wrist_v[0]))
     #
-    # if arm[1] > 0:
-    #     print("wrist above shoulder")
-    #     angle = 90 - angle
-    # else:
-    #     print("wrist below shoulder")
-    #     angle = 180 - angle
-    #
-    # return angle
-
-    shoulder_v = r @ np.array([shoulder_l.x, shoulder_l.y, shoulder_l.z], dtype=np.float64)
-    wrist_v = r @ np.array([wrist_l.x, wrist_l.y, wrist_l.z], dtype=np.float64)
-    wrist_v[1] = 0
-    normal = np.array([1, 0, 0])
-    angle = (np.arctan2(-wrist_v[2], wrist_v[0]))
-
-    return -np.degrees(angle)
+    # return -np.degrees(angle)
 
 
 def arm_to_ground(wrist_l, shoulder_l, r):

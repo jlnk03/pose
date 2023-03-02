@@ -211,7 +211,7 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                arm_rotation_l = arm_rotation(wrist_l, shoulder_l, R)
+                arm_rotation_l = arm_rotation(wrist_l, shoulder_l, shoulder_r, R)
                 save_arm_rotation.append(arm_rotation_l)
 
                 arm_ground = arm_to_ground(wrist_l, shoulder_l, R)
@@ -248,7 +248,7 @@ def process_motion(contents, filename, location):
                 left = int(20*normalized_height)
                 right = int(430*normalized_height)
                 text_offset = int(30*normalized_height)
-                center_offset = int(height / 2 - (1220*normalized_height - 20*normalized_height) / 2 + 20*normalized_height)
+                center_offset = int(height / 2 - (1220*normalized_height - 20*normalized_height) / 2 - 20*normalized_height)
                 draw_rounded_rectangle_agg(image, (left, int(20*normalized_height) + center_offset), (right, int(270*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
                 draw_rounded_rectangle_agg(image, (left, int(310*normalized_height) + center_offset), (right, int(640*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
                 draw_rounded_rectangle_agg(image, (left, int(680*normalized_height) + center_offset), (right, int(930*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
