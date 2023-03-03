@@ -2077,7 +2077,7 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     arm_index = find_closest_zero_intersection_left_of_max(
         -np.gradient(filter_data(arm_rotation, duration)))
 
-    print(hip_index, thorax_index, arm_index)
+    # print(hip_index, thorax_index, arm_index)
 
     # Colors for hip, thorax and arm
     sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
@@ -2167,11 +2167,11 @@ def tempo(start, back, end, fps):
 
 def velocity(path):
     # Get the velocity of the path
-    print(np.shape(path))
+    # print(np.shape(path))
     velocity = np.gradient(path, axis=1)
-    print(np.shape(velocity))
+    # print(np.shape(velocity))
     speed = np.sqrt(velocity[0] ** 2 + velocity[1] ** 2 + velocity[2] ** 2)
-    print(np.shape(speed))
+    # print(np.shape(speed))
 
     return speed
 
