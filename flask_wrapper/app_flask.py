@@ -2203,7 +2203,7 @@ def info_text(plot_type):
             text = '''
                             The finish sequence shows the order of the body parts that finish the swing. The color of the circle represents the body part and the order of the circles represents the order of the body parts.
                 '''
-            title = 'Finish Sequence'
+            title = 'Stabilization Sequence'
 
         case 'pelvis_rotation':
             text = '''

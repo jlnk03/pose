@@ -127,6 +127,7 @@ def process_motion(contents, filename, location):
                 shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
                 elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
                 wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
+                wrist_r = landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value]
                 hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
                 hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
                 foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
@@ -211,10 +212,10 @@ def process_motion(contents, filename, location):
                 left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
                 save_left_arm_length.append(left_arm)
 
-                arm_rotation_l = arm_rotation(wrist_l, shoulder_l, shoulder_r, R)
+                arm_rotation_l = arm_rotation(wrist_r, shoulder_l, shoulder_r, R)
                 save_arm_rotation.append(arm_rotation_l)
 
-                arm_ground = arm_to_ground(wrist_l, shoulder_l, R)
+                arm_ground = arm_to_ground(wrist_r, shoulder_r, R)
 
                 arm_v = [foot_l.x - wrist_l.x, foot_l.y - wrist_l.y, foot_l.z - wrist_l.z]
                 arm_v = R@arm_v
