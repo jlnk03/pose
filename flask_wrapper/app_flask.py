@@ -1033,9 +1033,13 @@ def init_dash(server):
                                         html.Div(children=[
                                             html.Div(
                                                 children=[
-                                                    html.Span(
-                                                        'Upload your video',
-                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                                                    html.Div(
+                                                        children=[
+                                                            'Upload your video',
+                                                            html.Div('BETA', className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                                        ],
+
+                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row items-center justify-between'
                                                     ),
                                                     html.Span(
                                                         'as mp4, mov or avi – max. 20 MB',

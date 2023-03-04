@@ -33,6 +33,9 @@
       {% endwith %}
         </div>
     </div>
+
+    <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">BETA</div>
+
 <div class="flex lg:flex-row flex-col pt-6">
     <div class="lg:w-2/6 pr-3 mb-3">
         <span class="text-base font-bold text-gray-900 sm:text-lg block mb-5 dark:text-gray-100">
@@ -84,6 +87,32 @@
 </form>
 </div>
 </div>
+
+<div class="flex lg:flex-row flex-col pt-10">
+<div class="lg:w-2/6 pr-3 mb-3">
+    <span class="text-base font-bold text-gray-900 sm:text-lg block mb-5 dark:text-gray-100">
+        Feedback
+    </span>
+    <span class="text-base font-medium text-gray-500 dark:text-gray-300">
+        Please give us feedback on your experience with our app and how we can improve our service.
+    </span>
+</div>
+
+    <div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between bg-white dark:bg-gray-700 shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900">
+          <form action="/contact" method="post" class="space-y-8">
+          <div>
+              <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Subject</label>
+              <input type="text" id="subject" name="subject" class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" placeholder="Let us know how we can help you" required>
+          </div>
+          <div class="sm:col-span-2">
+              <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your message</label>
+              <textarea id="message" name="message" rows="6" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Leave a comment..."></textarea>
+          </div>
+          <button type="submit" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-indigo-700 sm:w-fit hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800">Send message</button>
+      </form>
+    </div>
+
+    </div>
 
 <div class="flex lg:flex-row flex-col pt-10">
     <div class="lg:w-2/6 pr-3 m-b-3">
