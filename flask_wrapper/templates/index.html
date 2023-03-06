@@ -42,8 +42,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
         // console.log("loaded")
-        replay = document.getElementById("video-replay")
-        video = document.getElementById("video")
+        const replay = document.getElementById("video-replay")
+        const video = document.getElementById("video")
 
         video.addEventListener('ended', function() {
             replay.style.display = "block"
