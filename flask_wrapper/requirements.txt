@@ -30,3 +30,4 @@ pyarrow
 ffmpeg-python==0.2.0
 Pillow
 aggdraw
+dash-player
