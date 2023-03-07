@@ -150,7 +150,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('Impact', id='impact_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Finish', id='end_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end justify-center sm:mr-2 mb-2 gap-5'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:gap-5 gap-2'
                 ),
 
                 # Video player
