@@ -1,6 +1,6 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     clientside: {
-        positionUpdate: function(nclicks, nclicks2, nclicks3) {
+        positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4) {
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
 
@@ -21,11 +21,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 }
             }
 
-            else {
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'end_pos_button.n_clicks') {
                 const end_pos = document.getElementById('end_pos');
                 const end_index = end_pos.innerText;
                 if (nclicks3 > 0) {
                     return end_index;
+                }
+            }
+
+            else {
+                const setup_pos = document.getElementById('setup_pos');
+                const setup_index = setup_pos.innerText;
+                if (nclicks4 > 0) {
+                    return setup_index;
                 }
             }
 

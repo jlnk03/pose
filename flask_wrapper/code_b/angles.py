@@ -276,15 +276,17 @@ def arm_rotation(wrist_l, shoulder_l, shoulder_r, r):
         # print("wrist to the right")
         angle = angle
 
-        if arm[1] < 0 and (shoulder_l.x < shoulder_r.x):
-            angle = 360 - angle
+        # Rotation backswing to the right
+        # if arm[1] < 0 and (shoulder_l.x < shoulder_r.x):
+        #     angle = 360 - angle
 
     else:
         # print("wrist to the left")
         angle = -angle
 
-        if arm[1] < 0 and (shoulder_l.x > shoulder_r.x):
-            angle = 360 + angle
+        # Rotation backswing to the left
+        # if arm[1] < 0 and (shoulder_l.x > shoulder_r.x):
+        #     angle = 360 + angle
 
     return angle
 
