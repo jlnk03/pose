@@ -84,7 +84,7 @@ def find_closest_zero_intersection_left_of_min(array):
 
 
 def add_vertical_line(fig):
-    fig.add_vline(x=0, line_width=4, line_color="#d1d5db")
+    fig.add_vline(x=0, line_width=4, line_color="#818cf8")
 
 
 # Return the video view
