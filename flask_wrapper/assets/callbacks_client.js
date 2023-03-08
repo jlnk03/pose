@@ -48,7 +48,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
             Plotly.update(
                 graphDiv,
-                {},
                         {
                             'shapes[0]': {
                                 x0: currentTime,

@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
 from dash import Dash, ctx, ALL, html, dcc, MATCH, ClientsideFunction
-from dash_extensions.enrich import DashProxy, MultiplexerTransform, Output, Input, State
+from dash_extensions.enrich import DashProxy, MultiplexerTransform, NoOutputTransform, Output, Input, State
 import dash_player as dp
 import pandas as pd
 from scipy import signal
@@ -260,20 +260,20 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     #     line_color="black",
     # )
 
-    # fig.add_shape(
-    #     # Line Vertical
-    #     dict(
-    #         type="line",
-    #         x0=0,
-    #         y0=0,
-    #         x1=0,
-    #         y1=1,
-    #         line=dict(
-    #             color="black",
-    #             width=3,
-    #         )
-    #     )
-    # )
+    fig.add_shape(
+        # Line Vertical
+        dict(
+            type="line",
+            x0=0,
+            y0=0,
+            x1=0,
+            y1=1,
+            line=dict(
+                color="black",
+                width=3,
+            )
+        )
+    )
 
     fig.update_layout(
         # title='Angular velocity',
@@ -950,7 +950,7 @@ def init_dash(server):
     # Initialize the app
     app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
                     external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
-                    transforms=[MultiplexerTransform()]
+                    transforms=[MultiplexerTransform(), NoOutputTransform()]
                     )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
@@ -2088,16 +2088,16 @@ def init_callbacks(app):
     )
 
     # Vertical moving line plots
-    # app.clientside_callback(
-    #     ClientsideFunction(
-    #         namespace='clientside',
-    #         function_name='verticalLine'
-    #     ),
-    #
-    #     Output('sequence', 'figure'),
-    #     Input('video', 'currentTime'),
-    #     prevent_initial_call=True
-    # )
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='verticalLine'
+        ),
+
+        # Output('sequence', 'figure'),
+        Input('video', 'currentTime'),
+        prevent_initial_call=True
+    )
 
     # Define a callback to update the position of the line trace based on the video time
     # @app.callback(
