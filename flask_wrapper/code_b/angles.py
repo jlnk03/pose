@@ -307,3 +307,7 @@ def arm_to_ground(wrist_l, shoulder_l, r):
     angle = np.arccos(normal.dot(arm) / (np.linalg.norm(normal) * np.linalg.norm(arm)))
 
     return 90 - np.degrees(angle)
+
+
+if __name__ == '__main__':
+    pass

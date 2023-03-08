@@ -1,5 +1,6 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     clientside: {
+        // Update frame of video
         positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4) {
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
@@ -37,6 +38,26 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 }
             }
 
+        },
+
+        // Update the vertical line on the sequence plot
+        verticalLine: function(currentTime) {
+
+            // Get the DOM element of the Plotly graph
+            var graphDiv = document.getElementById('sequence');
+
+            Plotly.update(
+                graphDiv,
+                {},
+                        {
+                            'shapes[0]': {
+                                x0: currentTime,
+                                x1: currentTime
+                    }
+                }
+            )
+
         }
+
     }
 });

@@ -370,3 +370,7 @@ def draw_rounded_rectangle_agg(img, pt1, pt2, color, radius):
     draw.ellipse((x1, y2-2*radius, x1+2*radius, y2), brush, pen)
     draw.ellipse((x2-2*radius, y2-2*radius, x2, y2), brush, pen)
     draw.flush()
+
+
+if __name__ == '__main__':
+    pass

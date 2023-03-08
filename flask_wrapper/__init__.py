@@ -64,3 +64,7 @@ def create_app():
     app = protect_dashviews(app)
 
     return app.server
+
+
+if __name__ == '__main__':
+    pass

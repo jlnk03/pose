@@ -5,7 +5,8 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
 import plotly.express as px
-from dash import Dash, ctx, ALL, Input, Output, State, html, dcc, MATCH, ClientsideFunction
+from dash import Dash, ctx, ALL, html, dcc, MATCH, ClientsideFunction
+from dash_extensions.enrich import DashProxy, MultiplexerTransform, Output, Input, State
 import dash_player as dp
 import pandas as pd
 from scipy import signal
@@ -95,7 +96,8 @@ def upload_video(disabled=True, path=None):
                             html.Div(
                                 children=[
                                     'Upload your video',
-                                    html.Div('BETA', className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                    html.Div('BETA',
+                                             className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
                                 ],
                                 className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
                             ),
@@ -145,10 +147,14 @@ def upload_video(disabled=True, path=None):
                 # Controls for the video player (top, impact, end)
                 html.Div(
                     children=[
-                        html.Button('Setup', id='setup_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Top', id='top_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Impact', id='impact_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Finish', id='end_pos_button', className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                        html.Button('Setup', id='setup_pos_button',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                        html.Button('Top', id='top_pos_button',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                        html.Button('Impact', id='impact_pos_button',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                        html.Button('Finish', id='end_pos_button',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                     ],
                     className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:gap-5 gap-2'
                 ),
@@ -171,22 +177,9 @@ def upload_video(disabled=True, path=None):
 
                     ]
                 ),
-                # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
-                #            className="h-96 rounded-2xl mb-5 sm:block hidden"),
-
-                # dp.DashPlayer(
-                #     id='video',
-                #     url=f'{path}#t=0.001',
-                #     controls=True,
-                #     className="h-96 w-fit rounded-2xl mb-5 sm:block hidden",
-                #     width='fit-content',
-                #     height='24rem',
-                # ),
-
             ]),
 
     ]
-
 
     return layout
 
@@ -260,6 +253,27 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
             name=f'Arm',
         )
     )
+
+    # fig.add_vline(
+    #     x=0,
+    #     line_width=3,
+    #     line_color="black",
+    # )
+
+    # fig.add_shape(
+    #     # Line Vertical
+    #     dict(
+    #         type="line",
+    #         x0=0,
+    #         y0=0,
+    #         x1=0,
+    #         y1=1,
+    #         line=dict(
+    #             color="black",
+    #             width=3,
+    #         )
+    #     )
+    # )
 
     fig.update_layout(
         # title='Angular velocity',
@@ -612,6 +626,12 @@ fig.add_trace(
     )
 )
 
+# fig.add_vline(
+#     x=0,
+#     line_width=3,
+#     line_color="black",
+# )
+
 fig.update_layout(
     # title='Angular velocity',
     title_x=0.5,
@@ -928,9 +948,10 @@ def render_files(files):
 
 def init_dash(server):
     # Initialize the app
-    app = Dash(__name__, server=server, url_base_pathname='/dashboard/',
-               external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}]
-               )
+    app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
+                    external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
+                    transforms=[MultiplexerTransform()]
+                    )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
     # server = app.server
@@ -1073,7 +1094,8 @@ def init_dash(server):
                                                     html.Div(
                                                         children=[
                                                             'Upload your video',
-                                                            html.Div('BETA', className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                                            html.Div('BETA',
+                                                                     className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
                                                         ],
 
                                                         className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row items-center justify-between'
@@ -1133,7 +1155,8 @@ def init_dash(server):
                                     children=[
                                         html.Div(
                                             children=[
-                                                html.Div('Backswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('Backswing',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
                                                 html.Div('- s', id='backswing', className='mt-2'),
                                                 html.Div('0.5', id='top_pos', className='hidden'),
                                                 html.Div('0.5', id='impact_pos', className='hidden'),
@@ -1144,14 +1167,16 @@ def init_dash(server):
                                         ),
                                         html.Div(
                                             children=[
-                                                html.Div('Downswing', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('Downswing',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
                                                 html.Div('- s', id='downswing', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
-                                                html.Div('Tempo', className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left',),
+                                                html.Div('Tempo',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
                                                 html.Div('-', id='tempo', className='mt-2')
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
@@ -1187,40 +1212,6 @@ def init_dash(server):
                                         html.Div(
                                             className='flex flex-row justify-between items-center w-full flex-wrap relative',
                                             children=[
-                                                # Column for sequence
-                                                html.Div(
-                                                    className='flex flex-col',
-                                                    children=[
-                                                        html.Div(info_text('transition_sequence'),
-                                                                 className='relative w-full'),
-                                                        html.Div(
-                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                            children=[
-                                                                html.Div(
-                                                                    'Hip',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_first'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Thorax',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_second'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Arms',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_third'
-                                                                )
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
 
                                                 # Column for sequence
                                                 html.Div(
@@ -1251,6 +1242,40 @@ def init_dash(server):
                                                                     'Arms',
                                                                     className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
                                                                     id='start_sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('transition_sequence'),
+                                                                 className='relative w-full'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
+                                                            children=[
+                                                                html.Div(
+                                                                    'Hip',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    id='sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Thorax',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    id='sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Arms',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    id='sequence_third'
                                                                 )
                                                             ]
                                                         ),
@@ -1490,7 +1515,8 @@ def init_callbacks(app):
          Output('end_sequence_first', 'children'), Output('end_sequence_second', 'children'),
          Output('end_sequence_third', 'children'),
          Output('tempo', 'children'), Output('backswing', 'children'), Output('downswing', 'children'),
-         Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),  Output('setup_pos', 'children'),
+         Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
+         Output('setup_pos', 'children'),
          Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
@@ -1576,9 +1602,10 @@ def init_callbacks(app):
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
-                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(save_pelvis_rotation,
-                                                                                     save_thorax_rotation,
-                                                                                     save_arm_rotation, duration)
+                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
+                    save_pelvis_rotation,
+                    save_thorax_rotation,
+                    save_arm_rotation, duration)
 
                 # Get the kinematic start sequence
                 sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
@@ -1589,19 +1616,21 @@ def init_callbacks(app):
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Tempo
-                temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle)/duration)
+                temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e,
+                                                   len(save_wrist_angle) / duration)
 
                 # Top of backswing
-                top_pos = arm_index/len(save_wrist_angle)
+                top_pos = arm_index / len(save_wrist_angle)
 
                 # Impact
-                impact_pos = (np.argmin(filter_data(arm_z, duration * 2)[int(arm_index):]) + int(arm_index))/len(save_wrist_angle)
+                impact_pos = (np.argmin(filter_data(arm_z, duration * 2)[int(arm_index):]) + int(arm_index)) / len(
+                    save_wrist_angle)
 
                 # End of swing
-                end_pos = arm_index_e/len(save_wrist_angle)
+                end_pos = arm_index_e / len(save_wrist_angle)
 
                 # Setup
-                setup_pos = arm_index_s/len(save_wrist_angle)
+                setup_pos = arm_index_s / len(save_wrist_angle)
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1679,7 +1708,8 @@ def init_callbacks(app):
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first_start, sequence_second_start, sequence_third_start,
-                        sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
+                        sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp,
+                        first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                         temp, time_back, time_down,
                         top_pos, impact_pos, end_pos, setup_pos,
                         path
@@ -1934,32 +1964,36 @@ def init_callbacks(app):
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         # Get the kinematic transition  sequence
-        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(save_pelvis_rotation, save_thorax_rotation,
-                                                                             save_arm_rotation, duration)
+        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
+            save_pelvis_rotation, save_thorax_rotation,
+            save_arm_rotation, duration)
 
         # Get the kinematic start sequence
         sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
             save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
         # Get the kinematic end sequence
-        sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(save_pelvis_rotation,
-                                                                                             save_thorax_rotation,
-                                                                                             save_arm_rotation,
-                                                                                             duration)
+        sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
+            save_pelvis_rotation,
+            save_thorax_rotation,
+            save_arm_rotation,
+            duration)
 
-        temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle)/duration)
+        temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle) / duration)
 
         # Top of backswing
-        top_pos = arm_index/len(save_wrist_angle)
+        top_pos = arm_index / len(save_wrist_angle)
 
         # Impact
-        impact_pos = (np.argmin(filter_data(arm_position['z'], duration * 2)[int(arm_index):]/len(save_wrist_angle)) + arm_index)/len(save_wrist_angle)
+        impact_pos = (np.argmin(
+            filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(save_wrist_angle)) + arm_index) / len(
+            save_wrist_angle)
 
         # End of swing
-        end_pos = arm_index_e/len(save_wrist_angle)
+        end_pos = arm_index_e / len(save_wrist_angle)
 
         # Setup
-        setup_pos = arm_index_s/len(save_wrist_angle)
+        setup_pos = arm_index_s / len(save_wrist_angle)
 
         # Reset the background color of the buttons
         for child in children:
@@ -2048,9 +2082,22 @@ def init_callbacks(app):
         ),
 
         Output('video', 'seekTo'),
-        [Input('top_pos_button', 'n_clicks'), Input('impact_pos_button', 'n_clicks'), Input('end_pos_button', 'n_clicks'), Input('setup_pos_button', 'n_clicks')],
+        [Input('top_pos_button', 'n_clicks'), Input('impact_pos_button', 'n_clicks'),
+         Input('end_pos_button', 'n_clicks'), Input('setup_pos_button', 'n_clicks')],
         prevent_initial_call=True
     )
+
+    # Vertical moving line plots
+    # app.clientside_callback(
+    #     ClientsideFunction(
+    #         namespace='clientside',
+    #         function_name='verticalLine'
+    #     ),
+    #
+    #     Output('sequence', 'figure'),
+    #     Input('video', 'currentTime'),
+    #     prevent_initial_call=True
+    # )
 
     # Define a callback to update the position of the line trace based on the video time
     # @app.callback(
@@ -2195,7 +2242,8 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
+        0], thorax_index
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2223,7 +2271,8 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
+        0], thorax_index
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -2250,7 +2299,8 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
     sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][0], thorax_index
+    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
+        0], thorax_index
 
 
 def tempo(start, back, end, fps):
@@ -2420,18 +2470,18 @@ def info_text(plot_type):
 
 
 def content_box():
-
     return html.Div(
-    [
-        html.Div(
-            className="bg-slate-200 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
-        ),
-        html.Div(
-            className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
-        ),
-    ],
-    className="relative h-[500px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
-),
+        [
+            html.Div(
+                className="bg-slate-200 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
+            ),
+            html.Div(
+                className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
+            ),
+        ],
+        className="relative h-[500px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+    ),
+
 
 loader = html.Div(
     children=[
@@ -2442,11 +2492,13 @@ loader = html.Div(
                     className="bg-slate-200 dark:bg-slate-500 w-28 h-4 rounded-lg ml-4 mt-4 animate-pulse mb-4"
                 ),
                 html.Div(
-                    [html.Div(className="bg-slate-200 dark:bg-slate-500 h-10 rounded-lg mx-4 mt-2 animate-pulse") for _ in range(5)],
+                    [html.Div(className="bg-slate-200 dark:bg-slate-500 h-10 rounded-lg mx-4 mt-2 animate-pulse") for _
+                     in range(5)],
                     className="relative overflow-hidden",
                 ),
                 html.Div(
-                    [html.Div(className="bg-orange-200 dark:bg-orange-300 h-8 rounded-lg mt-2 animate-pulse") for _ in range(4)],
+                    [html.Div(className="bg-orange-200 dark:bg-orange-300 h-8 rounded-lg mt-2 animate-pulse") for _ in
+                     range(4)],
                     className="absolute bottom-4 left-4 right-4 bg-slate-600 dark:bg-gray-700",
                 ),
             ],
@@ -2476,12 +2528,16 @@ loader = html.Div(
                                                     id='quote',
                                                     className='animate-none',
                                                     children=[
-                                                        html.Div('No matter how good you get', className='animate-none'),
+                                                        html.Div('No matter how good you get',
+                                                                 className='animate-none'),
                                                         html.Div('you can always get better', className='animate-none'),
-                                                        html.Div('and that\'s the exciting part.', className='animate-none'),
-                                                        html.Div('— Tiger Woods', className='font-normal text-xs sm:text-sm'),
-                                                        html.Div('Extracting motion data...', className='animate-none text-gray-800 text-xs font-medium mt-1 sm:mt-4'),
-                                                ])
+                                                        html.Div('and that\'s the exciting part.',
+                                                                 className='animate-none'),
+                                                        html.Div('— Tiger Woods',
+                                                                 className='font-normal text-xs sm:text-sm'),
+                                                        html.Div('Extracting motion data...',
+                                                                 className='animate-none text-gray-800 text-xs font-medium mt-1 sm:mt-4'),
+                                                    ])
                                             ]
                                         ),
                                     ]
@@ -2505,6 +2561,31 @@ loader = html.Div(
                 ),
 
                 html.Div(
+                    [
+                        html.Div(
+                            className="bg-slate-200 dark:bg-slate-500 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
+                        ),
+                        html.Div(
+                            className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
+                        ),
+                    ],
+                    className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+                ),
+
+                html.Div(
+                    [
+                        html.Div(
+                            className="bg-slate-200 dark:bg-slate-500 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
+                        ),
+                        html.Div(
+                            className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
+                        ),
+                    ],
+                    className="relative h-[750px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+                ),
+
+                html.Div(
+                    children=[html.Div(
                         [
                             html.Div(
                                 className="bg-slate-200 dark:bg-slate-500 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
@@ -2514,33 +2595,7 @@ loader = html.Div(
                             ),
                         ],
                         className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
-                    ),
-
-                html.Div(
-                        [
-                            html.Div(
-                                className="bg-slate-200 dark:bg-slate-500 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
-                            ),
-                            html.Div(
-                                className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
-                            ),
-                        ],
-                        className="relative h-[750px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
-                    ),
-
-
-                html.Div(
-                    children=[html.Div(
-                            [
-                                html.Div(
-                                    className="bg-slate-200 dark:bg-slate-500 w-28 h-8 rounded-lg left-4 top-8 absolute animate-pulse"
-                                ),
-                                html.Div(
-                                    className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
-                                ),
-                            ],
-                            className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
-                        ) for _ in range(10)],
+                    ) for _ in range(10)],
                 )
 
             ],
@@ -2550,3 +2605,6 @@ loader = html.Div(
 
     ]
 )
+
+if __name__ == '__main__':
+    pass
