@@ -41,22 +41,28 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
 
         // Update the vertical line on the sequence plot
-        verticalLine: function(currentTime) {
+        verticalLine: function(currentTime, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10) {
 
-            // Get the DOM element of the Plotly graph
-            var graphDiv = document.getElementById('sequence');
+            // console.log(sequence.layout.shapes[0].x0)
+            // console.log(fig1)
 
-            Plotly.update(
-                graphDiv,
-                        {
-                            'shapes[0]': {
-                                x0: currentTime,
-                                x1: currentTime
-                    }
-                }
-            )
+            function drawLine (fig, time, id) {
+                fig.layout.shapes[0].x0 = time;
+                fig.layout.shapes[0].x1 = time;
+                Plotly.react(id , fig.data, fig.layout, {displayModeBar: false});
+            }
+
+            drawLine(fig1, currentTime, 'sequence');
+            drawLine(fig2, currentTime, 'pelvis_rotation');
+            drawLine(fig3, currentTime, 'pelvis_displacement');
+            drawLine(fig4, currentTime, 'thorax_rotation');
+            drawLine(fig5, currentTime, 'thorax_displacement');
+            drawLine(fig6, currentTime, 's_tilt');
+            drawLine(fig7, currentTime, 'h_tilt');
+            drawLine(fig8, currentTime, 'h_rotation');
+            drawLine(fig9, currentTime, 'arm_length');
+            drawLine(fig10, currentTime, 'spine_rotation');
 
         }
-
     }
 });

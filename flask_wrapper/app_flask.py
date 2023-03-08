@@ -83,6 +83,10 @@ def find_closest_zero_intersection_left_of_min(array):
         return 0
 
 
+def add_vertical_line(fig):
+    fig.add_vline(x=0, line_width=2, line_color="gray")
+
+
 # Return the video view
 def upload_video(disabled=True, path=None):
     layout = [
@@ -173,8 +177,8 @@ def upload_video(disabled=True, path=None):
                             className="h-full w-full object-cover",
                             width='100%',
                             height='100%',
+                            intervalCurrentTime=10,
                         )
-
                     ]
                 ),
             ]),
@@ -191,9 +195,9 @@ def rand(length, size):
 
 
 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
 arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -224,8 +228,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
                       save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation]]
 
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = converted
+            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = converted
 
     timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
@@ -254,26 +258,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         )
     )
 
-    # fig.add_vline(
-    #     x=0,
-    #     line_width=3,
-    #     line_color="black",
-    # )
-
-    fig.add_shape(
-        # Line Vertical
-        dict(
-            type="line",
-            x0=0,
-            y0=0,
-            x1=0,
-            y1=1,
-            line=dict(
-                color="black",
-                width=3,
-            )
-        )
-    )
+    add_vertical_line(fig)
 
     fig.update_layout(
         # title='Angular velocity',
@@ -305,6 +290,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig3.add_trace(
         go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
     )
+
+    add_vertical_line(fig3)
 
     fig3.update_layout(
         # title='Pelvis angles',
@@ -340,6 +327,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
     )
 
+    add_vertical_line(fig4)
+
     fig4.update_layout(
         # title='Pelvis displacement',
         title_x=0.5,
@@ -373,6 +362,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig5.add_trace(
         go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
     )
+
+    add_vertical_line(fig5)
 
     fig5.update_layout(
         # title='Thorax angles',
@@ -408,6 +399,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
     )
 
+    add_vertical_line(fig6)
+
     fig6.update_layout(
         # title='Thorax displacement',
         title_x=0.5,
@@ -434,6 +427,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
     fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
 
+    add_vertical_line(fig11)
+
     fig11.update_layout(
         # title='Tilt between pelvis and shoulder',
         title_x=0.5,
@@ -457,6 +452,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
+
+    add_vertical_line(fig12)
 
     fig12.update_layout(
         # title='Head tilt',
@@ -482,6 +479,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
     fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
 
+    add_vertical_line(fig13)
+
     fig13.update_layout(
         # title='Head rotation',
         title_x=0.5,
@@ -506,6 +505,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
     fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
 
+    add_vertical_line(fig14)
+
     fig14.update_layout(
         # title='Left arm length',
         title_x=0.5,
@@ -529,6 +530,8 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     )
 
     fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
+
+    add_vertical_line(fig15)
 
     fig15.update_layout(
         # title='Spine rotation',
@@ -626,11 +629,7 @@ fig.add_trace(
     )
 )
 
-# fig.add_vline(
-#     x=0,
-#     line_width=3,
-#     line_color="black",
-# )
+add_vertical_line(fig)
 
 fig.update_layout(
     # title='Angular velocity',
@@ -661,6 +660,8 @@ fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis s
 fig3.add_trace(
     go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
 )
+
+add_vertical_line(fig3)
 
 fig3.update_layout(
     # title='Pelvis angles',
@@ -696,6 +697,8 @@ fig4.add_trace(
     go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
 )
 
+add_vertical_line(fig4)
+
 fig4.update_layout(
     # title='Pelvis displacement',
     title_x=0.5,
@@ -729,6 +732,8 @@ fig5.add_trace(
 fig5.add_trace(
     go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
 )
+
+add_vertical_line(fig5)
 
 fig5.update_layout(
     # title='Thorax angles',
@@ -764,6 +769,8 @@ fig6.add_trace(
     go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
 )
 
+add_vertical_line(fig6)
+
 fig6.update_layout(
     # title='Thorax displacement',
     title_x=0.5,
@@ -790,6 +797,8 @@ fig6.update_layout(
 
 fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
 
+add_vertical_line(fig11)
+
 fig11.update_layout(
     # title='Tilt between pelvis and shoulder',
     title_x=0.5,
@@ -813,6 +822,8 @@ fig11.update_layout(
 )
 
 fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
+
+add_vertical_line(fig12)
 
 fig12.update_layout(
     # title='Head tilt',
@@ -838,6 +849,8 @@ fig12.update_layout(
 
 fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
 
+add_vertical_line(fig13)
+
 fig13.update_layout(
     # title='Head rotation',
     title_x=0.5,
@@ -862,6 +875,8 @@ fig13.update_layout(
 
 fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
 
+add_vertical_line(fig14)
+
 fig14.update_layout(
     # title='Left arm length',
     title_x=0.5,
@@ -885,6 +900,8 @@ fig14.update_layout(
 )
 
 fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
+
+add_vertical_line(fig15)
 
 fig15.update_layout(
     # title='Spine rotation',
@@ -1154,6 +1171,7 @@ def init_dash(server):
                                     className='flex flex-row w-full justify-between mb-5 sm:gap-5 gap-2',
                                     children=[
                                         html.Div(
+                                            id='position_divs',
                                             children=[
                                                 html.Div('Backswing',
                                                          className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
@@ -1195,6 +1213,7 @@ def init_dash(server):
                                             id='arm_path',
                                             children=[
                                                 dcc.Graph(
+                                                    id='arm_path_3d',
                                                     figure=path_fig,
                                                     config=config,
                                                     className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',
@@ -1448,7 +1467,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='hidden bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(
                                             className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
@@ -1728,9 +1747,9 @@ def init_callbacks(app):
 
                 # Reset plots
                 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
                 arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -1878,18 +1897,18 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps = response.json().values()
+                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps = response.json().values()
 
         else:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(
+                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(
                 100, 19)
             duration = 10
             arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -2087,7 +2106,7 @@ def init_callbacks(app):
         prevent_initial_call=True
     )
 
-    # Vertical moving line plots
+    # Vertical moving line synced with video
     app.clientside_callback(
         ClientsideFunction(
             namespace='clientside',
@@ -2096,28 +2115,12 @@ def init_callbacks(app):
 
         # Output('sequence', 'figure'),
         Input('video', 'currentTime'),
+        State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
+        State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
+        State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
+        State('spine_rotation', 'figure'),
         prevent_initial_call=True
     )
-
-    # Define a callback to update the position of the line trace based on the video time
-    # @app.callback(
-    #     Output('sequence', 'figure'),
-    #     [Input('my-video', 'currentTime')],
-    #     State('sequence', 'figure'),
-    # )
-    # def update_graph(currentTime, fig):
-    #     # Find the index of the line trace
-    #     lineIndex = None
-    #     for i, trace in enumerate(fig['data']):
-    #         if trace['mode'] == 'lines':
-    #             lineIndex = i
-    #             break
-    #
-    #     # Update the position of the line trace
-    #     if lineIndex is not None:
-    #         fig['data'][lineIndex]['x'] = [currentTime]
-    #
-    #     return fig
 
 
 # Reset plots
@@ -2130,9 +2133,9 @@ def reset_plots(children, button_id, disabled):
 
     # Reset plots
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+        save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
 
     duration = 10
 

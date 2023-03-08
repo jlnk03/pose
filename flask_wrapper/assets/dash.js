@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener("DOMContentLoaded", function() {
     let interval = setInterval(function () {
-        let ancestor = document.getElementById("parent_sequence")
+        let ancestor = document.getElementById("position_divs")
         let main = document.getElementById("main_wrapper")
         let loader = document.getElementById("loader")
         let quote = document.getElementById("quote")
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const ancestorObserver = new MutationObserver(function (mutations) {
                 mutations.forEach(function(mutation) {
-                    if (mutation.target === document.getElementById("sequence")) {
+                    if (mutation.target === document.getElementById("top_pos")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
                             main.classList.add('hidden');
@@ -199,11 +199,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.addEventListener("DOMContentLoaded", function() {
     let interval = setInterval(function () {
-        let ancestor = document.getElementById("parent_sequence")
+        let ancestor = document.getElementById("position_divs")
         let main = document.getElementById("main_wrapper")
         let loader = document.getElementById("loader")
         let quote = document.getElementById("quote")
-        let sequence = document.getElementById("sequence")
+        let sequence = document.getElementById("top_pos")
 
         if (ancestor) {
             // console.log("ancestor detected")
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const ancestorObserver = new MutationObserver(function (mutations) {
                 mutations.forEach(function(mutation) {
-                    if (mutation.target === document.getElementById("sequence")) {
+                    if (mutation.target === document.getElementById("top_pos")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
                             i = 0
