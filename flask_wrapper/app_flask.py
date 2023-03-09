@@ -1195,7 +1195,13 @@ def init_dash(server):
                                             children=[
                                                 html.Div('Tempo',
                                                          className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('-', id='tempo', className='mt-2')
+                                                html.Div(
+                                                    children=[
+                                                        html.Div('-', id='tempo', className='mt-2'),
+                                                        html.Div(': 1', className='mt-2 ml-2')
+                                                    ],
+                                                    className='flex flex-row items-center justify-center'
+                                                )
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
@@ -1634,10 +1640,6 @@ def init_callbacks(app):
                 sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
-                # Tempo
-                temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e,
-                                                   len(save_wrist_angle) / duration)
-
                 # Top of backswing
                 top_pos = arm_index / len(save_wrist_angle)
 
@@ -1650,6 +1652,10 @@ def init_callbacks(app):
 
                 # Setup
                 setup_pos = arm_index_s / len(save_wrist_angle)
+
+                # Tempo
+                temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
+                                                   len(save_wrist_angle) / duration)
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1998,7 +2004,6 @@ def init_callbacks(app):
             save_arm_rotation,
             duration)
 
-        temp, time_back, time_down = tempo(arm_index_s, arm_index, arm_index_e, len(save_wrist_angle) / duration)
 
         # Top of backswing
         top_pos = arm_index / len(save_wrist_angle)
@@ -2013,6 +2018,8 @@ def init_callbacks(app):
 
         # Setup
         setup_pos = arm_index_s / len(save_wrist_angle)
+
+        temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle), len(save_wrist_angle) / duration)
 
         # Reset the background color of the buttons
         for child in children:
