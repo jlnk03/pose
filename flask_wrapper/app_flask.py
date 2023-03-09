@@ -177,7 +177,7 @@ def upload_video(disabled=True, path=None):
                             className="h-full w-full object-cover",
                             width='100%',
                             height='100%',
-                            intervalCurrentTime=10,
+                            intervalCurrentTime=50,
                         )
                     ]
                 ),
