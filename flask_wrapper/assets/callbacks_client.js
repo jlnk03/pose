@@ -41,7 +41,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
 
         // Update the vertical line on the sequence plot
-        verticalLine: function(currentTime, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10) {
+        drawVerticalLine: function(currentTime, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10) {
 
             // console.log(sequence.layout.shapes[0].x0)
             // console.log(fig1)

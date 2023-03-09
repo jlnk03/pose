@@ -188,7 +188,7 @@ def upload_video(disabled=True, path=None):
     return layout
 
 
-# Random inititalization for data
+# Random initialization for data
 def rand(length, size):
     full = [np.full(length, np.random.randint(0, 30)) for _ in range(size)]
     return full
@@ -2110,7 +2110,7 @@ def init_callbacks(app):
     app.clientside_callback(
         ClientsideFunction(
             namespace='clientside',
-            function_name='verticalLine'
+            function_name='drawVerticalLine'
         ),
 
         # Output('sequence', 'figure'),
