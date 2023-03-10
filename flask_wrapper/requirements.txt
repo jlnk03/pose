@@ -24,7 +24,6 @@ stripe
 tqdm
 webencodings
 Werkzeug
-yagmail
 av==9.2.0
 pyarrow
 ffmpeg-python==0.2.0
