@@ -1621,12 +1621,16 @@ def init_callbacks(app):
                     arm_x = data_values[:, 19]
                     arm_y = data_values[:, 20]
                     arm_z = data_values[:, 21]
-                    impact_ratio = data['impact_ratio'][0]
+
                 except:
                     save_arm_rotation = np.zeros(len(save_wrist_angle))
                     arm_x = np.linspace(0, 9, len(save_wrist_angle))
                     arm_y = np.linspace(0, 9, len(save_wrist_angle))
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
+
+                try:
+                    impact_ratio = data['impact_ratio'][0]
+                except:
                     impact_ratio = -1
 
                 # Get the kinematic transition  sequence
@@ -1912,8 +1916,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
