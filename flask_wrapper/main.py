@@ -253,7 +253,7 @@ def predict(token):
     # Extracting the motion data from the video
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration, fps = process_motion(
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration, fps, impact_ratio = process_motion(
         contents, filename, location)
 
 
@@ -279,7 +279,8 @@ def predict(token):
         'save_arm_rotation',
         'arm_path',
         'duration',
-        'fps'
+        'fps',
+        'impact_ratio'
     ]
 
     values = [
@@ -304,7 +305,8 @@ def predict(token):
         list(save_arm_rotation),
         arm_path,
         duration,
-        fps
+        fps,
+        impact_ratio
     ]
 
     prediction = dict(zip(keys, values))

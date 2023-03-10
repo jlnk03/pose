@@ -13,6 +13,8 @@ import shutil
 from scipy.ndimage.filters import gaussian_filter
 import aggdraw
 import av
+import tempfile
+from moviepy.editor import AudioFileClip
 # import memory_profiler
 
 
@@ -47,6 +49,24 @@ def add_padding(img, padding_size, padding_color=(0, 0, 0)):
     return padding
 
 
+def impact_from_audio(audio_bytes):
+    # Create a temporary file and write the BytesIO contents to it
+    with tempfile.NamedTemporaryFile(suffix='.mp4') as temp_file:
+        temp_file.write(audio_bytes.getvalue())
+
+        # Extract the audio using moviepy
+        audio = AudioFileClip(temp_file.name)
+
+        # Convert the audio to a numpy array
+        audio_data = audio.to_soundarray()[:, 0]
+
+        if len(audio_data) == 0:
+            return -1
+
+        impact_ratio = np.argmax(audio_data) / len(audio_data)
+        return impact_ratio
+
+
 # @memory_profiler.profile
 def process_motion(contents, filename, location):
     # print("Processing video: " + filename)
@@ -56,6 +76,7 @@ def process_motion(contents, filename, location):
     name = filename
 
     decoded = base64.b64decode(content_string)
+
     vid_bytes = io.BytesIO(decoded)
 
     frames = iio.imiter(vid_bytes, plugin='pyav')
@@ -89,6 +110,12 @@ def process_motion(contents, filename, location):
     stream.height = height
     stream.pix_fmt = 'yuv420p'
     # writer = imageio.get_writer(location + '/motion.mp4', fps=fps)
+
+    # Audio
+    impact_ratio = impact_from_audio(vid_bytes)
+    duration_ratio = duration * impact_ratio
+    duration_ratio += 0.016
+    impact_ratio = duration_ratio / duration
 
     save_pelvis_rotation = deque([])
     save_pelvis_tilt = deque([])
@@ -354,7 +381,7 @@ def process_motion(contents, filename, location):
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps
+           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps, impact_ratio
 
 
 def draw_rounded_rectangle_agg(img, pt1, pt2, color, radius):

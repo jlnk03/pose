@@ -11,7 +11,7 @@ import dash_player as dp
 import pandas as pd
 from scipy import signal
 from code_b.angles import *
-from code_b.process_mem import process_motion
+# from code_b.process_mem import process_motion
 import os
 from flask_login import current_user
 from flask import url_for
@@ -1596,6 +1596,7 @@ def init_callbacks(app):
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
+                impact_ratio = data['impact_ratio'][0]
                 data_values = data.values
                 save_pelvis_rotation = data_values[:, 0]
                 save_pelvis_tilt = data_values[:, 1]
@@ -1644,8 +1645,14 @@ def init_callbacks(app):
                 top_pos = arm_index / len(save_wrist_angle)
 
                 # Impact
-                impact_pos = (np.argmin(filter_data(arm_z, duration * 2)[int(arm_index):]) + int(arm_index)) / len(
-                    save_wrist_angle)
+                if impact_ratio == -1:
+                    impact_pos = (np.argmin(
+                        filter_data(arm_z, duration * 2)[int(arm_index):] / len(
+                            save_wrist_angle)) + arm_index) / len(
+                        save_wrist_angle)
+
+                else:
+                    impact_pos = impact_ratio
 
                 # End of swing
                 end_pos = arm_index_e / len(save_wrist_angle)
@@ -1909,7 +1916,7 @@ def init_callbacks(app):
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                 save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps = response.json().values()
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps, impact_ratio = response.json().values()
 
         else:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1917,6 +1924,7 @@ def init_callbacks(app):
                 save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(
                 100, 19)
             duration = 10
+            impact_ratio = 0.5
             arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                             'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
@@ -1958,6 +1966,7 @@ def init_callbacks(app):
                       'wrist_angle', 'wrist_tilt', 'arm_rotation', 'arm_x', 'arm_y', 'arm_z']
 
         df['duration'] = duration
+        df['impact_ratio'] = impact_ratio
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
@@ -2004,14 +2013,16 @@ def init_callbacks(app):
             save_arm_rotation,
             duration)
 
-
         # Top of backswing
         top_pos = arm_index / len(save_wrist_angle)
 
         # Impact
-        impact_pos = (np.argmin(
-            filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(save_wrist_angle)) + arm_index) / len(
-            save_wrist_angle)
+        if impact_ratio == -1:
+            impact_pos = (np.argmin(
+                filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(save_wrist_angle)) + arm_index) / len(
+                save_wrist_angle)
+        else:
+            impact_pos = impact_ratio
 
         # End of swing
         end_pos = arm_index_e / len(save_wrist_angle)
