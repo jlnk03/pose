@@ -19,6 +19,8 @@ import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
+import cProfile
+import pstats
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 
@@ -250,11 +252,24 @@ def predict(token):
 
     contents, filename, location = request.get_json().values()
 
+    # profiler = cProfile.Profile()
+    # profiler.enable()
+
     # Extracting the motion data from the video
+    result = process_motion(contents, filename, location)
+    print(result)
+
+    if result == -1:
+        return 413
+
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration, fps, impact_ratio = process_motion(
-        contents, filename, location)
+    save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_path, duration, fps, impact_ratio = result
+
+    # profiler.disable()
+    # stats = pstats.Stats(profiler).sort_stats('cumtime')
+    # stats.print_stats()
+    # stats.dump_stats('profile.txt')
 
 
     keys = [

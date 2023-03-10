@@ -29,7 +29,7 @@ mp_pose = mp.solutions.pose
 pio.templates.default = "plotly_white"
 
 # Hide plotly logo
-config = dict({'displaylogo': False, 'displayModeBar': False})
+config = dict({'displaylogo': False, 'displayModeBar': False, 'scrollZoom': False})
 
 _PRESENCE_THRESHOLD = 0.5
 _VISIBILITY_THRESHOLD = 0.5
@@ -591,6 +591,7 @@ path_fig = go.Figure(
     data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'],
                       z=arm_position['z'], mode='lines',
                       line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
+
 path_fig.update_layout(
     scene=dict(
         xaxis_title='Down the line',
@@ -1350,7 +1351,7 @@ def init_dash(server):
                                             id='sequence',
                                             figure=fig,
                                             config=config,
-                                            className='h-[500px] w-full relative'
+                                            className='h-[500px] w-full relative',
                                         ),
                                     ]
                                 ),
@@ -1596,7 +1597,6 @@ def init_callbacks(app):
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
-                impact_ratio = data['impact_ratio'][0]
                 data_values = data.values
                 save_pelvis_rotation = data_values[:, 0]
                 save_pelvis_tilt = data_values[:, 1]
@@ -1621,11 +1621,13 @@ def init_callbacks(app):
                     arm_x = data_values[:, 19]
                     arm_y = data_values[:, 20]
                     arm_z = data_values[:, 21]
+                    impact_ratio = data['impact_ratio'][0]
                 except:
                     save_arm_rotation = np.zeros(len(save_wrist_angle))
                     arm_x = np.linspace(0, 9, len(save_wrist_angle))
                     arm_y = np.linspace(0, 9, len(save_wrist_angle))
                     arm_z = np.linspace(0, 9, len(save_wrist_angle))
+                    impact_ratio = -1
 
                 # Get the kinematic transition  sequence
                 sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
@@ -1910,8 +1912,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1919,6 +1921,8 @@ def init_callbacks(app):
                 save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps, impact_ratio = response.json().values()
 
         else:
+            if response.status_code == 413:
+                message = 'Video is too long. Please upload a shorter video.'
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                 save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
                 save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(

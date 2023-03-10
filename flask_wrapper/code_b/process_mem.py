@@ -85,6 +85,11 @@ def process_motion(contents, filename, location):
     fps = meta['fps']
     duration = meta['duration']
 
+    n_frames = duration * fps
+
+    if n_frames > 300:
+        return -1
+
     try:
         rotation = int(meta['rotate'])
     except KeyError:
@@ -370,9 +375,9 @@ def process_motion(contents, filename, location):
             frame = av.VideoFrame.from_ndarray(image, format='bgr24')
             for packet in stream.encode(frame):
                 container.mux(packet)
-    #
-    #
-    # # Flush the stream to make sure all frames have been written
+
+
+    # Flush the stream to make sure all frames have been written
     for packet in stream.encode():
         container.mux(packet)
     stream.close()
