@@ -234,7 +234,7 @@ def contact_post():
     send_mail_smtp('info@swinglab.app', subject, message)
 
     # return render_template('contact.html', title='Contact Us – Swinglab')
-    return request.referrer
+    return redirect(request.referrer)
 
 @main.route('/predict/<token>', methods=['POST'])
 def predict(token):
