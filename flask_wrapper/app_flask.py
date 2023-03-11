@@ -190,9 +190,9 @@ def upload_video(disabled=True, path=None):
                 html.Div(
                     children=[
                         html.Button('+', id='plus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                         html.Button('-', id='minus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
                     className='flex flex-row justify-between mb-5 mt-2 gap-2'
                 ),
