@@ -15,6 +15,7 @@ import aggdraw
 import av
 import tempfile
 from moviepy.editor import AudioFileClip
+
 # import memory_profiler
 
 
@@ -99,9 +100,9 @@ def process_motion(contents, filename, location):
     frame = next(frames)
     frame = np.rot90(frame, k=rot_angle // 90)
     height, width, _ = frame.shape
-    normalized_height = height/1920
-    normalized_padding = int(450 * normalized_height)
-    width += normalized_padding
+    # normalized_height = height / 1920
+    # normalized_padding = int(450 * normalized_height)
+    # width += normalized_padding
     if width % 2 != 0:
         width += 1
 
@@ -142,6 +143,7 @@ def process_motion(contents, filename, location):
     save_wrist_angle = deque([])
     save_wrist_tilt = deque([])
     save_arm_rotation = deque([])
+    save_arm_to_ground = deque([])
     arm_position = {'x': [], 'y': [], 'z': []}
 
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
@@ -251,9 +253,10 @@ def process_motion(contents, filename, location):
                 save_arm_rotation.append(arm_rotation_l)
 
                 arm_ground = arm_to_ground(wrist_r, shoulder_r, R)
+                save_arm_to_ground.append(arm_ground)
 
                 arm_v = [foot_l.x - wrist_l.x, foot_l.y - wrist_l.y, foot_l.z - wrist_l.z]
-                arm_v = R@arm_v
+                arm_v = R @ arm_v
 
                 arm_position['x'].append(arm_v[0])
                 arm_position['y'].append(arm_v[2])
@@ -271,91 +274,98 @@ def process_motion(contents, filename, location):
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                 # Padding to image
-                image = add_padding(image, normalized_padding, (55, 65, 81))
-
-                image = Image.fromarray(np.uint8(image))
-
-                # create an ImageDraw object
-                draw = ImageDraw.Draw(image)
-
-                radius = int(40*normalized_height)
-
-                # draw the rounded rectangle
-                left = int(20*normalized_height)
-                right = int(430*normalized_height)
-                text_offset = int(30*normalized_height)
-                center_offset = int(height / 2 - (1220*normalized_height - 20*normalized_height) / 2 - 20*normalized_height)
-                draw_rounded_rectangle_agg(image, (left, int(20*normalized_height) + center_offset), (right, int(270*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(310*normalized_height) + center_offset), (right, int(640*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(680*normalized_height) + center_offset), (right, int(930*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
-                draw_rounded_rectangle_agg(image, (left, int(970*normalized_height) + center_offset), (right, int(1220*normalized_height) + center_offset), color=(255, 255, 255), radius=radius)
-
-                try:
-                    # add text on top of the rounded rectangle
-                    os.chdir('assets')
-                    font = ImageFont.truetype('SF-Pro-Text-Regular.otf', int(50 * normalized_height))
-                    font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', int(60 * normalized_height))
-                    os.chdir('..')
-                except Exception as e:
-                    print(e)
-
-
-                text = "Head"
-                textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(30*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-
-                text = f"Rotation: {int(head_r)}°"
-                textposition = (text_offset, int(110*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = f"Tilt: {int(head_t)}°"
-                textposition = (text_offset, int(190*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = "Thorax"
-                textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(320*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-
-                text = f"Rotation: {int(thorax_r)}°"
-                textposition = (text_offset, int(400*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = f"Tilt: {int(thorax_t)}°"
-                textposition = (text_offset, int(480*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = f"Bend: {int(thorax_b)}°"
-                textposition = (text_offset, int(560*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = "Arm"
-                textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(690*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-
-                text = f"Rotation: {int(arm_rotation_l)}°"
-                textposition = (text_offset, int(770*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = f"To Ground: {int(arm_ground)}°"
-                textposition = (text_offset, int(850*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = 'Pelvis'
-                textwidth, textheight = draw.textsize(text, font=font_bold)
-                textposition = (int((normalized_padding - textwidth) / 2), int(980*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-
-                text = f"Rotation: {int(pelvis_r)}°"
-                textposition = (text_offset, int(1060*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                text = f'Tilt: {int(pelvis_t)}°'
-                textposition = (text_offset, int(1140*normalized_height) + center_offset)
-                draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
+                # image = add_padding(image, normalized_padding, (55, 65, 81))
+                #
+                # image = Image.fromarray(np.uint8(image))
+                #
+                # # create an ImageDraw object
+                # draw = ImageDraw.Draw(image)
+                #
+                # radius = int(40 * normalized_height)
+                #
+                # # draw the rounded rectangle
+                # left = int(20 * normalized_height)
+                # right = int(430 * normalized_height)
+                # text_offset = int(30 * normalized_height)
+                # center_offset = int(
+                #     height / 2 - (1220 * normalized_height - 20 * normalized_height) / 2 - 20 * normalized_height)
+                # draw_rounded_rectangle_agg(image, (left, int(20 * normalized_height) + center_offset),
+                #                            (right, int(270 * normalized_height) + center_offset), color=(255, 255, 255),
+                #                            radius=radius)
+                # draw_rounded_rectangle_agg(image, (left, int(310 * normalized_height) + center_offset),
+                #                            (right, int(640 * normalized_height) + center_offset), color=(255, 255, 255),
+                #                            radius=radius)
+                # draw_rounded_rectangle_agg(image, (left, int(680 * normalized_height) + center_offset),
+                #                            (right, int(930 * normalized_height) + center_offset), color=(255, 255, 255),
+                #                            radius=radius)
+                # draw_rounded_rectangle_agg(image, (left, int(970 * normalized_height) + center_offset),
+                #                            (right, int(1220 * normalized_height) + center_offset),
+                #                            color=(255, 255, 255), radius=radius)
+                #
+                # try:
+                #     # add text on top of the rounded rectangle
+                #     os.chdir('assets')
+                #     font = ImageFont.truetype('SF-Pro-Text-Regular.otf', int(50 * normalized_height))
+                #     font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', int(60 * normalized_height))
+                #     os.chdir('..')
+                # except Exception as e:
+                #     print(e)
+                #
+                # text = "Head"
+                # textwidth, textheight = draw.textsize(text, font=font_bold)
+                # textposition = (int((normalized_padding - textwidth) / 2), int(30 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+                #
+                # text = f"Rotation: {int(head_r)}°"
+                # textposition = (text_offset, int(110 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = f"Tilt: {int(head_t)}°"
+                # textposition = (text_offset, int(190 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = "Thorax"
+                # textwidth, textheight = draw.textsize(text, font=font_bold)
+                # textposition = (int((normalized_padding - textwidth) / 2), int(320 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+                #
+                # text = f"Rotation: {int(thorax_r)}°"
+                # textposition = (text_offset, int(400 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = f"Tilt: {int(thorax_t)}°"
+                # textposition = (text_offset, int(480 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = f"Bend: {int(thorax_b)}°"
+                # textposition = (text_offset, int(560 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = "Arm"
+                # textwidth, textheight = draw.textsize(text, font=font_bold)
+                # textposition = (int((normalized_padding - textwidth) / 2), int(690 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+                #
+                # text = f"Rotation: {int(arm_rotation_l)}°"
+                # textposition = (text_offset, int(770 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = f"To Ground: {int(arm_ground)}°"
+                # textposition = (text_offset, int(850 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = 'Pelvis'
+                # textwidth, textheight = draw.textsize(text, font=font_bold)
+                # textposition = (int((normalized_padding - textwidth) / 2), int(980 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
+                #
+                # text = f"Rotation: {int(pelvis_r)}°"
+                # textposition = (text_offset, int(1060 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
+                #
+                # text = f'Tilt: {int(pelvis_t)}°'
+                # textposition = (text_offset, int(1140 * normalized_height) + center_offset)
+                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
 
                 # convert the image to numpy array
                 image = np.asarray(image)
@@ -377,7 +387,6 @@ def process_motion(contents, filename, location):
             for packet in stream.encode(frame):
                 container.mux(packet)
 
-
     # Flush the stream to make sure all frames have been written
     for packet in stream.encode():
         container.mux(packet)
@@ -386,8 +395,10 @@ def process_motion(contents, filename, location):
     # writer.close()
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-           save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-           save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps, impact_ratio
+        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, \
+        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, \
+        arm_position, duration, fps, impact_ratio
 
 
 def draw_rounded_rectangle_agg(img, pt1, pt2, color, radius):
@@ -396,12 +407,12 @@ def draw_rounded_rectangle_agg(img, pt1, pt2, color, radius):
     brush = aggdraw.Brush(color)
     pen = aggdraw.Pen(color, 1)
     draw = aggdraw.Draw(img)
-    draw.rectangle((x1+radius, y1, x2-radius, y2), brush, pen)
-    draw.rectangle((x1, y1+radius, x2, y2-radius), brush, pen)
-    draw.ellipse((x1, y1, x1+2*radius, y1+2*radius), brush, pen)
-    draw.ellipse((x2-2*radius, y1, x2, y1+2*radius), brush, pen)
-    draw.ellipse((x1, y2-2*radius, x1+2*radius, y2), brush, pen)
-    draw.ellipse((x2-2*radius, y2-2*radius, x2, y2), brush, pen)
+    draw.rectangle((x1 + radius, y1, x2 - radius, y2), brush, pen)
+    draw.rectangle((x1, y1 + radius, x2, y2 - radius), brush, pen)
+    draw.ellipse((x1, y1, x1 + 2 * radius, y1 + 2 * radius), brush, pen)
+    draw.ellipse((x2 - 2 * radius, y1, x2, y1 + 2 * radius), brush, pen)
+    draw.ellipse((x1, y2 - 2 * radius, x1 + 2 * radius, y2), brush, pen)
+    draw.ellipse((x2 - 2 * radius, y2 - 2 * radius, x2, y2), brush, pen)
     draw.flush()
 
 

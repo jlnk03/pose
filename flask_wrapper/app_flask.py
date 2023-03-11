@@ -164,7 +164,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('-', id='minus_frame',
                                     className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 gap-2'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 gap-2 sm:gap-5'
                 ),
 
                 # Video player
@@ -178,6 +178,7 @@ def upload_video(disabled=True, path=None):
                             id='video',
                             url=f'{path}#t=0.001',
                             controls=True,
+                            playsinline=True,
                             className="h-full w-full object-cover",
                             width='100%',
                             height='100%',
@@ -189,9 +190,9 @@ def upload_video(disabled=True, path=None):
                 # Controls for the video player mobile (+, -)
                 html.Div(
                     children=[
-                        html.Button('+', id='plus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                         html.Button('-', id='minus_frame_mobile',
+                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
+                        html.Button('+', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
                     className='flex flex-row justify-between mb-5 mt-2 gap-2'
@@ -211,7 +212,7 @@ def rand(length, size):
 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+    save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(100, 20)
 
 arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -232,18 +233,19 @@ def filter_data(data, duration):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, fps=1,
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, fps=1,
                  filt=True):
     if filt:
         converted = [filter_data(np.array(name), duration) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                       save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                       save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                      save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation]]
+                      save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground]]
 
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
             save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = converted
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, \
+            save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = converted
 
     timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
@@ -571,9 +573,9 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
     fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
 
-    # fig16.add_trace(
-    #     go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
-    # )
+    fig16.add_trace(
+        go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
+    )
 
     fig16.update_layout(
         # title='Wrist angle',
@@ -942,9 +944,9 @@ fig15.update_layout(
 
 fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
 
-# fig16.add_trace(
-#     go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
-# )
+fig16.add_trace(
+    go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
+)
 
 fig16.update_layout(
     # title='Wrist angles',
@@ -1658,7 +1660,7 @@ def init_callbacks(app):
                     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
                         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                        save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+                        save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(100, 20)
 
                     arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                                     'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -1669,7 +1671,7 @@ def init_callbacks(app):
                         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
+                        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, filt=False)
 
                     path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
                                                            y=arm_position['y'],
@@ -1799,32 +1801,32 @@ def init_callbacks(app):
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
                 duration = data['duration'][0]
-                data_values = data.values
-                save_pelvis_rotation = data_values[:, 0]
-                save_pelvis_tilt = data_values[:, 1]
-                save_pelvis_lift = data_values[:, 2]
-                save_pelvis_sway = data_values[:, 3]
-                save_pelvis_thrust = data_values[:, 4]
-                save_thorax_lift = data_values[:, 5]
-                save_thorax_bend = data_values[:, 6]
-                save_thorax_sway = data_values[:, 7]
-                save_thorax_rotation = data_values[:, 8]
-                save_thorax_thrust = data_values[:, 9]
-                save_thorax_tilt = data_values[:, 10]
-                save_spine_rotation = data_values[:, 11]
-                save_spine_tilt = data_values[:, 12]
-                save_head_rotation = data_values[:, 13]
-                save_head_tilt = data_values[:, 14]
-                save_left_arm_length = data_values[:, 15]
-                save_wrist_angle = data_values[:, 16]
-                save_wrist_tilt = data_values[:, 17]
+                # data = data.values
+                save_pelvis_rotation = data['pelvis_rotation']
+                save_pelvis_tilt = data['pelvis_tilt']
+                save_pelvis_lift = data['pelvis_lift']
+                save_pelvis_sway = data['pelvis_sway']
+                save_pelvis_thrust = data['pelvis_thrust']
+                save_thorax_lift = data['thorax_lift']
+                save_thorax_bend = data['thorax_bend']
+                save_thorax_sway = data['thorax_sway']
+                save_thorax_rotation = data['thorax_rotation']
+                save_thorax_thrust = data['thorax_thrust']
+                save_thorax_tilt = data['thorax_tilt']
+                save_spine_rotation = data['spine_rotation']
+                save_spine_tilt = data['spine_tilt']
+                save_head_rotation = data['head_rotation']
+                save_head_tilt = data['head_tilt']
+                save_left_arm_length = data['left_arm_length']
+                save_wrist_angle = data['wrist_angle']
+                save_wrist_tilt = data['wrist_tilt']
                 try:
-                    save_arm_rotation = data_values[:, 18]
-                    arm_x = data_values[:, 19]
-                    arm_y = data_values[:, 20]
-                    arm_z = data_values[:, 21]
+                    save_arm_rotation = data['arm_rotation']
+                    arm_x = data['arm_x']
+                    arm_y = data['arm_y']
+                    arm_z = data['arm_z']
 
-                except:
+                except KeyError:
                     save_arm_rotation = np.zeros(len(save_wrist_angle))
                     arm_x = np.linspace(0, 9, len(save_wrist_angle))
                     arm_y = np.linspace(0, 9, len(save_wrist_angle))
@@ -1832,8 +1834,13 @@ def init_callbacks(app):
 
                 try:
                     impact_ratio = data['impact_ratio'][0]
-                except:
+                except KeyError:
                     impact_ratio = -1
+
+                try:
+                    save_arm_to_ground = data['arm_to_ground']
+                except KeyError:
+                    save_arm_to_ground = np.zeros(len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
                 sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
@@ -1916,6 +1923,7 @@ def init_callbacks(app):
                     save_wrist_angle,
                     save_wrist_tilt,
                     save_arm_rotation,
+                    save_arm_to_ground,
                     duration)
 
                 # Update the 3D plot
@@ -1972,7 +1980,7 @@ def init_callbacks(app):
                 save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
                     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                    save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+                    save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(100, 20)
 
                 arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -1982,11 +1990,10 @@ def init_callbacks(app):
                 fps_saved = 60
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
-                    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+                    save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                    save_left_arm_length, \
-                    save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
+                    save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, filt=False)
 
                 path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
                                                        y=arm_position['y'],
@@ -2128,15 +2135,17 @@ def init_callbacks(app):
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                 save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position, duration, fps, impact_ratio = response.json().values()
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_position, duration, fps, impact_ratio = response.json().values()
 
         else:
             if response.status_code == 413:
                 message = 'Video is too long. Please upload a shorter video.'
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
                 save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(
-                100, 19)
+                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(
+                100, 20)
             duration = 10
             impact_ratio = 0.5
             arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -2165,6 +2174,7 @@ def init_callbacks(app):
                                                                                              save_wrist_angle,
                                                                                              save_wrist_tilt,
                                                                                              save_arm_rotation,
+                                                                                             save_arm_to_ground,
                                                                                              duration)
 
         # Save the motion data to a parquet file
@@ -2172,12 +2182,12 @@ def init_callbacks(app):
             [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
              save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
              save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, arm_position['x'],
-             arm_position['y'], arm_position['z']]).T
+             save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
+             arm_position['x'], arm_position['y'], arm_position['z']]).T
         df.columns = ['pelvis_rotation', 'pelvis_tilt', 'pelvis_lift', 'pelvis_sway', 'pelvis_thrust',
                       'thorax_lift', 'thorax_bend', 'thorax_sway', 'thorax_rotation', 'thorax_thrust',
                       'thorax_tilt', 'spine_rotation', 'spine_tilt', 'head_rotation', 'head_tilt', 'left_arm_length',
-                      'wrist_angle', 'wrist_tilt', 'arm_rotation', 'arm_x', 'arm_y', 'arm_z']
+                      'wrist_angle', 'wrist_tilt', 'arm_rotation', 'arm_to_ground', 'arm_x', 'arm_y', 'arm_z']
 
         df['duration'] = duration
         df['impact_ratio'] = impact_ratio
@@ -2372,7 +2382,7 @@ def init_callbacks(app):
         [Output('pelvis_rot_val', 'children'), Output('pelvis_bend_val', 'children'),
          Output('thorax_rot_val', 'children'), Output('thorax_bend_val', 'children'),
          Output('head_rot_val', 'children'), Output('head_tilt_val', 'children'),
-         Output('arm_rot_val', 'children'),
+         Output('arm_rot_val', 'children'), Output('arm_ground_val', 'children'),
          ],
         [Input('video', 'currentTime'), Input('video', 'duration')],
         State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
@@ -2395,7 +2405,7 @@ def reset_plots(children, button_id, disabled):
     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-        save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+        save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(100, 20)
 
     duration = 10
 
@@ -2418,6 +2428,7 @@ def reset_plots(children, button_id, disabled):
                                                                                          save_wrist_angle,
                                                                                          save_wrist_tilt,
                                                                                          save_arm_rotation,
+                                                                                         save_arm_to_ground,
                                                                                          duration,
                                                                                          filt=False)
 
