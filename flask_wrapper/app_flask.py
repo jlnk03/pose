@@ -571,7 +571,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         )
     )
 
-    fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
+    fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm rotation'))
 
     fig16.add_trace(
         go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
@@ -942,7 +942,7 @@ fig15.update_layout(
     )
 )
 
-fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
+fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm rotation'))
 
 fig16.add_trace(
     go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
