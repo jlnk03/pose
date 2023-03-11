@@ -115,6 +115,32 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             drawLine(fig9, currentTime, 'arm_length');
             drawLine(fig10, currentTime, 'spine_rotation');
 
+        },
+
+        updateValues: function(currentTime, duration, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11) {
+            const pelvis_rotation = fig2.data[1].y;
+            const pelvis_bend = fig2.data[0].y;
+            const thorax_rotation = fig4.data[0].y;
+            const thorax_bend = fig4.data[1].y;
+            const head_tilt = fig7.data[0].y;
+            const head_rotation = fig8.data[0].y;
+            const arm_rotation = fig11.data[0].y;
+
+            const index = Math.floor(pelvis_rotation.length * (currentTime/duration))
+
+            const value_pelvis_rotation = Math.round(pelvis_rotation[index]);
+            const value_pelvis_bend = Math.round(pelvis_bend[index]);
+            const value_thorax_rotation = Math.round(thorax_rotation[index]);
+            const value_thorax_bend = Math.round(thorax_bend[index]);
+            const value_head_tilt = Math.round(head_tilt[index]);
+            const value_head_rotation = Math.round(head_rotation[index]);
+            const value_arm_rotation = Math.round(arm_rotation[index]);
+
+            // console.log(value_pelvis_rotation)
+
+            return [`${value_pelvis_rotation}°`, `${value_pelvis_bend}°`, `${value_thorax_rotation}°`, `${value_thorax_bend}°`,
+                `${value_head_rotation}°`, `${value_head_tilt}°`, `${value_arm_rotation}°`] ;
         }
+
     }
 });

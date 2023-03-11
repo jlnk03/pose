@@ -152,19 +152,19 @@ def upload_video(disabled=True, path=None):
                 html.Div(
                     children=[
                         html.Button('Setup', id='setup_pos_button',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Top', id='top_pos_button',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Impact', id='impact_pos_button',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Finish', id='end_pos_button',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('+', id='plus_frame',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                         html.Button('-', id='minus_frame',
-                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 sm:gap-5 gap-2'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 gap-2'
                 ),
 
                 # Video player
@@ -196,9 +196,7 @@ def upload_video(disabled=True, path=None):
                     ],
                     className='flex flex-row justify-between mb-5 mt-2 gap-2'
                 ),
-
             ]),
-
     ]
 
     return layout
@@ -571,11 +569,11 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
         )
     )
 
-    fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_wrist_angle, name=f'Wrist angle'))
+    fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
 
-    fig16.add_trace(
-        go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
-    )
+    # fig16.add_trace(
+    #     go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
+    # )
 
     fig16.update_layout(
         # title='Wrist angle',
@@ -942,11 +940,11 @@ fig15.update_layout(
     )
 )
 
-fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_wrist_angle, name=f'Wrist angle'))
+fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm angles'))
 
-fig16.add_trace(
-    go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
-)
+# fig16.add_trace(
+#     go.Scatter(x=timeline, y=save_wrist_tilt, name=f'Wrist tilt')
+# )
 
 fig16.update_layout(
     # title='Wrist angles',
@@ -1117,6 +1115,7 @@ def init_dash(server):
                             id='body',
                             className='lg:mx-16 mx-4 lg:pl-60 mt-0',
                             children=[
+                                # Upload component
                                 html.Div(
                                     id='upload-video',
                                     className='flex flex-row justify-between mt-5',
@@ -1172,16 +1171,87 @@ def init_dash(server):
                                                         borderColor='bg-red-400',
                                                         borderRadius='12px',
                                                     )),
-                                                    # className='upload'
                                                 ),
                                                 className='w-full'
                                                 # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                             )
                                         ],
-                                            # className='container',
                                             className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                         ),
                                     ]),
+                                # End of upload component
+
+                                # Live updating divs based on position in video
+                                html.Div(
+                                    className='grid grid-cols-4 w-full justify-between mb-5 gap-2',
+                                    children=[
+                                        html.Div(
+                                            children=[
+                                                html.Div('Pelvis Rot.',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='pelvis_rot_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Pelvis Tilt',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='pelvis_bend_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Thorax Rot.',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='thorax_rot_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Thorax Tilt',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='thorax_bend_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Head Rot.',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='head_rot_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Head Tilt',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='head_tilt_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Arm Rot.',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='arm_rot_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                        html.Div(
+                                            children=[
+                                                html.Div('Arm Ground',
+                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                html.Div('- °', id='arm_ground_val', className='mt-2'),
+                                            ],
+                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                        ),
+                                    ]
+                                ),
+                                # End of updating divs
 
                                 # Tempo divs
                                 html.Div(
@@ -1225,6 +1295,7 @@ def init_dash(server):
                                         ),
                                     ]
                                 ),
+                                # End of tempo divs
 
                                 html.Div(
                                     className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
@@ -1491,17 +1562,17 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='hidden bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(
                                             className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
                                             children=[
-                                                'Wrist Angles'
+                                                'Arm Angles'
                                             ]
                                         ),
 
                                         dcc.Graph(
-                                            id='wrist_angle',
+                                            id='arm_angle',
                                             figure=fig16,
                                             config=config,
                                             className='w-full h-[500px]'
@@ -1544,7 +1615,7 @@ def init_callbacks(app):
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
          Output('h_tilt', 'figure'),
          Output('h_rotation', 'figure'), Output('arm_length', 'figure'), Output('spine_rotation', 'figure'),
-         Output('wrist_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
+         Output('arm_angle', 'figure'), Output('file_list', 'children'), Output('upload-video', 'children'),
          Output('sequence_first', 'className'), Output('sequence_second', 'className'),
          Output('sequence_third', 'className'),
          Output('start_sequence_first', 'className'), Output('start_sequence_second', 'className'),
@@ -2287,6 +2358,27 @@ def init_callbacks(app):
         State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
         State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
         State('spine_rotation', 'figure'),
+        prevent_initial_call=True
+    )
+
+    # Value divs when video is playing
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='updateValues'
+        ),
+
+        # Output('sequence', 'figure'),
+        [Output('pelvis_rot_val', 'children'), Output('pelvis_bend_val', 'children'),
+         Output('thorax_rot_val', 'children'), Output('thorax_bend_val', 'children'),
+         Output('head_rot_val', 'children'), Output('head_tilt_val', 'children'),
+         Output('arm_rot_val', 'children'),
+         ],
+        [Input('video', 'currentTime'), Input('video', 'duration')],
+        State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
+        State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
+        State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
+        State('spine_rotation', 'figure'), State('arm_angle', 'figure'),
         prevent_initial_call=True
     )
 
