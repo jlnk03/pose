@@ -119,7 +119,8 @@ def process_motion(contents, filename, location):
     # Audio
     impact_ratio = impact_from_audio(vid_bytes)
     duration_ratio = duration * impact_ratio
-    duration_ratio += 0.016
+    # add half a frame
+    duration_ratio += 0.008
     impact_ratio = duration_ratio / duration
 
     save_pelvis_rotation = deque([])

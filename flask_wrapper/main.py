@@ -257,7 +257,7 @@ def predict(token):
 
     # Extracting the motion data from the video
     result = process_motion(contents, filename, location)
-    print(result)
+    # print(result)
 
     if result == -1:
         return 413

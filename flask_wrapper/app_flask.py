@@ -1562,10 +1562,56 @@ def init_callbacks(app):
                 file = f'{button_id}.parquet'
 
                 # Check if file exists and delete otherwise
-                if not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}'):
+                if (not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}')) or (not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/motion.mp4')):
                     fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(
                         children, button_id, disabled)
 
+                    # Reset plots
+                    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+                        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+                        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+                        save_wrist_angle, save_wrist_tilt, save_arm_rotation = rand(100, 19)
+
+                    arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                                    'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+
+                    duration = 10
+
+                    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
+                        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+                        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+                        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+                        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, duration, filt=False)
+
+                    path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
+                                                           y=arm_position['y'],
+                                                           z=arm_position['z'], mode='lines',
+                                                           line=dict(color=np.linspace(0, 1, len(arm_position['x'])),
+                                                                     width=6, colorscale='Viridis')))
+
+                    path_fig.update_layout(
+                        scene=dict(
+                            xaxis_title='Down the line',
+                            yaxis_title='Front on',
+                            zaxis_title='Height',
+                            xaxis_showticklabels=False,
+                            yaxis_showticklabels=False,
+                            zaxis_showticklabels=False,
+                            camera=dict(
+                                up=dict(x=0, y=0, z=1),
+                                center=dict(x=0, y=0, z=-0.1),
+                                eye=dict(x=-2.5, y=0.1, z=0.2)
+                            ),
+                        ),
+                        font_color="#94a3b8",
+                        margin=dict(r=10, b=10, l=10, t=10),
+                        paper_bgcolor='rgba(0,0,0,0)',
+                    )
+
+                    path = dcc.Graph(figure=path_fig, config=config,
+                                     className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
+
+                    # Reset sequence colors
                     sequence_first = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#6266F6]',
                     sequence_second = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#E74D39]'
                     sequence_third = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#2BC48C]'
@@ -1578,10 +1624,76 @@ def init_callbacks(app):
                     # Tempo
                     temp, time_back, time_down = ('-', '- s', '- s')
 
+                    # Top backswing
                     top_pos = 0.5
+
+                    # Impact
                     impact_pos = 0.5
+
+                    # End of swing
                     end_pos = 0.5
+
+                    # Setup
                     setup_pos = 0.5
+
+                    children_upload = [
+
+                        html.Div(children=[
+                            html.Div(
+                                children=[
+                                    html.Div(
+                                        children=[
+                                            'Upload your video',
+                                            html.Div('BETA',
+                                                     className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                        ],
+                                        className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                                    ),
+                                    html.Span(
+                                        'as mp4, mov or avi – max. 20 MB',
+                                        className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                                    )
+                                ],
+                                className='flex flex-col items-start mx-10 mb-4'
+                            ),
+                            html.Div(
+                                dcc.Upload(
+                                    disabled=disabled,
+                                    id='upload-data',
+                                    children=html.Div(
+                                        className='text-slate-900 dark:text-gray-100',
+                                        children=
+                                        [
+                                            'Drop your video here or ',
+                                            html.A(' browse'),
+                                            ' ⛳️',
+                                        ],
+                                    ),
+                                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                    className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
+                                    multiple=False,
+                                    max_size=20e6,
+                                    accept=['.mp4', '.mov', '.avi'],
+                                    style_active=(dict(
+                                        backgroundColor='rgba(230, 240, 250, 1)',
+                                        borderColor='rgba(115, 165, 250, 1)',
+                                        borderRadius='12px',
+                                    )),
+                                    style_reject=(dict(
+                                        backgroundColor='bg-red-200',
+                                        borderColor='bg-red-400',
+                                        borderRadius='12px',
+                                    )),
+                                    # className='upload'
+                                ),
+                                className='w-full'
+                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                            )
+                        ],
+                            # className='container',
+                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                        ),
+                    ]
 
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                             children_upload, sequence_first, sequence_second, sequence_third,
@@ -1916,8 +2028,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -1983,6 +2095,7 @@ def init_callbacks(app):
                                                z=filter_data(arm_position['z'], duration * 2), mode='lines',
                                                line=dict(color=np.linspace(0, 1, len(arm_position['x'])), width=6,
                                                          colorscale='Viridis')))
+
         path_fig.update_layout(
             scene=dict(
                 xaxis_title='Down the line',
