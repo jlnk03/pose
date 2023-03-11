@@ -159,13 +159,17 @@ def upload_video(disabled=True, path=None):
                                     className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Finish', id='end_pos_button',
                                     className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                        html.Button('+', id='plus_frame',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                        html.Button('-', id='minus_frame',
+                                    className='w-24 h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:gap-5 gap-2'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 sm:gap-5 gap-2'
                 ),
 
                 # Video player
                 html.Div(
-                    className=" relative overflow-hidden h-96 w-full shadow rounded-2xl mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                    className=" relative overflow-hidden h-96 w-full shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
                         # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                         #            className="h-full w-full object-cover"),
@@ -181,6 +185,18 @@ def upload_video(disabled=True, path=None):
                         )
                     ]
                 ),
+
+                # Controls for the video player mobile (+, -)
+                html.Div(
+                    children=[
+                        html.Button('+', id='plus_frame_mobile',
+                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm sm:hidden'),
+                        html.Button('-', id='minus_frame_mobile',
+                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm sm:hidden'),
+                    ],
+                    className='flex flex-row justify-between mb-5 mt-2 gap-2'
+                ),
+
             ]),
 
     ]
@@ -1181,6 +1197,7 @@ def init_dash(server):
                                                 html.Div('0.5', id='impact_pos', className='hidden'),
                                                 html.Div('0.5', id='end_pos', className='hidden'),
                                                 html.Div('0.5', id='setup_pos', className='hidden'),
+                                                html.Div('60', id='fps_saved', className='hidden'),
                                             ],
                                             className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
@@ -1542,7 +1559,7 @@ def init_callbacks(app):
          Output('end_sequence_third', 'children'),
          Output('tempo', 'children'), Output('backswing', 'children'), Output('downswing', 'children'),
          Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
-         Output('setup_pos', 'children'),
+         Output('setup_pos', 'children'), Output('fps_saved', 'children'),
          Output('arm_path', 'children')
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
@@ -1636,6 +1653,8 @@ def init_callbacks(app):
                     # Setup
                     setup_pos = 0.5
 
+                    fps_saved = 60
+
                     children_upload = [
 
                         html.Div(children=[
@@ -1703,7 +1722,7 @@ def init_callbacks(app):
                             sequence_first_text, sequence_second_text, sequence_third_text,
                             sequence_first_text, sequence_second_text, sequence_third_text,
                             temp, time_back, time_down,
-                            top_pos, impact_pos, end_pos, setup_pos,
+                            top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                             []]
 
                 # Read data from parquet file
@@ -1781,6 +1800,8 @@ def init_callbacks(app):
                 # Tempo
                 temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
                                                    len(save_wrist_angle) / duration)
+
+                fps_saved = len(save_wrist_angle) / duration
 
                 # Get the video and update the video player
                 vid_src = f'assets/save_data/{current_user.id}/{button_id}/motion.mp4'
@@ -1861,7 +1882,7 @@ def init_callbacks(app):
                         sequence_first_end, sequence_second_end, sequence_third_end, first_bp, second_bp, third_bp,
                         first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                         temp, time_back, time_down,
-                        top_pos, impact_pos, end_pos, setup_pos,
+                        top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                         path
                         ]
 
@@ -1886,6 +1907,8 @@ def init_callbacks(app):
                                 'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
                 duration = 10
+
+                fps_saved = 60
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
                     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2013,7 +2036,7 @@ def init_callbacks(app):
                         sequence_second_text, sequence_third_text, sequence_first_text, sequence_second_text,
                         sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text,
                         temp, time_back, time_down,
-                        top_pos, impact_pos, end_pos, setup_pos,
+                        top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                         path
                         ]
 
@@ -2153,6 +2176,8 @@ def init_callbacks(app):
 
         temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle), len(save_wrist_angle) / duration)
 
+        fps_saved = len(save_wrist_angle) / duration
+
         # Reset the background color of the buttons
         for child in children:
             child['props'][
@@ -2192,7 +2217,7 @@ def init_callbacks(app):
                 sequence_first_end, sequence_second_end, sequence_third_end,
                 first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                 temp, time_back, time_down,
-                top_pos, impact_pos, end_pos, setup_pos,
+                top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                 path
                 ]
 
@@ -2241,7 +2266,11 @@ def init_callbacks(app):
 
         Output('video', 'seekTo'),
         [Input('top_pos_button', 'n_clicks'), Input('impact_pos_button', 'n_clicks'),
-         Input('end_pos_button', 'n_clicks'), Input('setup_pos_button', 'n_clicks')],
+         Input('end_pos_button', 'n_clicks'), Input('setup_pos_button', 'n_clicks'),
+         Input('minus_frame', 'n_clicks'), Input('plus_frame', 'n_clicks'),
+         Input('minus_frame_mobile', 'n_clicks'), Input('plus_frame_mobile', 'n_clicks'),
+         ],
+        [State('video', 'currentTime'), State('video', 'duration')],
         prevent_initial_call=True
     )
 

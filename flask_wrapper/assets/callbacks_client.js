@@ -1,7 +1,7 @@
 window.dash_clientside = Object.assign({}, window.dash_clientside, {
     clientside: {
         // Update frame of video
-        positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4) {
+        positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4, nclicks5, nclicks6, nclicks7, nclicks8,currentTime, duration) {
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
 
@@ -30,12 +30,64 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 }
             }
 
-            else {
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'setup_pos_button.n_clicks') {
                 const setup_pos = document.getElementById('setup_pos');
                 const setup_index = setup_pos.innerText;
                 if (nclicks4 > 0) {
                     return setup_index;
                 }
+            }
+
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'minus_frame.n_clicks') {
+                const fps_saved = document.getElementById('fps_saved');
+                const fps = fps_saved.innerText;
+                if (nclicks5 > 0) {
+                    const time = (currentTime - 1/fps)/duration
+                    if (time < 0) {
+                        return 0;
+                    }
+                    return time;
+                }
+            }
+
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'plus_frame.n_clicks') {
+                const fps_saved = document.getElementById('fps_saved');
+                const fps = fps_saved.innerText;
+                if (nclicks6 > 0) {
+                    const time = (currentTime + 1/fps)/duration
+                    if (time > 1) {
+                        return 0.999;
+                    }
+                    return time;
+                }
+            }
+
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'minus_frame_mobile.n_clicks') {
+                const fps_saved = document.getElementById('fps_saved');
+                const fps = fps_saved.innerText;
+                if (nclicks7 > 0) {
+                    const time = (currentTime - 1/fps)/duration
+                    if (time < 0) {
+                        return 0;
+                    }
+                    return time;
+                }
+            }
+
+            else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'plus_frame_mobile.n_clicks') {
+                const fps_saved = document.getElementById('fps_saved');
+                const fps = fps_saved.innerText;
+                if (nclicks8 > 0) {
+                    const time = (currentTime + 1/fps)/duration
+                    if (time > 1) {
+                        return 0.999;
+                    }
+                    return time;
+                }
+            }
+
+            else {
+                return currentTime;
             }
 
         },
