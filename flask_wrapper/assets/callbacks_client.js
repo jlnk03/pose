@@ -150,6 +150,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const arm_rot_div = document.getElementById('arm_rot_val');
             const arm_ground_div = document.getElementById('arm_ground_val');
 
+            if (impact_button_time === undefined) {
+                impact_button_time = -1
+            }
+            if (top_button_time === undefined) {
+                top_button_time = -1
+            }
+            if (end_button_time === undefined) {
+                end_button_time = -1
+            }
+            if (setup_button_time === undefined) {
+                setup_button_time = -1
+            }
+
             const button_recent = {'impact': impact_button_time, 'top': top_button_time, 'end': end_button_time, 'setup': setup_button_time, 'default': 0}
             // sort button_recent by value
             const button_recent_sorted = Object.keys(button_recent).sort(function(a,b){return button_recent[a]-button_recent[b]})
@@ -173,14 +186,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 thorax_bend_div.style.color = ((value_thorax_bend < -4.8) || (value_thorax_bend > 7.8)) ? 'red' : 'green';
                 head_rot_div.style.color = ((value_head_rotation < -24.8) || (value_head_rotation > -8.8)) ? 'red' : 'green';
                 head_tilt_div.style.color = ((value_head_tilt < -16.3) || (value_head_tilt > -3.7)) ? 'red' : 'green';
-            }
-            else if (button_recent_name === 'end') {
-                pelvis_rot_div.style.color = 'black';
-                pelvis_bend_div.style.color = 'black';
-                thorax_rot_div.style.color = 'black';
-                thorax_bend_div.style.color = 'black';
-                head_rot_div.style.color = 'black';
-                head_tilt_div.style.color = 'black';
             }
             else if (button_recent_name === 'setup') {
                 pelvis_rot_div.style.color = ((value_pelvis_rotation < -2.8) || (value_pelvis_rotation > 6)) ? 'red' : 'green';
