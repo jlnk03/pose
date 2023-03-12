@@ -3,6 +3,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         // Update frame of video
         positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4, nclicks5, nclicks6, nclicks7, nclicks8,currentTime, duration) {
 
+            // slider area
+            const green_bar_pelvis_rot = document.getElementById('green_bar_pelvis_rot');
+            const green_bar_pelvis_bend = document.getElementById('green_bar_pelvis_bend');
+
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
 
@@ -10,6 +14,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const top_pos = document.getElementById('top_pos');
                 const top_index = top_pos.innerText;
                 if (nclicks > 0) {
+                    green_bar_pelvis_rot.style.left = (90 -55.9) / (180) * 100 + '%';
+                    green_bar_pelvis_rot.style.right = (90 + 39.9) / (180) * 100 + '%';
+
+                    green_bar_pelvis_bend.style.left = (30 - 14.1) / (60) * 100 + '%';
+                    green_bar_pelvis_bend.style.right = (30 + 6.3) / (60) * 100 + '%';
+
                     return top_index;
                 }
             }
@@ -19,6 +29,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     const impact_pos = document.getElementById('impact_pos');
                     const impact_index = impact_pos.innerText;
                     if (nclicks2 > 0) {
+                        green_bar_pelvis_rot.style.left = (90 + 29.5) / (180) * 100 + '%';
+                        green_bar_pelvis_rot.style.right = (90 - 48.3) / (180) * 100 + '%';
+
+                        green_bar_pelvis_bend.style.left = (30 - 1.5) / (60) * 100 + '%';
+                        green_bar_pelvis_bend.style.right = (30 - 11.1) / (60) * 100 + '%';
+
                         return impact_index;
                 }
             }
@@ -27,6 +43,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const end_pos = document.getElementById('end_pos');
                 const end_index = end_pos.innerText;
                 if (nclicks3 > 0) {
+                    green_bar_pelvis_rot.style.left = '0%';
+                    green_bar_pelvis_rot.style.right = '0%';
+
+                    green_bar_pelvis_bend.style.left = '0%';
+                    green_bar_pelvis_bend.style.right = '0%';
+
                     return end_index;
                 }
             }
@@ -35,6 +57,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const setup_pos = document.getElementById('setup_pos');
                 const setup_index = setup_pos.innerText;
                 if (nclicks4 > 0) {
+                    green_bar_pelvis_rot.style.left = (90 - 2.8) / (180) * 100 + '%';
+                    green_bar_pelvis_rot.style.right = (90 - 6) / (180) * 100 + '%';
+
+                    green_bar_pelvis_bend.style.left = (30 - 3.4) / (60) * 100 + '%';
+                    green_bar_pelvis_bend.style.right = (30 - 3.2) / (60) * 100 + '%';
+
                     return setup_index;
                 }
             }
@@ -119,7 +147,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
 
         updateValues: function(currentTime, duration, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, impact_button_time, top_button_time, end_button_time, setup_button_time) {
-            console.log(impact_button_time)
             const pelvis_rotation = fig2.data[1].y;
             const pelvis_bend = fig2.data[0].y;
             const thorax_rotation = fig4.data[0].y;
@@ -150,6 +177,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const arm_rot_div = document.getElementById('arm_rot_val');
             const arm_ground_div = document.getElementById('arm_ground_val');
 
+            // Sliders
+            const slider_pelvis_rot = document.getElementById('slider_pelvis_rot');
+            const slider_pelvis_bend = document.getElementById('slider_pelvis_bend');
+            const slider_thorax_rot = document.getElementById('slider_thorax_rot');
+            const slider_thorax_bend = document.getElementById('slider_thorax_bend');
+
             if (impact_button_time === undefined) {
                 impact_button_time = -1
             }
@@ -178,6 +211,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 head_tilt_div.style.color = ((value_head_tilt < 1.7) || (value_head_tilt > 18.3)) ? 'red' : 'green';
                 // arm_rot_div.style.color = ((value_arm_rotation < 0.5) || (value_arm_rotation > 3.5)) ? 'red' : 'green';
                 // arm_ground_div.style.color = ((value_arm_ground < 0.5) || (value_arm_ground > 3.5)) ? 'red' : 'green';
+
             }
             else if (button_recent_name === 'top') {
                 pelvis_rot_div.style.color = ((value_pelvis_rotation < -55.9) || (value_pelvis_rotation > -39.9)) ? 'red' : 'green';
@@ -207,6 +241,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             if (isNaN(value_pelvis_rotation)) {
                 return ['-°', '-°', '-°', '-°', '-°', '-°', '-°', '-°'];
             }
+
+            // Move sliders
+            slider_pelvis_rot.style.left = (value_pelvis_rotation + 90) / (180) * 100 + '%';
+            slider_pelvis_bend.style.left = (value_pelvis_bend + 40) / (80) * 100 + '%';
+            slider_thorax_rot.style.left = (value_thorax_rotation + 140) / (280) * 100 + '%';
+            slider_thorax_bend.style.left = (value_thorax_bend + 20) / (80) * 100 + '%';
 
             return [`${value_pelvis_rotation}°`, `${value_pelvis_bend}°`, `${value_thorax_rotation}°`, `${value_thorax_bend}°`,
                 `${value_head_rotation}°`, `${value_head_tilt}°`, `${value_arm_rotation}°`, `${value_arm_ground}°`];

@@ -233,7 +233,8 @@ def filter_data(data, duration):
 def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                  save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, fps=1,
+                 save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
+                 duration, fps=1,
                  filt=True):
     if filt:
         converted = [filter_data(np.array(name), duration) for name in
@@ -1185,7 +1186,7 @@ def init_dash(server):
 
                                 # Live updating divs based on position in video
                                 html.Div(
-                                  className='flex flex-nowrap overflow-x-auto px-4 -mx-4',
+                                    className='flex flex-nowrap overflow-x-auto px-4 -mx-4',
                                     children=[
                                         html.Div(
                                             className='flex mb-5 gap-2 flex-col',
@@ -1199,7 +1200,36 @@ def init_dash(server):
                                                                 html.Div('Pelvis Rot.',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_rot_val', className='mt-2'),
-                                                                html.Div(className='absolute h-2 bottom-2 left-2 right-2 bg-gray-400 rounded-full'),
+                                                                # Slider bar
+                                                                html.Div(
+                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
+                                                                    children=[
+                                                                        html.Div(
+                                                                            id='green_bar_pelvis_rot',
+                                                                            style=dict(
+                                                                                left='0%',
+                                                                                right='0%',
+                                                                            ),
+                                                                            className='absolute h-2 bg-green-600 rounded-full'),
+                                                                        # Slider
+                                                                        html.Div(
+                                                                            id='slider_pelvis_rot',
+                                                                            style=dict(
+                                                                                left='50%',
+                                                                            ),
+                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '-90°',
+                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '90°',
+                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                                                                        )
+                                                                    ]
+                                                                ),
+                                                                # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1208,6 +1238,36 @@ def init_dash(server):
                                                                 html.Div('Pelvis Tilt',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_bend_val', className='mt-2'),
+                                                                # Slider bar
+                                                                html.Div(
+                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
+                                                                    children=[
+                                                                        html.Div(
+                                                                            id='green_bar_pelvis_bend',
+                                                                            style=dict(
+                                                                                left='0%',
+                                                                                right='0%',
+                                                                            ),
+                                                                            className='absolute h-2 bg-green-600 rounded-full'),
+                                                                        # Slider
+                                                                        html.Div(
+                                                                            id='slider_pelvis_bend',
+                                                                            style=dict(
+                                                                                left='50%',
+                                                                            ),
+                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '-30°',
+                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '30°',
+                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                                                                        )
+                                                                    ]
+                                                                ),
+                                                                # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1216,6 +1276,36 @@ def init_dash(server):
                                                                 html.Div('Thorax Rot.',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_rot_val', className='mt-2'),
+                                                                # Slider bar
+                                                                html.Div(
+                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
+                                                                    children=[
+                                                                        html.Div(
+                                                                            id='green_bar_thorax_rot',
+                                                                            style=dict(
+                                                                                left='0%',
+                                                                                right='0%',
+                                                                            ),
+                                                                            className='absolute h-2 bg-green-600 rounded-full'),
+                                                                        # Slider
+                                                                        html.Div(
+                                                                            id='slider_thorax_rot',
+                                                                            style=dict(
+                                                                                left='50%',
+                                                                            ),
+                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '-140°',
+                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '140°',
+                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                                                                        )
+                                                                    ]
+                                                                ),
+                                                                # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1224,6 +1314,36 @@ def init_dash(server):
                                                                 html.Div('Thorax Tilt',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_bend_val', className='mt-2'),
+                                                                # Slider bar
+                                                                html.Div(
+                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
+                                                                    children=[
+                                                                        html.Div(
+                                                                            id='green_bar_thorax_bend',
+                                                                            style=dict(
+                                                                                left='0%',
+                                                                                right='0%',
+                                                                            ),
+                                                                            className='absolute h-2 bg-green-600 rounded-full'),
+                                                                        # Slider
+                                                                        html.Div(
+                                                                            id='slider_thorax_bend',
+                                                                            style=dict(
+                                                                                left='50%',
+                                                                            ),
+                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '-20°',
+                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                                                                        ),
+                                                                        html.Div(
+                                                                            '60°',
+                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                                                                        )
+                                                                    ]
+                                                                ),
+                                                                # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1673,7 +1793,8 @@ def init_callbacks(app):
                 file = f'{button_id}.parquet'
 
                 # Check if file exists and delete otherwise
-                if (not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}')) or (not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/motion.mp4')):
+                if (not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/{file}')) or (
+                        not os.path.exists(f'assets/save_data/{current_user.id}/{button_id}/motion.mp4')):
                     fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload = reset_plots(
                         children, button_id, disabled)
 
@@ -1692,7 +1813,8 @@ def init_callbacks(app):
                         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, filt=False)
+                        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
+                        duration, filt=False)
 
                     path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
                                                            y=arm_position['y'],
@@ -1948,11 +2070,13 @@ def init_callbacks(app):
                     duration)
 
                 # Update the 3D plot
-                path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_x, duration * 2)[int(arm_index_s):int(arm_index_e)],
-                                                       y=filter_data(arm_y, duration * 2)[int(arm_index_s):int(arm_index_e)],
-                                                       z=filter_data(arm_z, duration * 2)[int(arm_index_s):int(arm_index_e)], mode='lines',
-                                                       line=dict(color=np.linspace(0, 1, len(arm_x[int(arm_index_s):int(arm_index_e)])),
-                                                                 width=6, colorscale='Viridis')))
+                path_fig = go.Figure(
+                    data=go.Scatter3d(x=filter_data(arm_x, duration * 2)[int(arm_index_s):int(arm_index_e)],
+                                      y=filter_data(arm_y, duration * 2)[int(arm_index_s):int(arm_index_e)],
+                                      z=filter_data(arm_z, duration * 2)[int(arm_index_s):int(arm_index_e)],
+                                      mode='lines',
+                                      line=dict(color=np.linspace(0, 1, len(arm_x[int(arm_index_s):int(arm_index_e)])),
+                                                width=6, colorscale='Viridis')))
 
                 path_fig.update_layout(
                     scene=dict(
@@ -2014,7 +2138,8 @@ def init_callbacks(app):
                     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                     save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                     save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
-                    save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, duration, filt=False)
+                    save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
+                    duration, filt=False)
 
                 path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
                                                        y=arm_position['y'],
@@ -2150,7 +2275,8 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'), json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+                                 json={'contents': contents, 'filename': filename, 'location': location})
         # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
@@ -2237,7 +2363,8 @@ def init_callbacks(app):
         # Impact
         if impact_ratio == -1:
             impact_pos = (np.argmin(
-                filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(save_wrist_angle)) + arm_index) / len(
+                filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(
+                    save_wrist_angle)) + arm_index) / len(
                 save_wrist_angle)
         else:
             impact_pos = impact_ratio
@@ -2248,14 +2375,17 @@ def init_callbacks(app):
         # Setup
         setup_pos = arm_index_s / len(save_wrist_angle)
 
-        temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle), len(save_wrist_angle) / duration)
+        temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
+                                           len(save_wrist_angle) / duration)
 
         fps_saved = len(save_wrist_angle) / duration
 
         path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2)[arm_index_s:arm_index_e],
                                                y=filter_data(arm_position['y'], duration * 2)[arm_index_s:arm_index_e],
-                                               z=filter_data(arm_position['z'], duration * 2)[arm_index_s:arm_index_e], mode='lines',
-                                               line=dict(color=np.linspace(0, 1, len(arm_position['x']))[arm_index_s:arm_index_e], width=6,
+                                               z=filter_data(arm_position['z'], duration * 2)[arm_index_s:arm_index_e],
+                                               mode='lines',
+                                               line=dict(color=np.linspace(0, 1, len(arm_position['x']))[
+                                                               arm_index_s:arm_index_e], width=6,
                                                          colorscale='Viridis')))
 
         path_fig.update_layout(
