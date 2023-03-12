@@ -1199,7 +1199,7 @@ def init_dash(server):
                                                                 html.Div('Pelvis Rot.',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_rot_val', className='mt-2'),
-                                                                # html.Div(className='absolute h-2 bottom-2 left-2 right-2 bg-gray-400 rounded-full'),
+                                                                html.Div(className='absolute h-2 bottom-2 left-2 right-2 bg-gray-400 rounded-full'),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),

@@ -196,12 +196,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 head_tilt_div.style.color = ((value_head_tilt < -3.2) || (value_head_tilt > 7.2)) ? 'red' : 'green';
             }
             else {
-                pelvis_rot_div.style.color = 'black';
-                pelvis_bend_div.style.color = 'black';
-                thorax_rot_div.style.color = 'black';
-                thorax_bend_div.style.color = 'black';
-                head_rot_div.style.color = 'black';
-                head_tilt_div.style.color = 'black';
+                pelvis_rot_div.style.color = '';
+                pelvis_bend_div.style.color = '';
+                thorax_rot_div.style.color = '';
+                thorax_bend_div.style.color = '';
+                head_rot_div.style.color = '';
+                head_tilt_div.style.color = '';
             }
 
             if (isNaN(value_pelvis_rotation)) {
