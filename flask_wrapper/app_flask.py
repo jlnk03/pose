@@ -1185,71 +1185,92 @@ def init_dash(server):
 
                                 # Live updating divs based on position in video
                                 html.Div(
-                                    className='grid grid-cols-4 w-full justify-between mb-5 gap-2',
+                                  className='flex flex-nowrap overflow-x-auto px-4 -mx-4',
                                     children=[
                                         html.Div(
+                                            className='flex mb-5 gap-2 flex-col',
                                             children=[
-                                                html.Div('Pelvis Rot.',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='pelvis_rot_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Pelvis Tilt',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='pelvis_bend_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Thorax Rot.',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='thorax_rot_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Thorax Tilt',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='thorax_bend_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Head Rot.',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='head_rot_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Head Tilt',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='head_tilt_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Arm Rot.',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='arm_rot_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Arm Ground',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- °', id='arm_ground_val', className='mt-2'),
-                                            ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                # First row
+                                                html.Div(
+                                                    className='flex flex-row w-full gap-2',
+                                                    children=[
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Pelvis Rot.',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='pelvis_rot_val', className='mt-2'),
+                                                                # html.Div(className='absolute h-2 bottom-2 left-2 right-2 bg-gray-400 rounded-full'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Pelvis Tilt',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='pelvis_bend_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Thorax Rot.',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='thorax_rot_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Thorax Tilt',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='thorax_bend_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                    ]
+                                                ),
+                                                # End of first row
+
+                                                # Second row
+                                                html.Div(
+                                                    className='flex flex-row gap-2',
+                                                    children=[
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Head Rot.',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='head_rot_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Head Tilt',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='head_tilt_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Arm Rot.',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='arm_rot_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                        html.Div(
+                                                            children=[
+                                                                html.Div('Arm Ground',
+                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('- °', id='arm_ground_val', className='mt-2'),
+                                                            ],
+                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                        ),
+                                                    ]
+                                                ),
+                                                # End of second row
+                                            ]
                                         ),
                                     ]
                                 ),
@@ -1927,10 +1948,10 @@ def init_callbacks(app):
                     duration)
 
                 # Update the 3D plot
-                path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_x, duration * 2),
-                                                       y=filter_data(arm_y, duration * 2),
-                                                       z=filter_data(arm_z, duration * 2), mode='lines',
-                                                       line=dict(color=np.linspace(0, 1, len(arm_x)),
+                path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_x, duration * 2)[int(arm_index_s):int(arm_index_e)],
+                                                       y=filter_data(arm_y, duration * 2)[int(arm_index_s):int(arm_index_e)],
+                                                       z=filter_data(arm_z, duration * 2)[int(arm_index_s):int(arm_index_e)], mode='lines',
+                                                       line=dict(color=np.linspace(0, 1, len(arm_x[int(arm_index_s):int(arm_index_e)])),
                                                                  width=6, colorscale='Viridis')))
 
                 path_fig.update_layout(
@@ -2194,34 +2215,6 @@ def init_callbacks(app):
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
-        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2),
-                                               y=filter_data(arm_position['y'], duration * 2),
-                                               z=filter_data(arm_position['z'], duration * 2), mode='lines',
-                                               line=dict(color=np.linspace(0, 1, len(arm_position['x'])), width=6,
-                                                         colorscale='Viridis')))
-
-        path_fig.update_layout(
-            scene=dict(
-                xaxis_title='Down the line',
-                yaxis_title='Front on',
-                zaxis_title='Height',
-                xaxis_showticklabels=False,
-                yaxis_showticklabels=False,
-                zaxis_showticklabels=False,
-                camera=dict(
-                    up=dict(x=0, y=0, z=1),
-                    center=dict(x=0, y=0, z=-0.1),
-                    eye=dict(x=-2.5, y=0.1, z=0.2)
-                ),
-            ),
-            font_color="#94a3b8",
-            margin=dict(r=10, b=10, l=10, t=10),
-            paper_bgcolor='rgba(0,0,0,0)',
-        )
-
-        path = dcc.Graph(figure=path_fig, config=config,
-                         className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
-
         # Get the kinematic transition  sequence
         sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
             save_pelvis_rotation, save_thorax_rotation,
@@ -2258,6 +2251,34 @@ def init_callbacks(app):
         temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle), len(save_wrist_angle) / duration)
 
         fps_saved = len(save_wrist_angle) / duration
+
+        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2)[arm_index_s:arm_index_e],
+                                               y=filter_data(arm_position['y'], duration * 2)[arm_index_s:arm_index_e],
+                                               z=filter_data(arm_position['z'], duration * 2)[arm_index_s:arm_index_e], mode='lines',
+                                               line=dict(color=np.linspace(0, 1, len(arm_position['x']))[arm_index_s:arm_index_e], width=6,
+                                                         colorscale='Viridis')))
+
+        path_fig.update_layout(
+            scene=dict(
+                xaxis_title='Down the line',
+                yaxis_title='Front on',
+                zaxis_title='Height',
+                xaxis_showticklabels=False,
+                yaxis_showticklabels=False,
+                zaxis_showticklabels=False,
+                camera=dict(
+                    up=dict(x=0, y=0, z=1),
+                    center=dict(x=0, y=0, z=-0.1),
+                    eye=dict(x=-2.5, y=0.1, z=0.2)
+                ),
+            ),
+            font_color="#94a3b8",
+            margin=dict(r=10, b=10, l=10, t=10),
+            paper_bgcolor='rgba(0,0,0,0)',
+        )
+
+        path = dcc.Graph(figure=path_fig, config=config,
+                         className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         # Reset the background color of the buttons
         for child in children:
@@ -2382,6 +2403,8 @@ def init_callbacks(app):
         State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
         State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
         State('spine_rotation', 'figure'), State('arm_angle', 'figure'),
+        State('impact_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+        State('end_pos_button', 'n_clicks_timestamp'), State('setup_pos_button', 'n_clicks_timestamp'),
         prevent_initial_call=True
     )
 
