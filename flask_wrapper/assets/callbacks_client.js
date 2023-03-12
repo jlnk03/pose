@@ -142,6 +142,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
             return [`${value_pelvis_rotation}°`, `${value_pelvis_bend}°`, `${value_thorax_rotation}°`, `${value_thorax_bend}°`,
                 `${value_head_rotation}°`, `${value_head_tilt}°`, `${value_arm_rotation}°`, `${value_arm_ground}°`];
+        },
+
+        showNavbar: function(n_clicks, header_clicks, sidebar_class) {
+            if (window.dash_clientside.callback_context.triggered[0].prop_id === 'menu-button.n_clicks') {
+                sidebar_class = sidebar_class.replace('hidden', 'flex')
+
+                return sidebar_class
+            }
+
+            sidebar_class = sidebar_class.replace('flex', 'hidden')
+
+            return sidebar_class
+
         }
 
     }

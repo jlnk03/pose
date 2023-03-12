@@ -1045,11 +1045,11 @@ def init_dash(server):
                         # Sidebar
                         html.Div(
                             id='sidebar',
-                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
+                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-2xl hidden lg:flex',
                             children=[
                                 html.Button(
                                     id='sidebar-header',
-                                    className='flex-row items-center ml-4 hidden',
+                                    className='flex-row items-center ml-4 lg:hidden',
                                     children=[
                                         html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
                                 ),
@@ -2303,23 +2303,16 @@ def init_callbacks(app):
                 ]
 
     # Show navbar on click
-    @app.callback(
-        [Output('sidebar', 'className'), Output('sidebar-header', 'className')],
-        [Input('menu-button', 'n_clicks'), Input('body', 'className'), Input('sidebar-header', 'n_clicks')],
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showNavbar'
+        ),
+        [Output('sidebar', 'className')],
+        [Input('menu-button', 'n_clicks'), Input('sidebar-header', 'n_clicks')],
+        State('sidebar', 'className'),
         prevent_initial_call=True
     )
-    def show_navbar(n_clicks, body_class, header_clicks):
-        if ctx.triggered_id != 'menu-button':
-            body_class = body_class.replace('hidden', 'flex')
-            return [
-                'flex flex-col bg-slate-600 dark:bg-gray-700 fixed left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex',
-                body_class]
-
-        else:
-            body_class = body_class.replace('flex', 'hidden')
-            return [
-                'flex flex-col bg-slate-600 dark:bg-gray-700 fixed top-0 bottom-0 w-60 z-10 lg:rounded-2xl lg:left-5 lg:top-5 lg:bottom-5',
-                body_class]
 
     # Help box on click
     app.clientside_callback(
