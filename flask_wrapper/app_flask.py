@@ -159,9 +159,9 @@ def upload_video(disabled=True, path=None):
                                     className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Finish', id='end_pos_button',
                                     className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('+', id='plus_frame',
+                        html.Button('Frame +', id='plus_frame',
                                     className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
-                        html.Button('-', id='minus_frame',
+                        html.Button('Frame -', id='minus_frame',
                                     className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
                     className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 gap-2 sm:gap-5'
@@ -182,7 +182,7 @@ def upload_video(disabled=True, path=None):
                             className="h-full w-full object-cover",
                             width='100%',
                             height='100%',
-                            intervalCurrentTime=50,
+                            intervalCurrentTime=70,
                         )
                     ]
                 ),
@@ -190,14 +190,49 @@ def upload_video(disabled=True, path=None):
                 # Controls for the video player mobile (+, -)
                 html.Div(
                     children=[
-                        html.Button('-', id='minus_frame_mobile',
+                        html.Button('Frame -', id='minus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
-                        html.Button('+', id='plus_frame_mobile',
+                        html.Button('Frame +', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
                     className='flex flex-row justify-between mb-5 mt-2 gap-2'
                 ),
             ]),
+    ]
+
+    return layout
+
+
+def slider_view(name, min_bound, max_bound):
+    layout = [
+        html.Div(
+            className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
+            children=[
+                html.Div(
+                    id=f'green_bar_{name}',
+                    style=dict(
+                        left='0%',
+                        right='0%',
+                    ),
+                    className='absolute h-2 bg-green-600 rounded-full'),
+                # Slider
+                html.Div(
+                    id=f'slider_{name}',
+                    style=dict(
+                        left='50%',
+                    ),
+                    className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-900 dark:bg-gray-100 rounded-full',
+                ),
+                html.Div(
+                    f'{min_bound}',
+                    className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                ),
+                html.Div(
+                    f'{max_bound}',
+                    className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                )
+            ]
+        ),
     ]
 
     return layout
@@ -1201,34 +1236,7 @@ def init_dash(server):
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_rot_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(
-                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
-                                                                    children=[
-                                                                        html.Div(
-                                                                            id='green_bar_pelvis_rot',
-                                                                            style=dict(
-                                                                                left='0%',
-                                                                                right='0%',
-                                                                            ),
-                                                                            className='absolute h-2 bg-green-600 rounded-full'),
-                                                                        # Slider
-                                                                        html.Div(
-                                                                            id='slider_pelvis_rot',
-                                                                            style=dict(
-                                                                                left='50%',
-                                                                            ),
-                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '-90°',
-                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '90°',
-                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                                                                        )
-                                                                    ]
-                                                                ),
+                                                                html.Div(slider_view('pelvis_rot', -80, 160))
                                                                 # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
@@ -1239,34 +1247,7 @@ def init_dash(server):
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_bend_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(
-                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
-                                                                    children=[
-                                                                        html.Div(
-                                                                            id='green_bar_pelvis_bend',
-                                                                            style=dict(
-                                                                                left='0%',
-                                                                                right='0%',
-                                                                            ),
-                                                                            className='absolute h-2 bg-green-600 rounded-full'),
-                                                                        # Slider
-                                                                        html.Div(
-                                                                            id='slider_pelvis_bend',
-                                                                            style=dict(
-                                                                                left='50%',
-                                                                            ),
-                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '-30°',
-                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '30°',
-                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                                                                        )
-                                                                    ]
-                                                                ),
+                                                                html.Div(slider_view('pelvis_bend', -30, 30))
                                                                 # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
@@ -1277,34 +1258,7 @@ def init_dash(server):
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_rot_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(
-                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
-                                                                    children=[
-                                                                        html.Div(
-                                                                            id='green_bar_thorax_rot',
-                                                                            style=dict(
-                                                                                left='0%',
-                                                                                right='0%',
-                                                                            ),
-                                                                            className='absolute h-2 bg-green-600 rounded-full'),
-                                                                        # Slider
-                                                                        html.Div(
-                                                                            id='slider_thorax_rot',
-                                                                            style=dict(
-                                                                                left='50%',
-                                                                            ),
-                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '-140°',
-                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '140°',
-                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                                                                        )
-                                                                    ]
-                                                                ),
+                                                                html.Div(slider_view('thorax_rot', -140, 140)),
                                                                 # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
@@ -1315,34 +1269,7 @@ def init_dash(server):
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_bend_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(
-                                                                    className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
-                                                                    children=[
-                                                                        html.Div(
-                                                                            id='green_bar_thorax_bend',
-                                                                            style=dict(
-                                                                                left='0%',
-                                                                                right='0%',
-                                                                            ),
-                                                                            className='absolute h-2 bg-green-600 rounded-full'),
-                                                                        # Slider
-                                                                        html.Div(
-                                                                            id='slider_thorax_bend',
-                                                                            style=dict(
-                                                                                left='50%',
-                                                                            ),
-                                                                            className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-100 rounded-full',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '-20°',
-                                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                                                                        ),
-                                                                        html.Div(
-                                                                            '60°',
-                                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                                                                        )
-                                                                    ]
-                                                                ),
+                                                                html.Div(slider_view('thorax_bend', -20, 60)),
                                                                 # End of slider bar
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
@@ -1360,6 +1287,7 @@ def init_dash(server):
                                                                 html.Div('Head Rot.',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_rot_val', className='mt-2'),
+                                                                html.Div(slider_view('head_rot', -100, 100)),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1368,6 +1296,7 @@ def init_dash(server):
                                                                 html.Div('Head Tilt',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_tilt_val', className='mt-2'),
+                                                                html.Div(slider_view('head_tilt', -60, 60)),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1376,6 +1305,7 @@ def init_dash(server):
                                                                 html.Div('Arm Rot.',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='arm_rot_val', className='mt-2'),
+                                                                html.Div(slider_view('arm_rot', -240, 240)),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1384,6 +1314,7 @@ def init_dash(server):
                                                                 html.Div('Arm Ground',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='arm_ground_val', className='mt-2'),
+                                                                html.Div(slider_view('arm_ground', -90, 90)),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),

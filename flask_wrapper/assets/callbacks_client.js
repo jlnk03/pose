@@ -6,6 +6,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             // slider area
             const green_bar_pelvis_rot = document.getElementById('green_bar_pelvis_rot');
             const green_bar_pelvis_bend = document.getElementById('green_bar_pelvis_bend');
+            const green_bar_thorax_rot = document.getElementById('green_bar_thorax_rot');
+            const green_bar_thorax_bend = document.getElementById('green_bar_thorax_bend');
+            const green_bar_head_rot = document.getElementById('green_bar_head_rot');
+            const green_bar_head_tilt = document.getElementById('green_bar_head_tilt');
 
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
@@ -14,11 +18,23 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const top_pos = document.getElementById('top_pos');
                 const top_index = top_pos.innerText;
                 if (nclicks > 0) {
-                    green_bar_pelvis_rot.style.left = (90 -55.9) / (180) * 100 + '%';
-                    green_bar_pelvis_rot.style.right = (90 + 39.9) / (180) * 100 + '%';
+                    green_bar_pelvis_rot.style.left = (80 -55.9) / (240) * 100 + '%';
+                    green_bar_pelvis_rot.style.right = (160 + 39.9) / (240) * 100 + '%';
 
                     green_bar_pelvis_bend.style.left = (30 - 14.1) / (60) * 100 + '%';
                     green_bar_pelvis_bend.style.right = (30 + 6.3) / (60) * 100 + '%';
+
+                    green_bar_thorax_rot.style.left = (140 - 98) / (280) * 100 + '%';
+                    green_bar_thorax_rot.style.right = (140 + 84) / (280) * 100 + '%';
+
+                    green_bar_thorax_bend.style.left = (20 - 5) / (80) * 100 + '%';
+                    green_bar_thorax_bend.style.right = (60 - 8) / (80) * 100 + '%';
+
+                    green_bar_head_rot.style.left = (100 - 25) / (200) * 100 + '%';
+                    green_bar_head_rot.style.right = (100 + 9) / (200) * 100 + '%';
+
+                    green_bar_head_tilt.style.left = (60 - 16) / (120) * 100 + '%';
+                    green_bar_head_tilt.style.right = (60 - 4) / (120) * 100 + '%';
 
                     return top_index;
                 }
@@ -29,11 +45,23 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     const impact_pos = document.getElementById('impact_pos');
                     const impact_index = impact_pos.innerText;
                     if (nclicks2 > 0) {
-                        green_bar_pelvis_rot.style.left = (90 + 29.5) / (180) * 100 + '%';
-                        green_bar_pelvis_rot.style.right = (90 - 48.3) / (180) * 100 + '%';
+                        green_bar_pelvis_rot.style.left = (80 + 29.5) / (240) * 100 + '%';
+                        green_bar_pelvis_rot.style.right = (160 - 48.3) / (240) * 100 + '%';
 
                         green_bar_pelvis_bend.style.left = (30 - 1.5) / (60) * 100 + '%';
                         green_bar_pelvis_bend.style.right = (30 - 11.1) / (60) * 100 + '%';
+
+                        green_bar_thorax_rot.style.left = (140 + 20.5) / (280) * 100 + '%';
+                        green_bar_thorax_rot.style.right = (140 - 36.7) / (280) * 100 + '%';
+
+                        green_bar_thorax_bend.style.left = (20 + 26.7) / (80) * 100 + '%';
+                        green_bar_thorax_bend.style.right = (60 - 36.7) / (80) * 100 + '%';
+
+                        green_bar_head_rot.style.left = (100 - 6) / (200) * 100 + '%';
+                        green_bar_head_rot.style.right = (100 - 15) / (200) * 100 + '%';
+
+                        green_bar_head_tilt.style.left = (60 + 1) / (120) * 100 + '%';
+                        green_bar_head_tilt.style.right = (60 - 18) / (120) * 100 + '%';
 
                         return impact_index;
                 }
@@ -49,6 +77,18 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     green_bar_pelvis_bend.style.left = '0%';
                     green_bar_pelvis_bend.style.right = '0%';
 
+                    green_bar_thorax_rot.style.left = '0%';
+                    green_bar_thorax_rot.style.right = '0%';
+
+                    green_bar_thorax_bend.style.left = '0%';
+                    green_bar_thorax_bend.style.right = '0%';
+
+                    green_bar_head_rot.style.left = '0%';
+                    green_bar_head_rot.style.right = '0%';
+
+                    green_bar_head_tilt.style.left = '0%';
+                    green_bar_head_tilt.style.right = '0%';
+
                     return end_index;
                 }
             }
@@ -57,11 +97,23 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const setup_pos = document.getElementById('setup_pos');
                 const setup_index = setup_pos.innerText;
                 if (nclicks4 > 0) {
-                    green_bar_pelvis_rot.style.left = (90 - 2.8) / (180) * 100 + '%';
-                    green_bar_pelvis_rot.style.right = (90 - 6) / (180) * 100 + '%';
+                    green_bar_pelvis_rot.style.left = (80 - 2.8) / (240) * 100 + '%';
+                    green_bar_pelvis_rot.style.right = (160 - 6) / (240) * 100 + '%';
 
                     green_bar_pelvis_bend.style.left = (30 - 3.4) / (60) * 100 + '%';
                     green_bar_pelvis_bend.style.right = (30 - 3.2) / (60) * 100 + '%';
+
+                    green_bar_thorax_rot.style.left = (140 + 7) / (280) * 100 + '%';
+                    green_bar_thorax_rot.style.right = (140 - 15) / (280) * 100 + '%';
+
+                    green_bar_thorax_bend.style.left = (20 + 11) / (80) * 100 + '%';
+                    green_bar_thorax_bend.style.right = (60 - 18) / (80) * 100 + '%';
+
+                    green_bar_head_rot.style.left = (100 - 6) / (200) * 100 + '%';
+                    green_bar_head_rot.style.right = (100 - 6) / (200) * 100 + '%';
+
+                    green_bar_head_tilt.style.left = (60 - 3) / (120) * 100 + '%';
+                    green_bar_head_tilt.style.right = (60 - 7) / (120) * 100 + '%';
 
                     return setup_index;
                 }
@@ -182,6 +234,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const slider_pelvis_bend = document.getElementById('slider_pelvis_bend');
             const slider_thorax_rot = document.getElementById('slider_thorax_rot');
             const slider_thorax_bend = document.getElementById('slider_thorax_bend');
+            const slider_head_rot = document.getElementById('slider_head_rot');
+            const slider_head_tilt = document.getElementById('slider_head_tilt');
+            const slider_arm_rot = document.getElementById('slider_arm_rot');
+            const slider_arm_ground = document.getElementById('slider_arm_ground');
 
             if (impact_button_time === undefined) {
                 impact_button_time = -1
@@ -243,10 +299,14 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
 
             // Move sliders
-            slider_pelvis_rot.style.left = (value_pelvis_rotation + 90) / (180) * 100 + '%';
+            slider_pelvis_rot.style.left = (value_pelvis_rotation + 80) / (240) * 100 + '%';
             slider_pelvis_bend.style.left = (value_pelvis_bend + 40) / (80) * 100 + '%';
             slider_thorax_rot.style.left = (value_thorax_rotation + 140) / (280) * 100 + '%';
             slider_thorax_bend.style.left = (value_thorax_bend + 20) / (80) * 100 + '%';
+            slider_head_rot.style.left = (value_head_rotation + 100) / (200) * 100 + '%';
+            slider_head_tilt.style.left = (value_head_tilt + 60) / (120) * 100 + '%';
+            slider_arm_rot.style.left = (value_arm_rotation + 240) / (480) * 100 + '%';
+            slider_arm_ground.style.left = (value_arm_ground + 90) / (180) * 100 + '%';
 
             return [`${value_pelvis_rotation}°`, `${value_pelvis_bend}°`, `${value_thorax_rotation}°`, `${value_thorax_bend}°`,
                 `${value_head_rotation}°`, `${value_head_tilt}°`, `${value_arm_rotation}°`, `${value_arm_ground}°`];
