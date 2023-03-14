@@ -1214,7 +1214,7 @@ def init_dash(server):
 
                                 # Selection view in center of screen
                                 html.Div(
-                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm',
                                     children=[
                                         html.Div(
                                             className='fixed flex flex-col px-14 pt-14 pb-6 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
@@ -1243,6 +1243,23 @@ def init_dash(server):
                                                             ]
                                                         ),
                                                         html.Div(
+                                                            'Top',
+                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
+                                                        ),
+                                                        html.Div(
+                                                            className='flex flex-row gap-2',
+                                                            children=[
+                                                                dcc.Input(
+                                                                    id='top_low_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                                dcc.Input(
+                                                                    id='top_high_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                            ]
+                                                        ),
+                                                        html.Div(
                                                             'Impact',
                                                             className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
                                                         ),
@@ -1255,23 +1272,6 @@ def init_dash(server):
                                                                 ),
                                                                 dcc.Input(
                                                                     id='impact_high_new_margins',
-                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
-                                                                ),
-                                                            ]
-                                                        ),
-                                                        html.Div(
-                                                            'Finish',
-                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
-                                                        ),
-                                                        html.Div(
-                                                            className='flex flex-row gap-2',
-                                                            children=[
-                                                                dcc.Input(
-                                                                    id='finish_low_new_margins',
-                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
-                                                                ),
-                                                                dcc.Input(
-                                                                    id='finish_high_new_margins',
                                                                     className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
                                                                 ),
                                                             ]

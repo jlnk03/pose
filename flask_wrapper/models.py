@@ -25,6 +25,12 @@ class User(UserMixin, db.Model):
     canceled = db.Column(db.Boolean)
     analyzed = db.Column(db.Integer)
     last_analyzed = db.Column(db.DateTime)
+    setup_low = db.Column(db.Real)
+    setup_high = db.Column(db.Real)
+    top_low = db.Column(db.Real)
+    top_high = db.Column(db.Real)
+    impact_low = db.Column(db.Real)
+    impact_high = db.Column(db.Real)
 
 
 
