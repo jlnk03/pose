@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     admin = db.Column(db.Boolean)
     subscription = db.Column(db.String(100))
     canceled = db.Column(db.Boolean)
+    analyzed = db.Column(db.Integer)
 
 
 

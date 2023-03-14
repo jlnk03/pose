@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (mutation.target === document.getElementById("top_pos")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
-                            i = 0
+                            let i = 0;
                             let alternate = setInterval(function () {
                                 if (quote) {
                                     if (i % 2 === 0) {

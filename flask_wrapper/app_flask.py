@@ -224,11 +224,11 @@ def slider_view(name, min_bound, max_bound):
                     className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-900 dark:bg-gray-100 rounded-full',
                 ),
                 html.Div(
-                    f'{min_bound}',
+                    f'{min_bound}°',
                     className='absolute left-0 bottom-3.5 text-xs text-gray-400',
                 ),
                 html.Div(
-                    f'{max_bound}',
+                    f'{max_bound}°',
                     className='absolute right-0 bottom-3.5 text-xs text-gray-400',
                 )
             ]
@@ -236,6 +236,62 @@ def slider_view(name, min_bound, max_bound):
     ]
 
     return layout
+
+
+def hand_path_3d(x, y, z, start, end, top, duration):
+    start = int(start)
+    end = int(end)
+    top = int(top)
+
+    x = filter_data(x, duration * 2)
+    y = filter_data(y, duration * 2)
+    z = filter_data(z, duration * 2)
+
+    path_fig = go.Figure(
+        data=go.Scatter3d(x=x[start:end],
+                          y=y[start:end],
+                          z=z[start:end],
+                          mode='lines',
+                          line=dict(color=np.linspace(0, 1, len(x))[start:end], width=6, colorscale='Viridis')))
+
+    start_point = [x[start], y[start]]
+    end_point = [x[top], y[top]]
+    # print(start_point, end_point)
+
+    slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
+    # slope = -1 / slope
+
+    zero_intersect = start_point[1] - slope * start_point[0]
+
+    plane_x = np.linspace(-0.5, 0.5, 100)
+    plane_y = np.linspace(-0.5, 0.5, 100)
+    plane_x, plane_y = np.meshgrid(plane_x, plane_y)
+    plane_z = slope * plane_x + zero_intersect
+
+    plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
+
+    path_fig.add_trace(plane)
+
+    path_fig.update_layout(
+        scene=dict(
+            xaxis_title='Down the line',
+            # yaxis_title='Front on',
+            zaxis_title='Height',
+            # xaxis_showticklabels=False,
+            # yaxis_showticklabels=False,
+            # zaxis_showticklabels=False,
+            camera=dict(
+                up=dict(x=0, y=0, z=1),
+                center=dict(x=0, y=0, z=-0.1),
+                eye=dict(x=-2.5, y=0.1, z=0.2)
+            ),
+        ),
+        font_color="#94a3b8",
+        margin=dict(r=10, b=10, l=10, t=10),
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
+
+    return path_fig
 
 
 # Random initialization for data
@@ -1148,11 +1204,62 @@ def init_dash(server):
                                 )
                             ]
                         ),
+                        # Sidebar end
 
                         html.Div(
                             id='body',
                             className='lg:mx-16 mx-4 lg:pl-60 mt-0',
                             children=[
+
+                                # Selection view in center of screen
+                                html.Div(
+                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                    children=[
+                                        html.Div(
+                                            className='fixed flex flex-col p-14 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
+                                            children=[
+                                                html.Div(
+                                                    'New margins',
+                                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row items-center absolute top-4 left-1/2 transform -translate-x-1/2'
+                                                ),
+                                                html.Form(
+                                                    children=[
+                                                    html.Div(
+                                                        'Setup',
+                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
+                                                    ),
+                                                    dcc.Input(
+                                                        id='setup_new_margins',
+                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                    ),
+                                                    html.Div(
+                                                        'Impact',
+                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
+                                                    ),
+                                                    dcc.Input(
+                                                        id='impact_new_margins',
+                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                    ),
+                                                    html.Div(
+                                                        'Finish',
+                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
+                                                    ),
+                                                    dcc.Input(
+                                                        id='finish_new_margins',
+                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                    ),
+                                                    html.Button(
+                                                        'Save',
+                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
+                                                    )
+                                                    ]
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                ),
+                                # End selection view
+
                                 # Upload component
                                 html.Div(
                                     id='upload-video',
@@ -2001,32 +2108,7 @@ def init_callbacks(app):
                     duration)
 
                 # Update the 3D plot
-                path_fig = go.Figure(
-                    data=go.Scatter3d(x=filter_data(arm_x, duration * 2)[int(arm_index_s):int(arm_index_e)],
-                                      y=filter_data(arm_y, duration * 2)[int(arm_index_s):int(arm_index_e)],
-                                      z=filter_data(arm_z, duration * 2)[int(arm_index_s):int(arm_index_e)],
-                                      mode='lines',
-                                      line=dict(color=np.linspace(0, 1, len(arm_x[int(arm_index_s):int(arm_index_e)])),
-                                                width=6, colorscale='Viridis')))
-
-                path_fig.update_layout(
-                    scene=dict(
-                        xaxis_title='Down the line',
-                        yaxis_title='Front on',
-                        zaxis_title='Height',
-                        xaxis_showticklabels=False,
-                        yaxis_showticklabels=False,
-                        zaxis_showticklabels=False,
-                        camera=dict(
-                            up=dict(x=0, y=0, z=1),
-                            center=dict(x=0, y=0, z=-0.1),
-                            eye=dict(x=-2.5, y=0.1, z=0.2)
-                        ),
-                    ),
-                    font_color="#94a3b8",
-                    margin=dict(r=10, b=10, l=10, t=10),
-                    paper_bgcolor='rgba(0,0,0,0)',
-                )
+                path_fig = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index, duration)
 
                 path = dcc.Graph(figure=path_fig, config=config,
                                  className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
@@ -2206,9 +2288,9 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+        #                          json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2311,32 +2393,7 @@ def init_callbacks(app):
 
         fps_saved = len(save_wrist_angle) / duration
 
-        path_fig = go.Figure(data=go.Scatter3d(x=filter_data(arm_position['x'], duration * 2)[arm_index_s:arm_index_e],
-                                               y=filter_data(arm_position['y'], duration * 2)[arm_index_s:arm_index_e],
-                                               z=filter_data(arm_position['z'], duration * 2)[arm_index_s:arm_index_e],
-                                               mode='lines',
-                                               line=dict(color=np.linspace(0, 1, len(arm_position['x']))[
-                                                               arm_index_s:arm_index_e], width=6,
-                                                         colorscale='Viridis')))
-
-        path_fig.update_layout(
-            scene=dict(
-                xaxis_title='Down the line',
-                yaxis_title='Front on',
-                zaxis_title='Height',
-                xaxis_showticklabels=False,
-                yaxis_showticklabels=False,
-                zaxis_showticklabels=False,
-                camera=dict(
-                    up=dict(x=0, y=0, z=1),
-                    center=dict(x=0, y=0, z=-0.1),
-                    eye=dict(x=-2.5, y=0.1, z=0.2)
-                ),
-            ),
-            font_color="#94a3b8",
-            margin=dict(r=10, b=10, l=10, t=10),
-            paper_bgcolor='rgba(0,0,0,0)',
-        )
+        path_fig = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e, arm_index, duration)
 
         path = dcc.Graph(figure=path_fig, config=config,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
@@ -2372,8 +2429,10 @@ def init_callbacks(app):
 
         if not current_user.unlimited:
             current_user.n_analyses -= 1
-            db.session.commit()
 
+        # Log number of analyses
+        current_user.analyzed += 1
+        db.session.commit()
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
                 sequence_first, sequence_second, sequence_third,
                 sequence_first_start, sequence_second_start, sequence_third_start,
