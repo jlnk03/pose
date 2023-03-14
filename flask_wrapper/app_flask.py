@@ -1214,7 +1214,8 @@ def init_dash(server):
 
                                 # Selection view in center of screen
                                 html.Div(
-                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm',
+                                    id='selection-view',
+                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                     children=[
                                         html.Div(
                                             className='fixed flex flex-col px-14 pt-14 pb-6 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
@@ -2478,9 +2479,28 @@ def init_callbacks(app):
     # Save new margins
     @app.callback(
         Input('submit-new-margins', 'n_clicks'),
+        [State('setup_low_new_margins', 'value'), State('setup_high_new_margins', 'value')],
+        prevent_initial_call=True
     )
-    def save_new_margins():
-        pass
+    def save_new_margins(n_clicks, setup_low, setup_high):
+        if n_clicks > 0:
+            current_user.setup_low = setup_low
+            current_user.setup_high = setup_high
+            db.session.commit()
+
+    # Hide selection view
+    app.clientside_callback(
+        '''
+        function(n_clicks, selection_class) {
+            if (n_clicks > 0) {
+                return selection_class.replace('flex', 'hidden');
+            }
+        ''',
+        [Output('selection-view', 'className')],
+        Input('submit-new-margins', 'n_clicks'),
+        State('selection-view', 'className'),
+        prevent_initial_call=True
+    )
 
     # Show navbar on click
     app.clientside_callback(
