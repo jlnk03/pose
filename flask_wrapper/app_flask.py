@@ -18,6 +18,7 @@ from flask import url_for
 from . import db
 import requests
 from itsdangerous import URLSafeTimedSerializer
+import datetime
 
 # Tools for mp to draw the pose
 mp_drawing = mp.solutions.drawing_utils
@@ -1216,7 +1217,7 @@ def init_dash(server):
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                     children=[
                                         html.Div(
-                                            className='fixed flex flex-col p-14 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
+                                            className='fixed flex flex-col px-14 pt-14 pb-6 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
                                             children=[
                                                 html.Div(
                                                     'New margins',
@@ -1224,34 +1225,61 @@ def init_dash(server):
                                                 ),
                                                 html.Form(
                                                     children=[
-                                                    html.Div(
-                                                        'Setup',
-                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
-                                                    ),
-                                                    dcc.Input(
-                                                        id='setup_new_margins',
-                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
-                                                    ),
-                                                    html.Div(
-                                                        'Impact',
-                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
-                                                    ),
-                                                    dcc.Input(
-                                                        id='impact_new_margins',
-                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
-                                                    ),
-                                                    html.Div(
-                                                        'Finish',
-                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
-                                                    ),
-                                                    dcc.Input(
-                                                        id='finish_new_margins',
-                                                        className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
-                                                    ),
-                                                    html.Button(
-                                                        'Save',
-                                                        className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
-                                                    )
+                                                        html.Div(
+                                                            'Setup',
+                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
+                                                        ),
+                                                        html.Div(
+                                                            className='flex flex-row gap-2',
+                                                            children=[
+                                                                dcc.Input(
+                                                                    id='setup_low_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                                dcc.Input(
+                                                                    id='setup_high_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                            ]
+                                                        ),
+                                                        html.Div(
+                                                            'Impact',
+                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
+                                                        ),
+                                                        html.Div(
+                                                            className='flex flex-row gap-2',
+                                                            children=[
+                                                                dcc.Input(
+                                                                    id='impact_low_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                                dcc.Input(
+                                                                    id='impact_high_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                            ]
+                                                        ),
+                                                        html.Div(
+                                                            'Finish',
+                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-2 flex flex-row'
+                                                        ),
+                                                        html.Div(
+                                                            className='flex flex-row gap-2',
+                                                            children=[
+                                                                dcc.Input(
+                                                                    id='finish_low_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                                dcc.Input(
+                                                                    id='finish_high_new_margins',
+                                                                    className='dark:bg-gray-600 relative block w-full my-2 p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm',
+                                                                ),
+                                                            ]
+                                                        ),
+                                                        html.Button(
+                                                            'Save',
+                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
+                                                        )
                                                     ]
                                                 )
                                             ]
@@ -2288,9 +2316,9 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+        #                          json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2393,7 +2421,8 @@ def init_callbacks(app):
 
         fps_saved = len(save_wrist_angle) / duration
 
-        path_fig = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e, arm_index, duration)
+        path_fig = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e,
+                                arm_index, duration)
 
         path = dcc.Graph(figure=path_fig, config=config,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
@@ -2432,6 +2461,7 @@ def init_callbacks(app):
 
         # Log number of analyses
         current_user.analyzed += 1
+        current_user.last_analyzed = datetime.datetime.now()
         db.session.commit()
         return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload,
                 sequence_first, sequence_second, sequence_third,

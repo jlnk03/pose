@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
     subscription = db.Column(db.String(100))
     canceled = db.Column(db.Boolean)
     analyzed = db.Column(db.Integer)
+    last_analyzed = db.Column(db.DateTime)
 
 
 
