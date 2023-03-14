@@ -253,7 +253,9 @@ def hand_path_3d(x, y, z, start, end, top, duration):
                           y=y[start:end],
                           z=z[start:end],
                           mode='lines',
-                          line=dict(color=np.linspace(0, 1, len(x))[start:end], width=6, colorscale='Viridis')))
+                          line=dict(color=np.linspace(0, 1, len(x))[start:end], width=6, colorscale='Viridis'),
+                          name='Hand Path',
+                          ))
 
     start_point = [x[start], z[start]]
     end_point = [x[top], z[top]]
@@ -268,14 +270,14 @@ def hand_path_3d(x, y, z, start, end, top, duration):
     plane_x, plane_y = np.meshgrid(plane_x, plane_y)
     plane_z = slope * plane_x + zero_intersect
 
-    plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
+    plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5, name='Swing Plane',)
 
     path_fig.add_trace(plane)
 
     path_fig.update_layout(
         scene=dict(
             xaxis_title='Down the line',
-            # yaxis_title='Front on',
+            yaxis_title='Face on',
             zaxis_title='Height',
             xaxis_showticklabels=False,
             yaxis_showticklabels=False,
@@ -289,6 +291,8 @@ def hand_path_3d(x, y, z, start, end, top, duration):
         font_color="#94a3b8",
         margin=dict(r=10, b=10, l=10, t=10),
         paper_bgcolor='rgba(0,0,0,0)',
+        # showlegend=True,
+        hovermode=False
     )
 
     return path_fig
@@ -2804,7 +2808,7 @@ def info_text(plot_type):
                         This visualization can help you to understand the movement of your arms and hands. For example you can see how steep or shallow your backswing is and in which direction you transition on the downswing.
                         Front on is the view facing the player. Down the line is the view in direction of the target.
             '''
-            title = '3D Hand Path'
+            title = '3D Hand Path and Swing Plane'
 
         case 'transition_sequence':
             text = '''
