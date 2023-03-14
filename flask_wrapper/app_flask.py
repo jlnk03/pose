@@ -255,32 +255,31 @@ def hand_path_3d(x, y, z, start, end, top, duration):
                           mode='lines',
                           line=dict(color=np.linspace(0, 1, len(x))[start:end], width=6, colorscale='Viridis')))
 
-    start_point = [x[start], y[start]]
-    end_point = [x[top], y[top]]
+    start_point = [x[start], z[start]]
+    end_point = [x[top], z[top]]
     # print(start_point, end_point)
 
     slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
-    # slope = -1 / slope
 
     zero_intersect = start_point[1] - slope * start_point[0]
 
-    plane_x = np.linspace(-0.5, 0.5, 100)
-    plane_y = np.linspace(-0.5, 0.5, 100)
+    plane_x = np.linspace(x[start], x[top], 10)
+    plane_y = np.linspace(min(y), max(y), 10)
     plane_x, plane_y = np.meshgrid(plane_x, plane_y)
     plane_z = slope * plane_x + zero_intersect
 
-    # plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
+    plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
 
-    # path_fig.add_trace(plane)
+    path_fig.add_trace(plane)
 
     path_fig.update_layout(
         scene=dict(
             xaxis_title='Down the line',
             # yaxis_title='Front on',
             zaxis_title='Height',
-            # xaxis_showticklabels=False,
-            # yaxis_showticklabels=False,
-            # zaxis_showticklabels=False,
+            xaxis_showticklabels=False,
+            yaxis_showticklabels=False,
+            zaxis_showticklabels=False,
             camera=dict(
                 up=dict(x=0, y=0, z=1),
                 center=dict(x=0, y=0, z=-0.1),
