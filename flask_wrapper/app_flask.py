@@ -268,9 +268,9 @@ def hand_path_3d(x, y, z, start, end, top, duration):
     plane_x, plane_y = np.meshgrid(plane_x, plane_y)
     plane_z = slope * plane_x + zero_intersect
 
-    plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
+    # plane = go.Surface(x=plane_x, y=plane_y, z=plane_z, showscale=False, opacity=0.5)
 
-    path_fig.add_trace(plane)
+    # path_fig.add_trace(plane)
 
     path_fig.update_layout(
         scene=dict(
