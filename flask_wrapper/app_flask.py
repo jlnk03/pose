@@ -1278,6 +1278,7 @@ def init_dash(server):
                                                         ),
                                                         html.Button(
                                                             'Save',
+                                                            id='submit-new-margins',
                                                             className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
                                                         )
                                                     ]
@@ -2472,6 +2473,14 @@ def init_callbacks(app):
                 top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                 path
                 ]
+
+
+    # Save new margins
+    @app.callback(
+        Input('submit-new-margins', 'n_clicks'),
+    )
+    def save_new_margins():
+        pass
 
     # Show navbar on click
     app.clientside_callback(
