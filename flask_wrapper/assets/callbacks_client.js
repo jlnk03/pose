@@ -323,6 +323,48 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
             return sidebar_class
 
+        },
+
+        hideSelectionView: function(n_clicks, selection_class) {
+            if (n_clicks > 0) {
+                return selection_class.replace('flex', 'hidden');
+            }
+        },
+
+        showSelectionView: function(n_clicks, n_clicks2, n_clicks3, n_clicks4, n_clicks5, n_clicks6, selection_class) {
+
+                const title = document.getElementById('new_margins_title');
+
+                if (window.dash_clientside.callback_context.triggered[0].prop_id === 'pelvis_rot_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Pelvis Rot.';
+                }
+
+                else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'pelvis_tilt_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Pelvis Tilt';
+                }
+
+                else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'thorax_rot_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Thorax Rot.';
+                }
+
+                else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'thorax_tilt_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Thorax Tilt';
+                }
+
+                else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'head_rot_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Head Rot.';
+                }
+
+                else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'head_tilt_btn.n_clicks') {
+                    title.innerHTML = 'New Margins for Head Tilt';
+                }
+
+                else {
+                    title.innerHTML = 'New Margins';
+                }
+
+                return selection_class.replace('hidden', 'flex');
+
         }
 
     }

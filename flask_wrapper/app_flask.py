@@ -1221,14 +1221,13 @@ def init_dash(server):
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                     children=[
                                         html.Div(
-                                            className='fixed flex flex-col px-14 pt-14 pb-6 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
+                                            className='fixed flex flex-col px-6 pt-14 pb-6 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
                                             children=[
                                                 html.Div(
                                                     'New margins',
-                                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row items-center absolute top-4 left-1/2 transform -translate-x-1/2'
+                                                    id='new_margins_title',
+                                                    className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 absolute top-4 left-1/2 transform -translate-x-1/2'
                                                 ),
-                                                html.Form(
-                                                    children=[
                                                         html.Div(
                                                             'Setup',
                                                             className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
@@ -1283,10 +1282,8 @@ def init_dash(server):
                                                         html.Button(
                                                             'Save',
                                                             id='submit-new-margins',
-                                                            className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
+                                                            className='relative justify-start text-sm font-medium text-gray-100 flex flex-row bg-indigo-500 hover:bg-indigo-600 rounded-lg items-center justify-center px-4 py-2 mt-2 w-fit',
                                                         )
-                                                    ]
-                                                )
                                             ]
                                         )
                                     ]
@@ -1372,45 +1369,53 @@ def init_dash(server):
                                                     children=[
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Pelvis Rot.',
+                                                                html.Button('Pelvis Rot.',
+                                                                            id='pelvis_rot_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_rot_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(slider_view('pelvis_rot', -80, 160))
+                                                                html.Div(slider_view('pelvis_rot', -80, 160)),
                                                                 # End of slider bar
+                                                                dcc.Store(id='pelvis_rot_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Pelvis Tilt',
+                                                                html.Button('Pelvis Tilt',
+                                                                         id='pelvis_tilt_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_bend_val', className='mt-2'),
                                                                 # Slider bar
-                                                                html.Div(slider_view('pelvis_bend', -30, 30))
+                                                                html.Div(slider_view('pelvis_bend', -30, 30)),
                                                                 # End of slider bar
+                                                                dcc.Store(id='pelvis_bend_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Thorax Rot.',
+                                                                html.Button('Thorax Rot.',
+                                                                         id='thorax_rot_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_rot_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('thorax_rot', -140, 140)),
                                                                 # End of slider bar
+                                                                dcc.Store(id='thorax_rot_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Thorax Tilt',
+                                                                html.Button('Thorax Tilt',
+                                                                         id='thorax_tilt_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_bend_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('thorax_bend', -20, 60)),
                                                                 # End of slider bar
+                                                                dcc.Store(id='thorax_bend_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1424,19 +1429,23 @@ def init_dash(server):
                                                     children=[
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Head Rot.',
+                                                                html.Button('Head Rot.',
+                                                                         id='head_rot_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_rot_val', className='mt-2'),
                                                                 html.Div(slider_view('head_rot', -100, 100)),
+                                                                dcc.Store(id='head_rot_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Head Tilt',
+                                                                html.Button('Head Tilt',
+                                                                         id='head_tilt_btn',
                                                                          className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_tilt_val', className='mt-2'),
                                                                 html.Div(slider_view('head_tilt', -60, 60)),
+                                                                dcc.Store(id='head_tilt_store', data=0),
                                                             ],
                                                             className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                         ),
@@ -1552,7 +1561,7 @@ def init_dash(server):
                                                             children=[
                                                                 html.Div(
                                                                     'Hip',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center border-[#6266F6] border-2',
                                                                     id='start_sequence_first'
                                                                 ),
                                                                 html.Div(
@@ -1560,7 +1569,7 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     'Thorax',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center border-[#E74D39] border-2',
                                                                     id='start_sequence_second'
                                                                 ),
                                                                 html.Div(
@@ -1568,7 +1577,7 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     'Arms',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
+                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center border-[#2BC48C] border-2',
                                                                     id='start_sequence_third'
                                                                 )
                                                             ]
@@ -2482,25 +2491,45 @@ def init_callbacks(app):
     # Save new margins
     @app.callback(
         Input('submit-new-margins', 'n_clicks'),
-        [State('setup_low_new_margins', 'value'), State('setup_high_new_margins', 'value')],
+        [State('setup_low_new_margins', 'value'), State('setup_high_new_margins', 'value'),
+         State('top_low_new_margins', 'value'), State('top_high_new_margins', 'value'),
+         State('impact_low_new_margins', 'value'), State('impact_high_new_margins', 'value'),
+         ],
         prevent_initial_call=True
     )
-    def save_new_margins(n_clicks, setup_low, setup_high):
+    def save_new_margins(n_clicks, setup_low, setup_high, top_low, top_high, impact_low, impact_high):
         if n_clicks > 0:
-            current_user.setup_low = setup_low
-            current_user.setup_high = setup_high
+            current_user.setup_low_pelvis_rot = setup_low
+            current_user.setup_high_pelvis_rot = setup_high
+            current_user.top_low_pelvis_rot = top_low
+            current_user.top_high_pelvis_rot = top_high
+            current_user.impact_low_pelvis_rot = impact_low
+            current_user.impact_high_pelvis_rot = impact_high
             db.session.commit()
 
     # Hide selection view
     app.clientside_callback(
-        '''
-        function(n_clicks, selection_class) {
-            if (n_clicks > 0) {
-                return selection_class.replace('flex', 'hidden');
-            }
-        ''',
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='hideSelectionView'
+        ),
         [Output('selection-view', 'className')],
         Input('submit-new-margins', 'n_clicks'),
+        State('selection-view', 'className'),
+        prevent_initial_call=True
+    )
+
+    # Show selection view
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showSelectionView'
+        ),
+        Output('selection-view', 'className'),
+        [Input('pelvis_rot_btn', 'n_clicks'), Input('pelvis_tilt_btn', 'n_clicks'),
+         Input('thorax_rot_btn', 'n_clicks'), Input('thorax_tilt_btn', 'n_clicks'),
+            Input('head_rot_btn', 'n_clicks'), Input('head_tilt_btn', 'n_clicks'),
+         ],
         State('selection-view', 'className'),
         prevent_initial_call=True
     )
@@ -2710,9 +2739,9 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
+    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
+    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
         0], thorax_index
@@ -2739,9 +2768,9 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
+    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
+    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
         0], thorax_index
