@@ -2602,7 +2602,6 @@ def init_callbacks(app):
     )
     def update_margins(pelvis_rot, pelvis_tilt, thorax_rot, thorax_tilt, head_rot, head_tilt):
         if current_user.is_authenticated:
-            print('update_margins')
             if current_user.setup_low_pelvis_rot is None:
                 setup_low_pelvis_rot = '-3'
             else:
