@@ -1382,9 +1382,9 @@ def init_dash(server):
                                                     children=[
                                                         html.Div(
                                                             children=[
-                                                                html.Button('Pelvis Rot.',
+                                                                html.Button('Pelvis Rotation',
                                                                             id='pelvis_rot_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_rot_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('pelvis_rot', -80, 160)),
@@ -1398,7 +1398,7 @@ def init_dash(server):
                                                             children=[
                                                                 html.Button('Pelvis Tilt',
                                                                             id='pelvis_tilt_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='pelvis_bend_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('pelvis_bend', -30, 30)),
@@ -1410,9 +1410,9 @@ def init_dash(server):
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Button('Thorax Rot.',
+                                                                html.Button('Thorax Rotation',
                                                                             id='thorax_rot_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_rot_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('thorax_rot', -140, 140)),
@@ -1426,7 +1426,7 @@ def init_dash(server):
                                                             children=[
                                                                 html.Button('Thorax Tilt',
                                                                             id='thorax_tilt_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='thorax_bend_val', className='mt-2'),
                                                                 # Slider bar
                                                                 html.Div(slider_view('thorax_bend', -20, 60)),
@@ -1445,9 +1445,9 @@ def init_dash(server):
                                                     children=[
                                                         html.Div(
                                                             children=[
-                                                                html.Button('Head Rot.',
+                                                                html.Button('Head Rotation',
                                                                             id='head_rot_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_rot_val', className='mt-2'),
                                                                 html.Div(slider_view('head_rot', -100, 100)),
                                                                 html.Div('-100, 100, -100, 100, -100, 100',
@@ -1459,7 +1459,7 @@ def init_dash(server):
                                                             children=[
                                                                 html.Button('Head Tilt',
                                                                             id='head_tilt_btn',
-                                                                            className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='head_tilt_val', className='mt-2'),
                                                                 html.Div(slider_view('head_tilt', -60, 60)),
                                                                 html.Div('-60, 60, -60, 60, -60, 60',
@@ -1469,8 +1469,8 @@ def init_dash(server):
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Arm Rot.',
-                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('Arm Rotation',
+                                                                         className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='arm_rot_val', className='mt-2'),
                                                                 html.Div(slider_view('arm_rot', -240, 240)),
                                                             ],
@@ -1478,8 +1478,8 @@ def init_dash(server):
                                                         ),
                                                         html.Div(
                                                             children=[
-                                                                html.Div('Arm Ground',
-                                                                         className='absolute left-1/2 -translate-x-1/2 top-2 sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                html.Div('Arm To Ground',
+                                                                         className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                 html.Div('- °', id='arm_ground_val', className='mt-2'),
                                                                 html.Div(slider_view('arm_ground', -90, 90)),
                                                             ],
