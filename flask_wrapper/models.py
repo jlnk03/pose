@@ -25,9 +25,51 @@ class User(UserMixin, db.Model):
     canceled = db.Column(db.Boolean)
     analyzed = db.Column(db.Integer)
     last_analyzed = db.Column(db.DateTime)
-    setup_low_pelvis_rot = db.Column(db.Float)
-    setup_high_pelvis_rot = db.Column(db.Float)
-    top_low_pelvis_rot = db.Column(db.Float)
-    top_high_pelvis_rot = db.Column(db.Float)
-    impact_low_pelvis_rot = db.Column(db.Float)
-    impact_high_pelvis_rot = db.Column(db.Float)
+
+    # Pelvis Rotation
+    setup_low_pelvis_rot = db.Column(db.Integer)
+    setup_high_pelvis_rot = db.Column(db.Integer)
+    top_low_pelvis_rot = db.Column(db.Integer)
+    top_high_pelvis_rot = db.Column(db.Integer)
+    impact_low_pelvis_rot = db.Column(db.Integer)
+    impact_high_pelvis_rot = db.Column(db.Integer)
+
+    # Pelvis Tilt
+    setup_low_pelvis_tilt = db.Column(db.Integer)
+    setup_high_pelvis_tilt = db.Column(db.Integer)
+    top_low_pelvis_tilt = db.Column(db.Integer)
+    top_high_pelvis_tilt = db.Column(db.Integer)
+    impact_low_pelvis_tilt = db.Column(db.Integer)
+    impact_high_pelvis_tilt = db.Column(db.Integer)
+
+    # Thorax Rotation
+    setup_low_thorax_rot = db.Column(db.Integer)
+    setup_high_thorax_rot = db.Column(db.Integer)
+    top_low_thorax_rot = db.Column(db.Integer)
+    top_high_thorax_rot = db.Column(db.Integer)
+    impact_low_thorax_rot = db.Column(db.Integer)
+    impact_high_thorax_rot = db.Column(db.Integer)
+
+    # Thorax Tilt
+    setup_low_thorax_tilt = db.Column(db.Integer)
+    setup_high_thorax_tilt = db.Column(db.Integer)
+    top_low_thorax_tilt = db.Column(db.Integer)
+    top_high_thorax_tilt = db.Column(db.Integer)
+    impact_low_thorax_tilt = db.Column(db.Integer)
+    impact_high_thorax_tilt = db.Column(db.Integer)
+
+    # Head Rotation
+    setup_low_head_rot = db.Column(db.Integer)
+    setup_high_head_rot = db.Column(db.Integer)
+    top_low_head_rot = db.Column(db.Integer)
+    top_high_head_rot = db.Column(db.Integer)
+    impact_low_head_rot = db.Column(db.Integer)
+    impact_high_head_rot = db.Column(db.Integer)
+
+    # Head Tilt
+    setup_low_head_tilt = db.Column(db.Integer)
+    setup_high_head_tilt = db.Column(db.Integer)
+    top_low_head_tilt = db.Column(db.Integer)
+    top_high_head_tilt = db.Column(db.Integer)
+    impact_low_head_tilt = db.Column(db.Integer)
+    impact_high_head_tilt = db.Column(db.Integer)
