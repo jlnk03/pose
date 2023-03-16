@@ -1502,37 +1502,37 @@ def init_dash(server):
                                             id='position_divs',
                                             children=[
                                                 html.Div('Backswing',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- s', id='backswing', className='mt-2'),
+                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
+                                                html.Div('- s', id='backswing', className='mt-5'),
                                                 html.Div('0.5', id='top_pos', className='hidden'),
                                                 html.Div('0.5', id='impact_pos', className='hidden'),
                                                 html.Div('0.5', id='end_pos', className='hidden'),
                                                 html.Div('0.5', id='setup_pos', className='hidden'),
                                                 html.Div('60', id='fps_saved', className='hidden'),
                                             ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
                                                 html.Div('Downswing',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
-                                                html.Div('- s', id='downswing', className='mt-2')
+                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
+                                                html.Div('- s', id='downswing', className='mt-5')
                                             ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                         html.Div(
                                             children=[
                                                 html.Div('Tempo',
-                                                         className='sm:text-lg text-sm font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mx-4 sm:mx-10 relative text-left', ),
+                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
                                                 html.Div(
                                                     children=[
-                                                        html.Div('-', id='tempo', className='mt-2'),
-                                                        html.Div(': 1', className='mt-2 ml-2')
+                                                        html.Div('-', id='tempo', className='mt-5'),
+                                                        html.Div(': 1', className='mt-5 ml-2')
                                                     ],
                                                     className='flex flex-row items-center justify-center'
                                                 )
                                             ],
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
                                         ),
                                     ]
                                 ),
