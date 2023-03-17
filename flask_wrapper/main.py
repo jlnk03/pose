@@ -23,7 +23,6 @@ import cProfile
 import pstats
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
-# print(os.getenv('STRIPE_API_KEY'))
 
 main = Blueprint('main', __name__)
 
