@@ -23,6 +23,7 @@ import cProfile
 import pstats
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
+print(os.getenv('STRIPE_API_KEY'))
 
 main = Blueprint('main', __name__)
 
@@ -98,9 +99,9 @@ def payment(product, mode):
                     'quantity': 1,
                 },
             ],
-            # automatic_tax={
-            #     'enabled': True
-            # },
+            automatic_tax={
+                'enabled': True
+            },
             customer_email=current_user.email,
             payment_method_types=methods,
             mode=mode,
@@ -118,7 +119,8 @@ def payment(product, mode):
         db.session.commit()
 
     except Exception as e:
-        return 'Sorry, something went wrong. Please try again later.'
+        return str(e)
+        # return 'Sorry, something went wrong. Please try again later.'
 
     return redirect(checkout_session.url, code=303)
 
