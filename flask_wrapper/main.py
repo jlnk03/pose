@@ -22,7 +22,7 @@ from email.mime.text import MIMEText
 from email.utils import formataddr
 import cProfile
 import pstats
-import memory_profiler
+# import memory_profiler
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 

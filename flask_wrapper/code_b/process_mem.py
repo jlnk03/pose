@@ -16,7 +16,7 @@ import av
 import tempfile
 from moviepy.editor import AudioFileClip
 
-import memory_profiler
+# import memory_profiler
 
 
 mp_drawing = mp.solutions.drawing_utils
