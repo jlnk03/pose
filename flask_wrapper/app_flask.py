@@ -84,6 +84,25 @@ def find_closest_zero_intersection_left_of_min(array):
         return 0
 
 
+def over_the_top(hand_path_x, hand_path_z, setup, top, impact):
+    hand_path_x = np.array(hand_path_x)
+    hand_path_z = np.array(hand_path_z)
+    back_z = hand_path_z[setup:top]
+    down_z = hand_path_z[top:impact]
+    half_height = (back_z[-1] - back_z[0]) / 2 + back_z[0]
+    diff_back = np.abs(back_z - half_height)
+    diff_down = np.abs(down_z - half_height)
+    nearest = np.argmin(diff_back)
+    nearest_down = np.argmin(diff_down)
+    back_x = hand_path_x[setup:top][nearest]
+    down_x = hand_path_x[top:impact][nearest_down]
+
+    if back_x > down_x:
+        return True
+
+    return False
+
+
 def add_vertical_line(fig):
     fig.add_vline(x=0, line_width=4, line_color="#818cf8")
 
@@ -151,44 +170,44 @@ def upload_video(disabled=True, path=None):
 
                 html.Div(
                     className='flex flex-col-reverse sm:flex-row w-full h-full',
-                # Controls for the video player (top, impact, end)
-                children=[html.Div(
-                    children=[
-                        html.Button('Setup', id='setup_pos_button',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Top', id='top_pos_button',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Impact', id='impact_pos_button',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Finish', id='end_pos_button',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                        html.Button('Frame +', id='plus_frame',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
-                        html.Button('Frame -', id='minus_frame',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
-                    ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-5 sm:mt-0 gap-2 sm:gap-5 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
-                ),
+                    # Controls for the video player (top, impact, end)
+                    children=[html.Div(
+                        children=[
+                            html.Button('Setup', id='setup_pos_button',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                            html.Button('Top', id='top_pos_button',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                            html.Button('Impact', id='impact_pos_button',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                            html.Button('Finish', id='end_pos_button',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                            html.Button('Frame +', id='plus_frame',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                            html.Button('Frame -', id='minus_frame',
+                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                        ],
+                        className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-5 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
+                    ),
 
-                # Video player
-                html.Div(
-                    className="relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
-                    children=[
-                        # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
-                        #            className="h-full w-full object-cover"),
+                        # Video player
+                        html.Div(
+                            className="relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            children=[
+                                # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
+                                #            className="h-full w-full object-cover"),
 
-                        dp.DashPlayer(
-                            id='video',
-                            url=f'{path}#t=0.001',
-                            controls=True,
-                            playsinline=True,
-                            className="h-full w-96",
-                            width='100%',
-                            height='100%',
-                            intervalCurrentTime=70,
-                        )
-                    ]
-                ),]
+                                dp.DashPlayer(
+                                    id='video',
+                                    url=f'{path}#t=0.001',
+                                    controls=True,
+                                    playsinline=True,
+                                    className="h-full w-96",
+                                    width='100%',
+                                    height='100%',
+                                    intervalCurrentTime=70,
+                                )
+                            ]
+                        ), ]
                 ),
 
                 # Controls for the video player mobile (+, -)
@@ -199,7 +218,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('Frame +', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
-                    className='flex flex-row justify-between mb-5 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-full px-2 py-2 sm:hidden'
+                    className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-full px-2 py-2 sm:hidden'
                 ),
             ]),
     ]
@@ -265,6 +284,7 @@ def hand_path_3d(x, y, z, start, end, top, duration):
     # print(start_point, end_point)
 
     slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
+    angle = np.arctan(slope) * 180 / np.pi
 
     zero_intersect = start_point[1] - slope * start_point[0]
 
@@ -282,9 +302,9 @@ def hand_path_3d(x, y, z, start, end, top, duration):
             xaxis_title='Down the line',
             yaxis_title='Face on',
             zaxis_title='Height',
-            xaxis_showticklabels=False,
-            yaxis_showticklabels=False,
-            zaxis_showticklabels=False,
+            # xaxis_showticklabels=False,
+            # yaxis_showticklabels=False,
+            # zaxis_showticklabels=False,
             camera=dict(
                 up=dict(x=0, y=0, z=1),
                 center=dict(x=0, y=0, z=-0.1),
@@ -295,10 +315,10 @@ def hand_path_3d(x, y, z, start, end, top, duration):
         margin=dict(r=10, b=10, l=10, t=10),
         paper_bgcolor='rgba(0,0,0,0)',
         # showlegend=True,
-        hovermode=False
+        # hovermode=False
     )
 
-    return path_fig
+    return path_fig, angle
 
 
 # Random initialization for data
@@ -1548,16 +1568,44 @@ def init_dash(server):
                                         html.Div(info_text('arm_path'), className='w-full'),
 
                                         html.Div(
-                                            # 3D arm path
-                                            id='arm_path',
+                                            className='flex flex-row justify-between w-full flex-wrap relative',
                                             children=[
-                                                dcc.Graph(
-                                                    id='arm_path_3d',
-                                                    figure=path_fig,
-                                                    config=config,
-                                                    className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative',
-                                                )
-                                            ]),
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                html.Div(id='over_the_top',
+                                                         className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
+                                                            children=[
+                                                                html.Div(
+                                                                    children=[html.Div('Your swing is:',
+                                                                                       className='text-base font-normal'), 'Perfect'])
+                                                            ]
+                                                         ),
+                                                html.Div(
+                                                         id='swing_plane_angle',
+                                                         className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
+                                                    children=[
+                                                        html.Div(
+                                                            children=[html.Div('Swing Plane Anlge:',
+                                                                               className='text-base font-normal'),
+                                                                      '- °'])
+                                                    ]
+                                                ),
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    # 3D arm path
+                                                    id='arm_path',
+                                                    children=[
+                                                        dcc.Graph(
+                                                            id='arm_path_3d',
+                                                            figure=path_fig,
+                                                            config=config,
+                                                            className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
+                                                        )
+                                                    ]),
+                                            ]
+                                        )
                                     ]
                                 ),
 
@@ -1875,7 +1923,7 @@ def init_callbacks(app):
          Output('tempo', 'children'), Output('backswing', 'children'), Output('downswing', 'children'),
          Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
          Output('setup_pos', 'children'), Output('fps_saved', 'children'),
-         Output('arm_path', 'children')
+         Output('arm_path', 'children'), Output('over_the_top', 'children'), Output('swing_plane_angle', 'children'),
          ],
         [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
@@ -2040,7 +2088,7 @@ def init_callbacks(app):
                             sequence_first_text, sequence_second_text, sequence_third_text,
                             temp, time_back, time_down,
                             top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                            []]
+                            [], [], []]
 
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
@@ -2123,6 +2171,14 @@ def init_callbacks(app):
                 temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
                                                    len(save_wrist_angle) / duration)
 
+                # Check if the swing is over the top
+                over = over_the_top(arm_x, arm_z, int(arm_index_s), int(arm_index),
+                                    int(impact_pos * len(save_wrist_angle)))
+                if over:
+                    over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Over the top']
+                else:
+                    over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
+
                 fps_saved = len(save_wrist_angle) / duration
 
                 # Get the video and update the video player
@@ -2171,7 +2227,11 @@ def init_callbacks(app):
                     duration)
 
                 # Update the 3D plot
-                path_fig = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index, duration)
+                path_fig, angle_swing_plane = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index, duration)
+
+                angle_swing_plane_text = html.Div(
+                    children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                              f'{int(angle_swing_plane)}°'])
 
                 path = dcc.Graph(figure=path_fig, config=config,
                                  className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
@@ -2183,7 +2243,7 @@ def init_callbacks(app):
                         first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                         temp, time_back, time_down,
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                        path
+                        path, over_text, angle_swing_plane_text
                         ]
 
         # Delete was pressed
@@ -2337,7 +2397,7 @@ def init_callbacks(app):
                         sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text,
                         temp, time_back, time_down,
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                        path
+                        path, [], []
                         ]
 
         # Check if folder was created and generate file name
@@ -2456,11 +2516,22 @@ def init_callbacks(app):
 
         fps_saved = len(save_wrist_angle) / duration
 
-        path_fig = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e,
+        path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e,
                                 arm_index, duration)
 
         path = dcc.Graph(figure=path_fig, config=config,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
+
+        angle_swing_plane_text = html.Div(children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                                                    f'{int(angle_swing_plane)}°'])
+
+        # Check if the swing is over the top
+        over = over_the_top(arm_position['x'], arm_position['z'], int(arm_index_s), int(arm_index),
+                            int(impact_pos * len(save_wrist_angle)))
+        if over:
+            over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Over the top']
+        else:
+            over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
 
         # Reset the background color of the buttons
         for child in children:
@@ -2506,7 +2577,7 @@ def init_callbacks(app):
                 first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                 temp, time_back, time_down,
                 top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                path
+                path, over_text, angle_swing_plane_text
                 ]
 
     # Save new margins to db
@@ -2847,7 +2918,7 @@ def init_callbacks(app):
         ),
         [Output('selection-view', 'className'),
          Output('setup_low_new_margins', 'value'), Output('setup_high_new_margins', 'value'),
-            Output('top_low_new_margins', 'value'), Output('top_high_new_margins', 'value'),
+         Output('top_low_new_margins', 'value'), Output('top_high_new_margins', 'value'),
          Output('impact_low_new_margins', 'value'), Output('impact_high_new_margins', 'value'),
          ],
         [Input('pelvis_rot_btn', 'n_clicks'), Input('pelvis_tilt_btn', 'n_clicks'),
