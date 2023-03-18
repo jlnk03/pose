@@ -173,6 +173,8 @@ def upload_video(disabled=True, path=None):
                     # Controls for the video player (top, impact, end)
                     children=[html.Div(
                         children=[
+                            html.Div(
+                                children=[
                             html.Button('Setup', id='setup_pos_button',
                                         className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                             html.Button('Top', id='top_pos_button',
@@ -181,12 +183,21 @@ def upload_video(disabled=True, path=None):
                                         className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                             html.Button('Finish', id='end_pos_button',
                                         className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                    ],
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                            ),
+
+                            html.Div(
+                                children=[
                             html.Button('Frame +', id='plus_frame',
                                         className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                             html.Button('Frame -', id='minus_frame',
                                         className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                ],
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                            )
                         ],
-                        className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-5 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
+                        className='flex flex-col justify-between'
                     ),
 
                         # Video player
