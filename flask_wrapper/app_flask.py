@@ -302,9 +302,9 @@ def hand_path_3d(x, y, z, start, end, top, duration):
             xaxis_title='Down the line',
             yaxis_title='Face on',
             zaxis_title='Height',
-            # xaxis_showticklabels=False,
-            # yaxis_showticklabels=False,
-            # zaxis_showticklabels=False,
+            xaxis_showticklabels=False,
+            yaxis_showticklabels=False,
+            zaxis_showticklabels=False,
             camera=dict(
                 up=dict(x=0, y=0, z=1),
                 center=dict(x=0, y=0, z=-0.1),
@@ -315,7 +315,7 @@ def hand_path_3d(x, y, z, start, end, top, duration):
         margin=dict(r=10, b=10, l=10, t=10),
         paper_bgcolor='rgba(0,0,0,0)',
         # showlegend=True,
-        # hovermode=False
+        hovermode=False
     )
 
     return path_fig, angle
@@ -2411,9 +2411,9 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+        #                          json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -3382,7 +3382,7 @@ def content_box():
 loader = html.Div(
     children=[
         # Moving gradient loading indicator
-        html.Div(className='gradient-box'),
+        html.Div(className='gradient-box fixed top-0 left-0 z-50'),
         # Sidebar
         html.Div(
             [

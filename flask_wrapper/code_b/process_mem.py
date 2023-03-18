@@ -16,7 +16,7 @@ import av
 import tempfile
 from moviepy.editor import AudioFileClip
 
-# import memory_profiler
+import memory_profiler
 
 
 mp_drawing = mp.solutions.drawing_utils
@@ -70,329 +70,212 @@ def impact_from_audio(audio_bytes):
 
 # @memory_profiler.profile
 def process_motion(contents, filename, location):
-    # print("Processing video: " + filename)
     content_type, content_string = contents.split(',')
-    # content_string = contents
-    # name = filename.split('.')[0]
-    name = filename
 
     decoded = base64.b64decode(content_string)
 
-    vid_bytes = io.BytesIO(decoded)
+    with io.BytesIO(decoded) as vid_bytes:
 
-    frames = iio.imiter(vid_bytes, plugin='pyav')
+        frames = iio.imiter(vid_bytes, plugin='pyav')
 
-    meta = iio.immeta(decoded, plugin='pyav')
-    fps = meta['fps']
-    duration = meta['duration']
+        meta = iio.immeta(decoded, plugin='pyav')
+        fps = meta['fps']
+        duration = meta['duration']
 
-    n_frames = duration * fps
+        n_frames = duration * fps
 
-    if n_frames > 300:
-        return -1
+        if n_frames > 300:
+            return -1
 
-    try:
-        rotation = int(meta['rotate'])
-    except KeyError:
-        rotation = 360
+        try:
+            rotation = int(meta['rotate'])
+        except KeyError:
+            rotation = 360
 
-    rot_angle = 360 - rotation
-    frame = next(frames)
-    frame = np.rot90(frame, k=rot_angle // 90)
-    height, width, _ = frame.shape
-    # normalized_height = height / 1920
-    # normalized_padding = int(450 * normalized_height)
-    # width += normalized_padding
-    if width % 2 != 0:
-        width += 1
+        rot_angle = 360 - rotation
+        frame = next(frames)
+        frame = np.rot90(frame, k=rot_angle // 90)
+        height, width, _ = frame.shape
+        if width % 2 != 0:
+            width += 1
 
-    # fourcc = cv2.VideoWriter_fourcc(*'h264')
-    # writer = cv2.VideoWriter(location + '/motion.mp4', fourcc, fps, (width, height))
-    # Open a new video stream for writing
-    container = av.open(location + '/motion.mp4', 'w')
-    stream = container.add_stream('libx264', rate=np.floor(fps))
-    stream.options = {'preset': 'medium', 'crf': '20', 'profile': 'high'}
-    stream.width = width
-    stream.height = height
-    stream.pix_fmt = 'yuv420p'
-    # writer = imageio.get_writer(location + '/motion.mp4', fps=fps)
+        container = av.open(location + '/motion.mp4', 'w')
+        stream = container.add_stream('libx264', rate=np.floor(fps))
+        stream.options = {'preset': 'medium', 'crf': '20', 'profile': 'high'}
+        stream.width = width
+        stream.height = height
+        stream.pix_fmt = 'yuv420p'
 
-    # Audio
-    impact_ratio = impact_from_audio(vid_bytes)
-    duration_ratio = duration * impact_ratio
-    # add half a frame
-    duration_ratio += 0.008
-    impact_ratio = duration_ratio / duration
+        # Audio
+        impact_ratio = impact_from_audio(vid_bytes)
+        duration_ratio = duration * impact_ratio
+        # add half a frame
+        duration_ratio += 0.008
+        impact_ratio = duration_ratio / duration
 
-    save_pelvis_rotation = deque([])
-    save_pelvis_tilt = deque([])
-    save_pelvis_sway = deque([])
-    save_pelvis_thrust = deque([])
-    save_pelvis_lift = deque([])
-    save_thorax_rotation = deque([])
-    save_thorax_bend = deque([])
-    save_thorax_sway = deque([])
-    save_thorax_thrust = deque([])
-    save_thorax_lift = deque([])
-    save_thorax_tilt = deque([])
-    save_spine_rotation = deque([])
-    save_spine_tilt = deque([])
-    save_head_rotation = deque([])
-    save_head_tilt = deque([])
-    save_left_arm_length = deque([])
-    save_wrist_angle = deque([])
-    save_wrist_tilt = deque([])
-    save_arm_rotation = deque([])
-    save_arm_to_ground = deque([])
-    arm_position = {'x': [], 'y': [], 'z': []}
+        save_pelvis_rotation = deque([])
+        save_pelvis_tilt = deque([])
+        save_pelvis_sway = deque([])
+        save_pelvis_thrust = deque([])
+        save_pelvis_lift = deque([])
+        save_thorax_rotation = deque([])
+        save_thorax_bend = deque([])
+        save_thorax_sway = deque([])
+        save_thorax_thrust = deque([])
+        save_thorax_lift = deque([])
+        save_thorax_tilt = deque([])
+        save_spine_rotation = deque([])
+        save_spine_tilt = deque([])
+        save_head_rotation = deque([])
+        save_head_tilt = deque([])
+        save_left_arm_length = deque([])
+        save_wrist_angle = deque([])
+        save_wrist_tilt = deque([])
+        save_arm_rotation = deque([])
+        save_arm_to_ground = deque([])
+        arm_position = {'x': [], 'y': [], 'z': []}
 
-    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
-        # for i, image in enumerate(frames.iter_data()):
-        for i, image in enumerate(frames):
+        with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5, model_complexity=2) as pose:
+            for i, image in enumerate(frames):
 
-            image = np.rot90(image, k=rot_angle // 90)
-            image = np.ascontiguousarray(image)
+                image = np.rot90(image, k=rot_angle // 90)
+                image = np.ascontiguousarray(image)
 
-            # Make detection
-            results = pose.process(image)
+                # Make detection
+                results = pose.process(image)
 
-            try:
-                landmarks = results.pose_world_landmarks.landmark
-                # landmarks_hand = results.left_hand_landmarks.landmark
+                try:
+                    landmarks = results.pose_world_landmarks.landmark
 
-                shoulder_l = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
-                shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
-                elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
-                wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
-                wrist_r = landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value]
-                hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-                hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
-                foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
-                foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
-                nose = landmarks[mp_pose.PoseLandmark.NOSE.value]
-                eye_l = landmarks[mp_pose.PoseLandmark.LEFT_EAR.value]
-                eye_r = landmarks[mp_pose.PoseLandmark.RIGHT_EAR.value]
-                pinky_l = landmarks[mp_pose.PoseLandmark.LEFT_PINKY.value]
-                index_l = landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value]
+                    shoulder_l = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
+                    shoulder_r = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
+                    elbow_l = landmarks[mp_pose.PoseLandmark.LEFT_ELBOW.value]
+                    wrist_l = landmarks[mp_pose.PoseLandmark.LEFT_WRIST.value]
+                    wrist_r = landmarks[mp_pose.PoseLandmark.RIGHT_WRIST.value]
+                    hip_l = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+                    hip_r = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
+                    foot_r = landmarks[mp_pose.PoseLandmark.RIGHT_FOOT_INDEX.value]
+                    foot_l = landmarks[mp_pose.PoseLandmark.LEFT_FOOT_INDEX.value]
+                    eye_l = landmarks[mp_pose.PoseLandmark.LEFT_EAR.value]
+                    eye_r = landmarks[mp_pose.PoseLandmark.RIGHT_EAR.value]
+                    pinky_l = landmarks[mp_pose.PoseLandmark.LEFT_PINKY.value]
+                    index_l = landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value]
 
-                if i == 0:
-                    theta = calc_angle(foot_l, foot_r)
-                    c, s = np.cos(theta), np.sin(theta)
-                    # print(np.degrees(theta))
-                    R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]], dtype=np.float16)
-                    # print(R)
+                    if i == 0:
+                        theta = calc_angle(foot_l, foot_r)
+                        c, s = np.cos(theta), np.sin(theta)
+                        R = np.array([[c, 0, -s], [0, 1, 0], [s, 0, c]], dtype=np.float16)
 
-                pelvis_r = pelvis_rotation(hip_l, hip_r, R)
-                save_pelvis_rotation.append(-pelvis_r)
-                # print('pelvis_rotation: ', pelvis_r)
+                    pelvis_r = pelvis_rotation(hip_l, hip_r, R)
+                    save_pelvis_rotation.append(-pelvis_r)
+                    # print('pelvis_rotation: ', pelvis_r)
 
-                pelvis_t = pelvis_tilt(hip_l, hip_r, R)
-                save_pelvis_tilt.append(-pelvis_t)
-                # print('pelvis_tilt: ', pelvis_t)
+                    pelvis_t = pelvis_tilt(hip_l, hip_r, R)
+                    save_pelvis_tilt.append(-pelvis_t)
+                    # print('pelvis_tilt: ', pelvis_t)
 
-                pelvis_s = pelvis_sway(foot_l, R)
-                save_pelvis_sway.append(-pelvis_s)
-                # print('pelvis_sway: ', pelvis_s)
+                    pelvis_s = pelvis_sway(foot_l, R)
+                    save_pelvis_sway.append(-pelvis_s)
+                    # print('pelvis_sway: ', pelvis_s)
 
-                pelvis_th = pelvis_thrust(foot_l, R)
-                save_pelvis_thrust.append(-pelvis_th)
-                # print('pelvis_thrust: ', pelvis_th)
+                    pelvis_th = pelvis_thrust(foot_l, R)
+                    save_pelvis_thrust.append(-pelvis_th)
+                    # print('pelvis_thrust: ', pelvis_th)
 
-                pelvis_l = pelvis_lift(foot_l, R)
-                save_pelvis_lift.append(pelvis_l)
-                # print('pelvis_lift: ', pelvis_l)
+                    pelvis_l = pelvis_lift(foot_l, R)
+                    save_pelvis_lift.append(pelvis_l)
+                    # print('pelvis_lift: ', pelvis_l)
 
-                thorax_r = thorax_rotation(shoulder_l, shoulder_r, R)
-                save_thorax_rotation.append(-thorax_r)
-                # print('thorax_rotation: ', thorax_r)
+                    thorax_r = thorax_rotation(shoulder_l, shoulder_r, R)
+                    save_thorax_rotation.append(-thorax_r)
+                    # print('thorax_rotation: ', thorax_r)
 
-                thorax_b = thorax_bend(shoulder_l, shoulder_r, R)
-                save_thorax_bend.append(thorax_b)
+                    thorax_b = thorax_bend(shoulder_l, shoulder_r, R)
+                    save_thorax_bend.append(thorax_b)
 
-                thorax_t = thorax_tilt(shoulder_l, shoulder_r, R)
-                save_thorax_tilt.append(thorax_t)
+                    thorax_t = thorax_tilt(shoulder_l, shoulder_r, R)
+                    save_thorax_tilt.append(thorax_t)
 
-                thorax_s = thorax_sway(shoulder_l, shoulder_r, foot_l, R)
-                save_thorax_sway.append(thorax_s)
-                # print('thorax_sway: ', thorax_s)
+                    thorax_s = thorax_sway(shoulder_l, shoulder_r, foot_l, R)
+                    save_thorax_sway.append(thorax_s)
+                    # print('thorax_sway: ', thorax_s)
 
-                thorax_th = thorax_thrust(shoulder_l, shoulder_r, foot_l, R)
-                save_thorax_thrust.append(thorax_th)
-                # print('thorax_thrust: ', thorax_th)
+                    thorax_th = thorax_thrust(shoulder_l, shoulder_r, foot_l, R)
+                    save_thorax_thrust.append(thorax_th)
+                    # print('thorax_thrust: ', thorax_th)
 
-                thorax_l = thorax_lift(shoulder_l, shoulder_r, foot_l, R)
-                save_thorax_lift.append(thorax_l)
-                # print('thorax_lift: ', thorax_l)
+                    thorax_l = thorax_lift(shoulder_l, shoulder_r, foot_l, R)
+                    save_thorax_lift.append(thorax_l)
+                    # print('thorax_lift: ', thorax_l)
 
-                spine_r = spine_rotation(hip_l, hip_r, shoulder_l, shoulder_r, R)
-                save_spine_rotation.append(spine_r)
-                # print('spine_rotation: ', spine_r)
+                    spine_r = spine_rotation(hip_l, hip_r, shoulder_l, shoulder_r, R)
+                    save_spine_rotation.append(spine_r)
+                    # print('spine_rotation: ', spine_r)
 
-                spine_t = spine_tilt(hip_l, hip_r, shoulder_l, shoulder_r, R)
-                save_spine_tilt.append(spine_t)
-                # print('spine_tilt: ', spine_t)
+                    spine_t = spine_tilt(hip_l, hip_r, shoulder_l, shoulder_r, R)
+                    save_spine_tilt.append(spine_t)
+                    # print('spine_tilt: ', spine_t)
 
-                head_r = head_rotation(eye_l, eye_r, R)
-                save_head_rotation.append(head_r)
-                # print('head_rotation: ', head_r)
+                    head_r = head_rotation(eye_l, eye_r, R)
+                    save_head_rotation.append(head_r)
+                    # print('head_rotation: ', head_r)
 
-                head_t = head_tilt(eye_l, eye_r, R)
-                save_head_tilt.append(head_t)
-                # print('head_tilt: ', head_t)
+                    head_t = head_tilt(eye_l, eye_r, R)
+                    save_head_tilt.append(head_t)
+                    # print('head_tilt: ', head_t)
 
-                wrist_a = wrist_angle(pinky_l, index_l, wrist_l, elbow_l, R)
-                save_wrist_angle.append(wrist_a)
+                    wrist_a = wrist_angle(pinky_l, index_l, wrist_l, elbow_l, R)
+                    save_wrist_angle.append(wrist_a)
 
-                wrist_t = wrist_tilt(pinky_l, index_l, wrist_l, elbow_l, R)
-                save_wrist_tilt.append(wrist_t)
+                    wrist_t = wrist_tilt(pinky_l, index_l, wrist_l, elbow_l, R)
+                    save_wrist_tilt.append(wrist_t)
 
-                left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
-                save_left_arm_length.append(left_arm)
+                    left_arm = left_arm_length(shoulder_l, shoulder_r, wrist_l, R)
+                    save_left_arm_length.append(left_arm)
 
-                arm_rotation_l = arm_rotation(wrist_r, shoulder_l, shoulder_r, R)
-                save_arm_rotation.append(arm_rotation_l)
+                    arm_rotation_l = arm_rotation(wrist_r, shoulder_l, shoulder_r, R)
+                    save_arm_rotation.append(arm_rotation_l)
 
-                arm_ground = arm_to_ground(wrist_r, shoulder_r, R)
-                save_arm_to_ground.append(arm_ground)
+                    arm_ground = arm_to_ground(wrist_r, shoulder_r, R)
+                    save_arm_to_ground.append(arm_ground)
 
-                arm_v = [foot_l.x - wrist_l.x, foot_l.y - wrist_l.y, foot_l.z - wrist_l.z]
-                arm_v = R @ arm_v
+                    arm_v = [foot_l.x - wrist_l.x, foot_l.y - wrist_l.y, foot_l.z - wrist_l.z]
+                    arm_v = R @ arm_v
 
-                arm_position['x'].append(arm_v[0])
-                arm_position['y'].append(arm_v[2])
-                arm_position['z'].append(arm_v[1])
+                    arm_position['x'].append(arm_v[0])
+                    arm_position['y'].append(arm_v[2])
+                    arm_position['z'].append(arm_v[1])
+
+                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+                    mp_drawing.draw_landmarks(
+                        image,
+                        results.pose_landmarks,
+                        mp_pose.POSE_CONNECTIONS,
+                        landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
+                    )
+
+                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+                    # convert the image to numpy array
+                    image = np.asarray(image)
+
+                except Exception as e:
+                    shutil.rmtree(location)
+                    break
 
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                mp_drawing.draw_landmarks(
-                    image,
-                    results.pose_landmarks,
-                    mp_pose.POSE_CONNECTIONS,
-                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-                )
+                # Write with pyav
+                frame = av.VideoFrame.from_ndarray(image, format='bgr24')
+                for packet in stream.encode(frame):
+                    container.mux(packet)
 
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-                # Padding to image
-                # image = add_padding(image, normalized_padding, (55, 65, 81))
-                #
-                # image = Image.fromarray(np.uint8(image))
-                #
-                # # create an ImageDraw object
-                # draw = ImageDraw.Draw(image)
-                #
-                # radius = int(40 * normalized_height)
-                #
-                # # draw the rounded rectangle
-                # left = int(20 * normalized_height)
-                # right = int(430 * normalized_height)
-                # text_offset = int(30 * normalized_height)
-                # center_offset = int(
-                #     height / 2 - (1220 * normalized_height - 20 * normalized_height) / 2 - 20 * normalized_height)
-                # draw_rounded_rectangle_agg(image, (left, int(20 * normalized_height) + center_offset),
-                #                            (right, int(270 * normalized_height) + center_offset), color=(255, 255, 255),
-                #                            radius=radius)
-                # draw_rounded_rectangle_agg(image, (left, int(310 * normalized_height) + center_offset),
-                #                            (right, int(640 * normalized_height) + center_offset), color=(255, 255, 255),
-                #                            radius=radius)
-                # draw_rounded_rectangle_agg(image, (left, int(680 * normalized_height) + center_offset),
-                #                            (right, int(930 * normalized_height) + center_offset), color=(255, 255, 255),
-                #                            radius=radius)
-                # draw_rounded_rectangle_agg(image, (left, int(970 * normalized_height) + center_offset),
-                #                            (right, int(1220 * normalized_height) + center_offset),
-                #                            color=(255, 255, 255), radius=radius)
-                #
-                # try:
-                #     # add text on top of the rounded rectangle
-                #     os.chdir('assets')
-                #     font = ImageFont.truetype('SF-Pro-Text-Regular.otf', int(50 * normalized_height))
-                #     font_bold = ImageFont.truetype('SF-Pro-Text-Semibold.otf', int(60 * normalized_height))
-                #     os.chdir('..')
-                # except Exception as e:
-                #     print(e)
-                #
-                # text = "Head"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((normalized_padding - textwidth) / 2), int(30 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(head_r)}°"
-                # textposition = (text_offset, int(110 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Tilt: {int(head_t)}°"
-                # textposition = (text_offset, int(190 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = "Thorax"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((normalized_padding - textwidth) / 2), int(320 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(thorax_r)}°"
-                # textposition = (text_offset, int(400 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Tilt: {int(thorax_t)}°"
-                # textposition = (text_offset, int(480 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"Bend: {int(thorax_b)}°"
-                # textposition = (text_offset, int(560 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = "Arm"
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((normalized_padding - textwidth) / 2), int(690 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(arm_rotation_l)}°"
-                # textposition = (text_offset, int(770 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f"To Ground: {int(arm_ground)}°"
-                # textposition = (text_offset, int(850 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = 'Pelvis'
-                # textwidth, textheight = draw.textsize(text, font=font_bold)
-                # textposition = (int((normalized_padding - textwidth) / 2), int(980 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font_bold)
-                #
-                # text = f"Rotation: {int(pelvis_r)}°"
-                # textposition = (text_offset, int(1060 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-                #
-                # text = f'Tilt: {int(pelvis_t)}°'
-                # textposition = (text_offset, int(1140 * normalized_height) + center_offset)
-                # draw.text(textposition, text, fill=(0, 0, 0), font=font)
-
-                # convert the image to numpy array
-                image = np.asarray(image)
-
-            except Exception as e:
-                print(e)
-                shutil.rmtree(location)
-                break
-
-            # cv2. imshow('Mediapipe Feed', image)
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            # writer.write(image)
-
-            # imageio
-            # writer.append_data(image)
-
-            # Write with pyav
-            frame = av.VideoFrame.from_ndarray(image, format='bgr24')
-            for packet in stream.encode(frame):
-                container.mux(packet)
-
-    # Flush the stream to make sure all frames have been written
-    for packet in stream.encode():
-        container.mux(packet)
-    stream.close()
-    container.close()
-    # writer.close()
+        # Flush the stream to make sure all frames have been written
+        for packet in stream.encode():
+            container.mux(packet)
+        stream.close()
+        container.close()
 
     return save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \

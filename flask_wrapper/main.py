@@ -1,3 +1,4 @@
+import gc
 import json
 
 import flask
@@ -21,6 +22,7 @@ from email.mime.text import MIMEText
 from email.utils import formataddr
 import cProfile
 import pstats
+import memory_profiler
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
 
@@ -238,6 +240,7 @@ def contact_post():
 
 
 @main.route('/predict/<token>', methods=['POST'])
+# @memory_profiler.profile
 def predict(token):
     ts = URLSafeTimedSerializer('key')
     try:
@@ -325,6 +328,7 @@ def predict(token):
         fps,
         impact_ratio
     ]
+
 
     prediction = dict(zip(keys, values))
 
