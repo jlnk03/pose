@@ -3307,6 +3307,8 @@ def content_box():
 
 loader = html.Div(
     children=[
+        # Moving gradient loading indicator
+        html.Div(className='gradient-box'),
         # Sidebar
         html.Div(
             [
