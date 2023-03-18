@@ -175,24 +175,24 @@ def upload_video(disabled=True, path=None):
                         children=[
                             html.Div(
                                 children=[
-                            html.Button('Setup', id='setup_pos_button',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                            html.Button('Top', id='top_pos_button',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                            html.Button('Impact', id='impact_pos_button',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                            html.Button('Finish', id='end_pos_button',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
-                                    ],
+                                    html.Button('Setup', id='setup_pos_button',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                    html.Button('Top', id='top_pos_button',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                    html.Button('Impact', id='impact_pos_button',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                    html.Button('Finish', id='end_pos_button',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                ],
                                 className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
                                 children=[
-                            html.Button('Frame +', id='plus_frame',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
-                            html.Button('Frame -', id='minus_frame',
-                                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                    html.Button('Frame +', id='plus_frame',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                    html.Button('Frame -', id='minus_frame',
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
                                 className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             )
@@ -1579,29 +1579,30 @@ def init_dash(server):
                                         html.Div(info_text('arm_path'), className='w-full'),
 
                                         html.Div(
-                                            className='flex flex-row justify-between w-full flex-wrap relative',
+                                            className='sm:grid sm:grid-cols-3 flex flex-col justify-between w-full flex-wrap relative',
                                             children=[
                                                 html.Div(
                                                     className='flex flex-col',
                                                     children=[
-                                                html.Div(id='over_the_top',
-                                                         className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
+                                                        html.Div(id='over_the_top',
+                                                                 className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
+                                                                 children=[
+                                                                     html.Div(
+                                                                         children=[html.Div('Your swing is:',
+                                                                                            className='text-base font-normal'),
+                                                                                   'Perfect'])
+                                                                 ]
+                                                                 ),
+                                                        html.Div(
+                                                            id='swing_plane_angle',
+                                                            className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
                                                             children=[
                                                                 html.Div(
-                                                                    children=[html.Div('Your swing is:',
-                                                                                       className='text-base font-normal'), 'Perfect'])
+                                                                    children=[html.Div('Swing Plane Anlge:',
+                                                                                       className='text-base font-normal'),
+                                                                              '- °'])
                                                             ]
-                                                         ),
-                                                html.Div(
-                                                         id='swing_plane_angle',
-                                                         className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
-                                                    children=[
-                                                        html.Div(
-                                                            children=[html.Div('Swing Plane Anlge:',
-                                                                               className='text-base font-normal'),
-                                                                      '- °'])
-                                                    ]
-                                                ),
+                                                        ),
                                                     ]
                                                 ),
                                                 html.Div(
@@ -2238,7 +2239,8 @@ def init_callbacks(app):
                     duration)
 
                 # Update the 3D plot
-                path_fig, angle_swing_plane = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index, duration)
+                path_fig, angle_swing_plane = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index,
+                                                           duration)
 
                 angle_swing_plane_text = html.Div(
                     children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -2527,8 +2529,9 @@ def init_callbacks(app):
 
         fps_saved = len(save_wrist_angle) / duration
 
-        path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s, arm_index_e,
-                                arm_index, duration)
+        path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s,
+                                                   arm_index_e,
+                                                   arm_index, duration)
 
         path = dcc.Graph(figure=path_fig, config=config,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
