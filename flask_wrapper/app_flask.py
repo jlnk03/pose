@@ -149,28 +149,30 @@ def upload_video(disabled=True, path=None):
                     className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                 ),
 
-                # Controls for the video player (top, impact, end)
                 html.Div(
+                    className='flex flex-col-reverse sm:flex-row w-full h-full',
+                # Controls for the video player (top, impact, end)
+                children=[html.Div(
                     children=[
                         html.Button('Setup', id='setup_pos_button',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Top', id='top_pos_button',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Impact', id='impact_pos_button',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Finish', id='end_pos_button',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                         html.Button('Frame +', id='plus_frame',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                         html.Button('Frame -', id='minus_frame',
-                                    className='w-24 px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-2 mb-2 sm:mb-5 gap-2 sm:gap-5'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 gap-2 sm:gap-5 bg-indigo-100 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
                 ),
 
                 # Video player
                 html.Div(
-                    className=" relative overflow-hidden h-96 w-full shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                    className=" relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
                         # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                         #            className="h-full w-full object-cover"),
@@ -180,23 +182,24 @@ def upload_video(disabled=True, path=None):
                             url=f'{path}#t=0.001',
                             controls=True,
                             playsinline=True,
-                            className="h-full w-full object-cover",
+                            className="h-full w-96",
                             width='100%',
                             height='100%',
                             intervalCurrentTime=70,
                         )
                     ]
+                ),]
                 ),
 
                 # Controls for the video player mobile (+, -)
                 html.Div(
                     children=[
                         html.Button('Frame -', id='minus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                         html.Button('Frame +', id='plus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-lg bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
-                    className='flex flex-row justify-between mb-5 mt-2 gap-2'
+                    className='flex flex-row justify-between mb-5 mt-2 gap-2 bg-indigo-100 rounded-full px-2 py-2 sm:hidden'
                 ),
             ]),
     ]
