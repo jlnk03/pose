@@ -167,12 +167,12 @@ def upload_video(disabled=True, path=None):
                         html.Button('Frame -', id='minus_frame',
                                     className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block'),
                     ],
-                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 gap-2 sm:gap-5 bg-indigo-100 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
+                    className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-5 sm:mt-0 gap-2 sm:gap-5 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-5'
                 ),
 
                 # Video player
                 html.Div(
-                    className=" relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                    className="relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                     children=[
                         # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                         #            className="h-full w-full object-cover"),
@@ -199,7 +199,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('Frame +', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
-                    className='flex flex-row justify-between mb-5 mt-2 gap-2 bg-indigo-100 rounded-full px-2 py-2 sm:hidden'
+                    className='flex flex-row justify-between mb-5 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-full px-2 py-2 sm:hidden'
                 ),
             ]),
     ]
