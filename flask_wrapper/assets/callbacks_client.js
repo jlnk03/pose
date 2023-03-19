@@ -520,7 +520,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         hideSelectionViewCross: function(n_clicks, selection_class) {
             return selection_class.replace('flex', 'hidden');
-        }
+        },
 
+        tempoSlider: function(tempo) {
+            return {'left': tempo/6 * 100 + '%'}
+        }
     }
 });

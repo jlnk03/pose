@@ -1530,30 +1530,36 @@ def init_dash(server):
 
                                 # Tempo divs
                                 html.Div(
-                                    className='flex flex-row w-full justify-between mb-5 sm:gap-5 gap-2',
+                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 gap-2',
                                     children=[
                                         html.Div(
-                                            id='position_divs',
+                                            className='flex flex-col gap-2',
                                             children=[
-                                                html.Div('Backswing',
-                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
-                                                html.Div('- s', id='backswing', className='mt-5'),
-                                                html.Div('0.5', id='top_pos', className='hidden'),
-                                                html.Div('0.5', id='impact_pos', className='hidden'),
-                                                html.Div('0.5', id='end_pos', className='hidden'),
-                                                html.Div('0.5', id='setup_pos', className='hidden'),
-                                                html.Div('60', id='fps_saved', className='hidden'),
-                                            ],
-                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                html.Div(
+                                                    id='position_divs',
+                                                    children=[
+                                                        html.Div('Backswing',
+                                                                 className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
+                                                        html.Div('- s', id='backswing', className='mt-5'),
+                                                        html.Div('0.5', id='top_pos', className='hidden'),
+                                                        html.Div('0.5', id='impact_pos', className='hidden'),
+                                                        html.Div('0.5', id='end_pos', className='hidden'),
+                                                        html.Div('0.5', id='setup_pos', className='hidden'),
+                                                        html.Div('60', id='fps_saved', className='hidden'),
+                                                    ],
+                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                ),
+                                                html.Div(
+                                                    children=[
+                                                        html.Div('Downswing',
+                                                                 className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
+                                                        html.Div('- s', id='downswing', className='mt-5')
+                                                    ],
+                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                ),
+                                            ]
                                         ),
-                                        html.Div(
-                                            children=[
-                                                html.Div('Downswing',
-                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
-                                                html.Div('- s', id='downswing', className='mt-5')
-                                            ],
-                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
-                                        ),
+                                        # Tempo div
                                         html.Div(
                                             children=[
                                                 html.Div('Tempo',
@@ -1564,9 +1570,110 @@ def init_dash(server):
                                                         html.Div(': 1', className='mt-5 ml-2')
                                                     ],
                                                     className='flex flex-row items-center justify-center'
-                                                )
+                                                ),
+                                                html.Div(
+                                                    children=[
+                                                        html.Div(
+                                                            style={'left': '50%'},
+                                                            id='tempo_slider',
+                                                            className='rounded-full h-6 w-6 bg-slate-900 dark:bg-gray-100 border-4 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 -translate-y-1/2',
+                                                        ),
+                                                        html.Div(
+                                                            '0',
+                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+                                                        ),
+                                                        html.Div(
+                                                            '3',
+                                                            className='absolute left-1/2 -translate-x-1/2 bottom-3.5 text-xs text-gray-400',
+                                                        ),
+                                                        html.Div(
+                                                            '6',
+                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                                                        )
+                                                    ],
+                                                    className='absolute left-4 right-4 bottom-4 h-2 gradient-slider rounded-full'
+                                                ),
                                             ],
-                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full  text-center'
+                                        ),
+                                        # End of tempo div
+
+                                        # Sequence div
+                                        html.Div(
+                                            children=[
+                                                # Column for start sequence
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('start_sequence'),
+                                                                 className='relative w-full -mt-8 -mx-8'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-2 pt-2',
+                                                            children=[
+                                                                html.Div(
+                                                                    'Hip',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
+                                                                    id='start_sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Thorax',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
+                                                                    id='start_sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Arms',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
+                                                                    id='start_sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+                                                # Start sequence end
+
+                                                # Column for transition sequence
+                                                html.Div(
+                                                    className='flex flex-col',
+                                                    children=[
+                                                        html.Div(info_text('transition_sequence'),
+                                                                 className='relative w-full -mx-8 -mt-4'),
+                                                        html.Div(
+                                                            className='flex flex-row items-center w-full px-2 pt-2',
+                                                            children=[
+                                                                html.Div(
+                                                                    'Hip',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
+                                                                    id='sequence_first'
+                                                                ),
+                                                                html.Div(
+                                                                    className=' w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Thorax',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
+                                                                    id='sequence_second'
+                                                                ),
+                                                                html.Div(
+                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                                ),
+                                                                html.Div(
+                                                                    'Arms',
+                                                                    className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
+                                                                    id='sequence_third'
+                                                                )
+                                                            ]
+                                                        ),
+                                                    ]
+                                                ),
+                                                # Transition sequence end
+                                            ],
+                                            className='col-span-2 xl:col-span-1 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full  text-center pb-4'
                                         ),
                                     ]
                                 ),
@@ -1628,77 +1735,8 @@ def init_dash(server):
 
                                         # Row for sequences
                                         html.Div(
-                                            className='flex flex-row justify-between items-center w-full flex-wrap relative',
+                                            className='flex flex-row justify-between items-center w-full flex-wrap relative hidden',
                                             children=[
-
-                                                # Column for sequence
-                                                html.Div(
-                                                    className='flex flex-col',
-                                                    children=[
-                                                        html.Div(info_text('start_sequence'),
-                                                                 className='relative w-full'),
-                                                        html.Div(
-                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                            children=[
-                                                                html.Div(
-                                                                    'Hip',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center border-[#6266F6] border-2',
-                                                                    id='start_sequence_first'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Thorax',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center border-[#E74D39] border-2',
-                                                                    id='start_sequence_second'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Arms',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center border-[#2BC48C] border-2',
-                                                                    id='start_sequence_third'
-                                                                )
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
-
-                                                html.Div(
-                                                    className='flex flex-col',
-                                                    children=[
-                                                        html.Div(info_text('transition_sequence'),
-                                                                 className='relative w-full'),
-                                                        html.Div(
-                                                            className='flex flex-row items-center w-full px-4 sm:px-10 py-10',
-                                                            children=[
-                                                                html.Div(
-                                                                    'Hip',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#6266F6] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_first'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Thorax',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#E74D39] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_second'
-                                                                ),
-                                                                html.Div(
-                                                                    className='sm:w-16 w-10 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Arms',
-                                                                    className='text-lg font-medium text-gray-100 bg-[#2BC48C] rounded-lg py-2 px-2 flex items-center justify-center',
-                                                                    id='sequence_third'
-                                                                )
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
 
                                                 # Column for sequence
                                                 html.Div(
@@ -2006,9 +2044,9 @@ def init_callbacks(app):
                                      className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                     # Reset sequence colors
-                    sequence_first = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#6266F6]',
-                    sequence_second = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#E74D39]'
-                    sequence_third = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#2BC48C]'
+                    sequence_first = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center  bg-[#6266F6]',
+                    sequence_second = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center bg-[#E74D39]'
+                    sequence_third = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center bg-[#2BC48C]'
 
                     # Reset sequence text
                     sequence_first_text = 'Hip'
@@ -2319,9 +2357,9 @@ def init_callbacks(app):
                                  className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                 # Reset sequence colors
-                sequence_first = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#6266F6]',
-                sequence_second = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#E74D39]'
-                sequence_third = 'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center  bg-[#2BC48C]'
+                sequence_first = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center bg-[#6266F6]',
+                sequence_second = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center bg-[#E74D39]'
+                sequence_third = 'text-base font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center bg-[#2BC48C]'
 
                 # Reset sequence text
                 sequence_first_text = 'Hip'
@@ -3028,6 +3066,16 @@ def init_callbacks(app):
         prevent_initial_call=True
     )
 
+    # Tempo slider position
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='tempoSlider'
+        ),
+        Output('tempo_slider', 'style'),
+        Input('tempo', 'children'),
+    )
+
 
 # Reset plots
 def reset_plots(children, button_id, disabled):
@@ -3148,9 +3196,9 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
-    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
-    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
+    sequence_first = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
+    sequence_second = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
+    sequence_third = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
         0], thorax_index
@@ -3177,9 +3225,9 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
-    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
-    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
+    sequence_first = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
+    sequence_second = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
+    sequence_third = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
         0], thorax_index
@@ -3205,9 +3253,9 @@ def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, durat
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[0][0]}'
-    sequence_second = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[1][0]}'
-    sequence_third = f'text-lg font-medium text-gray-100 rounded-lg py-2 px-2 flex items-center justify-center {sequence[2][0]}'
+    sequence_first = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-18 py-1 px-2 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-18 py-1 px-2 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-18 py-1 px-2 flex items-center justify-center {sequence[2][0]}'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
         0], thorax_index

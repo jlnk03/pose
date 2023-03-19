@@ -91,6 +91,10 @@ body, html {
   }
 }
 
+.gradient-slider {
+    background: linear-gradient(to right,  #dc2626, #f97316, #f97316, #fde047, #84cc16, #84cc16, #fde047, #f97316, #f97316, #dc2626);
+}
+
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
