@@ -1576,7 +1576,7 @@ def init_dash(server):
                                                         html.Div(
                                                             style={'left': '50%'},
                                                             id='tempo_slider',
-                                                            className='rounded-full h-6 w-6 bg-slate-900 dark:bg-gray-100 border-4 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 -translate-y-1/2',
+                                                            className='rounded-full h-3 w-3 bg-slate-900 dark:bg-gray-100 border-2 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 -translate-y-1/2',
                                                         ),
                                                         html.Div(
                                                             '0',
