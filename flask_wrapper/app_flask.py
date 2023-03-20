@@ -131,7 +131,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Finish', id='end_pos_button',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -141,7 +141,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             )
                         ],
                         className='flex flex-col gap-5'
@@ -149,7 +149,7 @@ def upload_video(disabled=True, path=None):
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-3xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
@@ -159,7 +159,7 @@ def upload_video(disabled=True, path=None):
                                     url=f'{path}#t=0.001',
                                     controls=True,
                                     playsinline=True,
-                                    className="h-full w-full flex",
+                                    className="h-full w-fit flex",
                                     width='100%',
                                     height='100%',
                                     intervalCurrentTime=70,
@@ -1136,7 +1136,7 @@ def init_dash(server):
                         # Sidebar
                         html.Div(
                             id='sidebar',
-                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-2xl hidden lg:flex',
+                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-3xl hidden lg:flex',
                             children=[
                                 html.Button(
                                     id='sidebar-header',
@@ -1162,7 +1162,7 @@ def init_dash(server):
                                                 ' ⛳️',
                                             ],
                                         ),
-                                        className='absolute flex items-center justify-center text-center inline-block text-sm h-16 border border-slate-400 mx-2 rounded-xl',
+                                        className='absolute flex items-center justify-center text-center inline-block text-sm h-16 border border-slate-400 mx-2 rounded-2xl',
                                         multiple=False,
                                         max_size=20e6,
                                         accept=['.mp4', '.mov', '.avi'],
@@ -1248,7 +1248,7 @@ def init_dash(server):
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                     children=[
                                         html.Div(
-                                            className='fixed flex flex-col px-4 pt-14 pb-4 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
+                                            className='fixed flex flex-col px-4 pt-14 pb-4 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-3xl shadow-lg z-30',
                                             children=[
                                                 html.Div(
                                                     'New margins',
@@ -1379,7 +1379,7 @@ def init_dash(server):
                                                                     ' ⛳️',
                                                                 ],
                                                             ),
-                                                            className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
+                                                            className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-3xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
                                                             multiple=False,
                                                             max_size=50e6,
                                                             accept=['.mp4', '.mov', '.avi'],
@@ -1395,10 +1395,10 @@ def init_dash(server):
                                                             )),
                                                         ),
                                                         className='w-full'
-                                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-3xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                                     )
                                                 ],
-                                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 mb-2 xl:mb-0 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 mb-2 xl:mb-0 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                                 ),
 
                                             ]),
@@ -1420,7 +1420,7 @@ def init_dash(server):
                                                                     children=[
                                                                         html.Button('Pelvis Rotation',
                                                                                     id='pelvis_rot_btn',
-                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='pelvis_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1430,13 +1430,13 @@ def init_dash(server):
                                                                                  id='pelvis_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Button('Pelvis Tilt',
                                                                                     id='pelvis_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='pelvis_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1446,13 +1446,13 @@ def init_dash(server):
                                                                                  id='pelvis_bend_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Button('Thorax Rotation',
                                                                                     id='thorax_rot_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='thorax_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1462,13 +1462,13 @@ def init_dash(server):
                                                                                  id='thorax_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Button('Thorax Tilt',
                                                                                     id='thorax_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='thorax_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1477,7 +1477,7 @@ def init_dash(server):
                                                                                  id='thorax_bend_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                             ]
                                                         ),
@@ -1491,7 +1491,7 @@ def init_dash(server):
                                                                     children=[
                                                                         html.Button('Head Rotation',
                                                                                     id='head_rot_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='head_rot_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_rot', -100, 100)),
@@ -1499,13 +1499,13 @@ def init_dash(server):
                                                                                  id='head_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Button('Head Tilt',
                                                                                     id='head_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='head_tilt_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_tilt', -60, 60)),
@@ -1513,27 +1513,27 @@ def init_dash(server):
                                                                                  id='head_tilt_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Arm Rotation',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='arm_rot_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_rot', -240, 240)),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Arm To Ground',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
                                                                         html.Div('- °', id='arm_ground_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_ground', -90, 90)),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                             ]
                                                         ),
@@ -1557,38 +1557,42 @@ def init_dash(server):
                                                 html.Div(
                                                     id='position_divs',
                                                     children=[
-                                                        html.Div('Backswing',
-                                                                 className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
-                                                        html.Div('- s', id='backswing', className='mt-5'),
+                                                        html.Div('BACK',
+                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                        html.Div('SWING',
+                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                        html.Div('- s', id='backswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
                                                         html.Div('0.5', id='end_pos', className='hidden'),
                                                         html.Div('0.5', id='setup_pos', className='hidden'),
                                                         html.Div('60', id='fps_saved', className='hidden'),
                                                     ],
-                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
                                                 ),
                                                 html.Div(
                                                     children=[
-                                                        html.Div('Downswing',
-                                                                 className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
-                                                        html.Div('- s', id='downswing', className='mt-5')
+                                                        html.Div('DOWN',
+                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                        html.Div('SWING',
+                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
+                                                        html.Div('- s', id='downswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                     ],
-                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full h-28 text-center'
+                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
                                                 ),
                                             ]
                                         ),
                                         # Tempo div
                                         html.Div(
                                             children=[
-                                                html.Div('Tempo',
-                                                         className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 absolute top-2 transform -translate-x-1/2 left-1/2'),
+                                                html.Div('TEMPO',
+                                                         className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
                                                 html.Div(
                                                     children=[
-                                                        html.Div('-', id='tempo', className='mt-5'),
+                                                        html.Div('-', id='tempo', className='mt-5 ml-6'),
                                                         html.Div(': 1', className='mt-5 ml-2')
                                                     ],
-                                                    className='flex flex-row items-center justify-center'
+                                                    className='flex flex-row'
                                                 ),
                                                 html.Div(
                                                     children=[
@@ -1610,10 +1614,10 @@ def init_dash(server):
                                                             className='absolute right-0 bottom-3.5 text-xs text-gray-400',
                                                         )
                                                     ],
-                                                    className='absolute left-4 right-4 bottom-4 h-2 gradient-slider rounded-full'
+                                                    className='absolute left-6 right-6 bottom-4 h-2 gradient-slider rounded-full'
                                                 ),
                                             ],
-                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full  text-center'
+                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col justify-center w-full  text-center'
                                         ),
                                         # End of tempo div
 
@@ -1692,14 +1696,14 @@ def init_dash(server):
                                                 ),
                                                 # Transition sequence end
                                             ],
-                                            className='col-span-2 xl:col-span-1 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-full  text-center pb-4'
+                                            className='col-span-2 xl:col-span-1 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-full  text-center pb-4'
                                         ),
                                     ]
                                 ),
                                 # End of tempo divs
 
                                 html.Div(
-                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
                                         html.Div(info_text('arm_path'), className='w-full'),
@@ -1749,7 +1753,7 @@ def init_dash(server):
 
                                 html.Div(
                                     id='parent_sequence',
-                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
                                         # Row for sequences
@@ -1806,7 +1810,7 @@ def init_dash(server):
                                 ),
 
                                 html.Div(
-                                    className='relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('pelvis_rotation'), className='relative w-full'),
 
@@ -1819,7 +1823,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('pelvis_displacement'), className=' relative w-full'),
 
@@ -1832,7 +1836,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('thorax_angles'), className=' relative w-full'),
 
@@ -1845,7 +1849,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('thorax_displacement'), className=' relative w-full'),
 
@@ -1858,7 +1862,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('head_tilt'), className=' relative w-full'),
 
@@ -1871,7 +1875,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('head_rotation'), className=' relative w-full'),
 
@@ -1884,7 +1888,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('spine_tilt'), className=' relative w-full'),
 
@@ -1897,7 +1901,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('left_arm'), className=' relative w-full'),
 
@@ -1910,7 +1914,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('spine_rotation'), className=' relative w-full'),
 
@@ -1923,10 +1927,10 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(
-                                            className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                            className='text-base font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
                                             children=[
                                                 'Arm Angles'
                                             ]
@@ -2660,214 +2664,69 @@ def init_callbacks(app):
          ]
     )
     def update_margins(pelvis_rot, pelvis_tilt, thorax_rot, thorax_tilt, head_rot, head_tilt):
-        if current_user.is_authenticated:
-            if current_user.setup_low_pelvis_rot is None:
-                setup_low_pelvis_rot = '-3'
-            else:
-                setup_low_pelvis_rot = current_user.setup_low_pelvis_rot
 
-            if current_user.setup_high_pelvis_rot is None:
-                setup_high_pelvis_rot = '6'
-            else:
-                setup_high_pelvis_rot = current_user.setup_high_pelvis_rot
+        setup_low_pelvis_rot = current_user.setup_low_pelvis_rot
+        setup_high_pelvis_rot = current_user.setup_high_pelvis_rot
+        top_low_pelvis_rot = current_user.top_low_pelvis_rot
+        top_high_pelvis_rot = current_user.top_high_pelvis_rot
+        impact_low_pelvis_rot = current_user.impact_low_pelvis_rot
+        impact_high_pelvis_rot = current_user.impact_high_pelvis_rot
 
-            if current_user.top_low_pelvis_rot is None:
-                top_low_pelvis_rot = '-56'
-            else:
-                top_low_pelvis_rot = current_user.top_low_pelvis_rot
+        setup_low_pelvis_tilt = current_user.setup_low_pelvis_tilt
+        setup_high_pelvis_tilt = current_user.setup_high_pelvis_tilt
+        top_low_pelvis_tilt = current_user.top_low_pelvis_tilt
+        top_high_pelvis_tilt = current_user.top_high_pelvis_tilt
+        impact_low_pelvis_tilt = current_user.impact_low_pelvis_tilt
+        impact_high_pelvis_tilt = current_user.impact_high_pelvis_tilt
 
-            if current_user.top_high_pelvis_rot is None:
-                top_high_pelvis_rot = '-39'
-            else:
-                top_high_pelvis_rot = current_user.top_high_pelvis_rot
+        setup_low_thorax_rot = current_user.setup_low_thorax_rot
+        setup_high_thorax_rot = current_user.setup_high_thorax_rot
+        top_low_thorax_rot = current_user.top_low_thorax_rot
+        top_high_thorax_rot = current_user.top_high_thorax_rot
+        impact_low_thorax_rot = current_user.impact_low_thorax_rot
+        impact_high_thorax_rot = current_user.impact_high_thorax_rot
 
-            if current_user.impact_low_pelvis_rot is None:
-                impact_low_pelvis_rot = '29'
-            else:
-                impact_low_pelvis_rot = current_user.impact_low_pelvis_rot
+        setup_low_thorax_tilt = current_user.setup_low_thorax_tilt
+        setup_high_thorax_tilt = current_user.setup_high_thorax_tilt
+        top_low_thorax_tilt = current_user.top_low_thorax_tilt
+        top_high_thorax_tilt = current_user.top_high_thorax_tilt
+        impact_low_thorax_tilt = current_user.impact_low_thorax_tilt
+        impact_high_thorax_tilt = current_user.impact_high_thorax_tilt
 
-            if current_user.impact_high_pelvis_rot is None:
-                impact_high_pelvis_rot = '48'
-            else:
-                impact_high_pelvis_rot = current_user.impact_high_pelvis_rot
+        setup_low_head_rot = current_user.setup_low_head_rot
+        setup_high_head_rot = current_user.setup_high_head_rot
+        top_low_head_rot = current_user.top_low_head_rot
+        top_high_head_rot = current_user.top_high_head_rot
+        impact_low_head_rot = current_user.impact_low_head_rot
+        impact_high_head_rot = current_user.impact_high_head_rot
 
-            # Pelvis Tilt
-            if current_user.setup_low_pelvis_tilt is None:
-                setup_low_pelvis_tilt = '-4'
-            else:
-                setup_low_pelvis_tilt = current_user.setup_low_pelvis_tilt
+        setup_low_head_tilt = current_user.setup_low_head_tilt
+        setup_high_head_tilt = current_user.setup_high_head_tilt
+        top_low_head_tilt = current_user.top_low_head_tilt
+        top_high_head_tilt = current_user.top_high_head_tilt
+        impact_low_head_tilt = current_user.impact_low_head_tilt
+        impact_high_head_tilt = current_user.impact_high_head_tilt
 
-            if current_user.setup_high_pelvis_tilt is None:
-                setup_high_pelvis_tilt = '6'
-            else:
-                setup_high_pelvis_tilt = current_user.setup_high_pelvis_tilt
+        positions = [setup_low_pelvis_rot, setup_high_pelvis_rot, top_low_pelvis_rot, top_high_pelvis_rot, impact_low_pelvis_rot, impact_high_pelvis_rot,
+                     setup_low_pelvis_tilt, setup_high_pelvis_tilt, top_low_pelvis_tilt, top_high_pelvis_tilt, impact_low_pelvis_tilt, impact_high_pelvis_tilt,
+                        setup_low_thorax_rot, setup_high_thorax_rot, top_low_thorax_rot, top_high_thorax_rot, impact_low_thorax_rot, impact_high_thorax_rot,
+                     setup_low_thorax_tilt, setup_high_thorax_tilt, top_low_thorax_tilt, top_high_thorax_tilt, impact_low_thorax_tilt, impact_high_thorax_tilt,
+                        setup_low_head_rot, setup_high_head_rot, top_low_head_rot, top_high_head_rot, impact_low_head_rot, impact_high_head_rot,
+                     setup_low_head_tilt, setup_high_head_tilt, top_low_head_tilt, top_high_head_tilt, impact_low_head_tilt, impact_high_head_tilt
+                     ]
 
-            if current_user.top_low_pelvis_tilt is None:
-                top_low_pelvis_tilt = '-14'
-            else:
-                top_low_pelvis_tilt = current_user.top_low_pelvis_tilt
+        values = ['-3', '6', '-56', '-39', '29', '48', '-4', '6', '-14', '-6', '-2', '11', '7', '15', '-98', '-83', '20', '37', '7', '18', '-5', '8', '26', '36', '-6', '6', '-25', '-8', '-6', '15', '-3', '7', '-16', '-3', '1', '18']
 
-            if current_user.top_high_pelvis_tilt is None:
-                top_high_pelvis_tilt = '-6'
-            else:
-                top_high_pelvis_tilt = current_user.top_high_pelvis_tilt
+        result = [f'{pos}' if pos is not None else val for pos, val in zip(positions, values)]
 
-            if current_user.impact_low_pelvis_tilt is None:
-                impact_low_pelvis_tilt = '-2'
-            else:
-                impact_low_pelvis_tilt = current_user.impact_low_pelvis_tilt
+        pelvis_rot_margins = f'{result[0]}, {result[1]}, {result[2]}, {result[3]}, {result[4]}, {result[5]}'
+        pelvis_tilt_margins = f'{result[6]}, {result[7]}, {result[8]}, {result[9]}, {result[10]}, {result[11]}'
+        thorax_rot_margins = f'{result[12]}, {result[13]}, {result[14]}, {result[15]}, {result[16]}, {result[17]}'
+        thorax_tilt_margins = f'{result[18]}, {result[19]}, {result[20]}, {result[21]}, {result[22]}, {result[23]}'
+        head_rot_margins = f'{result[24]}, {result[25]}, {result[26]}, {result[27]}, {result[28]}, {result[29]}'
+        head_tilt_margins = f'{result[30]}, {result[31]}, {result[32]}, {result[33]}, {result[34]}, {result[35]}'
 
-            if current_user.impact_high_pelvis_tilt is None:
-                impact_high_pelvis_tilt = '11'
-            else:
-                impact_high_pelvis_tilt = current_user.impact_high_pelvis_tilt
-
-            # Thorax Rotation
-            if current_user.setup_low_thorax_rot is None:
-                setup_low_thorax_rot = '7'
-            else:
-                setup_low_thorax_rot = current_user.setup_low_thorax_rot
-
-            if current_user.setup_high_thorax_rot is None:
-                setup_high_thorax_rot = '15'
-            else:
-                setup_high_thorax_rot = current_user.setup_high_thorax_rot
-
-            if current_user.top_low_thorax_rot is None:
-                top_low_thorax_rot = '-98'
-            else:
-                top_low_thorax_rot = current_user.top_low_thorax_rot
-
-            if current_user.top_high_thorax_rot is None:
-                top_high_thorax_rot = '-83'
-            else:
-                top_high_thorax_rot = current_user.top_high_thorax_rot
-
-            if current_user.impact_low_thorax_rot is None:
-                impact_low_thorax_rot = '20'
-            else:
-                impact_low_thorax_rot = current_user.impact_low_thorax_rot
-
-            if current_user.impact_high_thorax_rot is None:
-                impact_high_thorax_rot = '37'
-            else:
-                impact_high_thorax_rot = current_user.impact_high_thorax_rot
-
-            # Thorax Tilt
-            if current_user.setup_low_thorax_tilt is None:
-                setup_low_thorax_tilt = '7'
-            else:
-                setup_low_thorax_tilt = current_user.setup_low_thorax_tilt
-
-            if current_user.setup_high_thorax_tilt is None:
-                setup_high_thorax_tilt = '18'
-            else:
-                setup_high_thorax_tilt = current_user.setup_high_thorax_tilt
-
-            if current_user.top_low_thorax_tilt is None:
-                top_low_thorax_tilt = '-5'
-            else:
-                top_low_thorax_tilt = current_user.top_low_thorax_tilt
-
-            if current_user.top_high_thorax_tilt is None:
-                top_high_thorax_tilt = '8'
-            else:
-                top_high_thorax_tilt = current_user.top_high_thorax_tilt
-
-            if current_user.impact_low_thorax_tilt is None:
-                impact_low_thorax_tilt = '26'
-            else:
-                impact_low_thorax_tilt = current_user.impact_low_thorax_tilt
-
-            if current_user.impact_high_thorax_tilt is None:
-                impact_high_thorax_tilt = '36'
-            else:
-                impact_high_thorax_tilt = current_user.impact_high_thorax_tilt
-
-            # Head Rotation
-            if current_user.setup_low_head_rot is None:
-                setup_low_head_rot = '-6'
-            else:
-                setup_low_head_rot = current_user.setup_low_head_rot
-
-            if current_user.setup_high_head_rot is None:
-                setup_high_head_rot = '6'
-            else:
-                setup_high_head_rot = current_user.setup_high_head_rot
-
-            if current_user.top_low_head_rot is None:
-                top_low_head_rot = '-25'
-            else:
-                top_low_head_rot = current_user.top_low_head_rot
-
-            if current_user.top_high_head_rot is None:
-                top_high_head_rot = '-8'
-            else:
-                top_high_head_rot = current_user.top_high_head_rot
-
-            if current_user.impact_low_head_rot is None:
-                impact_low_head_rot = '-6'
-            else:
-                impact_low_head_rot = current_user.impact_low_head_rot
-
-            if current_user.impact_high_head_rot is None:
-                impact_high_head_rot = '15'
-            else:
-                impact_high_head_rot = current_user.impact_high_head_rot
-
-            # Head Tilt
-            if current_user.setup_low_head_tilt is None:
-                setup_low_head_tilt = '-3'
-            else:
-                setup_low_head_tilt = current_user.setup_low_head_tilt
-
-            if current_user.setup_high_head_tilt is None:
-                setup_high_head_tilt = '7'
-            else:
-                setup_high_head_tilt = current_user.setup_high_head_tilt
-
-            if current_user.top_low_head_tilt is None:
-                top_low_head_tilt = '-16'
-            else:
-                top_low_head_tilt = current_user.top_low_head_tilt
-
-            if current_user.top_high_head_tilt is None:
-                top_high_head_tilt = '-3'
-            else:
-                top_high_head_tilt = current_user.top_high_head_tilt
-
-            if current_user.impact_low_head_tilt is None:
-                impact_low_head_tilt = '1'
-            else:
-                impact_low_head_tilt = current_user.impact_low_head_tilt
-
-            if current_user.impact_high_head_tilt is None:
-                impact_high_head_tilt = '18'
-            else:
-                impact_high_head_tilt = current_user.impact_high_head_tilt
-
-            # Pelvis Rotation
-            pelvis_rot_margins = f'{setup_low_pelvis_rot}, {setup_high_pelvis_rot}, {top_low_pelvis_rot}, {top_high_pelvis_rot}, {impact_low_pelvis_rot}, {impact_high_pelvis_rot}'
-
-            # Pelvis Tilt
-            pelvis_tilt_margins = f'{setup_low_pelvis_tilt}, {setup_high_pelvis_tilt}, {top_low_pelvis_tilt}, {top_high_pelvis_tilt}, {impact_low_pelvis_tilt}, {impact_high_pelvis_tilt}'
-
-            # Thorax Rotation
-            thorax_rot_margins = f'{setup_low_thorax_rot}, {setup_high_thorax_rot}, {top_low_thorax_rot}, {top_high_thorax_rot}, {impact_low_thorax_rot}, {impact_high_thorax_rot}'
-
-            # Thorax Tilt
-            thorax_tilt_margins = f'{setup_low_thorax_tilt}, {setup_high_thorax_tilt}, {top_low_thorax_tilt}, {top_high_thorax_tilt}, {impact_low_thorax_tilt}, {impact_high_thorax_tilt}'
-
-            # Head Rotation
-            head_rot_margins = f'{setup_low_head_rot}, {setup_high_head_rot}, {top_low_head_rot}, {top_high_head_rot}, {impact_low_head_rot}, {impact_high_head_rot}'
-
-            # Head Tilt
-            head_tilt_margins = f'{setup_low_head_tilt}, {setup_high_head_tilt}, {top_low_head_tilt}, {top_high_head_tilt}, {impact_low_head_tilt}, {impact_high_head_tilt}'
-
-            return pelvis_rot_margins, pelvis_tilt_margins, thorax_rot_margins, thorax_tilt_margins, head_rot_margins, head_tilt_margins
-
-        else:
-            return '0, 0, 0, 0, 0, 0', '0, 0, 0, 0, 0, 0', '0, 0, 0, 0, 0, 0', '0, 0, 0, 0, 0, 0', '0, 0, 0, 0, 0, 0', '0, 0, 0, 0, 0, 0'
+        return pelvis_rot_margins, pelvis_tilt_margins, thorax_rot_margins, thorax_tilt_margins, head_rot_margins, head_tilt_margins
 
     # Hide selection view with save
     app.clientside_callback(
@@ -3100,7 +2959,7 @@ def reset_plots(children, button_id, disabled):
             )
         ],
             # className='container',
-            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+            className='bg-white dark:bg-gray-700 shadow rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
         ),
     ]
 
@@ -3337,7 +3196,7 @@ def info_text(plot_type):
                 html.Button(
                     # id=f'{plot_type}_title',
                     id={'type': 'info_button', 'index': plot_type},
-                    className='text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mt-10 mx-4 sm:mx-10 relative text-left',
+                    className='text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 mt-10 mx-4 sm:mx-10 relative text-left',
                     children=[
                         title
                     ]
@@ -3347,10 +3206,10 @@ def info_text(plot_type):
         html.Div(
             # id=f'{plot_type}_help',
             id={'type': 'help_box', 'index': plot_type},
-            className='absolute top-20 right-3 left-4 sm:left-10 sm:w-96 bg-gray-200 border border-opacity-30 border-gray-400 shadow-sm rounded-2xl backdrop-blur-md bg-opacity-80 hidden z-10',
+            className='absolute top-20 right-3 left-4 sm:left-10 sm:w-96 bg-gray-200 border border-opacity-30 border-gray-400 shadow-sm rounded-3xl backdrop-blur-md bg-opacity-80 hidden z-10',
             children=[
                 html.Div(
-                    className='flex flex-row px-4 py-4 text-sm text-gray-900',
+                    className='flex flex-row px-4 py-4 text-sm text-gray-900 text-justify',
                     children=[text]
                 )
             ]
@@ -3370,7 +3229,7 @@ def content_box():
                 className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
             ),
         ],
-        className="relative h-[500px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+        className="relative h-[500px] bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
     ),
 
 
@@ -3395,7 +3254,7 @@ loader = html.Div(
                     className="absolute bottom-4 left-4 right-4 bg-slate-600 dark:bg-gray-700",
                 ),
             ],
-            className="flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-2xl hidden lg:flex",
+            className="flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-3xl hidden lg:flex",
         ),
 
         # Content
@@ -3436,12 +3295,12 @@ loader = html.Div(
                                     ]
                                 ),
                             ],
-                            className="relative bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full h-44 sm:h-96 sm:mt-0 mt-12",
+                            className="relative bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full h-44 sm:h-96 sm:mt-0 mt-12",
                         ),
 
                         # Video loader
                         html.Div(
-                            className="bg-slate-400 sm:w-96 h-96 rounded-2xl sm:ml-4 relative mb-5",
+                            className="bg-slate-400 sm:w-96 h-96 rounded-3xl sm:ml-4 relative mb-5",
                             children=[
                                 # Play button
                                 html.Div(
@@ -3462,7 +3321,7 @@ loader = html.Div(
                             className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
                         ),
                     ],
-                    className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+                    className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
                 ),
 
                 html.Div(
@@ -3474,7 +3333,7 @@ loader = html.Div(
                             className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
                         ),
                     ],
-                    className="relative h-[750px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+                    className="relative h-[750px] bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
                 ),
 
                 html.Div(
@@ -3487,7 +3346,7 @@ loader = html.Div(
                                 className="bg-slate-200 dark:bg-slate-500 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
                             ),
                         ],
-                        className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+                        className="relative h-[570px] bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
                     ) for _ in range(10)],
                 )
 

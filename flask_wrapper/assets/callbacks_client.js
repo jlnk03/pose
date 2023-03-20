@@ -26,6 +26,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
 
                 if (nclicks > 0) {
+                    console.log(green_bar_pelvis_bend)
                     green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
                     green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[3])) / (240) * 100 + '%';
 
