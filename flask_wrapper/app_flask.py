@@ -114,59 +114,6 @@ def upload_video(disabled=True, path=None):
             id='video-view',
             className='flex flex-col sm:flex-row w-full h-full',
             children=[
-                # html.Div(children=[
-                #     html.Div(
-                #         children=[
-                #             html.Div(
-                #                 children=[
-                #                     'Upload your video',
-                #                     html.Div('BETA',
-                #                              className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
-                #                 ],
-                #                 className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
-                #             ),
-                #             html.Span(
-                #                 'as mp4, mov or avi – max. 20 MB',
-                #                 className='text-sm font-medium text-slate-900 dark:text-gray-100'
-                #             )
-                #         ],
-                #         className='flex flex-col items-start sm:mx-10 mx-4 mb-4'
-                #     ),
-                #     html.Div(
-                #         dcc.Upload(
-                #             disabled=disabled,
-                #             id='upload-data',
-                #             children=html.Div(
-                #                 className='text-slate-900 dark:text-gray-100',
-                #                 children=
-                #                 [
-                #                     'Drop your video here or ',
-                #                     html.A(' browse'),
-                #                     ' ⛳️',
-                #                 ],
-                #             ),
-                #             className='bg-[rgba(251, 252, 254, 1)] sm:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 sm:h-60 h-20',
-                #             multiple=False,
-                #             max_size=50e6,
-                #             accept=['.mp4', '.mov', '.avi'],
-                #             style_active=(dict(
-                #                 backgroundColor='rgba(230, 240, 250, 1)',
-                #                 borderColor='rgba(115, 165, 250, 1)',
-                #                 borderRadius='12px',
-                #             )),
-                #             style_reject=(dict(
-                #                 backgroundColor='bg-red-200',
-                #                 borderColor='bg-red-400',
-                #                 borderRadius='12px',
-                #             )),
-                #         ),
-                #         className='w-full'
-                #         # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                #     )
-                # ],
-                #     # className='container',
-                #     className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                # ),
 
                 html.Div(
                     className='flex flex-col-reverse sm:flex-row w-full h-full',
@@ -184,7 +131,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Finish', id='end_pos_button',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -194,15 +141,15 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 sm:mb-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             )
                         ],
-                        className='flex flex-col justify-between'
+                        className='flex flex-col gap-5'
                     ),
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden h-[29.5rem] w-full flex shadow rounded-2xl sm:mb-5 xl:mr-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
@@ -1287,10 +1234,6 @@ def init_dash(server):
                         ),
                         # Sidebar end
 
-                        # html.Div(className='lg:mx-16 mx-4 lg:pl-60 w-full h-screen items-center justify-center flex flex-col',
-                        #          children=['Upload a video to get started']
-                        #          ),
-
                         html.Div(
                             id='body',
                             className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem]',
@@ -1391,7 +1334,7 @@ def init_dash(server):
 
                                         html.Div(
                                             id='upload-video',
-                                            className='relative w-full flex-row justify-between xl:mb-5 mt-5 hidden',
+                                            className='relative w-full flex-row justify-between mt-5 hidden',
                                             children=[
 
                                             ]),
@@ -1452,7 +1395,7 @@ def init_dash(server):
                                                         # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                                     )
                                                 ],
-                                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 mb-2 xl:mb-0 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                                 ),
 
                                             ]),
@@ -1461,10 +1404,10 @@ def init_dash(server):
                                         # Live updating divs based on position in video
                                         html.Div(
                                             id='live-divs',
-                                            className='flex flex-nowrap max-[1280px]:overflow-x-auto px-4 -mx-4 mt-5',
+                                            className='flex flex-nowrap max-[1280px]:overflow-x-auto px-4 -mx-4 xl:mt-5',
                                             children=[
                                                 html.Div(
-                                                    className='flex xl:mb-5 mb-2.5 gap-2 flex-col xl:flex-row',
+                                                    className='flex xl:mb-5 mb-1 gap-2 flex-col xl:flex-row',
                                                     children=[
                                                         # First row
                                                         html.Div(
@@ -1603,7 +1546,7 @@ def init_dash(server):
 
                                 # Tempo divs
                                 html.Div(
-                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 xl:mt-0 mt-2.5 gap-2',
+                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 xl:mt-0 mt-1 gap-2',
                                     children=[
                                         html.Div(
                                             className='flex flex-col gap-2',
@@ -2259,7 +2202,7 @@ def init_callbacks(app):
                     over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
 
                 upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
-                upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
+                upload_video_class = 'relative w-full flex-row justify-between mt-5 flex'
 
                 fps_saved = len(save_wrist_angle) / duration
 
@@ -2356,7 +2299,7 @@ def init_callbacks(app):
                 fps_saved = 60
 
                 upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
-                upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
+                upload_video_class = 'relative w-full flex-row justify-between mt-5 hidden'
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
                     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
@@ -2550,7 +2493,7 @@ def init_callbacks(app):
         fps_saved = len(save_wrist_angle) / duration
 
         upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
-        upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
+        upload_video_class = 'relative w-full flex-row justify-between mt-5 flex'
 
         path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s,
                                                    arm_index_e,
