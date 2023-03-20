@@ -1120,6 +1120,9 @@ def init_dash(server):
                                     '+',
                                     id='add-button',
                                     disabled=disabled,
+                                    multiple=False,
+                                    max_size=20e6,
+                                    accept=['.mp4', '.mov', '.avi'],
                                     className='flex flex-row w-6 h-6 items-center mr-8 text-gray-400 text-2xl lg:hidden',
                                 )
                             ]
