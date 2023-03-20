@@ -345,16 +345,18 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 `${value_head_rotation}°`, `${value_head_tilt}°`, `${value_arm_rotation}°`, `${value_arm_ground}°`];
         },
 
-        showNavbar: function(n_clicks, header_clicks, sidebar_class) {
+        showNavbar: function(n_clicks, header_clicks, mobile_clicks, sidebar_class, navbar_main_class) {
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'menu-button.n_clicks') {
                 sidebar_class = sidebar_class.replace('hidden', 'flex')
+                navbar_main_class = navbar_main_class.replace('hidden', 'lg:hidden')
 
-                return sidebar_class
+                return [sidebar_class, navbar_main_class]
             }
 
             sidebar_class = sidebar_class.replace('flex', 'hidden')
+            navbar_main_class = navbar_main_class.replace('lg:hidden', 'hidden')
 
-            return sidebar_class
+            return [sidebar_class, navbar_main_class]
 
         },
 

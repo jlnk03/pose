@@ -114,59 +114,59 @@ def upload_video(disabled=True, path=None):
             id='video-view',
             className='flex flex-col sm:flex-row w-full h-full',
             children=[
-                html.Div(children=[
-                    html.Div(
-                        children=[
-                            html.Div(
-                                children=[
-                                    'Upload your video',
-                                    html.Div('BETA',
-                                             className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
-                                ],
-                                className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
-                            ),
-                            html.Span(
-                                'as mp4, mov or avi – max. 20 MB',
-                                className='text-sm font-medium text-slate-900 dark:text-gray-100'
-                            )
-                        ],
-                        className='flex flex-col items-start sm:mx-10 mx-4 mb-4'
-                    ),
-                    html.Div(
-                        dcc.Upload(
-                            disabled=disabled,
-                            id='upload-data',
-                            children=html.Div(
-                                className='text-slate-900 dark:text-gray-100',
-                                children=
-                                [
-                                    'Drop your video here or ',
-                                    html.A(' browse'),
-                                    ' ⛳️',
-                                ],
-                            ),
-                            className='bg-[rgba(251, 252, 254, 1)] sm:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 sm:h-60 h-20',
-                            multiple=False,
-                            max_size=50e6,
-                            accept=['.mp4', '.mov', '.avi'],
-                            style_active=(dict(
-                                backgroundColor='rgba(230, 240, 250, 1)',
-                                borderColor='rgba(115, 165, 250, 1)',
-                                borderRadius='12px',
-                            )),
-                            style_reject=(dict(
-                                backgroundColor='bg-red-200',
-                                borderColor='bg-red-400',
-                                borderRadius='12px',
-                            )),
-                        ),
-                        className='w-full'
-                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                    )
-                ],
-                    # className='container',
-                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                ),
+                # html.Div(children=[
+                #     html.Div(
+                #         children=[
+                #             html.Div(
+                #                 children=[
+                #                     'Upload your video',
+                #                     html.Div('BETA',
+                #                              className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                #                 ],
+                #                 className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                #             ),
+                #             html.Span(
+                #                 'as mp4, mov or avi – max. 20 MB',
+                #                 className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                #             )
+                #         ],
+                #         className='flex flex-col items-start sm:mx-10 mx-4 mb-4'
+                #     ),
+                #     html.Div(
+                #         dcc.Upload(
+                #             disabled=disabled,
+                #             id='upload-data',
+                #             children=html.Div(
+                #                 className='text-slate-900 dark:text-gray-100',
+                #                 children=
+                #                 [
+                #                     'Drop your video here or ',
+                #                     html.A(' browse'),
+                #                     ' ⛳️',
+                #                 ],
+                #             ),
+                #             className='bg-[rgba(251, 252, 254, 1)] sm:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 sm:h-60 h-20',
+                #             multiple=False,
+                #             max_size=50e6,
+                #             accept=['.mp4', '.mov', '.avi'],
+                #             style_active=(dict(
+                #                 backgroundColor='rgba(230, 240, 250, 1)',
+                #                 borderColor='rgba(115, 165, 250, 1)',
+                #                 borderRadius='12px',
+                #             )),
+                #             style_reject=(dict(
+                #                 backgroundColor='bg-red-200',
+                #                 borderColor='bg-red-400',
+                #                 borderRadius='12px',
+                #             )),
+                #         ),
+                #         className='w-full'
+                #         # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                #     )
+                # ],
+                #     # className='container',
+                #     className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 sm:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                # ),
 
                 html.Div(
                     className='flex flex-col-reverse sm:flex-row w-full h-full',
@@ -202,7 +202,7 @@ def upload_video(disabled=True, path=None):
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden h-96 shadow rounded-2xl sm:mb-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            className="relative overflow-hidden h-[29.5rem] w-full flex shadow rounded-2xl sm:mb-5 xl:mr-5 bg-white dark:bg-gray-700 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
@@ -212,7 +212,7 @@ def upload_video(disabled=True, path=None):
                                     url=f'{path}#t=0.001',
                                     controls=True,
                                     playsinline=True,
-                                    className="h-full w-96",
+                                    className="h-full w-full flex",
                                     width='100%',
                                     height='100%',
                                     intervalCurrentTime=70,
@@ -1152,14 +1152,14 @@ def init_dash(server):
 
                 # Main wrapper
                 html.Div(
-                    className='flex w-full flex-col',
+                    className='flex w-full flex-col 2xl:items-center',
                     id='main_wrapper',
                     children=[
 
                         # navbar top
                         html.Div(
                             id='navbar-top',
-                            className='flex flex-row w-full h-12 items-center ml-4 lg:hidden',
+                            className='flex flex-row w-full h-12 items-center ml-4 lg:hidden justify-between',
                             children=[
                                 html.Button(
                                     className='flex flex-row w-6 h-6 items-center',
@@ -1168,8 +1168,19 @@ def init_dash(server):
                                         html.Img(src=app.get_asset_url('menu_burger.svg'), className='h-4 w-4',
                                                  id='menu-icon')
                                     ]
+                                ),
+                                dcc.Upload(
+                                    '+',
+                                    id='add-button',
+                                    disabled=disabled,
+                                    className='flex flex-row w-6 h-6 items-center mr-8 text-gray-400 text-2xl lg:hidden',
                                 )
                             ]
+                        ),
+
+                        html.Button(
+                            id='navbar-mobile',
+                            className='fixed z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 hidden cursor-default',
                         ),
 
                         # Sidebar
@@ -1183,12 +1194,44 @@ def init_dash(server):
                                     children=[
                                         html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
                                 ),
+
+                                # html.Div(
+                                #     'HISTORY',
+                                #     className='text-white text-xs font-medium mb-3 mt-5 px-4'
+                                # ),
+
                                 html.Div(
-                                    'HISTORY',
-                                    className='text-white text-xs font-medium mb-3 mt-5 px-4'
+                                    dcc.Upload(
+                                        disabled=disabled,
+                                        id='upload-data',
+                                        children=html.Div(
+                                            className='text-gray-100',
+                                            children=
+                                            [
+                                                '+  Upload your video',
+                                                ' ⛳️',
+                                            ],
+                                        ),
+                                        className='absolute flex items-center justify-center text-center inline-block text-sm h-16 border border-slate-400 mx-2 rounded-xl',
+                                        multiple=False,
+                                        max_size=20e6,
+                                        accept=['.mp4', '.mov', '.avi'],
+                                        style_active=(dict(
+                                            backgroundColor='#64748b',
+                                            borderColor='rgba(115, 165, 250, 1)',
+                                            borderRadius='12px',
+                                        )),
+                                        style_reject=(dict(
+                                            backgroundColor='bg-red-200',
+                                            borderColor='bg-red-400',
+                                            borderRadius='12px',
+                                        )),
+                                    ),
+                                    className='relative h-28 mt-2 max-w-full'
                                 ),
+
                                 html.Div(
-                                    className='flex flex-col mb-4 h-full overflow-y-auto border-b border-white',
+                                    className='flex flex-col mb-4 mt-1 h-full overflow-y-auto border-b border-white',
                                     children=[
                                         html.Button(
                                             children=[
@@ -1216,12 +1259,12 @@ def init_dash(server):
                                         html.A(
                                             'HOME',
                                             href='/',
-                                            className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'PROFILE',
                                             href='/profile',
-                                            className='font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         # html.A(
                                         #     'HISTORY',
@@ -1231,12 +1274,12 @@ def init_dash(server):
                                         html.A(
                                             'DASHBOARD',
                                             href='/dash',
-                                            className='font-medium text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'LOGOUT',
                                             href='/logout',
-                                            className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-medium text-white hover:border-gray-200 hover:text-gray-200 transition'
+                                            className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-white hover:border-gray-200 hover:text-gray-200 transition'
                                         )
                                     ]
                                 )
@@ -1244,9 +1287,13 @@ def init_dash(server):
                         ),
                         # Sidebar end
 
+                        # html.Div(className='lg:mx-16 mx-4 lg:pl-60 w-full h-screen items-center justify-center flex flex-col',
+                        #          children=['Upload a video to get started']
+                        #          ),
+
                         html.Div(
                             id='body',
-                            className='lg:mx-16 mx-4 lg:pl-60 mt-0',
+                            className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem]',
                             children=[
 
                                 # Selection view in center of screen
@@ -1337,200 +1384,226 @@ def init_dash(server):
                                 ),
                                 # End selection view
 
-                                # Upload component
+                                # Start video view
                                 html.Div(
-                                    id='upload-video',
-                                    className='flex flex-row justify-between mt-5',
+                                    className='flex flex-col xl:flex-row justify-between',
                                     children=[
 
-                                        html.Div(children=[
-                                            html.Div(
-                                                children=[
+                                        html.Div(
+                                            id='upload-video',
+                                            className='relative w-full flex-row justify-between xl:mb-5 mt-5 hidden',
+                                            children=[
+
+                                            ]),
+
+                                        # Upload component
+                                        html.Div(
+                                            id='upload-initial',
+                                            className='relative w-full flex flex-row justify-between xl:mb-5 mt-5',
+                                            children=[
+
+                                                html.Div(children=[
                                                     html.Div(
                                                         children=[
-                                                            'Upload your video',
-                                                            html.Div('BETA',
-                                                                     className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                                            html.Div(
+                                                                children=[
+                                                                    'Upload your video',
+                                                                    html.Div('BETA',
+                                                                             className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
+                                                                ],
+                                                                className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
+                                                            ),
+                                                            html.Span(
+                                                                'as mp4, mov or avi – max. 20 MB',
+                                                                className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                                                            )
                                                         ],
-
-                                                        className='text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row items-center justify-between'
+                                                        className='flex flex-col items-start xl:mx-10 mx-4 mb-4'
                                                     ),
-                                                    html.Span(
-                                                        'as mp4, mov or avi – max. 20 MB',
-                                                        className='text-sm font-medium text-slate-900 dark:text-gray-100'
+                                                    html.Div(
+                                                        dcc.Upload(
+                                                            disabled=disabled,
+                                                            id='upload-data-initial',
+                                                            children=html.Div(
+                                                                className='text-slate-900 dark:text-gray-100',
+                                                                children=
+                                                                [
+                                                                    'Drop your video here or ',
+                                                                    html.A(' browse'),
+                                                                    ' ⛳️',
+                                                                ],
+                                                            ),
+                                                            className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
+                                                            multiple=False,
+                                                            max_size=50e6,
+                                                            accept=['.mp4', '.mov', '.avi'],
+                                                            style_active=(dict(
+                                                                backgroundColor='rgba(230, 240, 250, 1)',
+                                                                borderColor='rgba(115, 165, 250, 1)',
+                                                                borderRadius='12px',
+                                                            )),
+                                                            style_reject=(dict(
+                                                                backgroundColor='bg-red-200',
+                                                                borderColor='bg-red-400',
+                                                                borderRadius='12px',
+                                                            )),
+                                                        ),
+                                                        className='w-full'
+                                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                                     )
                                                 ],
-                                                className='flex flex-col items-start mx-4 sm:mx-10 mb-4'
-                                            ),
-                                            html.Div(
-                                                dcc.Upload(
-                                                    disabled=disabled,
-                                                    id='upload-data',
-                                                    children=html.Div(
-                                                        className='text-slate-900 dark:text-gray-100',
-                                                        children=
-                                                        [
-                                                            'Drop your video here or ',
-                                                            html.A(' browse'),
-                                                            ' ⛳️',
-                                                        ],
-                                                    ),
-                                                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                                    className='mx-4 sm:mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-20 sm:h-60',
-                                                    multiple=False,
-                                                    max_size=20e6,
-                                                    accept=['.mp4', '.mov', '.avi'],
-                                                    # className_active='bg-[rgba(230, 240, 250, 1)]',
-                                                    # className_active='bg-blue-50 mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                                    # className_reject='bg-indigo-600'
-                                                    style_active=(dict(
-                                                        backgroundColor='rgba(230, 240, 250, 1)',
-                                                        borderColor='rgba(115, 165, 250, 1)',
-                                                        borderRadius='12px',
-                                                    )),
-                                                    style_reject=(dict(
-                                                        backgroundColor='bg-red-200',
-                                                        borderColor='bg-red-400',
-                                                        borderRadius='12px',
-                                                    )),
+                                                    className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                                 ),
-                                                className='w-full'
-                                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                                            )
-                                        ],
-                                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-44 sm:h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                                        ),
-                                    ]),
-                                # End of upload component
 
-                                # Live updating divs based on position in video
-                                html.Div(
-                                    className='flex flex-nowrap overflow-x-auto px-4 -mx-4',
-                                    children=[
+                                            ]),
+                                        # End of upload component
+
+                                        # Live updating divs based on position in video
                                         html.Div(
-                                            className='flex mb-5 gap-2 flex-col',
+                                            id='live-divs',
+                                            className='flex flex-nowrap max-[1280px]:overflow-x-auto px-4 -mx-4 mt-5',
                                             children=[
-                                                # First row
                                                 html.Div(
-                                                    className='flex flex-row w-full gap-2',
+                                                    className='flex xl:mb-5 mb-2.5 gap-2 flex-col xl:flex-row',
                                                     children=[
+                                                        # First row
                                                         html.Div(
+                                                            className='flex flex-row xl:flex-col w-full gap-2',
                                                             children=[
-                                                                html.Button('Pelvis Rotation',
-                                                                            id='pelvis_rot_btn',
-                                                                            className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='pelvis_rot_val', className='mt-2'),
-                                                                # Slider bar
-                                                                html.Div(slider_view('pelvis_rot', -80, 160)),
-                                                                # End of slider bar
-                                                                html.Div('-80, 160, -80, 160, -80, 160',
-                                                                         id='pelvis_rot_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Pelvis Rotation',
+                                                                                    id='pelvis_rot_btn',
+                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='pelvis_rot_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('pelvis_rot', -80, 160)),
+                                                                        # End of slider bar
+                                                                        html.Div('-80, 160, -80, 160, -80, 160',
+                                                                                 id='pelvis_rot_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Pelvis Tilt',
+                                                                                    id='pelvis_tilt_btn',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='pelvis_bend_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('pelvis_bend', -30, 30)),
+                                                                        # End of slider bar
+                                                                        html.Div('-30, 30, -30, 30, -30, 30',
+                                                                                 id='pelvis_bend_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Thorax Rotation',
+                                                                                    id='thorax_rot_btn',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='thorax_rot_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('thorax_rot', -140, 140)),
+                                                                        # End of slider bar
+                                                                        html.Div('-140, 140, -140, 140, -140, 140',
+                                                                                 id='thorax_rot_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Thorax Tilt',
+                                                                                    id='thorax_tilt_btn',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='thorax_bend_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('thorax_bend', -20, 60)),
+                                                                        html.Div('-20, 60, -20, 60, -20, 60',
+                                                                                 id='thorax_bend_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                            ]
                                                         ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Button('Pelvis Tilt',
-                                                                            id='pelvis_tilt_btn',
-                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='pelvis_bend_val', className='mt-2'),
-                                                                # Slider bar
-                                                                html.Div(slider_view('pelvis_bend', -30, 30)),
-                                                                # End of slider bar
-                                                                html.Div('-30, 30, -30, 30, -30, 30',
-                                                                         id='pelvis_bend_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Button('Thorax Rotation',
-                                                                            id='thorax_rot_btn',
-                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='thorax_rot_val', className='mt-2'),
-                                                                # Slider bar
-                                                                html.Div(slider_view('thorax_rot', -140, 140)),
-                                                                # End of slider bar
-                                                                html.Div('-140, 140, -140, 140, -140, 140',
-                                                                         id='thorax_rot_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Button('Thorax Tilt',
-                                                                            id='thorax_tilt_btn',
-                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='thorax_bend_val', className='mt-2'),
-                                                                # Slider bar
-                                                                html.Div(slider_view('thorax_bend', -20, 60)),
-                                                                html.Div('-20, 60, -20, 60, -20, 60',
-                                                                         id='thorax_bend_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
-                                                    ]
-                                                ),
-                                                # End of first row
+                                                        # End of first row
 
-                                                # Second row
-                                                html.Div(
-                                                    className='flex flex-row gap-2',
-                                                    children=[
+                                                        # Second row
                                                         html.Div(
+                                                            className='flex flex-row xl:flex-col gap-2',
                                                             children=[
-                                                                html.Button('Head Rotation',
-                                                                            id='head_rot_btn',
-                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='head_rot_val', className='mt-2'),
-                                                                html.Div(slider_view('head_rot', -100, 100)),
-                                                                html.Div('-100, 100, -100, 100, -100, 100',
-                                                                         id='head_rot_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Head Rotation',
+                                                                                    id='head_rot_btn',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='head_rot_val',
+                                                                                 className='mt-2'),
+                                                                        html.Div(slider_view('head_rot', -100, 100)),
+                                                                        html.Div('-100, 100, -100, 100, -100, 100',
+                                                                                 id='head_rot_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Button('Head Tilt',
+                                                                                    id='head_tilt_btn',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='head_tilt_val',
+                                                                                 className='mt-2'),
+                                                                        html.Div(slider_view('head_tilt', -60, 60)),
+                                                                        html.Div('-60, 60, -60, 60, -60, 60',
+                                                                                 id='head_tilt_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Div('Arm Rotation',
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='arm_rot_val',
+                                                                                 className='mt-2'),
+                                                                        html.Div(slider_view('arm_rot', -240, 240)),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Div('Arm To Ground',
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('- °', id='arm_ground_val',
+                                                                                 className='mt-2'),
+                                                                        html.Div(slider_view('arm_ground', -90, 90)),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+                                                            ]
                                                         ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Button('Head Tilt',
-                                                                            id='head_tilt_btn',
-                                                                            className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='head_tilt_val', className='mt-2'),
-                                                                html.Div(slider_view('head_tilt', -60, 60)),
-                                                                html.Div('-60, 60, -60, 60, -60, 60',
-                                                                         id='head_tilt_store', className='hidden'),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Div('Arm Rotation',
-                                                                         className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='arm_rot_val', className='mt-2'),
-                                                                html.Div(slider_view('arm_rot', -240, 240)),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
-                                                        html.Div(
-                                                            children=[
-                                                                html.Div('Arm To Ground',
-                                                                         className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-lg font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
-                                                                html.Div('- °', id='arm_ground_val', className='mt-2'),
-                                                                html.Div(slider_view('arm_ground', -90, 90)),
-                                                            ],
-                                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-2xl flex flex-col items-center justify-center w-56 h-28 text-center'
-                                                        ),
+                                                        # End of second row
                                                     ]
                                                 ),
-                                                # End of second row
                                             ]
                                         ),
-                                    ]
-                                ),
-                                # End of updating divs
+                                        # End of updating divs
+
+                                    ]),
+                                # End of video view
 
                                 # Tempo divs
                                 html.Div(
-                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 gap-2',
+                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 xl:mt-0 mt-2.5 gap-2',
                                     children=[
                                         html.Div(
                                             className='flex flex-col gap-2',
@@ -1974,19 +2047,29 @@ def init_callbacks(app):
          Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
          Output('setup_pos', 'children'), Output('fps_saved', 'children'),
          Output('arm_path', 'children'), Output('over_the_top', 'children'), Output('swing_plane_angle', 'children'),
+         Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
+            Output('upload-initial', 'className'), Output('upload-video', 'className'),
          ],
-        [Input('upload-data', 'contents'), Input('upload-data', 'filename'),
+        [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
+         Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
          Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
-        [State('file_list', 'children')],
+        [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'),],
         prevent_initial_call=True
     )
-    def process(contents, filename, n_clicks, clicks_delete, children):
+    def process(contents, contents_add, contents_initial, filename, n_clicks, clicks_delete, children, upload_initial_class, upload_video_class):
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
+        if contents is None:
+            if contents_initial is None:
+                contents = contents_add
+            else:
+                contents = contents_initial
+
+
         # Check if button was pressed or a file was uploaded
-        if ctx.triggered_id != 'upload-data':
+        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
             if ctx.triggered_id != ctx.triggered_id.type != 'delete':
                 button_id = ctx.triggered_id.index
                 file = f'{button_id}.parquet'
@@ -2070,64 +2153,7 @@ def init_callbacks(app):
 
                     fps_saved = 60
 
-                    children_upload = [
-
-                        html.Div(children=[
-                            html.Div(
-                                children=[
-                                    html.Div(
-                                        children=[
-                                            'Upload your video',
-                                            html.Div('BETA',
-                                                     className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
-                                        ],
-                                        className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
-                                    ),
-                                    html.Span(
-                                        'as mp4, mov or avi – max. 20 MB',
-                                        className='text-sm font-medium text-slate-900 dark:text-gray-100'
-                                    )
-                                ],
-                                className='flex flex-col items-start mx-10 mb-4'
-                            ),
-                            html.Div(
-                                dcc.Upload(
-                                    disabled=disabled,
-                                    id='upload-data',
-                                    children=html.Div(
-                                        className='text-slate-900 dark:text-gray-100',
-                                        children=
-                                        [
-                                            'Drop your video here or ',
-                                            html.A(' browse'),
-                                            ' ⛳️',
-                                        ],
-                                    ),
-                                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                    className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                    multiple=False,
-                                    max_size=20e6,
-                                    accept=['.mp4', '.mov', '.avi'],
-                                    style_active=(dict(
-                                        backgroundColor='rgba(230, 240, 250, 1)',
-                                        borderColor='rgba(115, 165, 250, 1)',
-                                        borderRadius='12px',
-                                    )),
-                                    style_reject=(dict(
-                                        backgroundColor='bg-red-200',
-                                        borderColor='bg-red-400',
-                                        borderRadius='12px',
-                                    )),
-                                    # className='upload'
-                                ),
-                                className='w-full'
-                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                            )
-                        ],
-                            # className='container',
-                            className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                        ),
-                    ]
+                    children_upload = []
 
                     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                             children_upload, sequence_first, sequence_second, sequence_third,
@@ -2138,7 +2164,10 @@ def init_callbacks(app):
                             sequence_first_text, sequence_second_text, sequence_third_text,
                             temp, time_back, time_down,
                             top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                            [], [], []]
+                            [], [], [],
+                            disabled, disabled, disabled,
+                            upload_initial_class, upload_video_class
+                            ]
 
                 # Read data from parquet file
                 data = pd.read_parquet(f'assets/save_data/{current_user.id}/{button_id}/{file}')
@@ -2229,6 +2258,9 @@ def init_callbacks(app):
                 else:
                     over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
 
+                upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
+                upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
+
                 fps_saved = len(save_wrist_angle) / duration
 
                 # Get the video and update the video player
@@ -2294,11 +2326,13 @@ def init_callbacks(app):
                         first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                         temp, time_back, time_down,
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                        path, over_text, angle_swing_plane_text
+                        path, over_text, angle_swing_plane_text,
+                        disabled, disabled, disabled,
+                        upload_initial_class, upload_video_class
                         ]
 
         # Delete was pressed
-        if ctx.triggered_id != 'upload-data':
+        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
             if ctx.triggered_id.type == 'delete':
                 button_id = ctx.triggered_id.index
                 # file = f'{button_id}.parquet'
@@ -2320,6 +2354,9 @@ def init_callbacks(app):
                 duration = 10
 
                 fps_saved = 60
+
+                upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
+                upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
                     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
@@ -2381,64 +2418,7 @@ def init_callbacks(app):
                 # Setup
                 setup_pos = 0.5
 
-                children_upload = [
-
-                    html.Div(children=[
-                        html.Div(
-                            children=[
-                                html.Div(
-                                    children=[
-                                        'Upload your video',
-                                        html.Div('BETA',
-                                                 className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
-                                    ],
-                                    className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
-                                ),
-                                html.Span(
-                                    'as mp4, mov or avi – max. 20 MB',
-                                    className='text-sm font-medium text-slate-900 dark:text-gray-100'
-                                )
-                            ],
-                            className='flex flex-col items-start mx-10 mb-4'
-                        ),
-                        html.Div(
-                            dcc.Upload(
-                                disabled=disabled,
-                                id='upload-data',
-                                children=html.Div(
-                                    className='text-slate-900 dark:text-gray-100',
-                                    children=
-                                    [
-                                        'Drop your video here or ',
-                                        html.A(' browse'),
-                                        ' ⛳️',
-                                    ],
-                                ),
-                                # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
-                                multiple=False,
-                                max_size=20e6,
-                                accept=['.mp4', '.mov', '.avi'],
-                                style_active=(dict(
-                                    backgroundColor='rgba(230, 240, 250, 1)',
-                                    borderColor='rgba(115, 165, 250, 1)',
-                                    borderRadius='12px',
-                                )),
-                                style_reject=(dict(
-                                    backgroundColor='bg-red-200',
-                                    borderColor='bg-red-400',
-                                    borderRadius='12px',
-                                )),
-                                # className='upload'
-                            ),
-                            className='w-full'
-                            # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
-                        )
-                    ],
-                        # className='container',
-                        className='bg-white dark:bg-gray-700 shadow rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
-                    ),
-                ]
+                children_upload = []
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
@@ -2448,7 +2428,9 @@ def init_callbacks(app):
                         sequence_third_text, sequence_first_text, sequence_second_text, sequence_third_text,
                         temp, time_back, time_down,
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                        path, [], []
+                        path, [], [],
+                        disabled, disabled, disabled,
+                        upload_initial_class, upload_video_class
                         ]
 
         # Check if folder was created and generate file name
@@ -2567,6 +2549,9 @@ def init_callbacks(app):
 
         fps_saved = len(save_wrist_angle) / duration
 
+        upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
+        upload_video_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 flex'
+
         path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s,
                                                    arm_index_e,
                                                    arm_index, duration)
@@ -2629,7 +2614,9 @@ def init_callbacks(app):
                 first_bp, second_bp, third_bp, first_bp_s, second_bp_s, third_bp_s, first_bp_e, second_bp_e, third_bp_e,
                 temp, time_back, time_down,
                 top_pos, impact_pos, end_pos, setup_pos, fps_saved,
-                path, over_text, angle_swing_plane_text
+                path, over_text, angle_swing_plane_text,
+                disabled, disabled, disabled,
+                upload_initial_class, upload_video_class
                 ]
 
     # Save new margins to db
@@ -2987,9 +2974,9 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='showNavbar'
         ),
-        [Output('sidebar', 'className')],
-        [Input('menu-button', 'n_clicks'), Input('sidebar-header', 'n_clicks')],
-        State('sidebar', 'className'),
+        [Output('sidebar', 'className'), Output('navbar-mobile', 'className')],
+        [Input('menu-button', 'n_clicks'), Input('sidebar-header', 'n_clicks'), Input('navbar-mobile', 'n_clicks')],
+        [State('sidebar', 'className'), State('navbar-mobile', 'className'), ],
         prevent_initial_call=True
     )
 
