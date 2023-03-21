@@ -1158,7 +1158,7 @@ def init_dash(server):
                                             className='text-gray-100',
                                             children=
                                             [
-                                                '+  Upload your video',
+                                                '+  Upload your swing',
                                                 ' ⛳️',
                                             ],
                                         ),
@@ -1216,11 +1216,6 @@ def init_dash(server):
                                             href='/profile',
                                             className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
-                                        # html.A(
-                                        #     'HISTORY',
-                                        #     href='/history',
-                                        #     className='font-medium text-xs text-amber-400 hover:border-amber-500 border-2 border-transparent hover:text-amber-500 items-center justify-center px-4 py-2 rounded-2xl'
-                                        # ),
                                         html.A(
                                             'DASHBOARD',
                                             href='/dash',
@@ -1241,6 +1236,19 @@ def init_dash(server):
                             id='body',
                             className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem]',
                             children=[
+
+                                # Analyze/Compare
+                                # html.Div(
+                                #     className='flex flex-row justify-between bg-indigo-200 rounded-full h-fit w-fit gap-4 px-1 py-1  mt-5 left-1/2 transform -translate-x-1/2 absolute z-20',
+                                #     children=[
+                                #         html.Div(
+                                #             'Analyze',
+                                #             className=' bg-indigo-400 rounded-full w-24 px-4 py-1 text-gray-100',),
+                                #         html.Div(
+                                #             'Compare',
+                                #             className='bg-indigo-400 rounded-full w-24 px-4 py-1 text-gray-100', ),
+                                #     ]
+                                # ),
 
                                 # Selection view in center of screen
                                 html.Div(
@@ -1353,14 +1361,14 @@ def init_dash(server):
                                                         children=[
                                                             html.Div(
                                                                 children=[
-                                                                    'Upload your video',
+                                                                    'New analysis',
                                                                     html.Div('BETA',
                                                                              className='ml-4 bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-sm text-gray-100 dark:text-gray-600')
                                                                 ],
                                                                 className='flex flex-row text-lg font-medium text-slate-900 dark:text-gray-100 pt-4'
                                                             ),
                                                             html.Span(
-                                                                'as mp4, mov or avi – max. 20 MB',
+                                                                'mp4, mov or avi – max. 20 MB',
                                                                 className='text-sm font-medium text-slate-900 dark:text-gray-100'
                                                             )
                                                         ],
@@ -1374,9 +1382,7 @@ def init_dash(server):
                                                                 className='text-slate-900 dark:text-gray-100',
                                                                 children=
                                                                 [
-                                                                    'Drop your video here or ',
-                                                                    html.A(' browse'),
-                                                                    ' ⛳️',
+                                                                    'Upload your swing ⛳️',
                                                                 ],
                                                             ),
                                                             className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-3xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
@@ -1558,9 +1564,9 @@ def init_dash(server):
                                                     id='position_divs',
                                                     children=[
                                                         html.Div('BACK',
-                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
-                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('- s', id='backswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
@@ -1573,9 +1579,9 @@ def init_dash(server):
                                                 html.Div(
                                                     children=[
                                                         html.Div('DOWN',
-                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
-                                                                 className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
                                                         html.Div('- s', id='downswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                     ],
                                                     className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
@@ -1586,7 +1592,7 @@ def init_dash(server):
                                         html.Div(
                                             children=[
                                                 html.Div('TEMPO',
-                                                         className='sm:text-3xl text-xl tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
+                                                         className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
                                                 html.Div(
                                                     children=[
                                                         html.Div('-', id='tempo', className='mt-5 ml-6'),
@@ -1599,7 +1605,7 @@ def init_dash(server):
                                                         html.Div(
                                                             style={'left': '50%'},
                                                             id='tempo_slider',
-                                                            className='rounded-full h-3 w-3 bg-slate-900 dark:bg-gray-100 border-2 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 -translate-y-1/2',
+                                                            className='rounded-full h-3 w-3 bg-slate-900 dark:bg-gray-100 border-2 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 transform -translate-y-1/2',
                                                         ),
                                                         html.Div(
                                                             '0',
@@ -1653,6 +1659,11 @@ def init_dash(server):
                                                                     'Arms',
                                                                     className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
                                                                     id='start_sequence_third'
+                                                                ),
+                                                                html.Div(
+                                                                    '😍',
+                                                                    className='text-lg font-medium ml-4',
+                                                                    id='emoji-start'
                                                                 )
                                                             ]
                                                         ),
@@ -1689,6 +1700,11 @@ def init_dash(server):
                                                                     'Arms',
                                                                     className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
                                                                     id='sequence_third'
+                                                                ),
+                                                                html.Div(
+                                                                    '😍',
+                                                                    className='text-lg font-medium ml-4',
+                                                                    id='emoji-transition'
                                                                 )
                                                             ]
                                                         ),
@@ -1999,6 +2015,7 @@ def init_callbacks(app):
          Output('arm_path', 'children'), Output('over_the_top', 'children'), Output('swing_plane_angle', 'children'),
          Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
             Output('upload-initial', 'className'), Output('upload-video', 'className'),
+         Output('emoji-start', 'children'), Output('emoji-transition', 'children')
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          Input('upload-data', 'filename'),
@@ -2116,7 +2133,8 @@ def init_callbacks(app):
                             top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                             [], [], [],
                             disabled, disabled, disabled,
-                            upload_initial_class, upload_video_class
+                            upload_initial_class, upload_video_class,
+                            '😍', '😍'
                             ]
 
                 # Read data from parquet file
@@ -2164,13 +2182,13 @@ def init_callbacks(app):
                     save_arm_to_ground = np.zeros(len(save_wrist_angle))
 
                 # Get the kinematic transition  sequence
-                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
+                sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index, emoji_transition = kinematic_sequence(
                     save_pelvis_rotation,
                     save_thorax_rotation,
                     save_arm_rotation, duration)
 
                 # Get the kinematic start sequence
-                sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
+                sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s, emoji_start = kinematic_sequence_start(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
                 # Get the kinematic end sequence
@@ -2278,7 +2296,8 @@ def init_callbacks(app):
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                         path, over_text, angle_swing_plane_text,
                         disabled, disabled, disabled,
-                        upload_initial_class, upload_video_class
+                        upload_initial_class, upload_video_class,
+                        emoji_start, emoji_transition
                         ]
 
         # Delete was pressed
@@ -2380,7 +2399,8 @@ def init_callbacks(app):
                         top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                         path, [], [],
                         disabled, disabled, disabled,
-                        upload_initial_class, upload_video_class
+                        upload_initial_class, upload_video_class,
+                        '😍', '😍'
                         ]
 
         # Check if folder was created and generate file name
@@ -2461,12 +2481,12 @@ def init_callbacks(app):
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
         # Get the kinematic transition  sequence
-        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index = kinematic_sequence(
+        sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index, emoji_transition = kinematic_sequence(
             save_pelvis_rotation, save_thorax_rotation,
             save_arm_rotation, duration)
 
         # Get the kinematic start sequence
-        sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s = kinematic_sequence_start(
+        sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s, emoji_start = kinematic_sequence_start(
             save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
         # Get the kinematic end sequence
@@ -2566,7 +2586,8 @@ def init_callbacks(app):
                 top_pos, impact_pos, end_pos, setup_pos, fps_saved,
                 path, over_text, angle_swing_plane_text,
                 disabled, disabled, disabled,
-                upload_initial_class, upload_video_class
+                upload_initial_class, upload_video_class,
+                emoji_start, emoji_transition
                 ]
 
     # Save new margins to db
@@ -2986,14 +3007,17 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
     # Body parrt sorted by index
     body_part = {'Pelvis': hip_index, 'Thorax': thorax_index, 'Arm': arm_index}
     body_part = sorted(body_part.items(), key=lambda item: item[1])
+    body_part = [body_part[0][0], body_part[1][0], body_part[2][0]]
 
     # Update colors
-    sequence_first = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
-    sequence_second = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
-    sequence_third = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
+    sequence_first = f'text-sm font-medium text-gray-100  rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
+    sequence_second = f'text-sm font-medium text-gray-100  rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
+    sequence_third = f'text-sm font-medium text-gray-100 rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
-        0], thorax_index
+    emoji_transition = '😍' if body_part == ['Pelvis', 'Thorax', 'Arm'] else '🧐'
+
+    return sequence_first, sequence_second, sequence_third, body_part[0], body_part[1], body_part[2],\
+        thorax_index, emoji_transition
 
 
 def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
@@ -3017,12 +3041,14 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
     body_part = sorted(body_part.items(), key=lambda item: item[1])
 
     # Update colors
-    sequence_first = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#6266F6] {sequence[0][0]}'
-    sequence_second = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#E74D39] {sequence[1][0]}'
-    sequence_third = f'text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-4 border-[#2BC48C] {sequence[2][0]}'
+    sequence_first = f'text-sm font-medium text-gray-100 rounded-full w-16 py-2 px-4 flex items-center justify-center {sequence[0][0]}'
+    sequence_second = f'text-sm font-medium text-gray-100 rounded-full w-16 py-2 px-4 flex items-center justify-center {sequence[1][0]}'
+    sequence_third = f'text-sm font-medium text-gray-100 rounded-full w-16 py-2 px-4 flex items-center justify-center {sequence[2][0]}'
+
+    sequence_start_emoji = ' 😍' if body_part[0][0] != 'Pelvis' else '🧐'
 
     return sequence_first, sequence_second, sequence_third, body_part[0][0], body_part[1][0], body_part[2][
-        0], thorax_index
+        0], thorax_index, sequence_start_emoji
 
 
 def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
