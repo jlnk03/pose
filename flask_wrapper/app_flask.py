@@ -2569,17 +2569,18 @@ def init_callbacks(app):
                 html.Div(
                     className='flex flex-row items-center',
                     children=[
-                        html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
+                        # html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
+                        heart_navbar(filename),
                         reformat_file(filename),
                     ]),
                 html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                             id={'type': 'delete', 'index': filename}, n_clicks=0,
-                            className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center',
+                            className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-1',
                             disabled=False
                             ),
             ],
             id={'type': 'saved-button', 'index': f'{filename}'},
-            className='font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            className='relative font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
