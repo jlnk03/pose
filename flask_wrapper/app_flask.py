@@ -1082,6 +1082,7 @@ def init_dash(server):
     app._favicon = 'favicon.png'
 
     app.title = 'Analyze your swing – Swinglab'
+    app.update_title = 'Analyze your swing – Swinglab'
 
     def serve_layout():
         disabled = True
@@ -1148,13 +1149,14 @@ def init_dash(server):
                         # Sidebar
                         html.Div(
                             id='sidebar',
-                            className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-3xl hidden lg:flex',
+                            # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-3xl hidden lg:flex',
+                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5]',
                             children=[
                                 html.Button(
                                     id='sidebar-header',
                                     className='flex-row items-center ml-4 lg:hidden',
                                     children=[
-                                        html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4')]
+                                        html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4 hidden')]
                                 ),
 
                                 # html.Div(
@@ -1167,7 +1169,7 @@ def init_dash(server):
                                         disabled=disabled,
                                         id='upload-data',
                                         children=html.Div(
-                                            className='text-gray-100',
+                                            className='text-gray-800 dark:text-gray-100',
                                             children=
                                             [
                                                 '+  Upload your swing',
@@ -1193,7 +1195,7 @@ def init_dash(server):
                                 ),
 
                                 html.Div(
-                                    className='flex flex-col mb-4 mt-1 h-full overflow-y-auto border-b border-white',
+                                    className='flex flex-col mb-4 mt-1 h-full overflow-y-auto border-b border-gray-200 dark:border-gray-600',
                                     children=[
                                         html.Button(
                                             children=[
@@ -1212,7 +1214,8 @@ def init_dash(server):
                                                 ),
                                             ],
                                             id={'type': 'saved-button', 'index': f'{file}'},
-                                            className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                            # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
                                     id='file_list',
                                 ),
@@ -1222,22 +1225,27 @@ def init_dash(server):
                                         html.A(
                                             'HOME',
                                             href='/',
-                                            className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            # className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'PROFILE',
                                             href='/profile',
-                                            className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            # className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'DASHBOARD',
                                             href='/dash',
-                                            className='font-normal text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            # className='font-normal text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 bg-amber-100 dark:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'LOGOUT',
                                             href='/logout',
-                                            className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-white hover:border-gray-200 hover:text-gray-200 transition'
+                                            # className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-white hover:border-gray-200 hover:text-gray-200 transition'
+                                            # className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-gray-800 dark:text-gray-100 hover:border-gray-200 hover:text-gray-200 transition'
+                                            className='font-normal text-xs dark:text-gray-200 text-gray-800 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
                                         )
                                     ]
                                 )
@@ -2252,7 +2260,7 @@ def init_callbacks(app):
                 for child in children:
                     if child['props']['id']['index'] == button_id:
                         child['props'][
-                            'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = True
                         # # Enabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = False
@@ -2260,7 +2268,7 @@ def init_callbacks(app):
                         #     'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
                     else:
                         child['props'][
-                            'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = False
                         # # Disabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = True
@@ -2562,7 +2570,7 @@ def init_callbacks(app):
         # Reset the background color of the buttons
         for child in children:
             child['props'][
-                'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                'className'] ='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
             child['props']['disabled'] = False
             # Disabling the delete button
             # child['props']['children'][1]['props']['disabled'] = True
@@ -2586,7 +2594,7 @@ def init_callbacks(app):
                             ),
             ],
             id={'type': 'saved-button', 'index': f'{filename}'},
-            className='relative font-base max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
