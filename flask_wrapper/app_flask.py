@@ -2402,6 +2402,12 @@ def init_callbacks(app):
 
                 children_upload = []
 
+                # Remove video from like db
+                like = UserLikes.query.filter_by(user_id=current_user.id, video_id=button_id).first()
+                if like:
+                    db.session.delete(like)
+                    db.session.commit()
+
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
                         children_upload, sequence_first, sequence_second, sequence_third,
                         sequence_first, sequence_second, sequence_third,
