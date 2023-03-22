@@ -16,6 +16,7 @@ import os
 from flask_login import current_user
 from flask import url_for
 from . import db
+from .models import UserLikes
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
@@ -142,7 +143,7 @@ def upload_video(disabled=True, path=None):
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
                                 className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
-                            )
+                            ),
                         ],
                         className='flex flex-col gap-5'
                     ),
@@ -153,6 +154,8 @@ def upload_video(disabled=True, path=None):
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
+
+                                html.Button(id='heart', className='heart absolute top-4 left-4'),
 
                                 dp.DashPlayer(
                                     id='video',
@@ -277,6 +280,15 @@ def hand_path_3d(x, y, z, start, end, top, duration):
     )
 
     return path_fig, angle
+
+
+def heart_navbar(file):
+    like_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=file).first()
+    if like_row is not None:
+        if like_row.like:
+            return html.Div(className='-ml-4 -my-1 heart is-active', id=f'heart_{file}')
+
+    return html.Div(className='-ml-4 -my-1 heart', id=f'heart_{file}')
 
 
 # Random initialization for data
@@ -1188,18 +1200,19 @@ def init_dash(server):
                                                 html.Div(
                                                     className='flex flex-row items-center',
                                                     children=[
-                                                        html.Img(src=app.get_asset_url('graph_gray.svg'),
-                                                                 className='w-6 h-6 mr-2'),
+                                                        # html.Img(src=app.get_asset_url('graph_gray.svg'),
+                                                        #          className='w-6 h-6 mr-2'),
+                                                        heart_navbar(file),
                                                         reformat_file(file),
                                                     ]),
                                                 html.Button(
                                                     html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                                                     id={'type': 'delete', 'index': file}, n_clicks=0,
-                                                    className='invisible', disabled=True
+                                                    className='absolute right-1 invisible', disabled=True
                                                 ),
                                             ],
                                             id={'type': 'saved-button', 'index': f'{file}'},
-                                            className='font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                            className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
                                     id='file_list',
                                 ),
@@ -2239,15 +2252,15 @@ def init_callbacks(app):
                 for child in children:
                     if child['props']['id']['index'] == button_id:
                         child['props'][
-                            'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = True
                         # Enabling the delete button
                         child['props']['children'][1]['props']['disabled'] = False
                         child['props']['children'][1]['props'][
-                            'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center'
+                            'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
                     else:
                         child['props'][
-                            'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = False
                         # Disabling the delete button
                         child['props']['children'][1]['props']['disabled'] = True
@@ -2749,6 +2762,45 @@ def init_callbacks(app):
 
         return pelvis_rot_margins, pelvis_tilt_margins, thorax_rot_margins, thorax_tilt_margins, head_rot_margins, head_tilt_margins
 
+    @app.callback(
+        Input('heart', 'n_clicks'),
+        [State('video', 'url')],
+        prevent_initial_call=True
+    )
+    def heart(n_clicks, src):
+        if n_clicks is not None:
+            vid = src.split('/')[3]
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+            if vid_row is None:
+                like_row = UserLikes(user_id=current_user.id, video_id=vid, like=True)
+                db.session.add(like_row)
+            else:
+                if vid_row.like:
+                    vid_row.like = False
+                else:
+                    vid_row.like = True
+
+            db.session.commit()
+
+    @app.callback(
+        Input('video', 'url'),
+        Output('heart', 'className'),
+        [State('heart', 'className')],
+    )
+    def heart_state(src, class_name):
+        if src is not None:
+            vid = src.split('/')[3]
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+            if vid_row is None:
+                return class_name
+            else:
+                if vid_row.like:
+                    return class_name + ' is-active'
+                else:
+                    return class_name
+
+
     # Hide selection view with save
     app.clientside_callback(
         ClientsideFunction(
@@ -2887,6 +2939,17 @@ def init_callbacks(app):
         ),
         Output('tempo_slider', 'style'),
         Input('tempo', 'children'),
+    )
+
+    # Show heart
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='toggleHeart'
+        ),
+        Input('heart', 'n_clicks'),
+        State('video', 'url'),
+        prevent_initial_call=True
     )
 
 

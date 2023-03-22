@@ -118,6 +118,22 @@ body, html {
     background: linear-gradient(to right,  #dc2626,  #fde047, #84cc16, #84cc16, #fde047, #dc2626);
 }
 
+.heart {
+  width: 50px;
+  height: 50px;
+  background: url("heart.png") no-repeat;
+  background-position: 0 0;
+  background-size: cover;
+  cursor: pointer;
+  transition: background-position 1s steps(28);
+  transition-duration: 0s;
+}
+
+.is-active {
+  transition-duration: 1s;
+  background-position: -1400px 0;
+}
+
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)

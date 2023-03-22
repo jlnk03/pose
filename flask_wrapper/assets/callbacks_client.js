@@ -527,6 +527,17 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         tempoSlider: function(tempo) {
             return {'left': tempo/6 * 100 + '%'}
+        },
+
+        toggleHeart: function(n_clicks, url) {
+            if (n_clicks > 0) {
+                let file = url.split('/')[3];
+                let heart = document.getElementById('heart');
+                let heart_navbar = document.getElementById(`heart_${file}`);
+                heart.classList.toggle('is-active');
+                heart_navbar.classList.toggle('is-active');
+            }
         }
+
     }
 });

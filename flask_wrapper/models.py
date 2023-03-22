@@ -11,6 +11,13 @@ class Transactions(db.Model):
     booked = db.Column(db.Boolean, default=False)
 
 
+class UserLikes(db.Model):
+    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    user_id = db.Column(db.Integer)
+    video_id = db.Column(db.Integer)
+    like = db.Column(db.Boolean)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     email = db.Column(db.String(100), unique=True)
