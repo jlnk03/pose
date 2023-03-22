@@ -537,7 +537,15 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 heart.classList.toggle('is-active');
                 heart_navbar.classList.toggle('is-active');
             }
-        }
+        },
 
+        toggleDelete: function(n_clicks) {
+            if (n_clicks > 0) {
+                button = window.dash_clientside.callback_context.triggered[0]
+                console.log(button)
+                // let delete_btn = document.getElementById('delete_btn');
+                // delete_btn.classList.toggle('is-active');
+            }
+        }
     }
 });

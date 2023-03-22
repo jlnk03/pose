@@ -1208,7 +1208,7 @@ def init_dash(server):
                                                 html.Button(
                                                     html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                                                     id={'type': 'delete', 'index': file}, n_clicks=0,
-                                                    className='absolute right-1 invisible', disabled=True
+                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False
                                                 ),
                                             ],
                                             id={'type': 'saved-button', 'index': f'{file}'},
@@ -2031,13 +2031,13 @@ def init_callbacks(app):
          Output('emoji-start', 'children'), Output('emoji-transition', 'children')
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
-         Input('upload-data', 'filename'),
+         # Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
          Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
         [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'),],
         prevent_initial_call=True
     )
-    def process(contents, contents_add, contents_initial, filename, n_clicks, clicks_delete, children, upload_initial_class, upload_video_class):
+    def process(contents, contents_add, contents_initial, n_clicks, clicks_delete, children, upload_initial_class, upload_video_class):
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
@@ -2254,17 +2254,17 @@ def init_callbacks(app):
                         child['props'][
                             'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = True
-                        # Enabling the delete button
-                        child['props']['children'][1]['props']['disabled'] = False
-                        child['props']['children'][1]['props'][
-                            'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
+                        # # Enabling the delete button
+                        # child['props']['children'][1]['props']['disabled'] = False
+                        # child['props']['children'][1]['props'][
+                        #     'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
                     else:
                         child['props'][
                             'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['disabled'] = False
-                        # Disabling the delete button
-                        child['props']['children'][1]['props']['disabled'] = True
-                        child['props']['children'][1]['props']['className'] = 'invisible'
+                        # # Disabling the delete button
+                        # child['props']['children'][1]['props']['disabled'] = True
+                        # child['props']['children'][1]['props']['className'] = 'invisible'
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
                     save_pelvis_rotation,
@@ -2562,11 +2562,11 @@ def init_callbacks(app):
         # Reset the background color of the buttons
         for child in children:
             child['props'][
-                'className'] = 'font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
+                'className'] = 'relative font-medium max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12'
             child['props']['disabled'] = False
             # Disabling the delete button
-            child['props']['children'][1]['props']['disabled'] = True
-            child['props']['children'][1]['props']['className'] = 'invisible'
+            # child['props']['children'][1]['props']['disabled'] = True
+            # child['props']['children'][1]['props']['className'] = 'invisible'
 
         # Add a new button for the new motion data
         new_item = html.Button(
@@ -2581,7 +2581,7 @@ def init_callbacks(app):
                     ]),
                 html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                             id={'type': 'delete', 'index': filename}, n_clicks=0,
-                            className='visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-1',
+                            className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1',
                             disabled=False
                             ),
             ],
