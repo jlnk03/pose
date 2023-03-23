@@ -2362,6 +2362,11 @@ def init_callbacks(app):
                 for child in children:
                     if child['props']['children'][0]['props']['id']['index'] == button_id:
                         children.remove(child)
+                    else:
+                        child['props'][
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                        child['props']['children'][0]['props']['disabled'] = False
+
                 path = f'assets/save_data/{current_user.id}/{button_id}'
                 shutil.rmtree(path)
 
