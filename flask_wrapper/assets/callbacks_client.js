@@ -26,7 +26,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
 
                 if (nclicks > 0) {
-                    console.log(green_bar_pelvis_bend)
                     green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
                     green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[3])) / (240) * 100 + '%';
 
@@ -539,13 +538,32 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        toggleDelete: function(n_clicks) {
+        toggleDeleteView: function(n_clicks) {
             if (n_clicks > 0) {
-                button = window.dash_clientside.callback_context.triggered[0]
-                console.log(button)
-                // let delete_btn = document.getElementById('delete_btn');
-                // delete_btn.classList.toggle('is-active');
+                // console.log(n_clicks)
+                let delete_view = document.getElementById('delete-file-view').classList
+                delete_view.toggle('hidden')
+
+                return 0
+
             }
-        }
+        },
+
+        hideDeleteView: function(n_clicks, n_clicks2) {
+            if ((n_clicks !== null) || (n_clicks2 !== null)) {
+                let delete_view = document.getElementById('delete-file-view').classList
+                delete_view.toggle('hidden')
+            }
+        },
+
+        deleteViewFile: function(n_clicks) {
+                if (n_clicks !== null) {
+                    let button = window.dash_clientside.callback_context.triggered[0].prop_id
+                    button = button.split('.')[0]
+                    button = JSON.parse(button)
+                    button = button['index']
+                    return  button
+                }
+        },
     }
 });

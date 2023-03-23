@@ -1150,7 +1150,7 @@ def init_dash(server):
                         html.Div(
                             id='sidebar',
                             # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-3xl hidden lg:flex',
-                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5]',
+                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5] overflow-x-visible',
                             children=[
                                 html.Button(
                                     id='sidebar-header',
@@ -1197,9 +1197,11 @@ def init_dash(server):
                                 html.Div(
                                     className='flex flex-col mb-4 mt-1 h-full overflow-y-auto border-b border-gray-200 dark:border-gray-600',
                                     children=[
-                                        html.Button(
+                                        html.Div(
+                                            # disabled=True,
                                             children=[
-                                                html.Div(
+                                                html.Button(
+                                                    id={'type': 'saved-button', 'index': f'{file}'},
                                                     className='flex flex-row items-center',
                                                     children=[
                                                         # html.Img(src=app.get_asset_url('graph_gray.svg'),
@@ -1209,11 +1211,11 @@ def init_dash(server):
                                                     ]),
                                                 html.Button(
                                                     html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
-                                                    id={'type': 'delete', 'index': file}, n_clicks=0,
-                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False
+                                                    id={'type': 'delete', 'index': file},
+                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False, n_clicks=0
                                                 ),
                                             ],
-                                            id={'type': 'saved-button', 'index': f'{file}'},
+
                                             # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                             className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
@@ -1358,6 +1360,34 @@ def init_dash(server):
                                     ]
                                 ),
                                 # End selection view
+
+                                # Delete file view
+                                html.Div(
+                                    id='delete-file-view',
+                                    children=[
+                                      html.Div(
+                                          className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 w-fit fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center',
+                                          children=[
+                                                html.Div('Do you want to delete this swing?',
+                                                         className='text-lg font-medium text-gray-900 dark:text-gray-100 pt-2 relative items-center w-full'),
+                                              html.Div('', className='text-sm font-medium text-gray-900 dark:text-gray-100 pt-2 relative items-center w-full', id='delete-file-name'),
+                                              html.Div(
+                                                  className='flex flex-row justify-between mt-6',
+                                                    children=[
+                                                        html.Button('Delete',
+                                                                    id='delete-file',
+                                                                 className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-red-200 dark:bg-red-800 rounded-lg w-24 items-center justify-center text-center'),
+                                                        html.Button('Cancel',
+                                                                    id='cancel-delete-file',
+                                                                 className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-gray-100 dark:bg-gray-600 rounded-lg w-24 items-center justify-center text-center')
+                                                  ]
+                                              )
+                                          ]
+                                      )
+                                    ],
+                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                ),
+                                # End delete file view
 
                                 # Start video view
                                 html.Div(
@@ -2041,11 +2071,13 @@ def init_callbacks(app):
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          # Input('upload-data', 'filename'),
          Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
-         Input({'type': 'delete', 'index': ALL}, 'n_clicks')],
-        [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'),],
+         Input('delete-file', 'n_clicks')
+         # Input({'type': 'delete', 'index': ALL}, 'n_clicks')
+         ],
+        [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'), State('delete-file-name', 'children')],
         prevent_initial_call=True
     )
-    def process(contents, contents_add, contents_initial, n_clicks, clicks_delete, children, upload_initial_class, upload_video_class):
+    def process(contents, contents_add, contents_initial, n_clicks, n_clicks_del, children, upload_initial_class, upload_video_class, del_file_name):
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
@@ -2058,7 +2090,7 @@ def init_callbacks(app):
 
         # Check if button was pressed or a file was uploaded
         if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
-            if ctx.triggered_id != ctx.triggered_id.type != 'delete':
+            if ctx.triggered_id != 'delete-file':
                 button_id = ctx.triggered_id.index
                 file = f'{button_id}.parquet'
 
@@ -2258,10 +2290,10 @@ def init_callbacks(app):
 
                 # Change the background color of the pressed button and reset the previously pressed button
                 for child in children:
-                    if child['props']['id']['index'] == button_id:
+                    if child['props']['children'][0]['props']['id']['index'] == button_id:
                         child['props'][
                             'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
-                        child['props']['disabled'] = True
+                        child['props']['children'][0]['props']['disabled'] = True
                         # # Enabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = False
                         # child['props']['children'][1]['props'][
@@ -2269,7 +2301,7 @@ def init_callbacks(app):
                     else:
                         child['props'][
                             'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
-                        child['props']['disabled'] = False
+                        child['props']['children'][0]['props']['disabled'] = False
                         # # Disabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = True
                         # child['props']['children'][1]['props']['className'] = 'invisible'
@@ -2323,11 +2355,11 @@ def init_callbacks(app):
 
         # Delete was pressed
         if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
-            if ctx.triggered_id.type == 'delete':
-                button_id = ctx.triggered_id.index
+            if ctx.triggered_id == 'delete-file':
+                button_id = del_file_name
                 # file = f'{button_id}.parquet'
                 for child in children:
-                    if child['props']['id']['index'] == button_id:
+                    if child['props']['children'][0]['props']['id']['index'] == button_id:
                         children.remove(child)
                 path = f'assets/save_data/{current_user.id}/{button_id}'
                 shutil.rmtree(path)
@@ -2571,30 +2603,33 @@ def init_callbacks(app):
         for child in children:
             child['props'][
                 'className'] ='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
-            child['props']['disabled'] = False
+            child['props']['children'][0]['props']['disabled'] = False
             # Disabling the delete button
             # child['props']['children'][1]['props']['disabled'] = True
             # child['props']['children'][1]['props']['className'] = 'invisible'
 
         # Add a new button for the new motion data
-        new_item = html.Button(
-            disabled=True,
-            children=[
-                html.Div(
-                    className='flex flex-row items-center',
-                    children=[
-                        # html.Img(src=app.get_asset_url('graph_gray.svg'), className='w-6 h-6 mr-2'),
-                        heart_navbar(filename),
-                        reformat_file(filename),
-                    ]),
-                html.Button(html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
-                            id={'type': 'delete', 'index': filename}, n_clicks=0,
-                            className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1',
-                            disabled=False
-                            ),
-            ],
-            id={'type': 'saved-button', 'index': f'{filename}'},
-            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+        new_item = html.Div(
+                                            # disabled=True,
+                                            children=[
+                                                html.Button(
+                                                    id={'type': 'saved-button', 'index': f'{filename}'},
+                                                    className='flex flex-row items-center',
+                                                    children=[
+                                                        # html.Img(src=app.get_asset_url('graph_gray.svg'),
+                                                        #          className='w-6 h-6 mr-2'),
+                                                        heart_navbar(filename),
+                                                        reformat_file(filename),
+                                                    ]),
+                                                html.Button(
+                                                    html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
+                                                    id={'type': 'delete', 'index': filename},
+                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False, n_clicks=0
+                                                ),
+                                            ],
+
+                                            # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
@@ -2650,12 +2685,10 @@ def init_callbacks(app):
             timestamp_dict = {'pelvis_rot_btn': pelvis_rot_btn, 'pelvis_tilt_btn': pelvis_tilt_btn,
                               'thorax_rot_btn': thorax_rot_btn, 'thorax_tilt_btn': thorax_tilt_btn,
                               'head_rot_btn': head_rot_btn, 'head_tilt_btn': head_tilt_btn}
-            print(timestamp_dict)
             max_key = max(timestamp_dict, key=timestamp_dict.get)
 
             match max_key:
                 case 'pelvis_rot_btn':
-                    print('pelvis_rot_btn')
                     current_user.setup_low_pelvis_rot = setup_low
                     current_user.setup_high_pelvis_rot = setup_high
                     current_user.top_low_pelvis_rot = top_low
@@ -2964,6 +2997,39 @@ def init_callbacks(app):
         ),
         Input('heart', 'n_clicks'),
         State('video', 'url'),
+        prevent_initial_call=True
+    )
+
+    # Show delete view file
+    # Should be called before toggleDeleteView
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='deleteViewFile'
+        ),
+        [Output('delete-file-name', 'children')],
+        Input({'type': 'delete', 'index': ALL}, 'n_clicks'),
+        prevent_initial_call=True
+    )
+
+    # Show delete view
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='toggleDeleteView'
+        ),
+        [Output({'type': 'delete', 'index': MATCH}, 'n_clicks')],
+        Input({'type': 'delete', 'index': MATCH}, 'n_clicks'),
+        prevent_initial_call=True
+    )
+
+    # Hide delete view
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='hideDeleteView'
+        ),
+        Input('delete-file', 'n_clicks'), Input('cancel-delete-file', 'n_clicks'),
         prevent_initial_call=True
     )
 
