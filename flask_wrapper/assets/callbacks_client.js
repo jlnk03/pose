@@ -3,6 +3,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         // Update frame of video
         positionUpdate: function(nclicks, nclicks2, nclicks3, nclicks4, nclicks5, nclicks6, nclicks7, nclicks8,currentTime, duration) {
 
+            // console.log('positionUpdate')
+
             // slider area
             const green_bar_pelvis_rot = document.getElementById('green_bar_pelvis_rot');
             const green_bar_pelvis_bend = document.getElementById('green_bar_pelvis_bend');
@@ -226,6 +228,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
 
         updateValues: function(currentTime, duration, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, impact_button_time, top_button_time, end_button_time, setup_button_time) {
+            // console.log('updateValues')
             const pelvis_rotation = fig2.data[1].y;
             const pelvis_bend = fig2.data[0].y;
             const thorax_rotation = fig4.data[0].y;

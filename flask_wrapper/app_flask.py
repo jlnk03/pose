@@ -110,6 +110,9 @@ def add_vertical_line(fig):
 
 # Return the video view
 def upload_video(disabled=True, path=None):
+    if path is not None:
+        path += '#t=0.001'
+
     layout = [
         html.Div(
             id='video-view',
@@ -159,7 +162,7 @@ def upload_video(disabled=True, path=None):
 
                                 dp.DashPlayer(
                                     id='video',
-                                    url=f'{path}#t=0.001',
+                                    url=path,
                                     controls=True,
                                     playsinline=True,
                                     className="h-full w-fit flex",
@@ -1228,26 +1231,26 @@ def init_dash(server):
                                             'HOME',
                                             href='/',
                                             # className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
-                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-800 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'PROFILE',
                                             href='/profile',
                                             # className='font-normal text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
-                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 hover:bg-amber-100 dark:hover:bg-slate-800 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'DASHBOARD',
                                             href='/dash',
                                             # className='font-normal text-xs text-amber-500 border-amber-500 hover:border-amber-400 border-2 hover:text-amber-400 items-center justify-center px-4 py-2 rounded-lg transition'
-                                            className='font-normal text-xs text-amber-500 bg-amber-100 dark:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs text-amber-500 bg-amber-100 dark:bg-slate-800 items-center justify-center px-4 py-2 rounded-lg transition'
                                         ),
                                         html.A(
                                             'LOGOUT',
                                             href='/logout',
                                             # className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-white hover:border-gray-200 hover:text-gray-200 transition'
                                             # className='inline-flex whitespace-nowrap rounded-lg border-2 border-transparent px-4 py-2 text-xs font-normal text-gray-800 dark:text-gray-100 hover:border-gray-200 hover:text-gray-200 transition'
-                                            className='font-normal text-xs dark:text-gray-200 text-gray-800 hover:bg-amber-100 dark:hover:bg-slate-500 items-center justify-center px-4 py-2 rounded-lg transition'
+                                            className='font-normal text-xs dark:text-gray-200 text-gray-800 hover:bg-amber-100 dark:hover:bg-slate-800 items-center justify-center px-4 py-2 rounded-lg transition'
                                         )
                                     ]
                                 )
@@ -1397,9 +1400,7 @@ def init_dash(server):
                                         html.Div(
                                             id='upload-video',
                                             className='relative w-full flex-row justify-between mt-5 hidden',
-                                            children=[
-
-                                            ]),
+                                            children=upload_video()),
 
                                         # Upload component
                                         html.Div(
@@ -2440,7 +2441,8 @@ def init_callbacks(app):
                 # Setup
                 setup_pos = 0.5
 
-                children_upload = []
+                # children_upload = []
+                children_upload = upload_video()
 
                 # Remove video from like db
                 like = UserLikes.query.filter_by(user_id=current_user.id, video_id=button_id).first()
@@ -2473,9 +2475,9 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+        #                          json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2838,6 +2840,7 @@ def init_callbacks(app):
     )
     def heart_state(src, class_name):
         if src is not None:
+            print(src)
             vid = src.split('/')[3]
             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
             if vid_row is None:
