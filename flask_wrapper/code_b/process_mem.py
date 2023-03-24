@@ -19,11 +19,6 @@ from moviepy.editor import AudioFileClip
 # import memory_profiler
 
 
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
-mp_pose = mp.solutions.pose
-
-
 def gradient(shape, start_color, end_color):
     gradient = np.ones(shape + (3,), dtype=np.uint8)
     for i in range(3):
@@ -70,6 +65,11 @@ def impact_from_audio(audio_bytes):
 
 # @memory_profiler.profile
 def process_motion(contents, filename, location):
+
+    mp_drawing = mp.solutions.drawing_utils
+    mp_drawing_styles = mp.solutions.drawing_styles
+    mp_pose = mp.solutions.pose
+
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)

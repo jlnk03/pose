@@ -1616,9 +1616,9 @@ def init_dash(server):
                                                     id='position_divs',
                                                     children=[
                                                         html.Div('BACK',
-                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
-                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('- s', id='backswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
@@ -1631,9 +1631,9 @@ def init_dash(server):
                                                 html.Div(
                                                     children=[
                                                         html.Div('DOWN',
-                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
-                                                                 className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
+                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
                                                         html.Div('- s', id='downswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                     ],
                                                     className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
@@ -1644,7 +1644,7 @@ def init_dash(server):
                                         html.Div(
                                             children=[
                                                 html.Div('TEMPO',
-                                                         className='sm:text-xl text-lg tracking-tight font-normal text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
+                                                         className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
                                                 html.Div(
                                                     children=[
                                                         html.Div('-', id='tempo', className='mt-5 ml-6'),
