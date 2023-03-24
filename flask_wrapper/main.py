@@ -259,79 +259,79 @@ def predict(token):
     # profiler.enable()
 
     # Extracting the motion data from the video
-    result = process_motion(contents, filename, location)
+    with process_motion(contents, filename, location) as result:
     # print(result)
 
-    if result == -1:
-        return 413
+        if result == -1:
+            return 413
 
-    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-        save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_path, duration, fps, impact_ratio = result
+        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+            save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+            save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+            save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_path, duration, fps, impact_ratio = result
 
-    # profiler.disable()
-    # stats = pstats.Stats(profiler).sort_stats('cumtime')
-    # stats.print_stats()
-    # stats.dump_stats('profile.txt')
+        # profiler.disable()
+        # stats = pstats.Stats(profiler).sort_stats('cumtime')
+        # stats.print_stats()
+        # stats.dump_stats('profile.txt')
 
-    keys = [
-        'save_pelvis_rotation',
-        'save_pelvis_tilt',
-        'save_pelvis_lift',
-        'save_pelvis_sway',
-        'save_pelvis_thrust',
-        'save_thorax_lift',
-        'save_thorax_bend',
-        'save_thorax_sway',
-        'save_thorax_rotation',
-        'save_thorax_thrust',
-        'save_thorax_tilt',
-        'save_spine_rotation',
-        'save_spine_tilt',
-        'save_head_rotation',
-        'save_head_tilt',
-        'save_left_arm_length',
-        'save_wrist_angle',
-        'save_wrist_tilt',
-        'save_arm_rotation',
-        'save_arm_to_ground',
-        'arm_path',
-        'duration',
-        'fps',
-        'impact_ratio'
-    ]
+        keys = [
+            'save_pelvis_rotation',
+            'save_pelvis_tilt',
+            'save_pelvis_lift',
+            'save_pelvis_sway',
+            'save_pelvis_thrust',
+            'save_thorax_lift',
+            'save_thorax_bend',
+            'save_thorax_sway',
+            'save_thorax_rotation',
+            'save_thorax_thrust',
+            'save_thorax_tilt',
+            'save_spine_rotation',
+            'save_spine_tilt',
+            'save_head_rotation',
+            'save_head_tilt',
+            'save_left_arm_length',
+            'save_wrist_angle',
+            'save_wrist_tilt',
+            'save_arm_rotation',
+            'save_arm_to_ground',
+            'arm_path',
+            'duration',
+            'fps',
+            'impact_ratio'
+        ]
 
-    values = [
-        list(save_pelvis_rotation),
-        list(save_pelvis_tilt),
-        list(save_pelvis_lift),
-        list(save_pelvis_sway),
-        list(save_pelvis_thrust),
-        list(save_thorax_lift),
-        list(save_thorax_bend),
-        list(save_thorax_sway),
-        list(save_thorax_rotation),
-        list(save_thorax_thrust),
-        list(save_thorax_tilt),
-        list(save_spine_rotation),
-        list(save_spine_tilt),
-        list(save_head_rotation),
-        list(save_head_tilt),
-        list(save_left_arm_length),
-        list(save_wrist_angle),
-        list(save_wrist_tilt),
-        list(save_arm_rotation),
-        list(save_arm_to_ground),
-        arm_path,
-        duration,
-        fps,
-        impact_ratio
-    ]
+        values = [
+            list(save_pelvis_rotation),
+            list(save_pelvis_tilt),
+            list(save_pelvis_lift),
+            list(save_pelvis_sway),
+            list(save_pelvis_thrust),
+            list(save_thorax_lift),
+            list(save_thorax_bend),
+            list(save_thorax_sway),
+            list(save_thorax_rotation),
+            list(save_thorax_thrust),
+            list(save_thorax_tilt),
+            list(save_spine_rotation),
+            list(save_spine_tilt),
+            list(save_head_rotation),
+            list(save_head_tilt),
+            list(save_left_arm_length),
+            list(save_wrist_angle),
+            list(save_wrist_tilt),
+            list(save_arm_rotation),
+            list(save_arm_to_ground),
+            arm_path,
+            duration,
+            fps,
+            impact_ratio
+        ]
 
 
-    prediction = dict(zip(keys, values))
+        prediction = dict(zip(keys, values))
 
-    prediction = json.dumps(prediction)
+        prediction = json.dumps(prediction)
 
-    return prediction, 200, {'ContentType': 'application/json'}
+        return prediction, 200, {'ContentType': 'application/json'}
