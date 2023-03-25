@@ -16,7 +16,7 @@ import av
 import tempfile
 from moviepy.editor import AudioFileClip
 
-import memory_profiler
+# import memory_profiler
 
 
 def gradient(shape, start_color, end_color):
