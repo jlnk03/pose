@@ -1,6 +1,5 @@
 import datetime
 import shutil
-import mediapipe as mp
 import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
@@ -10,8 +9,6 @@ from dash_extensions.enrich import DashProxy, MultiplexerTransform, NoOutputTran
 import dash_player as dp
 import pandas as pd
 from scipy import signal
-from code_b.angles import *
-# from code_b.process_mem import process_motion
 import os
 from flask_login import current_user
 from flask import url_for
@@ -20,22 +17,14 @@ from .models import UserLikes
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
-
-# Tools for mp to draw the pose
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
-mp_pose = mp.solutions.pose
-# mp_pose = mp.solutions.holistic
+# import memory_profiler
+import scalene
 
 # Set theme for dash
 pio.templates.default = "plotly_white"
 
 # Hide plotly logo
 config = dict({'displaylogo': False, 'displayModeBar': False, 'scrollZoom': False})
-
-_PRESENCE_THRESHOLD = 0.5
-_VISIBILITY_THRESHOLD = 0.5
-
 
 def find_closest_zero_intersection_left_of_max(array):
     max_index = np.argmax(array)
@@ -2043,6 +2032,7 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
+
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
@@ -2079,6 +2069,7 @@ def init_callbacks(app):
         prevent_initial_call=True
     )
     def process(contents, contents_add, contents_initial, n_clicks, n_clicks_del, children, upload_initial_class, upload_video_class, del_file_name):
+
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
@@ -2480,9 +2471,10 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
+
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),json={'contents': contents, 'filename': filename, 'location': location})
         # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
+
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
