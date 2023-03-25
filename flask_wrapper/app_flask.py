@@ -20,7 +20,7 @@ import datetime
 import gc
 # import memory_profiler
 
-# gc.set_debug(gc.DEBUG_LEAK)
+gc.set_debug(gc.DEBUG_LEAK)
 print(f'garbage collection enabled {gc.isenabled()}')
 
 # Set theme for dash
