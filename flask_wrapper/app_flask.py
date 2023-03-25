@@ -21,7 +21,7 @@ import gc
 # import memory_profiler
 
 # gc.set_debug(gc.DEBUG_LEAK)
-gc.isenabled()
+print(f'garbage collection enabled {gc.isenabled()}')
 
 # Set theme for dash
 pio.templates.default = "plotly_white"

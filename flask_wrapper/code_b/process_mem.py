@@ -63,7 +63,7 @@ def impact_from_audio(audio_bytes):
         return impact_ratio
 
 
-@memory_profiler.profile
+# @memory_profiler.profile
 def process_motion(contents, filename, location):
 
     mp_drawing = mp.solutions.drawing_utils
