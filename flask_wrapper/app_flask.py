@@ -17,7 +17,11 @@ from .models import UserLikes
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
+import gc
 # import memory_profiler
+
+# gc.set_debug(gc.DEBUG_LEAK)
+gc.isenabled()
 
 # Set theme for dash
 pio.templates.default = "plotly_white"

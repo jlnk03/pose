@@ -270,13 +270,6 @@ def predict(token):
         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
         save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_path, duration, fps, impact_ratio = result
 
-    del result
-
-    # profiler.disable()
-    # stats = pstats.Stats(profiler).sort_stats('cumtime')
-    # stats.print_stats()
-    # stats.dump_stats('profile.txt')
-
     keys = [
         'save_pelvis_rotation',
         'save_pelvis_tilt',
@@ -330,7 +323,6 @@ def predict(token):
         fps,
         impact_ratio
     ]
-
 
     prediction = dict(zip(keys, values))
 
