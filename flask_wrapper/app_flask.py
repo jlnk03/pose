@@ -18,7 +18,6 @@ import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
 # import memory_profiler
-import scalene
 
 # Set theme for dash
 pio.templates.default = "plotly_white"
