@@ -1,9 +1,7 @@
-import datetime
 import shutil
 import numpy as np
 import plotly.graph_objects as go
 import plotly.io as pio
-import plotly.express as px
 from dash import Dash, ctx, ALL, html, dcc, MATCH, ClientsideFunction
 from dash_extensions.enrich import DashProxy, MultiplexerTransform, NoOutputTransform, Output, Input, State
 import dash_player as dp
@@ -1266,7 +1264,7 @@ def init_dash(server):
                                 # ),
 
                                 # Selection view in center of screen
-                                html.Div(
+                                html.Button(
                                     id='selection-view',
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                     children=[
@@ -1465,9 +1463,9 @@ def init_dash(server):
                                                             children=[
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Pelvis Rotation',
-                                                                                    id='pelvis_rot_btn',
-                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Pelvis Rotation',
+                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(html.Img(src=app.get_asset_url('edit.svg'), className='h-4 w-4'), id='pelvis_rot_btn', className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='pelvis_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1481,9 +1479,13 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Pelvis Tilt',
-                                                                                    id='pelvis_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Pelvis Tilt',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100  text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='pelvis_tilt_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='pelvis_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1497,9 +1499,13 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Thorax Rotation',
-                                                                                    id='thorax_rot_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Thorax Rotation',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                    html.Button(
+                                                                        html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                 className='h-4 w-4'),
+                                                                        id='thorax_rot_btn',
+                                                                        className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='thorax_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1513,9 +1519,13 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Thorax Tilt',
-                                                                                    id='thorax_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Thorax Bend',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='thorax_tilt_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='thorax_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1536,9 +1546,13 @@ def init_dash(server):
                                                             children=[
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Head Rotation',
-                                                                                    id='head_rot_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Head Rotation',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='head_rot_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='head_rot_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_rot', -100, 100)),
@@ -1550,9 +1564,13 @@ def init_dash(server):
                                                                 ),
                                                                 html.Div(
                                                                     children=[
-                                                                        html.Button('Head Tilt',
-                                                                                    id='head_tilt_btn',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                        html.Div('Head Tilt',
+                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='head_tilt_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='head_tilt_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_tilt', -60, 60)),
@@ -1565,7 +1583,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Arm Rotation',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
                                                                         html.Div('- °', id='arm_rot_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_rot', -240, 240)),
@@ -1575,7 +1593,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Arm To Ground',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
                                                                         html.Div('- °', id='arm_ground_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_ground', -90, 90)),
@@ -2796,7 +2814,7 @@ def init_callbacks(app):
                      setup_low_head_tilt, setup_high_head_tilt, top_low_head_tilt, top_high_head_tilt, impact_low_head_tilt, impact_high_head_tilt
                      ]
 
-        values = ['-3', '6', '-56', '-39', '29', '48', '-4', '6', '-14', '-6', '-2', '11', '7', '15', '-98', '-83', '20', '37', '7', '18', '-5', '8', '26', '36', '-6', '6', '-25', '-8', '-6', '15', '-3', '7', '-16', '-3', '1', '18']
+        values = ['-3', '6', '-56', '-39', '29', '48', '-4', '6', '-14', '-6', '-2', '11', '7', '15', '-98', '-83', '20', '37', '28', '40', '28', '40', '18', '30', '-6', '6', '-25', '-8', '-6', '15', '-3', '7', '-16', '-3', '1', '18']
 
         result = [f'{pos}' if pos is not None else val for pos, val in zip(positions, values)]
 
@@ -2868,7 +2886,7 @@ def init_callbacks(app):
             function_name='hideSelectionViewCross'
         ),
         [Output('selection-view', 'className')],
-        Input('new_margins_close', 'n_clicks'),
+        Input('new_margins_close', 'n_clicks'),  Input('selection-view', 'n_clicks'),
         [State('selection-view', 'className'),
          ],
         prevent_initial_call=True

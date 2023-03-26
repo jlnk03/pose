@@ -523,7 +523,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         },
 
-        hideSelectionViewCross: function(n_clicks, selection_class) {
+        hideSelectionViewCross: function(n_clicks, n_clicks2, selection_class) {
             return selection_class.replace('flex', 'hidden');
         },
 

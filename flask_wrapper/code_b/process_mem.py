@@ -46,6 +46,17 @@ def add_padding(img, padding_size, padding_color=(0, 0, 0)):
 
 
 def impact_from_audio(audio_bytes):
+    """Calculate the impact ratio from an audio file in BytesIO format.
+
+       Args:
+           audio_bytes (BytesIO): A BytesIO object containing the audio file.
+
+       Returns:
+           float: The impact ratio, defined as the position of the highest-amplitude
+               sample in the audio array, normalized by the length of the array.
+               Returns -1 if the array is empty.
+       """
+
     # Create a temporary file and write the BytesIO contents to it
     with tempfile.NamedTemporaryFile(suffix='.mp4') as temp_file:
         temp_file.write(audio_bytes.getvalue())
@@ -65,6 +76,17 @@ def impact_from_audio(audio_bytes):
 
 # @memory_profiler.profile
 def process_motion(contents, filename, location):
+    """Processes a motion video file and extracts pose data for analysis.
+
+       Args:
+           contents (str): The contents of the motion video file.
+           filename (str): The name of the motion video file.
+           location (str): The directory where the motion video file will be saved.
+
+       Returns:
+           int: Returns -1 if the video has more than 300 frames.
+           Tuple[deque]: Returns deques of pose data for each body part extracted from the video.
+       """
 
     mp_drawing = mp.solutions.drawing_utils
     mp_drawing_styles = mp.solutions.drawing_styles
