@@ -480,7 +480,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     impact_low = thorax_tilt[4]
                     impact_high = thorax_tilt[5]
 
-                    title.innerHTML = 'New Margins for Thorax Tilt';
+                    title.innerHTML = 'New Margins for Thorax Bend';
                 }
 
                 else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'head_rot_btn.n_clicks') {
