@@ -13,8 +13,21 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const green_bar_head_rot = document.getElementById('green_bar_head_rot');
             const green_bar_head_tilt = document.getElementById('green_bar_head_tilt');
 
+            // buttons
+            let setup_pos_button = document.getElementById('setup_pos_button');
+            let top_pos_button = document.getElementById('top_pos_button');
+            let impact_pos_button = document.getElementById('impact_pos_button');
+            let end_pos_button = document.getElementById('end_pos_button');
+
+            // Settings
+            let edit_positions = document.getElementById('edit_positions').classList;
+
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
+                top_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
+                setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
 
                 // console.log(nclicks)
                 const top_pos = document.getElementById('top_pos');
@@ -26,6 +39,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_bend_margins = document.getElementById('thorax_bend_store').innerHTML.split(', ');
                 const head_rot_margins = document.getElementById('head_rot_store').innerHTML.split(', ');
                 const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
+
+                edit_positions.remove('hidden');
 
                 if (nclicks > 0) {
                     green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
@@ -51,6 +66,11 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
 
             else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'impact_pos_button.n_clicks') {
+                    impact_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
+                    setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                    top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                    end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+
                 // console.log(nclicks2)
                     const impact_pos = document.getElementById('impact_pos');
                     const impact_index = impact_pos.innerText;
@@ -61,6 +81,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     const thorax_bend_margins = document.getElementById('thorax_bend_store').innerHTML.split(', ');
                     const head_rot_margins = document.getElementById('head_rot_store').innerHTML.split(', ');
                     const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
+
+                    edit_positions.remove('hidden');
 
                     if (nclicks2 > 0) {
                         green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[4])) / (240) * 100 + '%';
@@ -86,8 +108,16 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
 
             else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'end_pos_button.n_clicks') {
+                end_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
+                setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+
                 const end_pos = document.getElementById('end_pos');
                 const end_index = end_pos.innerText;
+
+                edit_positions.remove('hidden');
+
                 if (nclicks3 > 0) {
                     green_bar_pelvis_rot.style.left = '0%';
                     green_bar_pelvis_rot.style.right = '0%';
@@ -112,6 +142,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
 
             else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'setup_pos_button.n_clicks') {
+                setup_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
+                top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
 
                 const setup_pos = document.getElementById('setup_pos');
                 const setup_index = setup_pos.innerText;
@@ -122,6 +156,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_bend_margins = document.getElementById('thorax_bend_store').innerHTML.split(', ');
                 const head_rot_margins = document.getElementById('head_rot_store').innerHTML.split(', ');
                 const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
+
+                edit_positions.remove('hidden');
 
                 // console.log(pelvis_rot_margins)
 
@@ -238,7 +274,11 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const arm_rotation = fig11.data[0].y;
             const arm_ground = fig11.data[1].y;
 
-            const index = Math.floor(pelvis_rotation.length * (currentTime / duration))
+            let index = Math.floor(pelvis_rotation.length * (currentTime / duration))
+
+            if (index >= pelvis_rotation.length) {
+                index = pelvis_rotation.length - 1;
+            }
 
             const value_pelvis_rotation = Math.round(pelvis_rotation[index]);
             const value_pelvis_bend = Math.round(pelvis_bend[index]);
@@ -411,6 +451,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         showSelectionView: function(n_clicks, n_clicks2, n_clicks3, n_clicks4, n_clicks5, n_clicks6, selection_class) {
 
                 const title = document.getElementById('new_margins_title');
+                let selection_view_dismiss = document.getElementById('selection-view-dismiss').classList
+                selection_view_dismiss.toggle('hidden')
 
                 // let setup_low = document.getElementById('setup_low_new_margins')
                 // let setup_high = document.getElementById('setup_high_new_margins')
@@ -523,7 +565,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         },
 
-        hideSelectionViewCross: function(n_clicks, n_clicks2, selection_class) {
+        hideSelectionViewCross: function(n_clicks, n_clicks2, selection_class, dismiss_class) {
+            let selection_view_dismiss = document.getElementById('selection-view-dismiss').classList
+            selection_view_dismiss.toggle('hidden')
             return selection_class.replace('flex', 'hidden');
         },
 
@@ -567,6 +611,13 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     button = button['index']
                     return  button
                 }
+        },
+
+        showEditPositionsSaveButton: function(n_clicks, n_clicks2, n_clicks3) {
+            if (n_clicks > 0 || n_clicks2 > 0 || n_clicks3 > 0) {
+                let button = document.getElementById('edit_positions_div').classList
+                button.toggle('hidden')
+            }
         },
     }
 });

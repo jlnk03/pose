@@ -157,10 +157,10 @@ document.addEventListener('DOMContentLoaded', function() {
      }, 100);
  });
 
-
+// Show loading view
 document.addEventListener("DOMContentLoaded", function() {
     let interval = setInterval(function () {
-        let ancestor = document.getElementById("position_divs")
+        let ancestor = document.getElementById("main")
         let main = document.getElementById("main_wrapper")
         let loader = document.getElementById("loader")
         let quote = document.getElementById("quote")
@@ -175,7 +175,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const ancestorObserver = new MutationObserver(function (mutations) {
                 mutations.forEach(function(mutation) {
-                    if (mutation.target === document.getElementById("top_pos")) {
+                    //  Check if the loading state has changed
+                    if (mutation.target === document.getElementById("loading-state")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
                             main.classList.add('hidden');

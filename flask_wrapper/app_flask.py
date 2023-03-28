@@ -15,6 +15,7 @@ from .models import UserLikes
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
+
 # import gc
 # import memory_profiler
 
@@ -23,6 +24,7 @@ pio.templates.default = "plotly_white"
 
 # Hide plotly logo
 config = dict({'displaylogo': False, 'displayModeBar': False, 'scrollZoom': False})
+
 
 def find_closest_zero_intersection_left_of_max(array):
     max_index = np.argmax(array)
@@ -156,7 +158,21 @@ def upload_video(disabled=True, path=None):
                                     width='100%',
                                     height='100%',
                                     intervalCurrentTime=70,
-                                )
+                                ),
+
+                                html.Div(
+                                    id='edit_positions_div',
+                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
+                                    children=[
+                                        html.Button('Reset', id='edit_positions_reset',
+                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                        html.Button('Save', id='edit_positions_save',
+                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                    ]
+                                ),
+
+                                html.Button('⚙️', id='edit_positions',
+                                            className='text-base absolute bottom-4 right-4 hidden'),
                             ]
                         ), ]
                 ),
@@ -1089,9 +1105,12 @@ def init_dash(server):
 
         layout = html.Div(
 
-            # className='flex w-full',
+            id='main',
 
             children=[
+
+                # Loading state to show loading view
+                html.Div(id='loading-state', className='hidden'),
 
                 # Loader
                 html.Div(
@@ -1146,7 +1165,8 @@ def init_dash(server):
                                     id='sidebar-header',
                                     className='flex-row items-center ml-4 lg:hidden',
                                     children=[
-                                        html.Img(src=app.get_asset_url('menu_cross.svg'), className='h-4 w-4 mt-4 hidden')]
+                                        html.Img(src=app.get_asset_url('menu_cross.svg'),
+                                                 className='h-4 w-4 mt-4 hidden')]
                                 ),
 
                                 # html.Div(
@@ -1202,7 +1222,8 @@ def init_dash(server):
                                                 html.Button(
                                                     html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
                                                     id={'type': 'delete', 'index': file},
-                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False, n_clicks=0
+                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1',
+                                                    disabled=False, n_clicks=0
                                                 ),
                                             ],
 
@@ -1263,10 +1284,16 @@ def init_dash(server):
                                 #     ]
                                 # ),
 
-                                # Selection view in center of screen
+                                # Selection View background dismiss button
                                 html.Button(
+                                    id='selection-view-dismiss',
+                                    className='fixed w-full h-full top-0 left-0 z-10 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                ),
+
+                                # Selection view in center of screen
+                                html.Div(
                                     id='selection-view',
-                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                    className='hidden',
                                     children=[
                                         html.Div(
                                             className='fixed flex flex-col px-4 pt-14 pb-4 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-3xl shadow-lg z-30',
@@ -1355,25 +1382,27 @@ def init_dash(server):
                                 html.Div(
                                     id='delete-file-view',
                                     children=[
-                                      html.Div(
-                                          className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 w-fit fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center',
-                                          children=[
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 w-fit fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center',
+                                            children=[
                                                 html.Div('Do you want to delete this swing?',
                                                          className='text-lg font-medium text-gray-900 dark:text-gray-100 pt-2 relative items-center w-full'),
-                                              html.Div('', className='text-sm font-medium text-gray-900 dark:text-gray-100 pt-2 relative items-center w-full', id='delete-file-name'),
-                                              html.Div(
-                                                  className='flex flex-row justify-between mt-6',
+                                                html.Div('',
+                                                         className='text-sm font-medium text-gray-900 dark:text-gray-100 pt-2 relative items-center w-full',
+                                                         id='delete-file-name'),
+                                                html.Div(
+                                                    className='flex flex-row justify-between mt-6',
                                                     children=[
                                                         html.Button('Delete',
                                                                     id='delete-file',
-                                                                 className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-red-200 dark:bg-red-800 rounded-lg w-24 items-center justify-center text-center'),
+                                                                    className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-red-200 dark:bg-red-800 rounded-lg w-24 items-center justify-center text-center'),
                                                         html.Button('Cancel',
                                                                     id='cancel-delete-file',
-                                                                 className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-gray-100 dark:bg-gray-600 rounded-lg w-24 items-center justify-center text-center')
-                                                  ]
-                                              )
-                                          ]
-                                      )
+                                                                    className='text-sm font-medium text-gray-900 dark:text-gray-100 py-2 px-3 bg-gray-100 dark:bg-gray-600 rounded-lg w-24 items-center justify-center text-center')
+                                                    ]
+                                                )
+                                            ]
+                                        )
                                     ],
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                 ),
@@ -1464,8 +1493,12 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Pelvis Rotation',
-                                                                                    className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
-                                                                        html.Button(html.Img(src=app.get_asset_url('edit.svg'), className='h-4 w-4'), id='pelvis_rot_btn', className='absolute right-3 w-fit h-fit top-3'),
+                                                                                 className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='pelvis_rot_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='pelvis_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1480,7 +1513,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Pelvis Tilt',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100  text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100  text-left', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1500,12 +1533,12 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Thorax Rotation',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
-                                                                    html.Button(
-                                                                        html.Img(src=app.get_asset_url('edit.svg'),
-                                                                                 className='h-4 w-4'),
-                                                                        id='thorax_rot_btn',
-                                                                        className='absolute right-3 w-fit h-fit top-3'),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        html.Button(
+                                                                            html.Img(src=app.get_asset_url('edit.svg'),
+                                                                                     className='h-4 w-4'),
+                                                                            id='thorax_rot_btn',
+                                                                            className='absolute right-3 w-fit h-fit top-3'),
                                                                         html.Div('- °', id='thorax_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1520,7 +1553,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Thorax Bend',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1547,7 +1580,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Head Rotation',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1565,7 +1598,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Head Tilt',
-                                                                                    className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1626,7 +1659,8 @@ def init_dash(server):
                                                                  className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
                                                                  className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
-                                                        html.Div('- s', id='backswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
+                                                        html.Div('- s', id='backswing',
+                                                                 className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
                                                         html.Div('0.5', id='end_pos', className='hidden'),
@@ -1641,7 +1675,8 @@ def init_dash(server):
                                                                  className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
                                                         html.Div('SWING',
                                                                  className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
-                                                        html.Div('- s', id='downswing', className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
+                                                        html.Div('- s', id='downswing',
+                                                                 className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
                                                     ],
                                                     className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
                                                 ),
@@ -1803,7 +1838,7 @@ def init_dash(server):
                                                             className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
                                                             children=[
                                                                 html.Div(
-                                                                    children=[html.Div('Swing Plane Anlge:',
+                                                                    children=[html.Div('Swing Plane Angle:',
                                                                                        className='text-base font-normal'),
                                                                               '- °'])
                                                             ]
@@ -2050,7 +2085,6 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
-
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
@@ -2074,8 +2108,8 @@ def init_callbacks(app):
          Output('setup_pos', 'children'), Output('fps_saved', 'children'),
          Output('arm_path', 'children'), Output('over_the_top', 'children'), Output('swing_plane_angle', 'children'),
          Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
-            Output('upload-initial', 'className'), Output('upload-video', 'className'),
-         Output('emoji-start', 'children'), Output('emoji-transition', 'children')
+         Output('upload-initial', 'className'), Output('upload-video', 'className'),
+         Output('emoji-start', 'children'), Output('emoji-transition', 'children'), Output('loading-state', 'children'),
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          # Input('upload-data', 'filename'),
@@ -2083,10 +2117,12 @@ def init_callbacks(app):
          Input('delete-file', 'n_clicks')
          # Input({'type': 'delete', 'index': ALL}, 'n_clicks')
          ],
-        [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'), State('delete-file-name', 'children')],
+        [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'),
+         State('delete-file-name', 'children')],
         prevent_initial_call=True
     )
-    def process(contents, contents_add, contents_initial, n_clicks, n_clicks_del, children, upload_initial_class, upload_video_class, del_file_name):
+    def process(contents, contents_add, contents_initial, n_clicks, n_clicks_del, children, upload_initial_class,
+                upload_video_class, del_file_name):
 
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
@@ -2097,9 +2133,9 @@ def init_callbacks(app):
             else:
                 contents = contents_initial
 
-
         # Check if button was pressed or a file was uploaded
-        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
+        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (
+                ctx.triggered_id != 'upload-data-initial'):
             if ctx.triggered_id != 'delete-file':
                 button_id = ctx.triggered_id.index
                 file = f'{button_id}.parquet'
@@ -2197,7 +2233,7 @@ def init_callbacks(app):
                             [], [], [],
                             disabled, disabled, disabled,
                             upload_initial_class, upload_video_class,
-                            '😍', '😍'
+                            '😍', '😍', ''
                             ]
 
                 # Read data from parquet file
@@ -2258,24 +2294,42 @@ def init_callbacks(app):
                 sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
                     save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
 
+                # Get vid from db and check if custom values are set
+                vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=button_id).first()
+
                 # Top of backswing
-                top_pos = arm_index / len(save_wrist_angle)
+                if vid_row is None or vid_row.top is None:
+                    top_pos = arm_index / len(save_wrist_angle)
+                else:
+                    top_pos = vid_row.top
+                    arm_index = int(top_pos * len(save_wrist_angle))
 
                 # Impact
-                if impact_ratio == -1:
-                    impact_pos = (np.argmin(
-                        filter_data(arm_z, duration * 2)[int(arm_index):] / len(
-                            save_wrist_angle)) + arm_index) / len(
-                        save_wrist_angle)
-
+                if vid_row is not None and vid_row.impact is not None:
+                    impact_pos = vid_row.impact
                 else:
-                    impact_pos = impact_ratio
+                    if impact_ratio == -1:
+                        impact_pos = (np.argmin(
+                            filter_data(arm_z, duration * 2)[int(arm_index):] / len(
+                                save_wrist_angle)) + arm_index) / len(
+                            save_wrist_angle)
+
+                    else:
+                        impact_pos = impact_ratio
 
                 # End of swing
-                end_pos = arm_index_e / len(save_wrist_angle)
+                if vid_row is None or vid_row.end is None:
+                    end_pos = arm_index_e / len(save_wrist_angle)
+                else:
+                    end_pos = vid_row.end
+                    arm_index_e = int(end_pos * len(save_wrist_angle))
 
                 # Setup
-                setup_pos = arm_index_s / len(save_wrist_angle)
+                if vid_row is None or vid_row.setup is None:
+                    setup_pos = arm_index_s / len(save_wrist_angle)
+                else:
+                    setup_pos = vid_row.setup
+                    arm_index_s = int(setup_pos * len(save_wrist_angle))
 
                 # Tempo
                 temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
@@ -2360,11 +2414,12 @@ def init_callbacks(app):
                         path, over_text, angle_swing_plane_text,
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        emoji_start, emoji_transition
+                        emoji_start, emoji_transition, ''
                         ]
 
         # Delete was pressed
-        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (ctx.triggered_id != 'upload-data-initial'):
+        if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (
+                ctx.triggered_id != 'upload-data-initial'):
             if ctx.triggered_id == 'delete-file':
                 button_id = del_file_name
                 # file = f'{button_id}.parquet'
@@ -2475,7 +2530,7 @@ def init_callbacks(app):
                         path, [], [],
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        '😍', '😍'
+                        '😍', '😍', ''
                         ]
 
         # Check if folder was created and generate file name
@@ -2489,10 +2544,9 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),json={'contents': contents, 'filename': filename, 'location': location})
+        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+                                 json={'contents': contents, 'filename': filename, 'location': location})
         # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
-
 
         if response.status_code == 200:
             save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2619,7 +2673,7 @@ def init_callbacks(app):
         # Reset the background color of the buttons
         for child in children:
             child['props'][
-                'className'] ='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
             child['props']['children'][0]['props']['disabled'] = False
             # Disabling the delete button
             # child['props']['children'][1]['props']['disabled'] = True
@@ -2627,26 +2681,27 @@ def init_callbacks(app):
 
         # Add a new button for the new motion data
         new_item = html.Div(
-                                            # disabled=True,
-                                            children=[
-                                                html.Button(
-                                                    id={'type': 'saved-button', 'index': f'{filename}'},
-                                                    className='flex flex-row items-center',
-                                                    children=[
-                                                        # html.Img(src=app.get_asset_url('graph_gray.svg'),
-                                                        #          className='w-6 h-6 mr-2'),
-                                                        heart_navbar(filename),
-                                                        reformat_file(filename),
-                                                    ]),
-                                                html.Button(
-                                                    html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
-                                                    id={'type': 'delete', 'index': filename},
-                                                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False, n_clicks=0
-                                                ),
-                                            ],
+            # disabled=True,
+            children=[
+                html.Button(
+                    id={'type': 'saved-button', 'index': f'{filename}'},
+                    className='flex flex-row items-center',
+                    children=[
+                        # html.Img(src=app.get_asset_url('graph_gray.svg'),
+                        #          className='w-6 h-6 mr-2'),
+                        heart_navbar(filename),
+                        reformat_file(filename),
+                    ]),
+                html.Button(
+                    html.Img(src=app.get_asset_url('delete.svg'), className='w-5 h-5'),
+                    id={'type': 'delete', 'index': filename},
+                    className='visible hover:bg-red-600 rounded-full px-1 py-1 absolute right-1', disabled=False,
+                    n_clicks=0
+                ),
+            ],
 
-                                            # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
-                                            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
@@ -2667,7 +2722,7 @@ def init_callbacks(app):
                 path, over_text, angle_swing_plane_text,
                 disabled, disabled, disabled,
                 upload_initial_class, upload_video_class,
-                emoji_start, emoji_transition
+                emoji_start, emoji_transition, ''
                 ]
 
     # Save new margins to db
@@ -2806,15 +2861,23 @@ def init_callbacks(app):
         impact_low_head_tilt = current_user.impact_low_head_tilt
         impact_high_head_tilt = current_user.impact_high_head_tilt
 
-        positions = [setup_low_pelvis_rot, setup_high_pelvis_rot, top_low_pelvis_rot, top_high_pelvis_rot, impact_low_pelvis_rot, impact_high_pelvis_rot,
-                     setup_low_pelvis_tilt, setup_high_pelvis_tilt, top_low_pelvis_tilt, top_high_pelvis_tilt, impact_low_pelvis_tilt, impact_high_pelvis_tilt,
-                        setup_low_thorax_rot, setup_high_thorax_rot, top_low_thorax_rot, top_high_thorax_rot, impact_low_thorax_rot, impact_high_thorax_rot,
-                     setup_low_thorax_tilt, setup_high_thorax_tilt, top_low_thorax_tilt, top_high_thorax_tilt, impact_low_thorax_tilt, impact_high_thorax_tilt,
-                        setup_low_head_rot, setup_high_head_rot, top_low_head_rot, top_high_head_rot, impact_low_head_rot, impact_high_head_rot,
-                     setup_low_head_tilt, setup_high_head_tilt, top_low_head_tilt, top_high_head_tilt, impact_low_head_tilt, impact_high_head_tilt
+        positions = [setup_low_pelvis_rot, setup_high_pelvis_rot, top_low_pelvis_rot, top_high_pelvis_rot,
+                     impact_low_pelvis_rot, impact_high_pelvis_rot,
+                     setup_low_pelvis_tilt, setup_high_pelvis_tilt, top_low_pelvis_tilt, top_high_pelvis_tilt,
+                     impact_low_pelvis_tilt, impact_high_pelvis_tilt,
+                     setup_low_thorax_rot, setup_high_thorax_rot, top_low_thorax_rot, top_high_thorax_rot,
+                     impact_low_thorax_rot, impact_high_thorax_rot,
+                     setup_low_thorax_tilt, setup_high_thorax_tilt, top_low_thorax_tilt, top_high_thorax_tilt,
+                     impact_low_thorax_tilt, impact_high_thorax_tilt,
+                     setup_low_head_rot, setup_high_head_rot, top_low_head_rot, top_high_head_rot, impact_low_head_rot,
+                     impact_high_head_rot,
+                     setup_low_head_tilt, setup_high_head_tilt, top_low_head_tilt, top_high_head_tilt,
+                     impact_low_head_tilt, impact_high_head_tilt
                      ]
 
-        values = ['-3', '6', '-56', '-39', '29', '48', '-4', '6', '-14', '-6', '-2', '11', '7', '15', '-98', '-83', '20', '37', '28', '40', '28', '40', '18', '30', '-6', '6', '-25', '-8', '-6', '15', '-3', '7', '-16', '-3', '1', '18']
+        values = ['-3', '6', '-56', '-39', '29', '48', '-4', '6', '-14', '-6', '-2', '11', '7', '15', '-98', '-83',
+                  '20', '37', '28', '40', '28', '40', '18', '30', '-6', '6', '-25', '-8', '-6', '15', '-3', '7', '-16',
+                  '-3', '1', '18']
 
         result = [f'{pos}' if pos is not None else val for pos, val in zip(positions, values)]
 
@@ -2865,6 +2928,302 @@ def init_callbacks(app):
                 else:
                     return class_name
 
+    # Save new positions
+    @app.callback(
+        Input('edit_positions_save', 'n_clicks'),
+        State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+        State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
+        State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
+        State('video', 'url'),
+        State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
+        State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
+        Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
+        prevent_initial_call=True
+    )
+    def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
+                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
+
+        time_back = '- s'
+        time_down = '- s'
+        temp = '-'
+
+        if n_clicks is not None:
+            setup_time = 0 if setup_time is None else setup_time
+            top_time = 0 if top_time is None else top_time
+            impact_time = 0 if impact_time is None else impact_time
+            end_time = 0 if end_time is None else end_time
+
+            timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
+            max_key = max(timestamp_dict, key=timestamp_dict.get)
+
+            ratio = current_time / duration
+
+            vid = url.split('/')[3]
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+            if vid_row is None:
+                db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
+                db.session.commit()
+
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+            # Read data from parquet file
+            data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
+            x = data['arm_x']
+            y = data['arm_y']
+            z = data['arm_z']
+
+            length = len(x)
+
+            match max_key:
+                case 'setup':
+                    vid_row.setup = ratio
+                    vid_row.setup_calc = setup_pos
+                    setup_pos = ratio
+
+                    # Tempo
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'top':
+                    vid_row.top = ratio
+                    vid_row.top_calc = top_pos
+                    top_pos = ratio
+
+                    # Tempo
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'impact':
+                    vid_row.impact = ratio
+                    vid_row.impact_calc = impact_pos
+                    impact_pos = ratio
+
+                    # Tempo
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'end':
+                    vid_row.end = ratio
+                    vid_row.end_calc = end_pos
+                    end_pos = ratio
+
+                    # Tempo
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case _:
+                    print('Error: No position selected')
+                    temp = '-'
+                    time_back = '- s'
+                    time_down = '- s'
+
+            # 3D plot
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), duration)
+
+            angle_text = html.Div(
+                children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                          f'{int(angle)}°'])
+
+            fig = dcc.Graph(
+                id='arm_path_3d',
+                figure=path,
+                config=config,
+                className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
+            )
+
+            db.session.commit()
+
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+
+
+    # Reset positions
+    @app.callback(
+        Input('edit_positions_reset', 'n_clicks'),
+        State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+        State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
+        State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
+        State('video', 'url'),
+        State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
+        State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
+        Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
+        prevent_initial_call=True
+    )
+    def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
+                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
+
+        time_back = '- s'
+        time_down = '- s'
+        temp = '-'
+
+        if n_clicks is not None:
+            setup_time = 0 if setup_time is None else setup_time
+            top_time = 0 if top_time is None else top_time
+            impact_time = 0 if impact_time is None else impact_time
+            end_time = 0 if end_time is None else end_time
+
+            timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
+            max_key = max(timestamp_dict, key=timestamp_dict.get)
+
+            ratio = current_time / duration
+
+            vid = url.split('/')[3]
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+            if vid_row is None:
+                db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
+                db.session.commit()
+
+            vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+            # Read data from parquet file
+            data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
+            x = data['arm_x']
+            y = data['arm_y']
+            z = data['arm_z']
+
+            length = len(x)
+
+            match max_key:
+                case 'setup':
+                    vid_row.setup = None
+
+                    setup_pos = vid_row.setup_calc
+
+                    if vid_row.top is not None:
+                        top_pos = vid_row.top
+                    if vid_row.impact is not None:
+                        impact_pos = vid_row.impact
+
+                    # Tempo
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'top':
+                    vid_row.top = None
+                    top_pos = vid_row.top_calc
+
+                    if vid_row.setup is not None:
+                        setup_pos = vid_row.setup
+                    if vid_row.impact is not None:
+                        impact_pos = vid_row.impact
+
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'impact':
+                    vid_row.impact = None
+                    impact_pos = vid_row.impact_calc
+
+                    if vid_row.setup is not None:
+                        setup_pos = vid_row.setup
+                    if vid_row.top is not None:
+                        top_pos = vid_row.top
+
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case 'end':
+                    vid_row.end = None
+                    end_pos = vid_row.end_calc
+
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                case _:
+                    print('Error: No position selected')
+
+                    temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+            # 3D plot
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), duration)
+
+            angle_text = html.Div(
+                children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                          f'{int(angle)}°'])
+
+            fig = dcc.Graph(
+                id='arm_path_3d',
+                figure=path,
+                config=config,
+                className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
+            )
+
+            db.session.commit()
+
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+
+    # @app.callback(
+    #     # Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
+    #     Input('edit_positions_reset', 'n_clicks'),
+    #     State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+    #     State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
+    #     State('video', 'url'), State('fps_saved', 'children'), State('video', 'duration'),
+    #     State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
+    #     prevent_initial_call=True
+    # )
+    # def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, url, fps, duration, setup_pos, top_pos,
+    #                     impact_pos):
+    #     if n_clicks is not None:
+    #         setup_time = 0 if setup_time is None else setup_time
+    #         top_time = 0 if top_time is None else top_time
+    #         impact_time = 0 if impact_time is None else impact_time
+    #         end_time = 0 if end_time is None else end_time
+    #
+    #         timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
+    #         max_key = max(timestamp_dict, key=timestamp_dict.get)
+    #
+    #         vid = url.split('/')[3]
+    #         vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+    #
+    #         length = fps * duration
+    #
+    #         match max_key:
+    #             case 'setup':
+    #                 vid_row.setup = None
+    #
+    #                 setup_pos = vid_row.setup_calc
+    #
+    #                 if vid_row.top is not None:
+    #                     top_pos = vid_row.top
+    #                 if vid_row.impact is not None:
+    #                     impact_pos = vid_row.impact
+    #
+    #                 # Tempo
+    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+    #
+    #             case 'top':
+    #                 vid_row.top = None
+    #                 top_pos = vid_row.top_calc
+    #
+    #                 if vid_row.setup is not None:
+    #                     setup_pos = vid_row.setup
+    #                 if vid_row.impact is not None:
+    #                     impact_pos = vid_row.impact
+    #
+    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+    #
+    #             case 'impact':
+    #                 vid_row.impact = None
+    #                 impact_pos = vid_row.impact_calc
+    #
+    #                 if vid_row.setup is not None:
+    #                     setup_pos = vid_row.setup
+    #                 if vid_row.top is not None:
+    #                     top_pos = vid_row.top
+    #
+    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+    #
+    #             case 'end':
+    #                 vid_row.end = None
+    #                 end_pos = vid_row.end_calc
+    #
+    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+    #
+    #             case _:
+    #                 print('Error: No position selected')
+    #
+    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+    #
+    #         db.session.commit()
+    #
+    #         return time_back, time_down, temp
 
     # Hide selection view with save
     app.clientside_callback(
@@ -2872,7 +3231,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionView'
         ),
-        [Output('selection-view', 'className')],
+        Output('selection-view', 'className'),
         Input('submit-new-margins', 'n_clicks'),
         [State('selection-view', 'className'),
          ],
@@ -2885,9 +3244,9 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionViewCross'
         ),
-        [Output('selection-view', 'className')],
-        Input('new_margins_close', 'n_clicks'),  Input('selection-view', 'n_clicks'),
-        [State('selection-view', 'className'),
+        Output('selection-view', 'className'),
+        Input('new_margins_close', 'n_clicks'), Input('selection-view-dismiss', 'n_clicks'),
+        [State('selection-view', 'className')
          ],
         prevent_initial_call=True
     )
@@ -3035,7 +3394,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='toggleDeleteView'
         ),
-        [Output({'type': 'delete', 'index': MATCH}, 'n_clicks')],
+        Output({'type': 'delete', 'index': MATCH}, 'n_clicks'),
         Input({'type': 'delete', 'index': MATCH}, 'n_clicks'),
         prevent_initial_call=True
     )
@@ -3047,6 +3406,17 @@ def init_callbacks(app):
             function_name='hideDeleteView'
         ),
         Input('delete-file', 'n_clicks'), Input('cancel-delete-file', 'n_clicks'),
+        prevent_initial_call=True
+    )
+
+    # Show edit positions save button
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showEditPositionsSaveButton'
+        ),
+        Input('edit_positions', 'n_clicks'), Input('edit_positions_save', 'n_clicks'),
+        Input('edit_positions_reset', 'n_clicks'),
         prevent_initial_call=True
     )
 
@@ -3177,7 +3547,7 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
 
     emoji_transition = '😍' if body_part == ['Pelvis', 'Thorax', 'Arm'] else '🧐'
 
-    return sequence_first, sequence_second, sequence_third, body_part[0], body_part[1], body_part[2],\
+    return sequence_first, sequence_second, sequence_third, body_part[0], body_part[1], body_part[2], \
         thorax_index, emoji_transition
 
 

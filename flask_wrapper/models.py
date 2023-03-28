@@ -16,6 +16,14 @@ class UserLikes(db.Model):
     user_id = db.Column(db.Integer)
     video_id = db.Column(db.Integer)
     like = db.Column(db.Boolean)
+    setup = db.Column(db.Float)
+    top = db.Column(db.Float)
+    impact = db.Column(db.Float)
+    end = db.Column(db.Float)
+    setup_calc = db.Column(db.Float)
+    top_calc = db.Column(db.Float)
+    impact_calc = db.Column(db.Float)
+    end_calc = db.Column(db.Float)
 
 
 class User(UserMixin, db.Model):

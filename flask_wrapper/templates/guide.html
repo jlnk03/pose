@@ -8,7 +8,7 @@
     bod.style.height = "100%"
 </script>
 
-<div class="flex flex-col w-full w-max-lg h-full mb-4">
+<div class="flex flex-col w-full w-max-lg h-full mb-4 text-justify">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 my-10">Swinglab Guide</h1>
 
     <span class="text-gray-900 dark:text-gray-100 mb-10">Our goal is to make 3D golf analyses accessible to anyone and therefore make the process as easy as possible.
@@ -16,10 +16,14 @@
         The following guide will help you to record your swing video for the best possible results.
     </span>
 
+    <span class="text-gray-900 dark:text-gray-100 mb-10">
+        Note: We are still in the process of testing the technology and are working on improving the accuracy of the analysis. In some cases the analysis might show faulty results. If you encounter any issues, please <a href="/contact" class="text-blue-500 hover:text-blue-600">contact</a> us.
+    </span>
+
     <div class="text-2xl font-medium text-gray-900 dark:text-gray-100 mb-4">The perfect angle</div>
 
     <div class="relative justify-center">
-        <img src="{{ url_for('static', filename='ideal_angle.svg') }}" class="w-48 h-48 float-right" alt="ideal angle">
+        <img src="{{ url_for('static', filename='ideal_angle.svg') }}" class="w-48 h-48 float-right ml-8" alt="ideal angle">
         <span class="text-gray-900 dark:text-gray-100">Swinglab uses AI technology to extract the motion from your swing video. As the technology relies on a single video the quality of the analysis is influenced by the recording angle
         and the quality of the video. Even if a body part is occluded or not visible in the video, the AI will still predict the motion of the body part.
         However, the accuracy of the prediction might be lower. The best overall results can be achieved by recording the swing from an angle between 30° and 50°.
