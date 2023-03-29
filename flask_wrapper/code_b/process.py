@@ -250,7 +250,7 @@ def process_motion(contents, filename, location):
         wist_a = wrist_angle(pinky_l_s, index_l_s, wrist_l_s, wrist_r_s)
         wrist_t = wrist_tilt(pinky_l_s, index_l_s, wrist_l_s, wrist_r_s)
         left_arm = left_arm_length(shoulder_l_s, shoulder_r_s, wrist_l_s)
-        arm_rotation_l = arm_rotation(wrist_l_s, shoulder_l_s, shoulder_r_s)
+        arm_rotation_l = arm_rotation(wrist_l_s, shoulder_l_s, shoulder_r_s, impact_ratio)
         arm_ground = arm_to_ground(wrist_l_s, shoulder_l_s)
         arm_position = {'x': arm_v[0].tolist(), 'y': arm_v[2].tolist(), 'z': arm_v[1].tolist()}
 

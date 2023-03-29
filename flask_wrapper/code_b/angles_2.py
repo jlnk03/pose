@@ -231,18 +231,40 @@ def wrist_tilt(pinky_l, index_l, wrist_l, elbow_l):
     return pinky_l[0]
 
 
-def arm_rotation(wrist_l, shoulder_l, shoulder_r):
+def arm_rotation(wrist_l, shoulder_l, shoulder_r, impact_ratio):
     shoulder_v = (shoulder_l + shoulder_r) / 2
     arm = wrist_l - shoulder_v
     arm[0] = 0
     normal = np.array([0, 1, 0])
+
+    print(shoulder_l)
+    print(shoulder_r)
+    print(shoulder_v)
+    print(arm)
+
+    impact_index = int(impact_ratio * np.shape(arm)[1])
+
     product = arm.T @ normal
     norm = np.linalg.norm(arm, axis=0)
     angle = np.arccos(product / norm)
     angle = np.degrees(angle)
 
-    mask_smaller_zero = arm[2] < 0
-    angle[mask_smaller_zero] = -angle[mask_smaller_zero]
+    # plt.plot(angle)
+    # plt.show()
+
+    angle_before_impact = -angle[:impact_index]
+    angle_after_impact = angle[impact_index:]
+
+    mask_arm_above_back = (arm[1][:impact_index] < 0) * (shoulder_l[2][:impact_index] < wrist_l[2][:impact_index])
+    angle_before_impact[mask_arm_above_back] = 360 - angle_before_impact[mask_arm_above_back]
+
+    mask_arm_above_finish = (arm[1][impact_index:] < 0) * (shoulder_l[2][impact_index:] > wrist_l[2][impact_index:])
+    angle_after_impact[mask_arm_above_finish] = 360 - angle_after_impact[mask_arm_above_finish]
+
+    angle = np.concatenate((angle_before_impact, angle_after_impact))
+
+    plt.plot(angle)
+    plt.show()
 
     return angle
 

@@ -317,7 +317,7 @@ timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 def filter_data(data, fps):
     Wn = 4
-    b, a = signal.butter(3, Wn, 'low', fs=fps)
+    b, a = signal.butter(4, Wn, 'low', fs=fps)
     data = signal.filtfilt(b, a, data, method='gust')
     return data
 
