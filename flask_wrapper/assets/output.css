@@ -50,11 +50,6 @@
   background: #cbd5e1;
 }
 
-/*Prevent main content from scrolling*/
-#page-content {
-  pointer-events: none;
-}
-
 /*#sequence[data-dash-is-loading="true"] {*/
 /*    visibility: hidden;*/
 /*}*/

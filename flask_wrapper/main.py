@@ -13,7 +13,7 @@ import os
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
-from code_b.process_mem import process_motion
+from code_b.process import process_motion
 from itsdangerous import URLSafeTimedSerializer
 import smtplib
 import ssl
@@ -262,13 +262,16 @@ def predict(token):
     result = process_motion(contents, filename, location)
     # print(result)
 
+    result = [value.tolist() if isinstance(value, np.ndarray) else value for value in result]
+
     if result == -1:
         return 413
 
-    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-        save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_path, duration, fps, impact_ratio = result
+    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_sway, save_pelvis_thrust, save_pelvis_lift, \
+        save_thorax_rotation, save_thorax_bend, save_thorax_tilt, save_thorax_sway, save_thorax_thrust, \
+        save_thorax_lift, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, \
+        save_wrist_angle, save_wrist_tilt, save_left_arm_length, save_arm_rotation, save_arm_to_ground, \
+        arm_position, duration, fps, impact_ratio = result
 
     keys = [
         'save_pelvis_rotation',
@@ -291,34 +294,34 @@ def predict(token):
         'save_wrist_tilt',
         'save_arm_rotation',
         'save_arm_to_ground',
-        'arm_path',
+        'arm_position',
         'duration',
         'fps',
         'impact_ratio'
     ]
 
     values = [
-        list(save_pelvis_rotation),
-        list(save_pelvis_tilt),
-        list(save_pelvis_lift),
-        list(save_pelvis_sway),
-        list(save_pelvis_thrust),
-        list(save_thorax_lift),
-        list(save_thorax_bend),
-        list(save_thorax_sway),
-        list(save_thorax_rotation),
-        list(save_thorax_thrust),
-        list(save_thorax_tilt),
-        list(save_spine_rotation),
-        list(save_spine_tilt),
-        list(save_head_rotation),
-        list(save_head_tilt),
-        list(save_left_arm_length),
-        list(save_wrist_angle),
-        list(save_wrist_tilt),
-        list(save_arm_rotation),
-        list(save_arm_to_ground),
-        arm_path,
+        save_pelvis_rotation,
+        save_pelvis_tilt,
+        save_pelvis_lift,
+        save_pelvis_sway,
+        save_pelvis_thrust,
+        save_thorax_lift,
+        save_thorax_bend,
+        save_thorax_sway,
+        save_thorax_rotation,
+        save_thorax_thrust,
+        save_thorax_tilt,
+        save_spine_rotation,
+        save_spine_tilt,
+        save_head_rotation,
+        save_head_tilt,
+        save_left_arm_length,
+        save_wrist_angle,
+        save_wrist_tilt,
+        save_arm_rotation,
+        save_arm_to_ground,
+        arm_position,
         duration,
         fps,
         impact_ratio

@@ -79,7 +79,7 @@ def over_the_top(hand_path_x, hand_path_z, setup, top, impact):
     hand_path_z = np.array(hand_path_z)
     back_z = hand_path_z[setup:top]
     down_z = hand_path_z[top:impact]
-    half_height = (back_z[-1] - back_z[0]) / 2 + back_z[0]
+    half_height = 2/3 * (back_z[-1] - back_z[0]) + back_z[0]
     diff_back = np.abs(back_z - half_height)
     diff_down = np.abs(down_z - half_height)
     nearest = np.argmin(diff_back)
@@ -116,25 +116,25 @@ def upload_video(disabled=True, path=None):
                             html.Div(
                                 children=[
                                     html.Button('Setup', id='setup_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Top', id='top_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Impact', id='impact_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Finish', id='end_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
                                 children=[
                                     html.Button('Frame +', id='plus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                     html.Button('Frame -', id='minus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
                         ],
                         className='flex flex-col gap-5'
@@ -165,9 +165,9 @@ def upload_video(disabled=True, path=None):
                                     className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
                                     children=[
                                         html.Button('Reset', id='edit_positions_reset',
-                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md hover:shadow-indigo-400 text-white font-bold text-sm'),
                                         html.Button('Save', id='edit_positions_save',
-                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 text-white font-bold text-sm'),
+                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     ]
                                 ),
 
@@ -185,7 +185,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('Frame +', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
-                    className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-full px-2 py-2 sm:hidden'
+                    className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 rounded-full px-2 py-2 sm:hidden'
                 ),
             ]),
     ]
@@ -228,14 +228,14 @@ def slider_view(name, min_bound, max_bound):
     return layout
 
 
-def hand_path_3d(x, y, z, start, end, top, duration):
+def hand_path_3d(x, y, z, start, end, top, fps):
     start = int(start)
     end = int(end)
     top = int(top)
 
-    x = filter_data(x, duration * 2)
-    y = filter_data(y, duration * 2)
-    z = filter_data(z, duration * 2)
+    x = filter_data(x, fps)
+    y = filter_data(y, fps)
+    z = filter_data(z, fps)
 
     path_fig = go.Figure(
         data=go.Scatter3d(x=x[start:end],
@@ -315,11 +315,10 @@ duration = 10
 timeline = np.linspace(0, duration, len(save_pelvis_rotation))
 
 
-def filter_data(data, duration):
-    sample_rate = len(data) / duration
-    Wn = 2
-    b, a = signal.butter(3, Wn / (sample_rate / 2), 'low')
-    data = signal.filtfilt(b, a, data)
+def filter_data(data, fps):
+    Wn = 4
+    b, a = signal.butter(3, Wn, 'low', fs=fps)
+    data = signal.filtfilt(b, a, data, method='gust')
     return data
 
 
@@ -331,7 +330,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
                  duration, fps=1,
                  filt=True):
     if filt:
-        converted = [filter_data(np.array(name), duration) for name in
+        converted = [filter_data(np.array(name), fps) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
                       save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
                       save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
@@ -364,7 +363,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     fig.add_trace(
         go.Scatter(
             x=timeline,
-            y=-np.gradient(save_arm_rotation, 1 / fps),
+            y=np.gradient(save_arm_rotation, 1 / fps),
             name=f'Arm',
         )
     )
@@ -1228,7 +1227,7 @@ def init_dash(server):
                                             ],
 
                                             # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
-                                            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+                                            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
                                     id='file_list',
                                 ),
@@ -2280,19 +2279,24 @@ def init_callbacks(app):
                 except KeyError:
                     save_arm_to_ground = np.zeros(len(save_wrist_angle))
 
+                try:
+                    fps = data['fps'][0]
+                except KeyError:
+                    fps = duration / len(save_wrist_angle)
+
                 # Get the kinematic transition  sequence
                 sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index, emoji_transition = kinematic_sequence(
                     save_pelvis_rotation,
                     save_thorax_rotation,
-                    save_arm_rotation, duration)
+                    save_arm_rotation, fps)
 
                 # Get the kinematic start sequence
                 sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s, emoji_start = kinematic_sequence_start(
-                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, fps)
 
                 # Get the kinematic end sequence
                 sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
-                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+                    save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, fps)
 
                 # Get vid from db and check if custom values are set
                 vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=button_id).first()
@@ -2310,7 +2314,7 @@ def init_callbacks(app):
                 else:
                     if impact_ratio == -1:
                         impact_pos = (np.argmin(
-                            filter_data(arm_z, duration * 2)[int(arm_index):] / len(
+                            filter_data(arm_z, fps)[int(arm_index):] / len(
                                 save_wrist_angle)) + arm_index) / len(
                             save_wrist_angle)
 
@@ -2356,7 +2360,7 @@ def init_callbacks(app):
                 for child in children:
                     if child['props']['children'][0]['props']['id']['index'] == button_id:
                         child['props'][
-                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['children'][0]['props']['disabled'] = True
                         # # Enabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = False
@@ -2364,7 +2368,7 @@ def init_callbacks(app):
                         #     'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
                     else:
                         child['props'][
-                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['children'][0]['props']['disabled'] = False
                         # # Disabling the delete button
                         # child['props']['children'][1]['props']['disabled'] = True
@@ -2391,11 +2395,11 @@ def init_callbacks(app):
                     save_wrist_tilt,
                     save_arm_rotation,
                     save_arm_to_ground,
-                    duration)
+                    duration, fps)
 
                 # Update the 3D plot
                 path_fig, angle_swing_plane = hand_path_3d(arm_x, arm_y, arm_z, arm_index_s, arm_index_e, arm_index,
-                                                           duration)
+                                                           fps)
 
                 angle_swing_plane_text = html.Div(
                     children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -2428,7 +2432,7 @@ def init_callbacks(app):
                         children.remove(child)
                     else:
                         child['props'][
-                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                            'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['children'][0]['props']['disabled'] = False
 
                 path = f'assets/save_data/{current_user.id}/{button_id}'
@@ -2564,6 +2568,7 @@ def init_callbacks(app):
                 100, 20)
             duration = 10
             impact_ratio = 0.5
+            fps = 60
             arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                             'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
 
@@ -2591,7 +2596,7 @@ def init_callbacks(app):
                                                                                              save_wrist_tilt,
                                                                                              save_arm_rotation,
                                                                                              save_arm_to_ground,
-                                                                                             duration)
+                                                                                             duration, fps)
 
         # Save the motion data to a parquet file
         df = pd.DataFrame(
@@ -2607,24 +2612,25 @@ def init_callbacks(app):
 
         df['duration'] = duration
         df['impact_ratio'] = impact_ratio
+        df['fps'] = fps
 
         df.to_parquet(f'assets/save_data/{current_user.id}/{filename}/{filename}.parquet')
 
         # Get the kinematic transition  sequence
         sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index, emoji_transition = kinematic_sequence(
             save_pelvis_rotation, save_thorax_rotation,
-            save_arm_rotation, duration)
+            save_arm_rotation, fps)
 
         # Get the kinematic start sequence
         sequence_first_start, sequence_second_start, sequence_third_start, first_bp_s, second_bp_s, third_bp_s, arm_index_s, emoji_start = kinematic_sequence_start(
-            save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, duration)
+            save_pelvis_rotation, save_thorax_rotation, save_arm_rotation, fps)
 
         # Get the kinematic end sequence
         sequence_first_end, sequence_second_end, sequence_third_end, first_bp_e, second_bp_e, third_bp_e, arm_index_e = kinematic_sequence_end(
             save_pelvis_rotation,
             save_thorax_rotation,
             save_arm_rotation,
-            duration)
+            fps)
 
         # Top of backswing
         top_pos = arm_index / len(save_wrist_angle)
@@ -2632,7 +2638,7 @@ def init_callbacks(app):
         # Impact
         if impact_ratio == -1:
             impact_pos = (np.argmin(
-                filter_data(arm_position['z'], duration * 2)[int(arm_index):] / len(
+                filter_data(arm_position['z'], fps)[int(arm_index):] / len(
                     save_wrist_angle)) + arm_index) / len(
                 save_wrist_angle)
         else:
@@ -2654,7 +2660,7 @@ def init_callbacks(app):
 
         path_fig, angle_swing_plane = hand_path_3d(arm_position['x'], arm_position['y'], arm_position['z'], arm_index_s,
                                                    arm_index_e,
-                                                   arm_index, duration)
+                                                   arm_index, fps)
 
         path = dcc.Graph(figure=path_fig, config=config,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
@@ -2663,8 +2669,9 @@ def init_callbacks(app):
                                                     f'{int(angle_swing_plane)}°'])
 
         # Check if the swing is over the top
-        over = over_the_top(arm_position['x'], arm_position['z'], int(arm_index_s), int(arm_index),
-                            int(impact_pos * len(save_wrist_angle)))
+        # over = over_the_top(arm_position['x'], arm_position['z'], int(arm_index_s), int(arm_index),
+        #                     int(impact_pos * len(save_wrist_angle)))
+        over = False
         if over:
             over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Over the top']
         else:
@@ -2673,7 +2680,7 @@ def init_callbacks(app):
         # Reset the background color of the buttons
         for child in children:
             child['props'][
-                'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
+                'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
             child['props']['children'][0]['props']['disabled'] = False
             # Disabling the delete button
             # child['props']['children'][1]['props']['disabled'] = True
@@ -2701,7 +2708,7 @@ def init_callbacks(app):
             ],
 
             # className='relative font-base max-w-full text-xs text-gray-200 flex flex-row hover:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
-            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
+            className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 shadow-md px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
         if not current_user.unlimited:
@@ -3017,7 +3024,7 @@ def init_callbacks(app):
                     time_down = '- s'
 
             # 3D plot
-            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), duration)
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), fps)
 
             angle_text = html.Div(
                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -3064,8 +3071,6 @@ def init_callbacks(app):
 
             timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
             max_key = max(timestamp_dict, key=timestamp_dict.get)
-
-            ratio = current_time / duration
 
             vid = url.split('/')[3]
             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
@@ -3132,7 +3137,7 @@ def init_callbacks(app):
                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
 
             # 3D plot
-            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), duration)
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), fps)
 
             angle_text = html.Div(
                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -3518,14 +3523,14 @@ def reset_plots(children, button_id, disabled):
     return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children, children_upload, []]
 
 
-def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, fps):
     # Get the kinematic transition sequence
     hip_index = find_closest_zero_intersection_left_of_max(
-        np.gradient(filter_data(pelvis_rotation, duration)))
+        np.gradient(filter_data(pelvis_rotation, fps)))
     thorax_index = find_closest_zero_intersection_left_of_max(
-        np.gradient(filter_data(thorax_rotation, duration)))
+        np.gradient(filter_data(thorax_rotation, fps)))
     arm_index = find_closest_zero_intersection_left_of_max(
-        -np.gradient(filter_data(arm_rotation, duration)))
+        -np.gradient(filter_data(arm_rotation, fps)))
 
     # print(hip_index, thorax_index, arm_index)
 
@@ -3551,15 +3556,15 @@ def kinematic_sequence(pelvis_rotation, thorax_rotation, arm_rotation, duration)
         thorax_index, emoji_transition
 
 
-def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, fps):
     # Get the kinematic start sequence
     argmax = np.argmax(arm_rotation)
     hip_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(pelvis_rotation[:argmax], duration)))
+        np.gradient(filter_data(pelvis_rotation[:argmax], fps)))
     thorax_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(thorax_rotation[:argmax], duration)))
+        np.gradient(filter_data(thorax_rotation[:argmax], fps)))
     arm_index = find_closest_zero_intersection_left_of_min(
-        np.gradient(filter_data(arm_rotation[:argmax], duration)))
+        np.gradient(filter_data(arm_rotation[:argmax], fps)))
 
     # Colors for hip, thorax and arm
     sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
@@ -3582,14 +3587,14 @@ def kinematic_sequence_start(pelvis_rotation, thorax_rotation, arm_rotation, dur
         0], thorax_index, sequence_start_emoji
 
 
-def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, duration):
+def kinematic_sequence_end(pelvis_rotation, thorax_rotation, arm_rotation, fps):
     # Get the kinematic end sequence
     hip_index = find_closest_zero_intersection_right_of_max(
-        np.gradient(filter_data(pelvis_rotation, duration)))
+        np.gradient(filter_data(pelvis_rotation, fps)))
     thorax_index = find_closest_zero_intersection_right_of_max(
-        np.gradient(filter_data(thorax_rotation, duration)))
+        np.gradient(filter_data(thorax_rotation, fps)))
     arm_index = find_closest_zero_intersection_right_of_max(
-        np.gradient(filter_data(arm_rotation, duration)))
+        np.gradient(filter_data(arm_rotation, fps)))
 
     # Colors for hip, thorax and arm
     sequence = {'bg-[#6266F6]': hip_index, 'bg-[#E74D39]': thorax_index, 'bg-[#2BC48C]': arm_index}
