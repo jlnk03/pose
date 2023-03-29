@@ -2282,7 +2282,7 @@ def init_callbacks(app):
                 try:
                     fps = data['fps'][0]
                 except KeyError:
-                    fps = duration / len(save_wrist_angle)
+                    fps = len(save_wrist_angle) / duration
 
                 # Get the kinematic transition  sequence
                 sequence_first, sequence_second, sequence_third, first_bp, second_bp, third_bp, arm_index, emoji_transition = kinematic_sequence(
