@@ -12,6 +12,7 @@ services:
       - STRIPE_PRICE_STARTER
       - STRIPE_PRICE_ESSENTIAL
       - STRIPE_PRICE_PROFESSIONAL
+      - REPLICATE_API_TOKEN
     volumes:
       - ./storage/db:/db
       - ./storage/save_data:/flask_wrapper/assets/save_data

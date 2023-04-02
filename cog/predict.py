@@ -12,6 +12,7 @@ import io
 import imageio.v3 as iio
 import av
 import cv2
+import base64
 
 
 def filter_data(data, fps):
@@ -77,16 +78,18 @@ class Predictor(BasePredictor):
 
     def predict(
             self,
-            video: Path = Input(description="Input video to detect pose")
+            video: str = Input(description="Input video to detect pose")
     ) -> tuple:
         """Run a single prediction on the model"""
         # processed_input = preprocess(image)
         # output = self.model(processed_image, scale)
         # return postprocess(output)
 
-        decoded = open(video, 'rb').read()
+        # decoded = open(video, 'rb').read()
 
-        # decoded = base64.b64decode(video)
+        decoded = base64.b64decode(video)
+
+        # decoded = video
 
         with io.BytesIO(decoded) as vid_bytes:
 

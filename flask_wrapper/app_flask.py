@@ -2631,24 +2631,24 @@ def init_callbacks(app):
         # TODO replicate
 
         # Write video to named tempfile
-        with tempfile.NamedTemporaryFile(suffix='.mp4') as temp:
-            content_type, content_string = contents.split(',')
+        # with contents.split(',')[1] as decoded:
+        content_type, content_string = contents.split(',')
 
-            decoded = base64.b64decode(content_string)
-            temp.write(decoded)
+        # decoded = base64.b64decode(content_string)
+            # temp.write(decoded)
 
-            file_path = 'https://swinglab.app' + temp.name
+            # file_path = 'https://swinglab.app' + temp.name
 
-            replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
+        replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
-            response = replicate.run(
-                "jlnk03/predict-pose:34a1cc2a75b90f89f2dfed9134579524ce034959744aa0f7e5627e44fbccf7ab",
-                input={"video": file_path},
-            )
+        response = replicate.run(
+            "jlnk03/predict-pose:16857c16e66dcde398cc7167273894a0bb9d5f9be67a7f29d861b673785f83e8",
+            input={"video": content_string},
+        )
 
-            shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
-                duration, fps, impact_ratio, \
-                out_path = response.json().values()
+        shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+            duration, fps, impact_ratio, \
+            out_path = response
 
         # if response.status_code == 200:
         #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
@@ -2688,8 +2688,9 @@ def init_callbacks(app):
 
         # Get the video and update the video player
 
-        video_file = urllib.URLopener()
-        video_file.retrieve(out_path, location + '/motion.mp4')
+        # video_file = urllib.URLopener()
+        # video_file.retrieve(out_path, location + '/motion.mp4')
+        urllib.request.urlretrieve(out_path, location + '/motion.mp4')
 
         vid_src = location + '/motion.mp4'
         children_upload = upload_video(disabled, path=vid_src)

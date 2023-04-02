@@ -15,6 +15,8 @@ def calc_angle(landmark1, landmark2):
 
 
 def angle_hip(hip_l, hip_r):
+    hip_l = np.array(hip_l)
+    hip_r = np.array(hip_r)
     hip_v = hip_l - hip_r
     normal = np.array([0, 0, 1]).T
     product = hip_v.T @ normal
@@ -26,6 +28,8 @@ def angle_hip(hip_l, hip_r):
 
 
 def angle_ground(left, right):
+    left = np.array(left)
+    right = np.array(right)
     vector = left - right
     normal = np.array([0, 1, 0])
     product = vector.T @ normal
@@ -37,6 +41,8 @@ def angle_ground(left, right):
 
 
 def back_angle(shoulder_l, shoulder_r):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
     connection = shoulder_l - shoulder_r
     spine = shoulder_l + 0.5 * connection
     normal = np.array([0, 1, 0])
@@ -49,6 +55,8 @@ def back_angle(shoulder_l, shoulder_r):
 
 
 def tilt_angle(shoulder_l, shoulder_r):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
     connection = shoulder_l - shoulder_r
     spine = shoulder_l + 0.5 * connection
     normal = np.array([0, 1, 0])
@@ -68,6 +76,8 @@ def mass_balance(foot_l, foot_r):
 
 
 def pelvis_rotation(hip_l, hip_r):
+    hip_l = np.array(hip_l)
+    hip_r = np.array(hip_r)
     hip_v = hip_l - hip_r
     # angle between hip vector and normal with atan2
     angle = np.arctan2(hip_v[0], hip_v[2])
@@ -76,6 +86,8 @@ def pelvis_rotation(hip_l, hip_r):
 
 
 def pelvis_tilt(hip_l, hip_r):
+    hip_l = np.array(hip_l)
+    hip_r = np.array(hip_r)
     hip_v = hip_l - hip_r
     normal = np.array([0, 1, 0])
     product = hip_v.T @ normal
@@ -86,24 +98,30 @@ def pelvis_tilt(hip_l, hip_r):
 
 
 def pelvis_sway(foot_l):
+    foot_l = np.array(foot_l)
     hip_v = foot_l
 
     return -hip_v[2]
 
 
 def pelvis_thrust(foot_l):
+    foot_l = np.array(foot_l)
+
     hip_v = foot_l
 
     return -hip_v[0]
 
 
 def pelvis_lift(foot_l):
+    foot_l = np.array(foot_l)
     hip_v = foot_l
 
     return hip_v[1]
 
 
 def thorax_rotation(shoulder_l, shoulder_r):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
     shoulder_v = shoulder_l - shoulder_r
     normal = np.array([0, 0, 1])
     # angle between shoulder vector and normal with atan2
@@ -113,6 +131,8 @@ def thorax_rotation(shoulder_l, shoulder_r):
 
 
 def thorax_tilt(shoulder_l, shoulder_r):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
     shoulder_v = shoulder_l - shoulder_r
     normal = np.array([0, 1, 0])
     product = shoulder_v.T @ normal
@@ -123,6 +143,8 @@ def thorax_tilt(shoulder_l, shoulder_r):
 
 
 def thorax_bend(shoulder_l, shoulder_r):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
     shoulder_v = shoulder_l - shoulder_r
     spine = shoulder_l - 0.5 * shoulder_v
     spine[2] = 0
@@ -135,6 +157,9 @@ def thorax_bend(shoulder_l, shoulder_r):
 
 
 def thorax_sway(shoulder_l, shoulder_r, foot_l):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+    foot_l = np.array(foot_l)
     shoulder_v = shoulder_l - shoulder_r
     spine = shoulder_l - 0.5 * shoulder_v
     sway = spine - foot_l
@@ -143,6 +168,9 @@ def thorax_sway(shoulder_l, shoulder_r, foot_l):
 
 
 def thorax_thrust(shoulder_l, shoulder_r, foot_l):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+    foot_l = np.array(foot_l)
     shoulder_v = shoulder_l - shoulder_r
     spine = shoulder_l - 0.5 * shoulder_v
     thrust = spine - foot_l
@@ -151,6 +179,9 @@ def thorax_thrust(shoulder_l, shoulder_r, foot_l):
 
 
 def thorax_lift(shoulder_l, shoulder_r, foot_l):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+    foot_l = np.array(foot_l)
     shoulder_v = shoulder_l - shoulder_r
     spine = shoulder_l - 0.5 * shoulder_v
     lift = spine - foot_l
@@ -160,6 +191,11 @@ def thorax_lift(shoulder_l, shoulder_r, foot_l):
 
 # rotation between spine and pelvis
 def spine_rotation(hip_l, hip_r, shoulder_l, shoulder_r):
+    hip_l = np.array(hip_l)
+    hip_r = np.array(hip_r)
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+
     hip_v = hip_l - hip_r
     shoulder_v = shoulder_l - shoulder_r
     # angle between hip vector and shoulder vector with atan2
@@ -171,6 +207,11 @@ def spine_rotation(hip_l, hip_r, shoulder_l, shoulder_r):
 
 # tilt between spine and pelvis
 def spine_tilt(hip_l, hip_r, shoulder_l, shoulder_r):
+    hip_l = np.array(hip_l)
+    hip_r = np.array(hip_r)
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+
     hip_v = hip_l - hip_r
     shoulder_v = shoulder_l - shoulder_r
     product = np.sum(hip_v * shoulder_v, axis=0)
@@ -182,6 +223,9 @@ def spine_tilt(hip_l, hip_r, shoulder_l, shoulder_r):
 
 # head rotation
 def head_rotation(eye_l, eye_r):
+    eye_l = np.array(eye_l)
+    eye_r = np.array(eye_r)
+
     eye_v = eye_l - eye_r
     angle = (np.arctan2(eye_v[0], eye_v[2]))
 
@@ -190,6 +234,9 @@ def head_rotation(eye_l, eye_r):
 
 # head tilt
 def head_tilt(eye_l, eye_r):
+    eye_l = np.array(eye_l)
+    eye_r = np.array(eye_r)
+
     eye_v = eye_l - eye_r
     normal = np.array([0, 1, 0])
     product = eye_v.T @ normal
@@ -201,6 +248,10 @@ def head_tilt(eye_l, eye_r):
 
 # distance from spine to left wrist
 def left_arm_length(shoulder_l, shoulder_r, wrist_l):
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+    wrist_l = np.array(wrist_l)
+
     shoulder_v = shoulder_l - shoulder_r
     spine = shoulder_l - 0.5 * shoulder_v
     length = np.linalg.norm(spine - wrist_l, axis=0)
@@ -209,6 +260,8 @@ def left_arm_length(shoulder_l, shoulder_r, wrist_l):
 
 
 def wrist_angle(pinky_l, index_l, wrist_l, elbow_l):
+    pinky_l = np.array(pinky_l)
+    index_l = np.array(index_l)
     # pinky_v = pinky_l - wrist_l
     # index_v = index_l - wrist_l
     # normal = np.cross(pinky_v, index_v)
@@ -232,6 +285,10 @@ def wrist_tilt(pinky_l, index_l, wrist_l, elbow_l):
 
 
 def arm_rotation(wrist_l, shoulder_l, shoulder_r, impact_ratio):
+    wrist_l = np.array(wrist_l)
+    shoulder_l = np.array(shoulder_l)
+    shoulder_r = np.array(shoulder_r)
+
     shoulder_v = (shoulder_l + shoulder_r) / 2
     arm = wrist_l - shoulder_v
     arm[0] = 0
@@ -259,6 +316,9 @@ def arm_rotation(wrist_l, shoulder_l, shoulder_r, impact_ratio):
 
 
 def arm_to_ground(wrist_l, shoulder_l):
+    wrist_l = np.array(wrist_l)
+    shoulder_l = np.array(shoulder_l)
+
     arm = wrist_l - shoulder_l
     normal = np.array([0, 1, 0])
     product = arm.T @ normal
@@ -291,7 +351,7 @@ def calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, 
     left_arm = left_arm_length(shoulder_l_s, shoulder_r_s, wrist_l_s)
     arm_rotation_l = arm_rotation(wrist_l_s, shoulder_l_s, shoulder_r_s, impact_ratio)
     arm_ground = arm_to_ground(wrist_l_s, shoulder_l_s)
-    arm_position = {'x': arm_v[0].tolist(), 'y': arm_v[2].tolist(), 'z': arm_v[1].tolist()}
+    arm_position = {'x': arm_v[0], 'y': arm_v[2], 'z': arm_v[1]}
 
     return pelvis_r, pelvis_t, pelvis_s, pelvis_th, pelvis_l, thorax_r, thorax_b, thorax_t, thorax_s, thorax_th, \
         thorax_l, spine_r, spine_t, head_r, head_t, wist_a, wrist_t, left_arm, arm_rotation_l, arm_ground, \
