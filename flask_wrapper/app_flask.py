@@ -13,7 +13,7 @@ from flask_login import current_user
 from flask import url_for
 from . import db
 from .models import UserLikes
-from .code_b.angles_2 import calculate_angles
+from code_b.angles_2 import calculate_angles
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
