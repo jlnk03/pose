@@ -1,0 +1,36 @@
+# Configuration for Cog ⚙️
+# Reference: https://github.com/replicate/cog/blob/main/docs/yaml.md
+
+build:
+  # set to true if your model requires a GPU
+  gpu: false
+
+  # a list of ubuntu apt packages to install
+  system_packages:
+     - ffmpeg
+     - libsm6
+     - libxext6
+
+  # python version in the form '3.8' or '3.8.12'
+  python_version: "3.10"
+
+  python_packages:
+     - numpy
+     - numpy
+     - scipy
+     - moviepy
+     - imageio[pyav]
+     - cog
+     - mediapipe
+     - av==9.2.0
+     - opencv-python
+
+image: "r8.im/jlnk03/predict-pose"
+
+  # commands run after the environment is setup
+  # run:
+    # - "echo env is ready!"
+    # - "echo another command if needed"
+
+# predict.py defines how predictions are run on your model
+predict: "predict.py:Predictor"

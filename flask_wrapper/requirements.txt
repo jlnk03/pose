@@ -32,3 +32,4 @@ aggdraw
 dash-player
 dash-extensions
 moviepy
+replicate

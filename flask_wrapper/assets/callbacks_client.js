@@ -575,6 +575,16 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             return {'left': tempo/6 * 100 + '%'}
         },
 
+        backswingSlider: function(backswing) {
+            backswing = Number(backswing.split(' ')[0])
+            return {'left': backswing/1.5 * 100 + '%'}
+        },
+
+        downswingSlider: function(downswing) {
+            downswing = Number(downswing.split(' ')[0])
+            return {'left': downswing/0.5 * 100 + '%'}
+        },
+
         toggleHeart: function(n_clicks, url) {
             if (n_clicks > 0) {
                 let file = url.split('/')[3];
@@ -619,5 +629,157 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 button.toggle('hidden')
             }
         },
+
+        showOverlay: function(n_clicks, n_clicks2, n_clicks3) {
+            if (n_clicks > 0 || n_clicks2 > 0 || n_clicks3 > 0) {
+                let overlay = document.getElementById('overlay').classList
+                overlay.toggle('hidden')
+
+                let main_wrapper = document.getElementById('main_wrapper').classList
+                main_wrapper.toggle('overflow-hidden')
+
+                let body = document.getElementById('body').classList
+                body.toggle('overflow-hidden')
+
+            }
+        },
+
+        showVideoFrames: function (n_clicks, setup, impact, top) {
+            if (n_clicks === 1) {
+                let video = document.getElementById('video').children[0]
+                var canvas = document.getElementById("setup_frame");
+
+                var canvas_impact = document.getElementById("impact_frame");
+
+                var canvas_top = document.getElementById("top_frame");
+
+                const duration = video.duration;
+
+                console.log(setup)
+
+                // Take the first snapshot
+                takeSnapshot(video, canvas, setup * duration).then(function() {
+                  // Wait for the first snapshot to finish loading before taking the second one
+                  return takeSnapshot(video, canvas_top, top * duration);
+                }).then(function() {
+                  // Wait for the second snapshot to finish loading before taking the third one
+                  return takeSnapshot(video, canvas_impact, impact * duration);
+                }).then(function() {
+                  // All snapshots have finished loading
+                  // console.log("All snapshots taken");
+                }).catch(function(error) {
+                  // Handle any errors that may occur
+                  console.error(error);
+                });
+
+            }
+        },
+
+        reportText: function (n_clicks, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, setup, impact, top) {
+            if (n_clicks === 1) {
+                const pelvis_rotation = fig2.data[1].y;
+                const pelvis_bend = fig2.data[0].y;
+                const thorax_rotation = fig4.data[0].y;
+                const thorax_bend = fig4.data[1].y;
+                const head_tilt = fig7.data[0].y;
+                const head_rotation = fig8.data[0].y;
+                const arm_rotation = fig11.data[0].y;
+                const arm_ground = fig11.data[1].y;
+
+                setup = Number(setup)
+                impact = Number(impact)
+                top = Number(top)
+
+                const length = pelvis_rotation.length;
+
+                const pelvis_rot_margins = document.getElementById('pelvis_rot_store').innerHTML.split(', ');
+                const thorax_rot_margins = document.getElementById('thorax_rot_store').innerHTML.split(', ');
+                const head_rot_margins = document.getElementById('head_rot_store').innerHTML.split(', ');
+
+                const pelvis_rot = pelvis_rotation[Math.floor(setup * length)];
+                const thorax_rot = thorax_rotation[Math.floor(setup * length)];
+                const head_rot = head_rotation[Math.floor(setup * length)];
+
+                const pelvis_rot_top = pelvis_rotation[Math.floor(top * length)];
+                const thorax_rot_top = thorax_rotation[Math.floor(top * length)];
+                const head_rot_top = head_rotation[Math.floor(top * length)];
+
+                let pelvis_report_text = document.getElementById('pelvis_report_text');
+                let thorax_report_text = document.getElementById('thorax_report_text');
+                let head_report_text = document.getElementById('head_report_text');
+
+                let pelvis_report_text_top = document.getElementById('pelvis_report_text_top');
+                let thorax_report_text_top = document.getElementById('thorax_report_text_top');
+                let head_report_text_top = document.getElementById('head_report_text_top');
+
+                rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
+                rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
+                rotationText(head_rot, head_rot_margins, 'head', head_report_text)
+
+                rotationText(pelvis_rot_top, pelvis_rot_margins.slice(2, 4), 'pelvis', pelvis_report_text_top)
+                rotationText(thorax_rot_top, thorax_rot_margins.slice(2, 4), 'thorax', thorax_report_text_top)
+                rotationText(head_rot_top, head_rot_margins.slice(2, 4), 'head', head_report_text_top)
+
+            }
+        }
+
     }
 });
+
+
+// Define the takeSnapshot function
+function takeSnapshot(video, canvas, time) {
+  return new Promise(function(resolve, reject) {
+    var ctx = canvas.getContext("2d");
+
+    // Calculate the aspect ratio of the video
+    var aspectRatio = video.videoWidth / video.videoHeight;
+
+    const maxWidth = 384;
+    const maxHeight = 384;
+
+    // Calculate the maximum width and height of the canvas based on the aspect ratio
+    var canvasWidth, canvasHeight;
+    if (aspectRatio > 1) {
+        canvasWidth = Math.min(maxWidth, video.videoWidth);
+        canvasHeight = canvasWidth / aspectRatio;
+    } else {
+        canvasHeight = Math.min(maxHeight, video.videoHeight);
+        canvasWidth = canvasHeight * aspectRatio;
+    }
+
+    // Set the width and height of the canvas
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // Create a closure to capture the current time value
+    function captureSnapshot() {
+      // Draw the frame onto the canvas
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Remove the event listener
+      video.removeEventListener("seeked", captureSnapshot);
+
+      // Resolve the promise
+      resolve();
+    }
+
+    // Seek to the desired time
+    video.currentTime = time;
+
+    // Wait for the video to load that specific frame
+    video.addEventListener("seeked", captureSnapshot, false);
+  });
+}
+
+function rotationText(angle, margin, body_part, element) {
+    if (angle < margin[0]) {
+        element.innerHTML =  `Rotate your ${body_part} a little less.`
+    }
+    else if (angle > margin[1]) {
+        element.innerHTML = `Rotate your ${body_part} a little more.`
+    }
+    else {
+        element.innerHTML = `Your ${body_part} rotation is good.`
+    }
+}

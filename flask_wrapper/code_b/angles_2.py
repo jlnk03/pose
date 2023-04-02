@@ -268,5 +268,35 @@ def arm_to_ground(wrist_l, shoulder_l):
     return 90 - np.degrees(angle)
 
 
+def calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, impact_ratio):
+
+    # Calculate angles
+    pelvis_r = pelvis_rotation(hip_l_s, hip_r_s)
+    pelvis_t = pelvis_tilt(hip_l_s, hip_r_s)
+    pelvis_s = pelvis_sway(foot_l_s)
+    pelvis_th = pelvis_thrust(foot_l_s)
+    pelvis_l = pelvis_lift(foot_l_s)
+    thorax_r = thorax_rotation(shoulder_l_s, shoulder_r_s)
+    thorax_b = thorax_bend(shoulder_l_s, shoulder_r_s)
+    thorax_t = thorax_tilt(shoulder_l_s, shoulder_r_s)
+    thorax_s = thorax_sway(shoulder_l_s, shoulder_r_s, foot_l_s)
+    thorax_th = thorax_thrust(shoulder_l_s, shoulder_r_s, foot_l_s)
+    thorax_l = thorax_lift(shoulder_l_s, shoulder_r_s, foot_l_s)
+    spine_r = spine_rotation(hip_l_s, hip_r_s, shoulder_l_s, shoulder_r_s)
+    spine_t = spine_tilt(hip_l_s, hip_r_s, shoulder_l_s, shoulder_r_s)
+    head_r = head_rotation(eye_l_s, eye_r_s)
+    head_t = head_tilt(eye_l_s, eye_r_s)
+    wist_a = wrist_angle(pinky_l_s, index_l_s, wrist_l_s, wrist_r_s)
+    wrist_t = wrist_tilt(pinky_l_s, index_l_s, wrist_l_s, wrist_r_s)
+    left_arm = left_arm_length(shoulder_l_s, shoulder_r_s, wrist_l_s)
+    arm_rotation_l = arm_rotation(wrist_l_s, shoulder_l_s, shoulder_r_s, impact_ratio)
+    arm_ground = arm_to_ground(wrist_l_s, shoulder_l_s)
+    arm_position = {'x': arm_v[0].tolist(), 'y': arm_v[2].tolist(), 'z': arm_v[1].tolist()}
+
+    return pelvis_r, pelvis_t, pelvis_s, pelvis_th, pelvis_l, thorax_r, thorax_b, thorax_t, thorax_s, thorax_th, \
+        thorax_l, spine_r, spine_t, head_r, head_t, wist_a, wrist_t, left_arm, arm_rotation_l, arm_ground, \
+        arm_position
+
+
 if __name__ == '__main__':
     pass

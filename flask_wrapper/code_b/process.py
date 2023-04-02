@@ -16,6 +16,14 @@ import av
 import tempfile
 from moviepy.editor import AudioFileClip
 import numpy as np
+from scipy import signal
+
+
+def filter_data(data, fps):
+    Wn = 4
+    b, a = signal.butter(4, Wn, 'low', fs=fps)
+    data = signal.filtfilt(b, a, data, method='gust')
+    return data
 
 
 def impact_from_audio(audio_bytes):
@@ -75,7 +83,11 @@ def process_motion(contents, filename, location):
 
         meta = iio.immeta(decoded, plugin='pyav')
         fps = meta['fps']
+
         duration = meta['duration']
+
+        if fps < 20:
+            fps = 120
 
         n_frames = duration * fps
 
@@ -215,21 +227,21 @@ def process_motion(contents, filename, location):
         container.close()
 
         # Rotate data
-        shoulder_l_s = R @ np.array(shoulder_l_s).T
-        shoulder_r_s = R @ np.array(shoulder_r_s).T
-        elbow_l_s = R @ np.array(elbow_l_s).T
-        wrist_l_s = R @ np.array(wrist_l_s).T
-        wrist_r_s = R @ np.array(wrist_r_s).T
-        hip_l_s = R @ np.array(hip_l_s).T
-        hip_r_s = R @ np.array(hip_r_s).T
-        foot_r_s = R @ np.array(foot_r_s).T
-        foot_l_s = R @ np.array(foot_l_s).T
-        eye_l_s = R @ np.array(eye_l_s).T
-        eye_r_s = R @ np.array(eye_r_s).T
-        pinky_l_s = R @ np.array(pinky_l_s).T
-        index_l_s = R @ np.array(index_l_s).T
+        shoulder_l_s = filter_data(R @ np.array(shoulder_l_s).T, fps)
+        shoulder_r_s = filter_data(R @ np.array(shoulder_r_s).T, fps)
+        elbow_l_s = filter_data(R @ np.array(elbow_l_s).T, fps)
+        wrist_l_s = filter_data(R @ np.array(wrist_l_s).T, fps)
+        wrist_r_s = filter_data(R @ np.array(wrist_r_s).T, fps)
+        hip_l_s = filter_data(R @ np.array(hip_l_s).T, fps)
+        hip_r_s = filter_data(R @ np.array(hip_r_s).T, fps)
+        foot_r_s = filter_data(R @ np.array(foot_r_s).T, fps)
+        foot_l_s = filter_data(R @ np.array(foot_l_s).T, fps)
+        eye_l_s = filter_data(R @ np.array(eye_l_s).T, fps)
+        eye_r_s = filter_data(R @ np.array(eye_r_s).T, fps)
+        pinky_l_s = filter_data(R @ np.array(pinky_l_s).T, fps)
+        index_l_s = filter_data(R @ np.array(index_l_s).T, fps)
         arm_v = foot_l_s - wrist_l_s
-        arm_v = R @ arm_v
+        arm_v = filter_data(arm_v, fps)
 
         # Calculate angles
         pelvis_r = pelvis_rotation(hip_l_s, hip_r_s)

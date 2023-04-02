@@ -1,3 +1,4 @@
+import io
 import shutil
 import numpy as np
 import plotly.graph_objects as go
@@ -12,9 +13,15 @@ from flask_login import current_user
 from flask import url_for
 from . import db
 from .models import UserLikes
+from .code_b.angles_2 import calculate_angles
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
+from overlay_view import overlay
+import replicate
+import urllib
+import tempfile
+import base64
 
 # import gc
 # import memory_profiler
@@ -79,7 +86,7 @@ def over_the_top(hand_path_x, hand_path_z, setup, top, impact):
     hand_path_z = np.array(hand_path_z)
     back_z = hand_path_z[setup:top]
     down_z = hand_path_z[top:impact]
-    half_height = 2/3 * (back_z[-1] - back_z[0]) + back_z[0]
+    half_height = 2 / 3 * (back_z[-1] - back_z[0]) + back_z[0]
     diff_back = np.abs(back_z - half_height)
     diff_down = np.abs(down_z - half_height)
     nearest = np.argmin(diff_back)
@@ -109,6 +116,15 @@ def upload_video(disabled=True, path=None):
             children=[
 
                 html.Div(
+                    html.Button(
+                        'Report',
+                        id='show_overlay_mobile',
+                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm disable-dbl-tap-zoom'
+                    ),
+                    className='sm:hidden absolute -top-16 left-1/2 -translate-x-1/2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                ),
+
+                html.Div(
                     className='flex flex-col-reverse sm:flex-row w-full h-full',
                     # Controls for the video player (top, impact, end)
                     children=[html.Div(
@@ -136,8 +152,19 @@ def upload_video(disabled=True, path=None):
                                 ],
                                 className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
+
+                            html.Div(
+                                html.Button(
+                                    'Report',
+                                    id='show_overlay',
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
+                                ),
+                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+
+                            ),
+
                         ],
-                        className='flex flex-col gap-5'
+                        className='flex flex-col justify-between'
                     ),
 
                         # Video player
@@ -148,6 +175,8 @@ def upload_video(disabled=True, path=None):
                                 #            className="h-full w-full object-cover"),
 
                                 html.Button(id='heart', className='heart absolute top-4 left-4'),
+
+                                # TODO: video
 
                                 dp.DashPlayer(
                                     id='video',
@@ -185,7 +214,7 @@ def upload_video(disabled=True, path=None):
                         html.Button('Frame +', id='plus_frame_mobile',
                                     className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
                     ],
-                    className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 rounded-full px-2 py-2 sm:hidden'
+                    className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full px-2 py-2 sm:hidden'
                 ),
             ]),
     ]
@@ -224,6 +253,34 @@ def slider_view(name, min_bound, max_bound):
             ]
         ),
     ]
+
+    return layout
+
+
+def gradient_slider_view(id, min, max):
+    center = (max - min) / 2
+    layout = [html.Div(
+        children=[
+            html.Div(
+                style={'left': '50%'},
+                id=id,
+                className='rounded-full h-3 w-3 bg-slate-900 dark:bg-gray-100 border-2 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 transform -translate-y-1/2',
+            ),
+            html.Div(
+                min,
+                className='absolute left-0 bottom-3.5 text-xs text-gray-400',
+            ),
+            html.Div(
+                center,
+                className='absolute left-1/2 -translate-x-1/2 bottom-3.5 text-xs text-gray-400',
+            ),
+            html.Div(
+                max,
+                className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+            )
+        ],
+        className='absolute left-6 right-6 bottom-4 h-2 gradient-slider rounded-full'
+    )]
 
     return layout
 
@@ -1118,6 +1175,13 @@ def init_dash(server):
                     children=loader
                 ),
 
+                # overlay
+                html.Div(
+                    id='overlay',
+                    className='w-full hidden z-50 fixed top-0 left-0 bottom-0 right-0',
+                    children=overlay
+                ),
+
                 # Main wrapper
                 html.Div(
                     className='flex w-full flex-col 2xl:items-center',
@@ -1503,6 +1567,7 @@ def init_dash(server):
                                                                         # Slider bar
                                                                         html.Div(slider_view('pelvis_rot', -80, 160)),
                                                                         # End of slider bar
+                                                                        # TODO: Pelvis rotation
                                                                         html.Div('-80, 160, -80, 160, -80, 160',
                                                                                  id='pelvis_rot_store',
                                                                                  className='hidden'),
@@ -1646,7 +1711,7 @@ def init_dash(server):
 
                                 # Tempo divs
                                 html.Div(
-                                    className='grid xl:grid-cols-3 grid-cols-2 w-full justify-between mb-5 xl:mt-0 mt-1 gap-2',
+                                    className='grid md:grid-cols-3 grid-cols-1 w-full justify-between mb-5 xl:mt-0 mt-1 gap-2',
                                     children=[
                                         html.Div(
                                             className='flex flex-col gap-2',
@@ -1654,162 +1719,168 @@ def init_dash(server):
                                                 html.Div(
                                                     id='position_divs',
                                                     children=[
-                                                        html.Div('BACK',
-                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
-                                                        html.Div('SWING',
-                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
+                                                        html.Div('BACKSWING',
+                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute left-6 top-6'),
+                                                        # TODO back text
+                                                        html.Div(
+                                                            id='backswing_text',
+                                                            className='text-base text-gray-400 w-fit text-left mr-6'
+                                                        ),
                                                         html.Div('- s', id='backswing',
-                                                                 className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
+                                                                 className='mt-3'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
                                                         html.Div('0.5', id='end_pos', className='hidden'),
                                                         html.Div('0.5', id='setup_pos', className='hidden'),
                                                         html.Div('60', id='fps_saved', className='hidden'),
+
+                                                        html.Div(
+                                                            gradient_slider_view('backswing_slider', 0, 1.5)
+                                                        )
+
                                                     ],
-                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
-                                                ),
-                                                html.Div(
-                                                    children=[
-                                                        html.Div('DOWN',
-                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 flex flex-col'),
-                                                        html.Div('SWING',
-                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300  flex flex-col'),
-                                                        html.Div('- s', id='downswing',
-                                                                 className='absolute absolute sm:top-1/2 bottom-4 transform sm:-translate-y-1/2 sm:right-8 right-1/2 transform max-sm:translate-x-1/2'),
-                                                    ],
-                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex sm:flex-col flex-row items-start justify-center w-full h-28 text-center sm:pl-6 pt-6 sm:pt-0'
+                                                    className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-start justify-center w-full h-28 text-center pl-6 pt-6 sm:pt-0'
                                                 ),
                                             ]
                                         ),
+
+                                        # Downswing div
+                                        html.Div(
+                                            children=[
+                                                html.Div('DOWNSWING',
+                                                         className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6'),
+                                                # TODO down text
+                                                html.Div(
+                                                    id='downswing_text',
+                                                    className='text-base text-gray-400 w-fit text-left mr-6'
+                                                ),
+                                                html.Div('- s', id='downswing',
+                                                         className='mt-3'),
+
+                                                html.Div(
+                                                    gradient_slider_view('downswing_slider', 0, 0.5)
+                                                )
+
+                                            ],
+                                            className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-start justify-center w-full pl-6 pt-6 sm:pt-0'
+                                        ),
+
                                         # Tempo div
                                         html.Div(
                                             children=[
                                                 html.Div('TEMPO',
                                                          className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
+                                                # TODO tempo text
+                                                html.Div(
+                                                    id='tempo_text',
+                                                    className='text-base text-gray-400 mx-6 w-fit'
+                                                ),
                                                 html.Div(
                                                     children=[
-                                                        html.Div('-', id='tempo', className='mt-5 ml-6'),
-                                                        html.Div(': 1', className='mt-5 ml-2')
+                                                        html.Div('-', id='tempo', className='mt-3 ml-6'),
+                                                        html.Div(': 1', className='mt-3 ml-2')
                                                     ],
                                                     className='flex flex-row'
                                                 ),
                                                 html.Div(
-                                                    children=[
-                                                        html.Div(
-                                                            style={'left': '50%'},
-                                                            id='tempo_slider',
-                                                            className='rounded-full h-3 w-3 bg-slate-900 dark:bg-gray-100 border-2 border-white dark:border-gray-700 absolute -translate-x-1/2 top-1/2 transform -translate-y-1/2',
-                                                        ),
-                                                        html.Div(
-                                                            '0',
-                                                            className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                                                        ),
-                                                        html.Div(
-                                                            '3',
-                                                            className='absolute left-1/2 -translate-x-1/2 bottom-3.5 text-xs text-gray-400',
-                                                        ),
-                                                        html.Div(
-                                                            '6',
-                                                            className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                                                        )
-                                                    ],
-                                                    className='absolute left-6 right-6 bottom-4 h-2 gradient-slider rounded-full'
-                                                ),
+                                                    gradient_slider_view(id='tempo_slider', min=0, max=6),
+                                                )
                                             ],
-                                            className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col justify-center w-full  text-center'
+                                            className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col justify-center w-full  text-center'
                                         ),
                                         # End of tempo div
-
-                                        # Sequence div
-                                        html.Div(
-                                            children=[
-                                                # Column for start sequence
-                                                html.Div(
-                                                    className='flex flex-col',
-                                                    children=[
-                                                        html.Div(info_text('start_sequence'),
-                                                                 className='relative w-full -mt-8 -mx-8'),
-                                                        html.Div(
-                                                            className='flex flex-row items-center w-full px-2 pt-2',
-                                                            children=[
-                                                                html.Div(
-                                                                    'Hip',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
-                                                                    id='start_sequence_first'
-                                                                ),
-                                                                html.Div(
-                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Thorax',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
-                                                                    id='start_sequence_second'
-                                                                ),
-                                                                html.Div(
-                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Arms',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
-                                                                    id='start_sequence_third'
-                                                                ),
-                                                                html.Div(
-                                                                    '😍',
-                                                                    className='text-lg font-medium ml-4',
-                                                                    id='emoji-start'
-                                                                )
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
-                                                # Start sequence end
-
-                                                # Column for transition sequence
-                                                html.Div(
-                                                    className='flex flex-col',
-                                                    children=[
-                                                        html.Div(info_text('transition_sequence'),
-                                                                 className='relative w-full -mx-8 -mt-4'),
-                                                        html.Div(
-                                                            className='flex flex-row items-center w-full px-2 pt-2',
-                                                            children=[
-                                                                html.Div(
-                                                                    'Hip',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
-                                                                    id='sequence_first'
-                                                                ),
-                                                                html.Div(
-                                                                    className=' w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Thorax',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
-                                                                    id='sequence_second'
-                                                                ),
-                                                                html.Div(
-                                                                    className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
-                                                                ),
-                                                                html.Div(
-                                                                    'Arms',
-                                                                    className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
-                                                                    id='sequence_third'
-                                                                ),
-                                                                html.Div(
-                                                                    '😍',
-                                                                    className='text-lg font-medium ml-4',
-                                                                    id='emoji-transition'
-                                                                )
-                                                            ]
-                                                        ),
-                                                    ]
-                                                ),
-                                                # Transition sequence end
-                                            ],
-                                            className='col-span-2 xl:col-span-1 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-full  text-center pb-4'
-                                        ),
                                     ]
                                 ),
                                 # End of tempo divs
+
+                                # Sequence div
+                                html.Div(
+                                    children=[
+                                        # Column for start sequence
+                                        html.Div(
+                                            className='flex flex-col',
+                                            children=[
+                                                html.Div(info_text('start_sequence'),
+                                                         className='relative w-full -mt-8 -mx-8'),
+                                                html.Div(
+                                                    className='flex flex-row items-center w-full px-2 pt-2',
+                                                    children=[
+                                                        html.Div(
+                                                            'Hip',
+                                                            className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
+                                                            id='start_sequence_first'
+                                                        ),
+                                                        html.Div(
+                                                            className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                        ),
+                                                        html.Div(
+                                                            'Thorax',
+                                                            className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
+                                                            id='start_sequence_second'
+                                                        ),
+                                                        html.Div(
+                                                            className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                        ),
+                                                        html.Div(
+                                                            'Arms',
+                                                            className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
+                                                            id='start_sequence_third'
+                                                        ),
+                                                        html.Div(
+                                                            '😍',
+                                                            className='text-lg font-medium ml-4',
+                                                            id='emoji-start'
+                                                        )
+                                                    ]
+                                                ),
+                                            ]
+                                        ),
+                                        # Start sequence end
+
+                                        # Column for transition sequence
+                                        html.Div(
+                                            className='flex flex-col',
+                                            children=[
+                                                html.Div(info_text('transition_sequence'),
+                                                         className='relative w-full -mx-8 -mt-4'),
+                                                html.Div(
+                                                    className='flex flex-row items-center w-full px-2 pt-2',
+                                                    children=[
+                                                        html.Div(
+                                                            'Hip',
+                                                            className='text-sm font-medium text-gray-100 bg-[#6266F6] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#6266F6] border-4',
+                                                            id='sequence_first'
+                                                        ),
+                                                        html.Div(
+                                                            className=' w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                        ),
+                                                        html.Div(
+                                                            'Thorax',
+                                                            className='text-sm font-medium text-gray-100 bg-[#E74D39] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#E74D39] border-4',
+                                                            id='sequence_second'
+                                                        ),
+                                                        html.Div(
+                                                            className='w-8 h-1 bg-gray-300 dark:bg-gray-500 rounded-full mx-2'
+                                                        ),
+                                                        html.Div(
+                                                            'Arms',
+                                                            className='text-sm font-medium text-gray-100 bg-[#2BC48C] rounded-full w-16 py-1 px-2 flex items-center justify-center border-[#2BC48C] border-4',
+                                                            id='sequence_third'
+                                                        ),
+                                                        html.Div(
+                                                            '😍',
+                                                            className='text-lg font-medium ml-4',
+                                                            id='emoji-transition'
+                                                        )
+                                                    ]
+                                                ),
+                                            ]
+                                        ),
+                                        # Transition sequence end
+                                    ],
+                                    className='mb-5 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-center justify-center w-full  text-center pb-4 h-72'
+                                ),
+                                # End of sequence div
 
                                 html.Div(
                                     className='relative bg-white dark:bg-gray-700 shadow rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
@@ -1827,9 +1898,9 @@ def init_dash(server):
                                                                  className='mx-4 sm:mx-10 sm:mt-20 mt-10 font-medium text-2xl dark:text-gray-100 text-slate-900 flex flex-col',
                                                                  children=[
                                                                      html.Div(
-                                                                         children=[html.Div('Your swing is:',
+                                                                         children=[html.Div('Your transition is:',
                                                                                             className='text-base font-normal'),
-                                                                                   'Perfect'])
+                                                                                   'Like a Pro'])
                                                                  ]
                                                                  ),
                                                         html.Div(
@@ -2109,6 +2180,7 @@ def init_callbacks(app):
          Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
          Output('upload-initial', 'className'), Output('upload-video', 'className'),
          Output('emoji-start', 'children'), Output('emoji-transition', 'children'), Output('loading-state', 'children'),
+         Output('tempo_text', 'children'), Output('backswing_text', 'children'), Output('downswing_text', 'children'),
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          # Input('upload-data', 'filename'),
@@ -2232,7 +2304,7 @@ def init_callbacks(app):
                             [], [], [],
                             disabled, disabled, disabled,
                             upload_initial_class, upload_video_class,
-                            '😍', '😍', ''
+                            '😍', '😍', '', '', '', ''
                             ]
 
                 # Read data from parquet file
@@ -2339,13 +2411,22 @@ def init_callbacks(app):
                 temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
                                                    len(save_wrist_angle) / duration)
 
+                # Get the tempo text
+                tempo_text = get_tempo_text(temp)
+
+                # Backswing text
+                backswing_text = get_backswing_text(time_back)
+
+                # Downswing text
+                downswing_text = get_downswing_text(time_down)
+
                 # Check if the swing is over the top
                 over = over_the_top(arm_x, arm_z, int(arm_index_s), int(arm_index),
                                     int(impact_pos * len(save_wrist_angle)))
                 if over:
-                    over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Over the top']
+                    over_text = [html.Div('Your transition is:', className='text-base font-normal'), 'Over the top']
                 else:
-                    over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
+                    over_text = [html.Div('Your transition is:', className='text-base font-normal'), 'Like a Pro']
 
                 upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
                 upload_video_class = 'relative w-full flex-row justify-between mt-5 flex'
@@ -2418,7 +2499,7 @@ def init_callbacks(app):
                         path, over_text, angle_swing_plane_text,
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        emoji_start, emoji_transition, ''
+                        emoji_start, emoji_transition, '', tempo_text, backswing_text, downswing_text,
                         ]
 
         # Delete was pressed
@@ -2534,13 +2615,8 @@ def init_callbacks(app):
                         path, [], [],
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        '😍', '😍', ''
+                        '😍', '😍', '', '', '', ''
                         ]
-
-        # Check if folder was created and generate file name
-        filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        create_folder(f'assets/save_data/{current_user.id}/' + filename)
-        location = f'assets/save_data/{current_user.id}/' + filename
 
         # Send the video to the server and extract motion data
         # Send token to server to verify user
@@ -2548,31 +2624,73 @@ def init_callbacks(app):
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(email, salt='verification-key')
 
-        response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-                                 json={'contents': contents, 'filename': filename, 'location': location})
+        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
+        #                          json={'contents': contents, 'filename': filename, 'location': location})
         # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
-        if response.status_code == 200:
-            save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_position, duration, fps, impact_ratio = response.json().values()
+        # TODO replicate
 
-        else:
-            if response.status_code == 413:
-                message = 'Video is too long. Please upload a shorter video.'
-            save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-                save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-                save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-                save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(
-                100, 20)
-            duration = 10
-            impact_ratio = 0.5
-            fps = 60
-            arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                            'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+        # Write video to named tempfile
+        with tempfile.NamedTemporaryFile(suffix='.mp4') as temp:
+            content_type, content_string = contents.split(',')
+
+            decoded = base64.b64decode(content_string)
+            temp.write(decoded)
+
+            file_path = 'https://swinglab.app' + temp.name
+
+            replicate.Client(api_token='aa4a6f5c72222795668778fc94205f49659f0060')
+
+            response = replicate.run(
+                "jlnk03/predict-pose:34a1cc2a75b90f89f2dfed9134579524ce034959744aa0f7e5627e44fbccf7ab",
+                input={"video": file_path},
+            )
+
+            shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+                duration, fps, impact_ratio, \
+                out_path = response.json().values()
+
+        # if response.status_code == 200:
+        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+        #         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        #         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+        #         save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_position, duration, fps, impact_ratio = response.json().values()
+        #
+        # else:
+        #     if response.status_code == 413:
+        #         message = 'Video is too long. Please upload a shorter video.'
+        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+        #         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        #         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+        #         save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(
+        #         100, 20)
+        #     duration = 10
+        #     impact_ratio = 0.5
+        #     fps = 60
+        #     arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        #                     'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+
+        # pelvis_r, pelvis_t, pelvis_s, pelvis_th, pelvis_l, thorax_r, thorax_b, thorax_t, thorax_s, thorax_th, \
+        #     thorax_l, spine_r, spine_t, head_r, head_t, wist_a, wrist_t, left_arm, arm_rotation_l, arm_ground, \
+        #     arm_position
+
+        # Angles
+        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_sway, save_pelvis_thrust, save_pelvis_lift, \
+            save_thorax_rotation, save_thorax_bend, save_thorax_tilt, save_thorax_sway, save_thorax_thrust, \
+            save_thorax_lift, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_wrist_angle, \
+            save_wrist_tilt, save_left_arm_length, save_arm_rotation, save_arm_to_ground, arm_position = \
+            calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, impact_ratio)
+
+        # Check if folder was created and generate file name
+        filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        create_folder(f'assets/save_data/{current_user.id}/' + filename)
+        location = f'assets/save_data/{current_user.id}/' + filename
 
         # Get the video and update the video player
+
+        video_file = urllib.URLopener()
+        video_file.retrieve(out_path, location + '/motion.mp4')
+
         vid_src = location + '/motion.mp4'
         children_upload = upload_video(disabled, path=vid_src)
 
@@ -2653,6 +2771,15 @@ def init_callbacks(app):
         temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
                                            len(save_wrist_angle) / duration)
 
+        # Get the tempo text
+        tempo_text = get_tempo_text(temp)
+
+        # Backswing text
+        backswing_text = get_backswing_text(time_back)
+
+        # Downswing text
+        downswing_text = get_downswing_text(time_down)
+
         fps_saved = len(save_wrist_angle) / duration
 
         upload_initial_class = 'relative w-full flex-row justify-between xl:mb-5 mt-5 hidden'
@@ -2669,13 +2796,12 @@ def init_callbacks(app):
                                                     f'{int(angle_swing_plane)}°'])
 
         # Check if the swing is over the top
-        # over = over_the_top(arm_position['x'], arm_position['z'], int(arm_index_s), int(arm_index),
-        #                     int(impact_pos * len(save_wrist_angle)))
-        over = False
+        over = over_the_top(arm_position['x'], arm_position['z'], int(arm_index_s), int(arm_index),
+                            int(impact_pos * len(save_wrist_angle)))
         if over:
-            over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Over the top']
+            over_text = [html.Div('Your transition is:', className='text-base font-normal'), 'Over the top']
         else:
-            over_text = [html.Div('Your swing is:', className='text-base font-normal'), 'Under the top']
+            over_text = [html.Div('Your transition is:', className='text-base font-normal'), 'Like a Pro']
 
         # Reset the background color of the buttons
         for child in children:
@@ -2729,7 +2855,7 @@ def init_callbacks(app):
                 path, over_text, angle_swing_plane_text,
                 disabled, disabled, disabled,
                 upload_initial_class, upload_video_class,
-                emoji_start, emoji_transition, ''
+                emoji_start, emoji_transition, '', tempo_text, backswing_text, downswing_text,
                 ]
 
     # Save new margins to db
@@ -2946,7 +3072,8 @@ def init_callbacks(app):
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
         Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
         Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
-        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
+        Output('end_pos', 'children'),
         prevent_initial_call=True
     )
     def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
@@ -3024,7 +3151,8 @@ def init_callbacks(app):
                     time_down = '- s'
 
             # 3D plot
-            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), fps)
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
+                                       fps)
 
             angle_text = html.Div(
                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -3041,7 +3169,6 @@ def init_callbacks(app):
 
         return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
 
-
     # Reset positions
     @app.callback(
         Input('edit_positions_reset', 'n_clicks'),
@@ -3053,11 +3180,12 @@ def init_callbacks(app):
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
         Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
         Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
-        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
+        Output('end_pos', 'children'),
         prevent_initial_call=True
     )
     def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
-                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
+                        setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
 
         time_back = '- s'
         time_down = '- s'
@@ -3137,7 +3265,8 @@ def init_callbacks(app):
                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
 
             # 3D plot
-            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length), fps)
+            path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
+                                       fps)
 
             angle_text = html.Div(
                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -3153,82 +3282,6 @@ def init_callbacks(app):
             db.session.commit()
 
         return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
-
-    # @app.callback(
-    #     # Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
-    #     Input('edit_positions_reset', 'n_clicks'),
-    #     State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
-    #     State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
-    #     State('video', 'url'), State('fps_saved', 'children'), State('video', 'duration'),
-    #     State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
-    #     prevent_initial_call=True
-    # )
-    # def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, url, fps, duration, setup_pos, top_pos,
-    #                     impact_pos):
-    #     if n_clicks is not None:
-    #         setup_time = 0 if setup_time is None else setup_time
-    #         top_time = 0 if top_time is None else top_time
-    #         impact_time = 0 if impact_time is None else impact_time
-    #         end_time = 0 if end_time is None else end_time
-    #
-    #         timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
-    #         max_key = max(timestamp_dict, key=timestamp_dict.get)
-    #
-    #         vid = url.split('/')[3]
-    #         vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
-    #
-    #         length = fps * duration
-    #
-    #         match max_key:
-    #             case 'setup':
-    #                 vid_row.setup = None
-    #
-    #                 setup_pos = vid_row.setup_calc
-    #
-    #                 if vid_row.top is not None:
-    #                     top_pos = vid_row.top
-    #                 if vid_row.impact is not None:
-    #                     impact_pos = vid_row.impact
-    #
-    #                 # Tempo
-    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #             case 'top':
-    #                 vid_row.top = None
-    #                 top_pos = vid_row.top_calc
-    #
-    #                 if vid_row.setup is not None:
-    #                     setup_pos = vid_row.setup
-    #                 if vid_row.impact is not None:
-    #                     impact_pos = vid_row.impact
-    #
-    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #             case 'impact':
-    #                 vid_row.impact = None
-    #                 impact_pos = vid_row.impact_calc
-    #
-    #                 if vid_row.setup is not None:
-    #                     setup_pos = vid_row.setup
-    #                 if vid_row.top is not None:
-    #                     top_pos = vid_row.top
-    #
-    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #             case 'end':
-    #                 vid_row.end = None
-    #                 end_pos = vid_row.end_calc
-    #
-    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #             case _:
-    #                 print('Error: No position selected')
-    #
-    #                 temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #         db.session.commit()
-    #
-    #         return time_back, time_down, temp
 
     # Hide selection view with save
     app.clientside_callback(
@@ -3370,6 +3423,26 @@ def init_callbacks(app):
         Input('tempo', 'children'),
     )
 
+    # Backswing slider position
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='backswingSlider'
+        ),
+        Output('backswing_slider', 'style'),
+        Input('backswing', 'children'),
+    )
+
+    # Downswing slider position
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='downswingSlider'
+        ),
+        Output('downswing_slider', 'style'),
+        Input('downswing', 'children'),
+    )
+
     # Show heart
     app.clientside_callback(
         ClientsideFunction(
@@ -3422,6 +3495,43 @@ def init_callbacks(app):
         ),
         Input('edit_positions', 'n_clicks'), Input('edit_positions_save', 'n_clicks'),
         Input('edit_positions_reset', 'n_clicks'),
+        prevent_initial_call=True
+    )
+
+    # Show video frames
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showVideoFrames'
+        ),
+        Input('show_overlay', 'n_clicks'),
+        State('setup_pos', 'children'), State('impact_pos', 'children'), State('top_pos', 'children'),
+        prevent_initial_call=True
+    )
+
+    # Show report text
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='reportText'
+        ),
+        Input('show_overlay', 'n_clicks'),
+        State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
+        State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
+        State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
+        State('spine_rotation', 'figure'), State('arm_angle', 'figure'),
+        State('setup_pos', 'children'), State('impact_pos', 'children'), State('top_pos', 'children'),
+        prevent_initial_call=True
+    )
+
+    # TODO overlay
+    # Show overlay
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showOverlay'
+        ),
+        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'), Input('hide_overlay', 'n_clicks'),
         prevent_initial_call=True
     )
 
@@ -3919,6 +4029,37 @@ loader = html.Div(
 
     ]
 )
+
+
+def get_tempo_text(tempo):
+    tempo = float(tempo)
+    if tempo < 2.4:
+        return 'Be more relaxed during your swing'
+    elif tempo > 3.6:
+        return 'Your tempo is a bit slow'
+    else:
+        return 'Your tempo is good'
+
+
+def get_backswing_text(backswing):
+    backswing = float(backswing.split(' ')[0])
+    if backswing < 0.6:
+        return 'Try to swing a bit slower, your backswing is too short'
+    elif backswing > 0.9:
+        return 'Try to swing a bit faster, your backswing is too long'
+    else:
+        return 'Your backswing is good'
+
+
+def get_downswing_text(downswing):
+    downswing = float(downswing.split(' ')[0])
+    if downswing < 0.2:
+        return 'Relax, your downsing is a bit fast'
+    elif downswing > 0.30:
+        return 'Try to swing a bit faster, your downswing is too slow'
+    else:
+        return 'Your downswing is good'
+
 
 if __name__ == '__main__':
     pass
