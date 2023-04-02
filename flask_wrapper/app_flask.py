@@ -2639,7 +2639,7 @@ def init_callbacks(app):
 
             file_path = 'https://swinglab.app' + temp.name
 
-            replicate.Client(api_token='aa4a6f5c72222795668778fc94205f49659f0060')
+            replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
             response = replicate.run(
                 "jlnk03/predict-pose:34a1cc2a75b90f89f2dfed9134579524ce034959744aa0f7e5627e44fbccf7ab",
