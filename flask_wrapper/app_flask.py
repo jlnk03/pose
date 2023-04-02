@@ -17,7 +17,7 @@ from code_b.angles_2 import calculate_angles
 import requests
 from itsdangerous import URLSafeTimedSerializer
 import datetime
-from overlay_view import overlay
+from .overlay_view import overlay
 import replicate
 import urllib
 import tempfile
