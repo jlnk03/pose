@@ -3035,6 +3035,7 @@ def init_callbacks(app):
         State('video', 'url'),
         State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
         Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
         Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
         Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
@@ -3042,11 +3043,7 @@ def init_callbacks(app):
         prevent_initial_call=True
     )
     def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
-                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
-
-        time_back = '- s'
-        time_down = '- s'
-        temp = '-'
+                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
 
         if n_clicks is not None:
             if n_clicks > 0:
@@ -3133,7 +3130,7 @@ def init_callbacks(app):
 
                 db.session.commit()
 
-            return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
 
     # Reset positions
     @app.callback(
@@ -3144,6 +3141,7 @@ def init_callbacks(app):
         State('video', 'url'),
         State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
         Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
         Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
         Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
@@ -3151,11 +3149,7 @@ def init_callbacks(app):
         prevent_initial_call=True
     )
     def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
-                        setup_pos, top_pos, impact_pos, end_pos, fig, angle_text):
-
-        time_back = '- s'
-        time_down = '- s'
-        temp = '-'
+                        setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
 
         if n_clicks is not None:
             if n_clicks > 0:
@@ -3248,7 +3242,7 @@ def init_callbacks(app):
 
                 db.session.commit()
 
-            return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
 
     # Hide selection view with save
     app.clientside_callback(
