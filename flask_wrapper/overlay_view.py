@@ -8,7 +8,7 @@ overlay = html.Div(
             className='fixed top-24 w-full bottom-0 dark:bg-slate-700 bg-[#FAF7F5] rounded-t-3xl',
             children=[
                 html.Div(
-                    className='relative flex flex-col gap-4 mx-6 my-6 overflow-y-auto h-full',
+                    className='relative flex flex-col gap-4 mx-6 my-6 overflow-y-auto overflow-x-hidden h-full',
                     children=[
                         html.Div(
                             className='w-full h-fit flex flex-col gap-4',

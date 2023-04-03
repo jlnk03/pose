@@ -3471,7 +3471,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='showVideoFrames'
         ),
-        Input('show_overlay', 'n_clicks'),
+        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('setup_pos', 'children'), State('impact_pos', 'children'), State('top_pos', 'children'),
         prevent_initial_call=True
     )
@@ -3482,7 +3482,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='reportText'
         ),
-        Input('show_overlay', 'n_clicks'),
+        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
         State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
         State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),

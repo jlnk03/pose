@@ -644,8 +644,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        showVideoFrames: function (n_clicks, setup, impact, top) {
-            if (n_clicks === 1) {
+        showVideoFrames: function (n_clicks, n_clicks2, setup, impact, top) {
+            if (n_clicks === 1 || n_clicks2 === 1) {
                 let video = document.getElementById('video').children[0]
                 var canvas = document.getElementById("setup_frame");
 
@@ -675,8 +675,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        reportText: function (n_clicks, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, setup, impact, top) {
-            if (n_clicks === 1) {
+        reportText: function (n_clicks, n_clicks2, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, setup, impact, top) {
+            if (n_clicks === 1 || n_clicks2 === 1) {
                 const pelvis_rotation = fig2.data[1].y;
                 const pelvis_bend = fig2.data[0].y;
                 const thorax_rotation = fig4.data[0].y;
