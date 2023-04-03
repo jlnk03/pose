@@ -217,7 +217,7 @@ class Predictor(BasePredictor):
                         landmark_drawing_spec=self.mp_drawing_styles.get_default_pose_landmarks_style()
                     )
 
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
                     # convert the image to numpy array
                     image = np.asarray(image)

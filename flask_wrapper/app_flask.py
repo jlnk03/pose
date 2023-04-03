@@ -2407,9 +2407,14 @@ def init_callbacks(app):
                     setup_pos = vid_row.setup
                     arm_index_s = int(setup_pos * len(save_wrist_angle))
 
+                # Check if impact is before top
+                if impact_pos < top_pos:
+                    top_pos = (impact_pos - setup_pos) / 2 + setup_pos
+                    arm_index = int(top_pos * len(save_wrist_angle))
+
                 # Tempo
                 temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
-                                                   len(save_wrist_angle) / duration)
+                                                   fps)
 
                 # Get the tempo text
                 tempo_text = get_tempo_text(temp)
@@ -2620,9 +2625,9 @@ def init_callbacks(app):
 
         # Send the video to the server and extract motion data
         # Send token to server to verify user
-        email = current_user.email
-        ts = URLSafeTimedSerializer('key')
-        token = ts.dumps(email, salt='verification-key')
+        # email = current_user.email
+        # ts = URLSafeTimedSerializer('key')
+        # token = ts.dumps(email, salt='verification-key')
 
         # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
         #                          json={'contents': contents, 'filename': filename, 'location': location})
@@ -2688,8 +2693,6 @@ def init_callbacks(app):
 
         # Get the video and update the video player
 
-        # video_file = urllib.URLopener()
-        # video_file.retrieve(out_path, location + '/motion.mp4')
         urllib.request.urlretrieve(out_path, location + '/motion.mp4')
 
         vid_src = location + '/motion.mp4'
@@ -2768,6 +2771,11 @@ def init_callbacks(app):
 
         # Setup
         setup_pos = arm_index_s / len(save_wrist_angle)
+
+        # Check if impact is before top
+        if impact_pos < top_pos:
+            top_pos = (impact_pos - setup_pos) / 2 + setup_pos
+            arm_index = int(top_pos * len(save_wrist_angle))
 
         temp, time_back, time_down = tempo(arm_index_s, arm_index, impact_pos * len(save_wrist_angle),
                                            len(save_wrist_angle) / duration)
