@@ -2647,7 +2647,7 @@ def init_callbacks(app):
         replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
         response = replicate.run(
-            "jlnk03/predict-pose:16857c16e66dcde398cc7167273894a0bb9d5f9be67a7f29d861b673785f83e8",
+            "jlnk03/predict-pose:6917f21ac0df836381e6e4903f91db89c1b6f8a86fd4c0a933e372d94c1d460c",
             input={"video": content_string},
         )
 
