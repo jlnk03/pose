@@ -208,7 +208,7 @@ class Predictor(BasePredictor):
                     pinky_l_s.append(pinky_l_v)
                     index_l_s.append(index_l_v)
 
-                    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                     self.mp_drawing.draw_landmarks(
                         image,
