@@ -115,13 +115,10 @@ def upload_video(disabled=True, path=None):
             className='flex flex-col sm:flex-row w-full h-full',
             children=[
 
-                html.Div(
-                    html.Button(
-                        'Report',
-                        id='show_overlay_mobile',
-                        className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm disable-dbl-tap-zoom'
-                    ),
-                    className='sm:hidden absolute -top-16 left-1/2 -translate-x-1/2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                html.Button(
+                    'Report',
+                    id='show_overlay_mobile',
+                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 w-24 px-2 py-1 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm disable-dbl-tap-zoom'
                 ),
 
                 html.Div(
@@ -1722,10 +1719,10 @@ def init_dash(server):
                                                         html.Div('BACKSWING',
                                                                  className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute left-6 top-6'),
                                                         # TODO back text
-                                                        html.Div(
-                                                            id='backswing_text',
-                                                            className='text-base text-gray-400 w-fit text-left mr-6'
-                                                        ),
+                                                        # html.Div(
+                                                        #     id='backswing_text',
+                                                        #     className='text-base text-gray-400 w-fit text-left mr-6'
+                                                        # ),
                                                         html.Div('- s', id='backswing',
                                                                  className='mt-3'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
@@ -1734,9 +1731,9 @@ def init_dash(server):
                                                         html.Div('0.5', id='setup_pos', className='hidden'),
                                                         html.Div('60', id='fps_saved', className='hidden'),
 
-                                                        html.Div(
-                                                            gradient_slider_view('backswing_slider', 0, 1.5)
-                                                        )
+                                                        # html.Div(
+                                                        #     gradient_slider_view('backswing_slider', 0, 1.5)
+                                                        # )
 
                                                     ],
                                                     className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-start justify-center w-full h-28 text-center pl-6 pt-6 sm:pt-0'
@@ -1750,16 +1747,16 @@ def init_dash(server):
                                                 html.Div('DOWNSWING',
                                                          className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6'),
                                                 # TODO down text
-                                                html.Div(
-                                                    id='downswing_text',
-                                                    className='text-base text-gray-400 w-fit text-left mr-6'
-                                                ),
+                                                # html.Div(
+                                                #     id='downswing_text',
+                                                #     className='text-base text-gray-400 w-fit text-left mr-6'
+                                                # ),
                                                 html.Div('- s', id='downswing',
                                                          className='mt-3'),
 
-                                                html.Div(
-                                                    gradient_slider_view('downswing_slider', 0, 0.5)
-                                                )
+                                                # html.Div(
+                                                #     gradient_slider_view('downswing_slider', 0, 0.5)
+                                                # )
 
                                             ],
                                             className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow rounded-3xl flex flex-col items-start justify-center w-full pl-6 pt-6 sm:pt-0'
@@ -2180,7 +2177,7 @@ def init_callbacks(app):
          Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
          Output('upload-initial', 'className'), Output('upload-video', 'className'),
          Output('emoji-start', 'children'), Output('emoji-transition', 'children'), Output('loading-state', 'children'),
-         Output('tempo_text', 'children'), Output('backswing_text', 'children'), Output('downswing_text', 'children'),
+         Output('tempo_text', 'children'), #Output('backswing_text', 'children'), Output('downswing_text', 'children'),
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          # Input('upload-data', 'filename'),
@@ -2304,7 +2301,7 @@ def init_callbacks(app):
                             [], [], [],
                             disabled, disabled, disabled,
                             upload_initial_class, upload_video_class,
-                            '😍', '😍', '', '', '', ''
+                            '😍', '😍', '', '',  # '', ''
                             ]
 
                 # Read data from parquet file
@@ -2504,7 +2501,7 @@ def init_callbacks(app):
                         path, over_text, angle_swing_plane_text,
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        emoji_start, emoji_transition, '', tempo_text, backswing_text, downswing_text,
+                        emoji_start, emoji_transition, '',  tempo_text,  # backswing_text, downswing_text,
                         ]
 
         # Delete was pressed
@@ -2620,29 +2617,13 @@ def init_callbacks(app):
                         path, [], [],
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        '😍', '😍', '', '', '', ''
+                        '😍', '😍', '', '',  # '', ''
                         ]
-
-        # Send the video to the server and extract motion data
-        # Send token to server to verify user
-        # email = current_user.email
-        # ts = URLSafeTimedSerializer('key')
-        # token = ts.dumps(email, salt='verification-key')
-
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='https'),
-        #                          json={'contents': contents, 'filename': filename, 'location': location})
-        # response = requests.post(url_for('main.predict', token=token, _external=True, _scheme='http'),  json={'contents': contents, 'filename': filename, 'location': location})
 
         # TODO replicate
 
         # Write video to named tempfile
-        # with contents.split(',')[1] as decoded:
         content_type, content_string = contents.split(',')
-
-        # decoded = base64.b64decode(content_string)
-            # temp.write(decoded)
-
-            # file_path = 'https://swinglab.app' + temp.name
 
         replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
@@ -2654,30 +2635,6 @@ def init_callbacks(app):
         shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
             duration, fps, impact_ratio, \
             out_path = response
-
-        # if response.status_code == 200:
-        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        #         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        #         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-        #         save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground, arm_position, duration, fps, impact_ratio = response.json().values()
-        #
-        # else:
-        #     if response.status_code == 413:
-        #         message = 'Video is too long. Please upload a shorter video.'
-        #     save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
-        #         save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
-        #         save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
-        #         save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(
-        #         100, 20)
-        #     duration = 10
-        #     impact_ratio = 0.5
-        #     fps = 60
-        #     arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        #                     'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
-
-        # pelvis_r, pelvis_t, pelvis_s, pelvis_th, pelvis_l, thorax_r, thorax_b, thorax_t, thorax_s, thorax_th, \
-        #     thorax_l, spine_r, spine_t, head_r, head_t, wist_a, wrist_t, left_arm, arm_rotation_l, arm_ground, \
-        #     arm_position
 
         # Angles
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_sway, save_pelvis_thrust, save_pelvis_lift, \
@@ -2692,7 +2649,6 @@ def init_callbacks(app):
         location = f'assets/save_data/{current_user.id}/' + filename
 
         # Get the video and update the video player
-
         urllib.request.urlretrieve(out_path, location + '/motion.mp4')
 
         vid_src = location + '/motion.mp4'
@@ -2864,7 +2820,7 @@ def init_callbacks(app):
                 path, over_text, angle_swing_plane_text,
                 disabled, disabled, disabled,
                 upload_initial_class, upload_video_class,
-                emoji_start, emoji_transition, '', tempo_text, backswing_text, downswing_text,
+                emoji_start, emoji_transition, '', tempo_text,  # backswing_text, downswing_text,
                 ]
 
     # Save new margins to db
@@ -3432,25 +3388,25 @@ def init_callbacks(app):
         Input('tempo', 'children'),
     )
 
-    # Backswing slider position
-    app.clientside_callback(
-        ClientsideFunction(
-            namespace='clientside',
-            function_name='backswingSlider'
-        ),
-        Output('backswing_slider', 'style'),
-        Input('backswing', 'children'),
-    )
-
-    # Downswing slider position
-    app.clientside_callback(
-        ClientsideFunction(
-            namespace='clientside',
-            function_name='downswingSlider'
-        ),
-        Output('downswing_slider', 'style'),
-        Input('downswing', 'children'),
-    )
+    # # Backswing slider position
+    # app.clientside_callback(
+    #     ClientsideFunction(
+    #         namespace='clientside',
+    #         function_name='backswingSlider'
+    #     ),
+    #     Output('backswing_slider', 'style'),
+    #     Input('backswing', 'children'),
+    # )
+    #
+    # # Downswing slider position
+    # app.clientside_callback(
+    #     ClientsideFunction(
+    #         namespace='clientside',
+    #         function_name='downswingSlider'
+    #     ),
+    #     Output('downswing_slider', 'style'),
+    #     Input('downswing', 'children'),
+    # )
 
     # Show heart
     app.clientside_callback(
@@ -4061,6 +4017,7 @@ def get_backswing_text(backswing):
 
 
 def get_downswing_text(downswing):
+    return ''
     downswing = float(downswing.split(' ')[0])
     if downswing < 0.2:
         return 'Relax, your downsing is a bit fast'
