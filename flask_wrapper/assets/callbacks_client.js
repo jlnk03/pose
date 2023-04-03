@@ -631,7 +631,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         },
 
         showOverlay: function(n_clicks, n_clicks2, n_clicks3) {
-            if (n_clicks > 0 || n_clicks2 > 0 || n_clicks3 > 0) {
+            // if (n_clicks > 0 || n_clicks2 > 0 || n_clicks3 > 0) {
+            if (window.dash_clientside.callback_context.triggered[0].value > 0) {
                 let overlay = document.getElementById('overlay').classList
                 overlay.toggle('hidden')
 
@@ -655,7 +656,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
                 const duration = video.duration;
 
-                console.log(setup)
+                const previousTime = video.currentTime;
 
                 // Take the first snapshot
                 takeSnapshot(video, canvas, setup * duration).then(function() {
@@ -665,13 +666,14 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                   // Wait for the second snapshot to finish loading before taking the third one
                   return takeSnapshot(video, canvas_impact, impact * duration);
                 }).then(function() {
+                    // Wait for the third snapshot to finish loading before resetting the video
+                    video.currentTime = previousTime;
                   // All snapshots have finished loading
                   // console.log("All snapshots taken");
                 }).catch(function(error) {
                   // Handle any errors that may occur
                   console.error(error);
                 });
-
             }
         },
 

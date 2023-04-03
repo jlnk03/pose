@@ -1124,7 +1124,6 @@ def render_files(files):
         return []
 
     template = [html.A(href='# ', children=file, className='text-white text-sm') for file in files]
-    print(template)
     return template
 
 
@@ -1132,7 +1131,7 @@ def init_dash(server):
     # Initialize the app
     app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
                     external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
-                    transforms=[MultiplexerTransform(), NoOutputTransform()]
+                    transforms=[MultiplexerTransform(proxy_location=None), NoOutputTransform()], prevent_initial_callbacks=True,
                     )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
