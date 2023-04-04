@@ -403,7 +403,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         },
 
-        hideSelectionView: function(n_clicks, selection_class) {
+        hideSelectionView: function(n_clicks) {
 
             let pelvis_rot_store = document.getElementById('pelvis_rot_store')
             let pelvis_tilt_store = document.getElementById('pelvis_bend_store')
@@ -444,15 +444,24 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 console.log('No body part selected')
             }
 
-            return selection_class.replace('flex', 'hidden');
+            let selection_view_dismiss = document.getElementById('selection-view-dismiss').classList
+                selection_view_dismiss.toggle('hidden')
+
+            let selection_class = document.getElementById('selection-view').classList
+            selection_class.toggle('hidden')
+
+            // return selection_class.replace('flex', 'hidden');
 
         },
 
-        showSelectionView: function(n_clicks, n_clicks2, n_clicks3, n_clicks4, n_clicks5, n_clicks6, selection_class) {
+        showSelectionView: function(n_clicks, n_clicks2, n_clicks3, n_clicks4, n_clicks5, n_clicks6) {
 
                 const title = document.getElementById('new_margins_title');
                 let selection_view_dismiss = document.getElementById('selection-view-dismiss').classList
                 selection_view_dismiss.toggle('hidden')
+
+                let selection_class = document.getElementById('selection-view').classList
+                selection_class.toggle('hidden')
 
                 // let setup_low = document.getElementById('setup_low_new_margins')
                 // let setup_high = document.getElementById('setup_high_new_margins')
@@ -557,18 +566,15 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     title.innerHTML = 'New Margins';
                 }
 
-                selection_class = selection_class.replace('hidden', 'flex');
-
-
-
-                return [selection_class, setup_low, setup_high, top_low, top_high, impact_low, impact_high];
+                return [setup_low, setup_high, top_low, top_high, impact_low, impact_high];
 
         },
 
-        hideSelectionViewCross: function(n_clicks, n_clicks2, selection_class, dismiss_class) {
+        hideSelectionViewCross: function(n_clicks) {
+            let selection_class = document.getElementById('selection-view').classList
+            selection_class.toggle('hidden')
             let selection_view_dismiss = document.getElementById('selection-view-dismiss').classList
             selection_view_dismiss.toggle('hidden')
-            return selection_class.replace('flex', 'hidden');
         },
 
         tempoSlider: function(tempo) {

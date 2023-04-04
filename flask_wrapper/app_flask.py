@@ -1362,12 +1362,12 @@ def init_dash(server):
                                                     id='new_margins_title',
                                                     className='w-fit text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 absolute top-6 transform -translate-x-1/2 left-1/2'
                                                 ),
-                                                html.Button(
-                                                    html.Img(src=app.get_asset_url('cross_light.svg'),
-                                                             className='h-5 w-5'),
-                                                    id='new_margins_close',
-                                                    className='h-5 w-5 absolute top-4 right-4 cursor-pointer',
-                                                ),
+                                                # html.Button(
+                                                #     html.Img(src=app.get_asset_url('cross_light.svg'),
+                                                #              className='h-5 w-5'),
+                                                #     id='new_margins_close',
+                                                #     className='h-5 w-5 absolute top-4 right-4 cursor-pointer',
+                                                # ),
                                                 html.Div(
                                                     'Setup',
                                                     className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
@@ -1437,7 +1437,7 @@ def init_dash(server):
                                 ),
                                 # End selection view
 
-                                # Delete file view
+                                # region Delete file view
                                 html.Div(
                                     id='delete-file-view',
                                     children=[
@@ -1465,7 +1465,7 @@ def init_dash(server):
                                     ],
                                     className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                 ),
-                                # End delete file view
+                                # endregion delete file view
 
                                 # Start video view
                                 html.Div(
@@ -3249,10 +3249,10 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionView'
         ),
-        Output('selection-view', 'className'),
+        # Output('selection-view', 'className'),
         Input('submit-new-margins', 'n_clicks'),
-        [State('selection-view', 'className'),
-         ],
+        # [State('selection-view', 'className'),
+        #  ],
         prevent_initial_call=True
     )
 
@@ -3262,10 +3262,10 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionViewCross'
         ),
-        Output('selection-view', 'className'),
-        Input('new_margins_close', 'n_clicks'), Input('selection-view-dismiss', 'n_clicks'),
-        [State('selection-view', 'className')
-         ],
+        # Output('selection-view', 'className'),
+        Input('selection-view-dismiss', 'n_clicks'),
+        # [State('selection-view', 'className')
+        #  ],
         prevent_initial_call=True
     )
 
@@ -3275,7 +3275,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='showSelectionView'
         ),
-        [Output('selection-view', 'className'),
+        [
          Output('setup_low_new_margins', 'value'), Output('setup_high_new_margins', 'value'),
          Output('top_low_new_margins', 'value'), Output('top_high_new_margins', 'value'),
          Output('impact_low_new_margins', 'value'), Output('impact_high_new_margins', 'value'),
@@ -3284,7 +3284,7 @@ def init_callbacks(app):
          Input('thorax_rot_btn', 'n_clicks'), Input('thorax_tilt_btn', 'n_clicks'),
          Input('head_rot_btn', 'n_clicks'), Input('head_tilt_btn', 'n_clicks'),
          ],
-        State('selection-view', 'className'),
+        # State('selection-view', 'className'),
         prevent_initial_call=True
     )
 
