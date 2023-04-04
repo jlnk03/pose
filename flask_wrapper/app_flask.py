@@ -1131,7 +1131,8 @@ def init_dash(server):
     # Initialize the app
     app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
                     external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
-                    transforms=[MultiplexerTransform(proxy_location=None), NoOutputTransform()], prevent_initial_callbacks=True,
+                    transforms=[#MultiplexerTransform(proxy_location=None),
+                                NoOutputTransform()], prevent_initial_callbacks=True,
                     )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
@@ -2169,10 +2170,10 @@ def init_callbacks(app):
          Output('start_sequence_third', 'children'),
          Output('end_sequence_first', 'children'), Output('end_sequence_second', 'children'),
          Output('end_sequence_third', 'children'),
-         Output('tempo', 'children'), Output('backswing', 'children'), Output('downswing', 'children'),
-         Output('top_pos', 'children'), Output('impact_pos', 'children'), Output('end_pos', 'children'),
-         Output('setup_pos', 'children'), Output('fps_saved', 'children'),
-         Output('arm_path', 'children'), Output('over_the_top', 'children'), Output('swing_plane_angle', 'children'),
+         Output('tempo', 'children', allow_duplicate=True), Output('backswing', 'children', allow_duplicate=True), Output('downswing', 'children', allow_duplicate=True),
+         Output('top_pos', 'children', allow_duplicate=True), Output('impact_pos', 'children', allow_duplicate=True), Output('end_pos', 'children', allow_duplicate=True),
+         Output('setup_pos', 'children', allow_duplicate=True), Output('fps_saved', 'children'),
+         Output('arm_path', 'children', allow_duplicate=True), Output('over_the_top', 'children', allow_duplicate=True), Output('swing_plane_angle', 'children', allow_duplicate=True),
          Output('upload-data', 'disabled'), Output('add-button', 'disabled'), Output('upload-data-initial', 'disabled'),
          Output('upload-initial', 'className'), Output('upload-video', 'className'),
          Output('emoji-start', 'children'), Output('emoji-transition', 'children'), Output('loading-state', 'children'),
@@ -3028,222 +3029,222 @@ def init_callbacks(app):
                     return class_name
 
     # TODO Save new positions
-    # @app.callback(
-    #     Input('edit_positions_save', 'n_clicks'),
-    #     State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
-    #     State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
-    #     State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
-    #     State('video', 'url'),
-    #     State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
-    #     State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
-    #     State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
-    #     Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
-    #     Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
-    #     Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
-    #     Output('end_pos', 'children'),
-    #     prevent_initial_call=True
-    # )
-    # def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
-    #                        setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
-    #
-    #     if n_clicks is not None:
-    #         if n_clicks > 0:
-    #             setup_time = 0 if setup_time is None else setup_time
-    #             top_time = 0 if top_time is None else top_time
-    #             impact_time = 0 if impact_time is None else impact_time
-    #             end_time = 0 if end_time is None else end_time
-    #
-    #             timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
-    #             max_key = max(timestamp_dict, key=timestamp_dict.get)
-    #
-    #             ratio = current_time / duration
-    #
-    #             vid = url.split('/')[3]
-    #             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
-    #
-    #             if vid_row is None:
-    #                 db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
-    #                 db.session.commit()
-    #
-    #             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
-    #
-    #             # Read data from parquet file
-    #             data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
-    #             x = data['arm_x']
-    #             y = data['arm_y']
-    #             z = data['arm_z']
-    #
-    #             length = len(x)
-    #
-    #             match max_key:
-    #                 case 'setup':
-    #                     vid_row.setup = ratio
-    #                     vid_row.setup_calc = setup_pos
-    #                     setup_pos = ratio
-    #
-    #                     # Tempo
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'top':
-    #                     vid_row.top = ratio
-    #                     vid_row.top_calc = top_pos
-    #                     top_pos = ratio
-    #
-    #                     # Tempo
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'impact':
-    #                     vid_row.impact = ratio
-    #                     vid_row.impact_calc = impact_pos
-    #                     impact_pos = ratio
-    #
-    #                     # Tempo
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'end':
-    #                     vid_row.end = ratio
-    #                     vid_row.end_calc = end_pos
-    #                     end_pos = ratio
-    #
-    #                     # Tempo
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case _:
-    #                     print('Error: No position selected')
-    #                     temp = '-'
-    #                     time_back = '- s'
-    #                     time_down = '- s'
-    #
-    #             # 3D plot
-    #             path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
-    #                                        fps)
-    #
-    #             angle_text = html.Div(
-    #                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
-    #                           f'{int(angle)}°'])
-    #
-    #             fig = dcc.Graph(
-    #                 id='arm_path_3d',
-    #                 figure=path,
-    #                 config=config,
-    #                 className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
-    #             )
-    #
-    #             db.session.commit()
-    #
-    #     return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
-    #
-    # # Reset positions
-    # @app.callback(
-    #     Input('edit_positions_reset', 'n_clicks'),
-    #     State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
-    #     State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
-    #     State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
-    #     State('video', 'url'),
-    #     State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
-    #     State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
-    #     State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
-    #     Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
-    #     Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
-    #     Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
-    #     Output('end_pos', 'children'),
-    #     prevent_initial_call=True
-    # )
-    # def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
-    #                     setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
-    #
-    #     if n_clicks is not None:
-    #         if n_clicks > 0:
-    #             setup_time = 0 if setup_time is None else setup_time
-    #             top_time = 0 if top_time is None else top_time
-    #             impact_time = 0 if impact_time is None else impact_time
-    #             end_time = 0 if end_time is None else end_time
-    #
-    #             timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
-    #             max_key = max(timestamp_dict, key=timestamp_dict.get)
-    #
-    #             vid = url.split('/')[3]
-    #             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
-    #
-    #             if vid_row is None:
-    #                 db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
-    #                 db.session.commit()
-    #
-    #             vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
-    #
-    #             # Read data from parquet file
-    #             data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
-    #             x = data['arm_x']
-    #             y = data['arm_y']
-    #             z = data['arm_z']
-    #
-    #             length = len(x)
-    #
-    #             match max_key:
-    #                 case 'setup':
-    #                     vid_row.setup = None
-    #
-    #                     setup_pos = vid_row.setup_calc
-    #
-    #                     if vid_row.top is not None:
-    #                         top_pos = vid_row.top
-    #                     if vid_row.impact is not None:
-    #                         impact_pos = vid_row.impact
-    #
-    #                     # Tempo
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'top':
-    #                     vid_row.top = None
-    #                     top_pos = vid_row.top_calc
-    #
-    #                     if vid_row.setup is not None:
-    #                         setup_pos = vid_row.setup
-    #                     if vid_row.impact is not None:
-    #                         impact_pos = vid_row.impact
-    #
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'impact':
-    #                     vid_row.impact = None
-    #                     impact_pos = vid_row.impact_calc
-    #
-    #                     if vid_row.setup is not None:
-    #                         setup_pos = vid_row.setup
-    #                     if vid_row.top is not None:
-    #                         top_pos = vid_row.top
-    #
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case 'end':
-    #                     vid_row.end = None
-    #                     end_pos = vid_row.end_calc
-    #
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #                 case _:
-    #                     print('Error: No position selected')
-    #
-    #                     temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
-    #
-    #             # 3D plot
-    #             path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
-    #                                        fps)
-    #
-    #             angle_text = html.Div(
-    #                 children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
-    #                           f'{int(angle)}°'])
-    #
-    #             fig = dcc.Graph(
-    #                 id='arm_path_3d',
-    #                 figure=path,
-    #                 config=config,
-    #                 className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
-    #             )
-    #
-    #             db.session.commit()
-    #
-    #     return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+    @app.callback(
+        Input('edit_positions_save', 'n_clicks'),
+        State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+        State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
+        State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
+        State('video', 'url'),
+        State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
+        State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
+        Output('backswing', 'children', allow_duplicate=True), Output('downswing', 'children', allow_duplicate=True), Output('tempo', 'children', allow_duplicate=True),
+        Output('arm_path', 'children', allow_duplicate=True), Output('swing_plane_angle', 'children', allow_duplicate=True),
+        Output('setup_pos', 'children', allow_duplicate=True), Output('top_pos', 'children', allow_duplicate=True), Output('impact_pos', 'children', allow_duplicate=True),
+        Output('end_pos', 'children', allow_duplicate=True),
+        prevent_initial_call=True
+    )
+    def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
+                           setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
+
+        if n_clicks is not None:
+            if n_clicks > 0:
+                setup_time = 0 if setup_time is None else setup_time
+                top_time = 0 if top_time is None else top_time
+                impact_time = 0 if impact_time is None else impact_time
+                end_time = 0 if end_time is None else end_time
+
+                timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
+                max_key = max(timestamp_dict, key=timestamp_dict.get)
+
+                ratio = current_time / duration
+
+                vid = url.split('/')[3]
+                vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+                if vid_row is None:
+                    db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
+                    db.session.commit()
+
+                vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+                # Read data from parquet file
+                data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
+                x = data['arm_x']
+                y = data['arm_y']
+                z = data['arm_z']
+
+                length = len(x)
+
+                match max_key:
+                    case 'setup':
+                        vid_row.setup = ratio
+                        vid_row.setup_calc = setup_pos
+                        setup_pos = ratio
+
+                        # Tempo
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'top':
+                        vid_row.top = ratio
+                        vid_row.top_calc = top_pos
+                        top_pos = ratio
+
+                        # Tempo
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'impact':
+                        vid_row.impact = ratio
+                        vid_row.impact_calc = impact_pos
+                        impact_pos = ratio
+
+                        # Tempo
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'end':
+                        vid_row.end = ratio
+                        vid_row.end_calc = end_pos
+                        end_pos = ratio
+
+                        # Tempo
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case _:
+                        print('Error: No position selected')
+                        temp = '-'
+                        time_back = '- s'
+                        time_down = '- s'
+
+                # 3D plot
+                path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
+                                           fps)
+
+                angle_text = html.Div(
+                    children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                              f'{int(angle)}°'])
+
+                fig = dcc.Graph(
+                    id='arm_path_3d',
+                    figure=path,
+                    config=config,
+                    className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
+                )
+
+                db.session.commit()
+
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+
+    # Reset positions
+    @app.callback(
+        Input('edit_positions_reset', 'n_clicks'),
+        State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
+        State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
+        State('video', 'currentTime'), State('video', 'duration'), State('fps_saved', 'children'),
+        State('video', 'url'),
+        State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
+        State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
+        State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
+        Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
+        Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
+        Output('end_pos', 'children'),
+        prevent_initial_call=True
+    )
+    def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
+                        setup_pos, top_pos, impact_pos, end_pos, fig, angle_text, time_back, time_down, temp):
+
+        if n_clicks is not None:
+            if n_clicks > 0:
+                setup_time = 0 if setup_time is None else setup_time
+                top_time = 0 if top_time is None else top_time
+                impact_time = 0 if impact_time is None else impact_time
+                end_time = 0 if end_time is None else end_time
+
+                timestamp_dict = {'setup': setup_time, 'top': top_time, 'impact': impact_time, 'end': end_time}
+                max_key = max(timestamp_dict, key=timestamp_dict.get)
+
+                vid = url.split('/')[3]
+                vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+                if vid_row is None:
+                    db.session.add(UserLikes(user_id=current_user.id, video_id=vid))
+                    db.session.commit()
+
+                vid_row = UserLikes.query.filter_by(user_id=current_user.id, video_id=vid).first()
+
+                # Read data from parquet file
+                data = pd.read_parquet(f'assets/save_data/{current_user.id}/{vid}/{vid}.parquet')
+                x = data['arm_x']
+                y = data['arm_y']
+                z = data['arm_z']
+
+                length = len(x)
+
+                match max_key:
+                    case 'setup':
+                        vid_row.setup = None
+
+                        setup_pos = vid_row.setup_calc
+
+                        if vid_row.top is not None:
+                            top_pos = vid_row.top
+                        if vid_row.impact is not None:
+                            impact_pos = vid_row.impact
+
+                        # Tempo
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'top':
+                        vid_row.top = None
+                        top_pos = vid_row.top_calc
+
+                        if vid_row.setup is not None:
+                            setup_pos = vid_row.setup
+                        if vid_row.impact is not None:
+                            impact_pos = vid_row.impact
+
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'impact':
+                        vid_row.impact = None
+                        impact_pos = vid_row.impact_calc
+
+                        if vid_row.setup is not None:
+                            setup_pos = vid_row.setup
+                        if vid_row.top is not None:
+                            top_pos = vid_row.top
+
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case 'end':
+                        vid_row.end = None
+                        end_pos = vid_row.end_calc
+
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                    case _:
+                        print('Error: No position selected')
+
+                        temp, time_back, time_down = tempo(setup_pos * length, top_pos * length, impact_pos * length, fps)
+
+                # 3D plot
+                path, angle = hand_path_3d(x, y, z, int(setup_pos * length), int(end_pos * length), int(top_pos * length),
+                                           fps)
+
+                angle_text = html.Div(
+                    children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
+                              f'{int(angle)}°'])
+
+                fig = dcc.Graph(
+                    id='arm_path_3d',
+                    figure=path,
+                    config=config,
+                    className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
+                )
+
+                db.session.commit()
+
+        return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
 
     # Hide selection view with save
     app.clientside_callback(
@@ -3450,15 +3451,15 @@ def init_callbacks(app):
     )
 
     # TODO Show edit positions save button
-    # app.clientside_callback(
-    #     ClientsideFunction(
-    #         namespace='clientside',
-    #         function_name='showEditPositionsSaveButton'
-    #     ),
-    #     Input('edit_positions', 'n_clicks'), Input('edit_positions_save', 'n_clicks'),
-    #     Input('edit_positions_reset', 'n_clicks'),
-    #     prevent_initial_call=True
-    # )
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='showEditPositionsSaveButton'
+        ),
+        Input('edit_positions', 'n_clicks'), Input('edit_positions_save', 'n_clicks'),
+        Input('edit_positions_reset', 'n_clicks'),
+        prevent_initial_call=True
+    )
 
     # Show video frames
     app.clientside_callback(
