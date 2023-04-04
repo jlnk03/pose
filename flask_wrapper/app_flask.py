@@ -129,13 +129,13 @@ def upload_video(disabled=True, path=None):
                             html.Div(
                                 children=[
                                     html.Button('Setup', id='setup_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Top', id='top_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Impact', id='impact_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm'),
                                     html.Button('Finish', id='end_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm'),
                                 ],
                                 className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
@@ -143,9 +143,9 @@ def upload_video(disabled=True, path=None):
                             html.Div(
                                 children=[
                                     html.Button('Frame +', id='plus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                     html.Button('Frame -', id='minus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
                                 className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
@@ -154,7 +154,7 @@ def upload_video(disabled=True, path=None):
                                 html.Button(
                                     'Report',
                                     id='show_overlay',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:shadow-sm dark:hover:shadow-none hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
                                 ),
                                 className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
 
