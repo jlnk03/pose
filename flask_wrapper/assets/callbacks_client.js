@@ -762,14 +762,16 @@ function takeSnapshot(video, canvas, time) {
 
     // Create a closure to capture the current time value
     function captureSnapshot() {
-      // Draw the frame onto the canvas
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      setTimeout(function() {
+          // Draw the frame onto the canvas
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Remove the event listener
-      video.removeEventListener("seeked", captureSnapshot);
+          // Remove the event listener
+          video.removeEventListener("seeked", captureSnapshot);
 
-      // Resolve the promise
-      resolve();
+          // Resolve the promise
+          resolve();
+      }, 5);
     }
 
     // Seek to the desired time
