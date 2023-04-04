@@ -2912,7 +2912,8 @@ def init_callbacks(app):
         [Output('pelvis_rot_store', 'children'), Output('pelvis_bend_store', 'children'),
          Output('thorax_rot_store', 'children'), Output('thorax_bend_store', 'children'),
          Output('head_rot_store', 'children'), Output('head_tilt_store', 'children')
-         ]
+         ],
+        prevent_initial_call=False
     )
     def update_margins(pelvis_rot, pelvis_tilt, thorax_rot, thorax_tilt, head_rot, head_tilt):
 
@@ -3012,6 +3013,7 @@ def init_callbacks(app):
         Input('video', 'url'),
         Output('heart', 'className'),
         [State('heart', 'className')],
+        prevent_initial_call=False
     )
     def heart_state(src, class_name):
         if src is not None:
