@@ -118,7 +118,7 @@ def upload_video(disabled=True, path=None):
                 html.Button(
                     'Report',
                     id='show_overlay_mobile',
-                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 w-24 px-2 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 text-white font-bold text-sm disable-dbl-tap-zoom'
+                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 w-24 px-2 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 dark:shadow-none text-white font-bold text-sm disable-dbl-tap-zoom'
                 ),
 
                 html.Div(

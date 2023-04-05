@@ -26,13 +26,16 @@ overlay = html.Div(
                                                                className='text-2xl text-left font-bold mb-8 text-gray-900 dark:text-gray-100'),
                                                      html.Span('Pelvis',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                     html.Span(id='pelvis_report_text', className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
+                                                     html.Span(id='pelvis_report_text',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Thorax',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                    html.Span(id='thorax_report_text', className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
+                                                     html.Span(id='thorax_report_text',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Head',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                    html.Span(id='head_report_text', className='text-base text-left text-gray-900 dark:text-gray-100'),
+                                                     html.Span(id='head_report_text',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100'),
                                                  ]
                                              )
                                          ]
@@ -41,20 +44,23 @@ overlay = html.Div(
                                 html.Div(className='flex flex-row',
                                          children=[
                                              html.Canvas(id='top_frame', className='rounded-2xl'),
-                                            html.Div(
+                                             html.Div(
                                                  className='flex flex-col ml-6',
                                                  children=[
                                                      html.Span('Top',
                                                                className='text-2xl text-left font-bold mb-4 text-gray-900 dark:text-gray-100 mb-8'),
                                                      html.Span('Pelvis',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                    html.Span(id='pelvis_report_text_top', className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
+                                                     html.Span(id='pelvis_report_text_top',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Thorax',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                    html.Span(id='thorax_report_text_top', className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
+                                                     html.Span(id='thorax_report_text_top',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Head',
                                                                className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-                                                    html.Span(id='head_report_text_top', className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
+                                                     html.Span(id='head_report_text_top',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                  ]
                                              )
                                          ]
@@ -63,17 +69,23 @@ overlay = html.Div(
                                 html.Div(className='flex flex-row gap-4',
                                          children=[
                                              html.Canvas(id='impact_frame', className='rounded-2xl'),
-                                            html.Div(
-                                                 className='flex flex-col gap-4 ml-6',
+                                             html.Div(
+                                                 className='flex flex-col ml-6',
                                                  children=[
                                                      html.Span('Impact',
-                                                               className='text-2xl text-left font-bold mb-4 text-gray-900 dark:text-gray-100'),
+                                                               className='text-2xl text-left font-bold mb-4 text-gray-900 dark:text-gray-100 mb-8'),
                                                      html.Span('Pelvis',
-                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100'),
+                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                     html.Span(id='pelvis_report_text_impact',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Thorax',
-                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100'),
+                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                     html.Span(id='thorax_report_text_impact',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                      html.Span('Head',
-                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100'),
+                                                               className='text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                     html.Span(id='head_report_text_impact',
+                                                               className='text-base text-left text-gray-900 dark:text-gray-100 mb-4'),
                                                  ]
                                              )
                                          ]

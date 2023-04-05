@@ -712,6 +712,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_rot_top = thorax_rotation[Math.floor(top * length)];
                 const head_rot_top = head_rotation[Math.floor(top * length)];
 
+                const pelvis_rot_impact = pelvis_rotation[Math.floor(impact * length)];
+                const thorax_rot_impact = thorax_rotation[Math.floor(impact * length)];
+                const head_rot_impact = head_rotation[Math.floor(impact * length)];
+
                 let pelvis_report_text = document.getElementById('pelvis_report_text');
                 let thorax_report_text = document.getElementById('thorax_report_text');
                 let head_report_text = document.getElementById('head_report_text');
@@ -720,6 +724,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 let thorax_report_text_top = document.getElementById('thorax_report_text_top');
                 let head_report_text_top = document.getElementById('head_report_text_top');
 
+                let pelvis_report_text_impact = document.getElementById('pelvis_report_text_impact');
+                let thorax_report_text_impact = document.getElementById('thorax_report_text_impact');
+                let head_report_text_impact = document.getElementById('head_report_text_impact');
+
                 rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
                 rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
                 rotationText(head_rot, head_rot_margins, 'head', head_report_text)
@@ -727,6 +735,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 rotationText(pelvis_rot_top, pelvis_rot_margins.slice(2, 4), 'pelvis', pelvis_report_text_top)
                 rotationText(thorax_rot_top, thorax_rot_margins.slice(2, 4), 'thorax', thorax_report_text_top)
                 rotationText(head_rot_top, head_rot_margins.slice(2, 4), 'head', head_report_text_top)
+
+                rotationTextDown(pelvis_rot_impact, pelvis_rot_margins.slice(4, 7), 'pelvis', pelvis_report_text_impact)
+                rotationTextDown(thorax_rot_impact, thorax_rot_margins.slice(4, 6), 'thorax', thorax_report_text_impact)
+                rotationTextDown(head_rot_impact, head_rot_margins.slice(4, 6), 'head', head_report_text_impact)
 
             }
         }
@@ -788,6 +800,18 @@ function rotationText(angle, margin, body_part, element) {
     }
     else if (angle > margin[1]) {
         element.innerHTML = `Rotate your ${body_part} a little more.`
+    }
+    else {
+        element.innerHTML = `Your ${body_part} rotation is good.`
+    }
+}
+
+function rotationTextDown(angle, margin, body_part, element) {
+    if (angle < margin[0]) {
+        element.innerHTML =  `Rotate your ${body_part} a little more.`
+    }
+    else if (angle > margin[1]) {
+        element.innerHTML = `Rotate your ${body_part} a little less.`
     }
     else {
         element.innerHTML = `Your ${body_part} rotation is good.`
