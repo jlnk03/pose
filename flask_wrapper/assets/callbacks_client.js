@@ -758,19 +758,30 @@ function takeSnapshot(video, canvas, time) {
     const maxWidth = 384;
     const maxHeight = 384;
 
+    const maxWidthMobile = 224;
+    const maxHeightMobile = 224;
+
     // Calculate the maximum width and height of the canvas based on the aspect ratio
-    var canvasWidth, canvasHeight;
-    if (aspectRatio > 1) {
-        canvasWidth = Math.min(maxWidth, video.videoWidth);
-        canvasHeight = canvasWidth / aspectRatio;
-    } else {
-        canvasHeight = Math.min(maxHeight, video.videoHeight);
-        canvasWidth = canvasHeight * aspectRatio;
-    }
+    // var canvasWidth, canvasHeight, canvasWidthMobile, canvasHeightMobile;
+    // if (aspectRatio > 1) {
+    //     canvasWidth = Math.min(maxWidth, video.videoWidth);
+    //     // canvasHeight = canvasWidth / aspectRatio;
+    //     canvasWidthMobile = Math.min(maxWidthMobile, video.videoWidth);
+    //     // canvasHeightMobile = canvasWidthMobile / aspectRatio;
+    // } else {
+    //     canvasHeight = Math.min(maxHeight, video.videoHeight);
+    //     canvasWidth = canvasHeight * aspectRatio;
+    //     canvasHeightMobile = Math.min(maxHeightMobile, video.videoHeight);
+    //     canvasWidthMobile = canvasHeightMobile * aspectRatio;
+    // }
+    //
+    // let impact_report = document.getElementById('impact_report');
+    //
+    // impact_report.classList = `flex flex-col sm:w-[calc(100% - ${canvasWidth})] w-[calc(100% - ${canvasWidthMobile})]`
 
     // Set the width and height of the canvas
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
     // Create a closure to capture the current time value
     function captureSnapshot() {
