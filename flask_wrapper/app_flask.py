@@ -277,7 +277,7 @@ def gradient_slider_view(id, min, max):
                 className='absolute right-0 bottom-3.5 text-xs text-gray-400',
             )
         ],
-        className='absolute left-6 right-6 bottom-4 h-2 gradient-slider rounded-full'
+        className='absolute left-0 right-6 max-md:top-0 md:bottom-3 h-2 gradient-slider rounded-full'
     )]
 
     return layout
@@ -1709,23 +1709,20 @@ def init_dash(server):
 
                                 # Tempo divs
                                 html.Div(
-                                    className='grid md:grid-cols-3 grid-cols-1 w-full justify-between mb-5 xl:mt-0 mt-1 gap-2',
+                                    className='md:h-56 h-72 grid md:grid-cols-3 grid-cols-1 w-full md:justify-between mb-5 xl:mt-0 mt-1 gap-2 md:text-3xl text-xl font-bold text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl px-2',
                                     children=[
-                                        html.Div(
-                                            className='flex flex-col gap-2',
-                                            children=[
                                                 html.Div(
                                                     id='position_divs',
                                                     children=[
-                                                        html.Div('BACKSWING',
-                                                                 className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute left-6 top-6'),
+                                                        html.Div('Backswing',
+                                                                 className='text-base tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 left-6 md:left-4 top-6 md:absolute'),
                                                         # TODO back text
                                                         # html.Div(
                                                         #     id='backswing_text',
                                                         #     className='text-base text-gray-400 w-fit text-left mr-6'
                                                         # ),
                                                         html.Div('- s', id='backswing',
-                                                                 className='mt-3'),
+                                                                 className='mr-6'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
                                                         html.Div('0.5', id='impact_pos', className='hidden'),
                                                         html.Div('0.5', id='end_pos', className='hidden'),
@@ -1737,54 +1734,70 @@ def init_dash(server):
                                                         # )
 
                                                     ],
-                                                    className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-start justify-center w-full h-28 text-center pl-6 pt-6 sm:pt-0'
+                                                    className='relative flex flex-col items-start md:justify-center w-full pl-4 pt-2 sm:pt-0 md:border-r border-gray-200 dark:border-gray-600 my-2'
                                                 ),
-                                            ]
-                                        ),
 
                                         # Downswing div
                                         html.Div(
                                             children=[
-                                                html.Div('DOWNSWING',
-                                                         className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6'),
+                                                html.Div('Downswing',
+                                                         className='text-base tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 top-6 left-6 md:left-4 md:absolute'),
                                                 # TODO down text
                                                 # html.Div(
                                                 #     id='downswing_text',
                                                 #     className='text-base text-gray-400 w-fit text-left mr-6'
                                                 # ),
                                                 html.Div('- s', id='downswing',
-                                                         className='mt-3'),
+                                                         className='mr-6'),
 
                                                 # html.Div(
                                                 #     gradient_slider_view('downswing_slider', 0, 0.5)
                                                 # )
 
                                             ],
-                                            className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-start justify-center w-full pl-6 pt-6 sm:pt-0'
+                                            className='relative flex flex-col flex-none items-start md:justify-center w-full pl-4 md:pt-2 pt-0 md:border-r border-gray-200 dark:border-gray-600 my-2'
                                         ),
 
                                         # Tempo div
                                         html.Div(
                                             children=[
-                                                html.Div('TEMPO',
-                                                         className='sm:text-xl text-lg tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 absolute top-6 left-6 flex flex-col'),
-                                                # TODO tempo text
+                                                      html.Div('Tempo',
+                                                               className='text-base tracking-tight font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 top-6 left-6 md:left-4 flex flex-col md:absolute md:justify-center'),
+
                                                 html.Div(
-                                                    id='tempo_text',
-                                                    className='text-base text-gray-400 mx-6 w-fit'
-                                                ),
-                                                html.Div(
+                                                    className='flex flex-row w-full h-full md:flex-col justify-center relative',
                                                     children=[
-                                                        html.Div('-', id='tempo', className='mt-3 ml-6'),
-                                                        html.Div(': 1', className='mt-3 ml-2')
-                                                    ],
-                                                    className='flex flex-row'
+
+                                                      html.Div(
+                                                          children=[
+                                                              html.Div('-', id='tempo'),
+                                                              html.Div(': 1', className=' ml-2')
+                                                          ],
+                                                          className='flex flex-row mr-6 w-1/3 md:w-full'
+                                                      ),
+
+                                                        html.Div(
+                                                            className='relative md:absolute md:bottom-0 flex flex-col-reverse md:flex-col items-center w-2/3 md:w-full max-md:px-2',
+                                                            children=[
+                                                                # TODO tempo text
+                                                                html.Div(
+                                                                    id='tempo_text',
+                                                                    className='md:text-base text-sm text-gray-400 mx-6 w-full text-left h-full absolute max-md:top-8 font-normal md:bottom-24'
+                                                                ),
+
+                                                                html.Div(
+                                                                    gradient_slider_view(id='tempo_slider', min=0,
+                                                                                         max=6),
+                                                                )
+                                                            ]
+                                                        )
+
+                                                  ]
                                                 ),
-                                                html.Div(
-                                                    gradient_slider_view(id='tempo_slider', min=0, max=6),
-                                                )
+
+
                                             ],
-                                            className='h-52 relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col justify-center w-full  text-center'
+                                            className='relative flex flex-col flex-none md:justify-center w-full pl-4 h-24 md:h-full'
                                         ),
                                         # End of tempo div
                                     ]
