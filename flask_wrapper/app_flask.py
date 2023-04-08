@@ -1733,7 +1733,7 @@ def init_dash(server):
                                                         # )
 
                                                     ],
-                                                    className='relative flex flex-col items-start w-full pl-4 sm:pl-8 pt-2 my-2'
+                                                    className='relative flex flex-col items-start w-full pl-2 sm:pl-8 pt-2 my-2'
                                                 ),
 
                                                 # Downswing div
@@ -1754,7 +1754,7 @@ def init_dash(server):
                                                         # )
 
                                                     ],
-                                                    className='relative flex flex-col flex-none items-start w-full pl-4 sm:pl-8 md:pt-2 pt-0 my-2'
+                                                    className='relative flex flex-col flex-none items-start w-full pl-2 sm:pl-8 md:pt-2 pt-0 my-2'
                                                 ),
 
                                                 # Tempo div
@@ -1796,7 +1796,7 @@ def init_dash(server):
                                                         ),
 
                                                     ],
-                                                    className='relative flex flex-col flex-none md:justify-center w-full pl-4 sm:pl-8 h-24'
+                                                    className='relative flex flex-col flex-none md:justify-center w-full pl-2 sm:pl-8 h-24'
                                                 ),
                                                 # End of tempo div
                                             ]
