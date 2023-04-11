@@ -21,7 +21,7 @@ loader = html.Div(
                     className="absolute bottom-4 left-4 right-4 bg-slate-600 dark:bg-gray-700",
                 ),
             ],
-            className="flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-10 rounded-3xl hidden lg:flex",
+            className="flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 top-5 bottom-5 w-60 z-50 rounded-3xl hidden lg:flex",
         ),
 
         # Content

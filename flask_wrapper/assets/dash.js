@@ -5,18 +5,18 @@ bod.className = "dark:bg-slate-900 bg-[#FAF7F5]"
 
 switchColorMode = () => {
     let interval = setInterval(function () {
-    if (darkMode) {
-                let element = document.getElementsByClassName("xtick");
-                if (element.length > 0) {
-                    clearInterval(interval);
-                    // console.log("dark mode detected")
+        if (darkMode) {
+            let element = document.getElementsByClassName("xtick");
+            if (element.length > 0) {
+                clearInterval(interval);
+                // console.log("dark mode detected")
 
-                    let plots = document.getElementsByClassName("js-plotly-plot")
-                    for (let i = 0; i < plots.length; i++) {
-                        // console.log(plots[i])
-                        // console.log(plots[i].layout.yaxis.ticksuffix)
-                        try {
-                            Plotly.update(
+                let plots = document.getElementsByClassName("js-plotly-plot")
+                for (let i = 0; i < plots.length; i++) {
+                    // console.log(plots[i])
+                    // console.log(plots[i].layout.yaxis.ticksuffix)
+                    try {
+                        Plotly.update(
                             plots[i], {}, {
                                 titlefont: {
                                     color: "white"
@@ -50,26 +50,23 @@ switchColorMode = () => {
                                 }
                             }
                         )
-                            // console.log("updated")
-                        }
-                        catch (err) {
-                            console.log(err)
-                        }
+                        // console.log("updated")
+                    } catch (err) {
+                        console.log(err)
                     }
                 }
-        }
+            }
+        } else {
+            let element = document.getElementsByClassName("xtick");
+            if (element.length > 0) {
+                clearInterval(interval);
+                // console.log("light mode detected")
 
-        else {
-                let element = document.getElementsByClassName("xtick");
-                if (element.length > 0) {
-                    clearInterval(interval);
-                    // console.log("light mode detected")
-
-                    let plots = document.getElementsByClassName("js-plotly-plot")
-                    for (let i = 0; i < plots.length; i++) {
-                        // console.log(plots[i])
-                        try {
-                            Plotly.update(
+                let plots = document.getElementsByClassName("js-plotly-plot")
+                for (let i = 0; i < plots.length; i++) {
+                    // console.log(plots[i])
+                    try {
+                        Plotly.update(
                             plots[i], {}, {
                                 titlefont: {
                                     color: "black"
@@ -89,14 +86,14 @@ switchColorMode = () => {
                                 yaxis: {
                                     tickfont: {
                                         color: "black"
-                                        },
-                                        titlefont: {
-                                            color: "black"
-                                        },
-                                        // title: {
-                                        //     text: plots[i].layout.yaxis.title.text
-                                        // },
-                                        ticksuffix: plots[i].layout.yaxis.ticksuffix
+                                    },
+                                    titlefont: {
+                                        color: "black"
+                                    },
+                                    // title: {
+                                    //     text: plots[i].layout.yaxis.title.text
+                                    // },
+                                    ticksuffix: plots[i].layout.yaxis.ticksuffix
                                 },
                                 legend: {
                                     font: {
@@ -106,13 +103,12 @@ switchColorMode = () => {
                                 }
                             }
                         )
-                            // console.log("updated")
-                        }
-                        catch (err) {
-                            console.log(err)
-                        }
+                        // console.log("updated")
+                    } catch (err) {
+                        console.log(err)
                     }
                 }
+            }
         }
     }, 100);
 }
@@ -131,34 +127,34 @@ window
     })
 
 
-document.addEventListener('DOMContentLoaded', function() {
-     let interval = setInterval(function () {
-     let navbar = document.getElementById("file_list")
-     // console.log(navbar)
-     if (navbar) {
-         clearInterval(interval);
+document.addEventListener('DOMContentLoaded', function () {
+    let interval = setInterval(function () {
+        let navbar = document.getElementById("file_list")
+        // console.log(navbar)
+        if (navbar) {
+            clearInterval(interval);
 
-         const observer = new MutationObserver(function (mutations) {
-             // console.log("mutation detected")
-             mutations.forEach(function (mutation) {
-                 // console.log(mutation.type);
-                 switchColorMode()
-             });
-         });
+            const observer = new MutationObserver(function (mutations) {
+                // console.log("mutation detected")
+                mutations.forEach(function (mutation) {
+                    // console.log(mutation.type);
+                    switchColorMode()
+                });
+            });
 
-         const observerOptions = {
-             attributes: true,
-             childList: true,
-             characterData: true
-         };
+            const observerOptions = {
+                attributes: true,
+                childList: true,
+                characterData: true
+            };
 
-         observer.observe(navbar, observerOptions);
-     }
-     }, 100);
- });
+            observer.observe(navbar, observerOptions);
+        }
+    }, 100);
+});
 
 // Show loading view
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let interval = setInterval(function () {
         let ancestor = document.getElementById("main")
         let main = document.getElementById("main_wrapper")
@@ -174,13 +170,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const ancestorObserver = new MutationObserver(function (mutations) {
-                mutations.forEach(function(mutation) {
+                mutations.forEach(function (mutation) {
                     //  Check if the loading state has changed
                     if (mutation.target === document.getElementById("loading-state")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")
-                            main.classList.add('hidden');
+
                             loader.classList.remove('hidden');
+                            main.classList.add('hidden');
                         } else {
                             // console.log("not loading")
                             main.classList.remove('hidden');
@@ -198,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let interval = setInterval(function () {
         let ancestor = document.getElementById("position_divs")
         let main = document.getElementById("main_wrapper")
@@ -215,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const ancestorObserver = new MutationObserver(function (mutations) {
-                mutations.forEach(function(mutation) {
+                mutations.forEach(function (mutation) {
                     if (mutation.target === document.getElementById("top_pos")) {
                         if (mutation.target.getAttribute('data-dash-is-loading') === 'true') {
                             // console.log("loading")

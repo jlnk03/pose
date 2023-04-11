@@ -28,26 +28,31 @@
 }
 
 /*scrollbar two*/
-#live-divs::-webkit-scrollbar {
-    height: 0.4em;
-    background-color: #faf7f5;
+#live-divs-container::-webkit-scrollbar {
+  height: 0.4em;
+  width: 0.4em;
+  background-color: #faf7f5;
 }
 
 @media (prefers-color-scheme: dark) {
-    #live-divs::-webkit-scrollbar {
-        background-color: #0f172a;
-    }
+  #live-divs-container::-webkit-scrollbar {
+    background-color: #0f172a;
+  }
 }
 
 /* Track */
-#live-divs::-webkit-scrollbar-thumb {
+#live-divs-container::-webkit-scrollbar-thumb {
   background-color: #94a3b8;
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 /* Handle */
-#live-divs::-webkit-scrollbar-thumb:hover {
+#live-divs-container::-webkit-scrollbar-thumb:hover {
   background: #cbd5e1;
+}
+
+.overlay-scroll {
+  scrollbar-gutter: overlay;
 }
 
 /*#sequence[data-dash-is-loading="true"] {*/

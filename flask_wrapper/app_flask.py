@@ -9,7 +9,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 import replicate
-from dash import ctx, ALL, html, dcc, MATCH, ClientsideFunction
+from dash import ctx, ALL, html, dcc, MATCH, ClientsideFunction, no_update
 from dash_extensions.enrich import DashProxy, NoOutputTransform, Output, Input, State
 from flask_login import current_user
 from scipy import signal
@@ -134,7 +134,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Finish', id='end_pos_button',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -144,7 +144,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -153,7 +153,7 @@ def upload_video(disabled=True, path=None):
                                     id='show_overlay',
                                     className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
                                 ),
-                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
 
                             ),
 
@@ -163,7 +163,7 @@ def upload_video(disabled=True, path=None):
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-3xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
@@ -177,7 +177,7 @@ def upload_video(disabled=True, path=None):
                                     url=path,
                                     controls=True,
                                     playsinline=True,
-                                    className="h-full w-fit flex",
+                                    className="h-full w-full flex",
                                     width='100%',
                                     height='100%',
                                     intervalCurrentTime=70,
@@ -185,7 +185,7 @@ def upload_video(disabled=True, path=None):
 
                                 html.Div(
                                     id='edit_positions_div',
-                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
+                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-2xl px-2 py-2 hidden',
                                     children=[
                                         html.Button('Reset', id='edit_positions_reset',
                                                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
@@ -216,7 +216,7 @@ def upload_video(disabled=True, path=None):
     return layout
 
 
-def slider_view(name, min_bound, max_bound):
+def slider_view(name, min_bound, max_bound, suffix='°'):
     layout = [
         html.Div(
             className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
@@ -234,14 +234,14 @@ def slider_view(name, min_bound, max_bound):
                     style=dict(
                         left='50%',
                     ),
-                    className='absolute h-6 w-1 -translate-x-1/2 -translate-y-2 bg-gray-900 dark:bg-gray-100 rounded-full',
+                    className='absolute h-4 w-1 -translate-x-1/2 -translate-y-1 bg-gray-900 dark:bg-gray-100 rounded-full',
                 ),
                 html.Div(
-                    f'{min_bound}°',
+                    f'{min_bound}{suffix}',
                     className='absolute left-0 bottom-3.5 text-xs text-gray-400',
                 ),
                 html.Div(
-                    f'{max_bound}°',
+                    f'{max_bound}{suffix}',
                     className='absolute right-0 bottom-3.5 text-xs text-gray-400',
                 )
             ]
@@ -254,6 +254,7 @@ def slider_view(name, min_bound, max_bound):
 def gradient_slider_view(id, min, max):
     center = (max - min) / 2
     layout = [html.Div(
+        id=f'{id}_gradient',
         children=[
             html.Div(
                 style={'left': '50%'},
@@ -1158,6 +1159,7 @@ def init_dash(server):
             id='main',
 
             children=[
+                dcc.Location(id='url', refresh=False),
 
                 # Loading state to show loading view
                 html.Div(id='loading-state', className='hidden'),
@@ -1165,7 +1167,7 @@ def init_dash(server):
                 # Loader
                 html.Div(
                     id='loader',
-                    className='hidden w-full',
+                    className='w-full z-50',
                     children=loader
                 ),
 
@@ -1178,7 +1180,7 @@ def init_dash(server):
 
                 # Main wrapper
                 html.Div(
-                    className='flex w-full flex-col 2xl:items-center overflow-x-hidden',
+                    className='flex w-full flex-col 2xl:items-center overflow-x-hidden hidden',
                     id='main_wrapper',
                     children=[
 
@@ -1215,7 +1217,7 @@ def init_dash(server):
                         # Sidebar
                         html.Div(
                             id='sidebar',
-                            # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-3xl hidden lg:flex',
+                            # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-2xl hidden lg:flex',
                             className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5] overflow-x-visible',
                             children=[
                                 html.Button(
@@ -1325,7 +1327,7 @@ def init_dash(server):
 
                         html.Div(
                             id='body',
-                            className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem] overflow-x-hidden',
+                            className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem] ',
                             children=[
 
                                 # Analyze/Compare
@@ -1353,7 +1355,7 @@ def init_dash(server):
                                     className='hidden',
                                     children=[
                                         html.Div(
-                                            className='fixed flex flex-col px-4 pt-14 pb-4 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-3xl shadow-lg z-30',
+                                            className='fixed flex flex-col px-4 pt-14 pb-4 w-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg z-30',
                                             children=[
                                                 html.Div(
                                                     'New margins',
@@ -1510,7 +1512,7 @@ def init_dash(server):
                                                                     'Upload your swing ⛳️',
                                                                 ],
                                                             ),
-                                                            className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-3xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
+                                                            className='bg-[rgba(251, 252, 254, 1)] xl:mx-10 mx-4 rounded-2xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 xl:h-80 h-20',
                                                             multiple=False,
                                                             max_size=50e6,
                                                             accept=['.mp4', '.mov', '.avi'],
@@ -1526,10 +1528,10 @@ def init_dash(server):
                                                             )),
                                                         ),
                                                         className='w-full'
-                                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-3xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
+                                                        # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
                                                     )
                                                 ],
-                                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 mb-2 xl:mb-0 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+                                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-start justify-center text-center inline-block flex-col w-full h-44 xl:h-full xl:mr-5 mb-2 xl:mb-0 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
                                                 ),
 
                                             ]),
@@ -1538,10 +1540,11 @@ def init_dash(server):
                                         # region Live updating divs based on position in video
                                         html.Div(
                                             id='live-divs',
-                                            className='flex flex-nowrap max-[1280px]:overflow-x-auto px-4 -mx-4 xl:mt-5',
+                                            className='flex flex-nowrap px-4 -mx-4 xl:mt-5 relative',
                                             children=[
                                                 html.Div(
-                                                    className='flex xl:mb-5 mb-1 gap-2 flex-col xl:flex-row',
+                                                    id='live-divs-container',
+                                                    className='flex xl:mb-5 mb-1 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-4 -mx-4',
                                                     children=[
                                                         # First row
                                                         html.Div(
@@ -1566,7 +1569,7 @@ def init_dash(server):
                                                                                  id='pelvis_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1586,7 +1589,7 @@ def init_dash(server):
                                                                                  id='pelvis_bend_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1606,7 +1609,7 @@ def init_dash(server):
                                                                                  id='thorax_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1625,7 +1628,49 @@ def init_dash(server):
                                                                                  id='thorax_bend_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+
+                                                                # TODO Pelvis Tilt
+                                                                # html.Div(
+                                                                #     children=[
+                                                                #         html.Div('Pelvis Tilt',
+                                                                #                  className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                #         # html.Button(
+                                                                #         #     html.Img(src=app.get_asset_url('edit.svg'),
+                                                                #         #              className='h-4 w-4'),
+                                                                #         #     id='thorax_tilt_btn',
+                                                                #         #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                #         html.Div('- °', id='pelvis_tilt_val',
+                                                                #                  className='mt-2'),
+                                                                #         # Slider bar
+                                                                #         html.Div(slider_view('pelvis_tilt', -20, 60)),
+                                                                #         html.Div('-20, 60, -20, 60, -20, 60',
+                                                                #                  id='pelvis_tilt_store',
+                                                                #                  className='hidden'),
+                                                                #     ],
+                                                                #     className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
+                                                                # ),
+
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Div('Pelvis Sway',
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        # html.Button(
+                                                                        #     html.Img(src=app.get_asset_url('edit.svg'),
+                                                                        #              className='h-4 w-4'),
+                                                                        #     id='thorax_tilt_btn',
+                                                                        #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                        html.Div('- °', id='pelvis_sway_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('pelvis_sway', -20, 60,
+                                                                                             suffix='cm')),
+                                                                        html.Div('-20, 60, -20, 60, -20, 60',
+                                                                                 id='pelvis_sway_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                             ]
                                                         ),
@@ -1651,7 +1696,7 @@ def init_dash(server):
                                                                                  id='head_rot_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1669,7 +1714,7 @@ def init_dash(server):
                                                                                  id='head_tilt_store',
                                                                                  className='hidden'),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1679,7 +1724,7 @@ def init_dash(server):
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_rot', -240, 240)),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow  dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow  dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
                                                                 html.Div(
                                                                     children=[
@@ -1689,8 +1734,50 @@ def init_dash(server):
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_ground', -90, 90)),
                                                                     ],
-                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col items-center justify-center w-56 h-28 text-center'
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
                                                                 ),
+
+                                                                # html.Div(
+                                                                #     children=[
+                                                                #         html.Div('Thorax Tilt',
+                                                                #                  className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                #         # html.Button(
+                                                                #         #     html.Img(src=app.get_asset_url('edit.svg'),
+                                                                #         #              className='h-4 w-4'),
+                                                                #         #     id='thorax_tilt_btn',
+                                                                #         #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                #         html.Div('- °', id='thorax_tilt_val',
+                                                                #                  className='mt-2'),
+                                                                #         # Slider bar
+                                                                #         html.Div(slider_view('thorax_tilt', -20, 60)),
+                                                                #         html.Div('-20, 60, -20, 60, -20, 60',
+                                                                #                  id='thorax_tilt_store',
+                                                                #                  className='hidden'),
+                                                                #     ],
+                                                                #     className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
+                                                                # ),
+
+                                                                html.Div(
+                                                                    children=[
+                                                                        html.Div('Thorax Sway',
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                        # html.Button(
+                                                                        #     html.Img(src=app.get_asset_url('edit.svg'),
+                                                                        #              className='h-4 w-4'),
+                                                                        #     id='thorax_tilt_btn',
+                                                                        #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                        html.Div('- °', id='thorax_sway_val',
+                                                                                 className='mt-2'),
+                                                                        # Slider bar
+                                                                        html.Div(slider_view('thorax_sway', -20, 60,
+                                                                                             suffix='cm')),
+                                                                        html.Div('-20, 60, -20, 60, -20, 60',
+                                                                                 id='thorax_sway_store',
+                                                                                 className='hidden'),
+                                                                    ],
+                                                                    className='relative text-3xl font-medium text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-none flex-col items-center justify-center w-56 h-28 text-center'
+                                                                ),
+
                                                             ]
                                                         ),
                                                         # End of second row
@@ -1708,7 +1795,7 @@ def init_dash(server):
                                     children=[
                                         # Tempo divs
                                         html.Div(
-                                            className='h-72 grid grid-cols-1 w-full gap-2 text-xl font-bold text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl px-2',
+                                            className='h-72 grid grid-cols-1 w-full gap-2 text-xl font-bold text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl px-2',
                                             children=[
                                                 html.Div(
                                                     id='position_divs',
@@ -1768,6 +1855,7 @@ def init_dash(server):
                                                             children=[
 
                                                                 html.Div(
+                                                                    id='tempo_div',
                                                                     children=[
                                                                         html.Div('-', id='tempo'),
                                                                         html.Div(': 1', className=' ml-2')
@@ -1907,14 +1995,14 @@ def init_dash(server):
                                                 ),
                                                 # Transition sequence end
                                             ],
-                                            className='relative text-3xl text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex flex-col justify-betwen w-full h-full md:h-72 text-center pb-4 pt-2'
+                                            className='relative text-3xl text-slate-900 dark:text-gray-100 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex flex-col justify-betwen w-full h-full md:h-72 text-center pb-4 pt-2'
                                         ),
                                         # End of sequence div
 
                                     ]),
 
                                 html.Div(
-                                    className='relative bg-white dark:bg-gray-700 shadow  dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow  dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
                                         html.Div(info_text('arm_path'), className='w-full'),
@@ -1931,7 +2019,7 @@ def init_dash(server):
                                                                      html.Div(
                                                                          children=[html.Div('Your transition is:',
                                                                                             className='text-base font-normal'),
-                                                                                   'Like a Pro'])
+                                                                                   'Perfect'])
                                                                  ]
                                                                  ),
                                                         html.Div(
@@ -1964,7 +2052,7 @@ def init_dash(server):
 
                                 html.Div(
                                     id='parent_sequence',
-                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
                                         # Row for sequences
@@ -2021,7 +2109,7 @@ def init_dash(server):
                                 ),
 
                                 html.Div(
-                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('pelvis_rotation'), className='relative w-full'),
 
@@ -2034,7 +2122,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('pelvis_displacement'), className=' relative w-full'),
 
@@ -2047,7 +2135,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('thorax_angles'), className=' relative w-full'),
 
@@ -2060,7 +2148,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('thorax_displacement'), className=' relative w-full'),
 
@@ -2073,7 +2161,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('head_tilt'), className=' relative w-full'),
 
@@ -2086,7 +2174,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('head_rotation'), className=' relative w-full'),
 
@@ -2099,7 +2187,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('spine_tilt'), className=' relative w-full'),
 
@@ -2112,7 +2200,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('left_arm'), className=' relative w-full'),
 
@@ -2125,7 +2213,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(info_text('spine_rotation'), className=' relative w-full'),
 
@@ -2138,7 +2226,7 @@ def init_dash(server):
                                     ]),
 
                                 html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
                                         html.Div(
                                             className='text-base font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
@@ -2216,10 +2304,12 @@ def init_callbacks(app):
          Output('emoji-start', 'children'), Output('emoji-transition', 'children'), Output('loading-state', 'children'),
          Output('tempo_text', 'children'),
          # Output('backswing_text', 'children'), Output('downswing_text', 'children'),
+         Output('url', 'pathname', allow_duplicate=True)
          ],
         [Input('upload-data', 'contents'), Input('add-button', 'contents'), Input('upload-data-initial', 'contents'),
          # Input('upload-data', 'filename'),
-         Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
+         # Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
+         Input('url', 'pathname'),
          Input('delete-file', 'n_clicks')
          # Input({'type': 'delete', 'index': ALL}, 'n_clicks')
          ],
@@ -2228,7 +2318,8 @@ def init_callbacks(app):
         # progress=Output('upload-progress', 'style'),
         prevent_initial_call=True
     )
-    def process(contents, contents_add, contents_initial, n_clicks, n_clicks_del, children, upload_initial_class,
+    def process(contents, contents_add, contents_initial, pathname,  # n_clicks,
+                n_clicks_del, children, upload_initial_class,
                 upload_video_class, del_file_name):
 
         # Enable or Disable upload component
@@ -2240,11 +2331,25 @@ def init_callbacks(app):
             else:
                 contents = contents_initial
 
+        # print(f'pathname: {pathname}')
+
+        if pathname.split('/')[2] == '':
+            # print('No file selected')
+            # exit function
+            return no_update
+
+        # Check if file exists
+        if not os.path.exists(f'assets/save_data/{current_user.id}/{pathname.split("/")[2]}'):
+            # print('File does not exist')
+            # exit function
+            return [no_update for _ in range(0, 51)] + ['/dashboard/']
+
         # Check if button was pressed or a file was uploaded
         if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (
                 ctx.triggered_id != 'upload-data-initial'):
             if ctx.triggered_id != 'delete-file':
-                button_id = ctx.triggered_id.index
+                # button_id = ctx.triggered_id.index
+                button_id = pathname.split('/')[2]
                 file = f'{button_id}.parquet'
 
                 # Check if file exists and delete otherwise
@@ -2341,6 +2446,7 @@ def init_callbacks(app):
                             disabled, disabled, disabled,
                             upload_initial_class, upload_video_class,
                             '😍', '😍', '', '',  # '', ''
+                            '/dashboard/'
                             ]
 
                 # Read data from parquet file
@@ -2541,6 +2647,7 @@ def init_callbacks(app):
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
                         emoji_start, emoji_transition, '', tempo_text,  # backswing_text, downswing_text,
+                        f'/dashboard/{button_id}'
                         ]
 
         # Delete was pressed
@@ -2656,7 +2763,8 @@ def init_callbacks(app):
                         path, [], [],
                         disabled, disabled, disabled,
                         upload_initial_class, upload_video_class,
-                        '😍', '😍', '', '',  # '', ''
+                        '😍', '😍', '', '',  # '', '',
+                        '/dashboard/'
                         ]
 
         # TODO replicate
@@ -2861,7 +2969,28 @@ def init_callbacks(app):
                 disabled, disabled, disabled,
                 upload_initial_class, upload_video_class,
                 emoji_start, emoji_transition, '', tempo_text,  # backswing_text, downswing_text,
+                f'/dashboard/{filename}'
                 ]
+
+    # Set pathname on button press
+    @app.callback(
+        Output('url', 'pathname', allow_duplicate=True),
+        Input({'type': 'saved-button', 'index': ALL}, 'n_clicks'),
+        State('url', 'pathname'),
+        prevent_initial_call=False
+    )
+    def set_pathname_on_button_press(n_clicks, pathname):
+        # print(pathname)
+
+        if ctx.triggered[0]['value'] is None:
+            return no_update
+
+        if not os.path.exists(f'assets/save_data/{current_user.id}/{pathname.split("/")[2]}'):
+            return '/dashboard/'
+
+        pathname = ctx.triggered_id.index
+
+        return f'/dashboard/{pathname}'
 
     # Save new margins to db
     @app.callback(
@@ -3360,7 +3489,7 @@ def init_callbacks(app):
     # Help box on click
     app.clientside_callback(
         '''
-        function(n_clicks, help_class) {
+        function showHelp(n_clicks, help_class) {
             if (n_clicks % 2 == 1) {
                 return help_class.replace('hidden', 'flex');
             } else {
@@ -3419,6 +3548,7 @@ def init_callbacks(app):
          Output('thorax_rot_val', 'children'), Output('thorax_bend_val', 'children'),
          Output('head_rot_val', 'children'), Output('head_tilt_val', 'children'),
          Output('arm_rot_val', 'children'), Output('arm_ground_val', 'children'),
+         Output('pelvis_sway_val', 'children'), Output('thorax_sway_val', 'children'),
          ],
         [Input('video', 'currentTime'), Input('video', 'duration')],
         State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
@@ -3643,7 +3773,7 @@ def reset_plots(children, button_id, disabled):
             )
         ],
             # className='container',
-            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
+            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
         ),
     ]
 
@@ -3895,7 +4025,7 @@ def info_text(plot_type):
         html.Div(
             # id=f'{plot_type}_help',
             id={'type': 'help_box', 'index': plot_type},
-            className='absolute top-20 right-3 left-4 sm:left-10 sm:w-96 bg-gray-200 border border-opacity-30 border-gray-400 shadow-sm rounded-3xl backdrop-blur-md bg-opacity-80 hidden z-10',
+            className='absolute top-20 right-3 left-4 sm:left-10 sm:w-96 bg-gray-200 border border-opacity-30 border-gray-400 shadow-sm rounded-2xl backdrop-blur-md bg-opacity-80 hidden z-10',
             children=[
                 html.Div(
                     className='flex flex-row px-4 py-4 text-sm text-gray-900 text-justify',
@@ -3918,7 +4048,7 @@ def content_box():
                 className="bg-slate-200 rounded-lg top-24 left-4 right-4 bottom-10 animate-pulse absolute"
             ),
         ],
-        className="relative h-[500px] bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-3xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
+        className="relative h-[500px] bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full",
     ),
 
 
