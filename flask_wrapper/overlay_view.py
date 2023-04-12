@@ -8,23 +8,23 @@ overlay = html.Div(
             className='fixed top-24 w-full bottom-0 dark:bg-slate-700 bg-[#FAF7F5] rounded-t-3xl',
             children=[
                 html.Div(
-                    className='relative h-full flex flex-col gap-4 ml-6 py-6 ',
+                    className='relative h-full flex flex-col sm:mx-6 mx-2 py-6 ',
                     children=[
                         html.Div(
-                            className='w-full h-full flex flex-col gap-4 overflow-y-auto overflow-x-hidden relative',
+                            className='w-full h-full flex flex-col overflow-y-auto overflow-x-hidden relative',
                             children=[
                                 html.Div('Report',
                                          className='sm:text-3xl text-xl text-left font-bold mt-4 sm:mb-10 mb-6 text-gray-900 dark:text-gray-100'),
 
                                 html.Span('Setup',
-                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-2'),
+                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
                                 html.Div(className='flex flex-row',
                                          children=[
                                              html.Canvas(id='setup_frame',
                                                          className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
                                              html.Div(
-                                                 className='flex flex-col ml-6 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
+                                                 className='flex flex-col sm:ml-6 ml-2 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
                                                  children=[
                                                      html.Div(
                                                          className='flex flex-row gap-4 h-full w-fit',
@@ -74,13 +74,13 @@ overlay = html.Div(
                                          ),
 
                                 html.Span('Top',
-                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-2 mt-6'),
+                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
                                 html.Div(className='flex flex-row',
                                          children=[
                                              html.Canvas(id='top_frame',
                                                          className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
                                              html.Div(
-                                                 className='flex flex-col ml-6 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
+                                                 className='flex flex-col sm:ml-6 ml-2 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
                                                  children=[
                                                      html.Div(
                                                          className='flex flex-row gap-4 h-full w-fit',
@@ -129,14 +129,14 @@ overlay = html.Div(
                                          ),
 
                                 html.Span('Impact',
-                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-2 mt-6'),
+                                          className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
                                 html.Div(className='flex flex-row w-full',
                                          children=[
                                              html.Canvas(id='impact_frame',
                                                          className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
                                              html.Div(
                                                  # id='impact_report',
-                                                 className='flex flex-col ml-6 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
+                                                 className='flex flex-col sm:ml-6 ml-2 relative overflow-x-auto bg-white dark:bg-gray-800 rounded-2xl p-4 shadow',
                                                  children=[
                                                      html.Div(
                                                          className='flex flex-row gap-4 h-full w-fit',

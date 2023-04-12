@@ -610,7 +610,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const regex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/g;
             const rgbColors = computedStyle.backgroundImage.match(regex);
             // const gradientColors = computedStyle.backgroundImage.split(', ');
-            console.log(rgbColors)
+            // console.log(rgbColors)
 
             let maxColorIndex = Math.ceil((rgbColors.length - 1) * positionPercent)
             if (maxColorIndex > rgbColors.length - 1) {
