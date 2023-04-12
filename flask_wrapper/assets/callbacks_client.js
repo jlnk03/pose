@@ -851,10 +851,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 // Define the takeSnapshot function
 function takeSnapshot(video, canvas, time) {
     return new Promise(function (resolve, reject) {
-        var ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d");
 
         // Calculate the aspect ratio of the video
-        var aspectRatio = video.videoWidth / video.videoHeight;
+        const aspectRatio = video.videoWidth / video.videoHeight;
 
         const maxWidth = 384;
         const maxHeight = 384;

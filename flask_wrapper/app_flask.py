@@ -134,7 +134,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Finish', id='end_pos_button',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -144,7 +144,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
                             ),
 
                             html.Div(
@@ -153,7 +153,7 @@ def upload_video(disabled=True, path=None):
                                     id='show_overlay',
                                     className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
                                 ),
-                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-2xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
 
                             ),
 
@@ -219,33 +219,36 @@ def upload_video(disabled=True, path=None):
 def slider_view(name, min_bound, max_bound, suffix='°'):
     layout = [
         html.Div(
-            className='absolute h-2 bottom-3 left-3 right-3 bg-red-600 rounded-full',
-            children=[
-                html.Div(
-                    id=f'green_bar_{name}',
-                    style=dict(
-                        left='0%',
-                        right='0%',
+            html.Div(
+                className='absolute h-2 bottom-3 left-0 right-0 bg-red-600 rounded-full',
+                children=[
+                    html.Div(
+                        id=f'green_bar_{name}',
+                        style=dict(
+                            left='0%',
+                            right='0%',
+                        ),
+                        className='absolute h-2 bg-green-600 rounded-full'),
+                    # Slider
+                    html.Div(
+                        id=f'slider_{name}',
+                        style=dict(
+                            left='50%',
+                        ),
+                        className='relative h-4 w-1 -translate-x-1/2 -translate-y-1 bg-gray-900 dark:bg-gray-100 rounded-full',
                     ),
-                    className='absolute h-2 bg-green-600 rounded-full'),
-                # Slider
-                html.Div(
-                    id=f'slider_{name}',
-                    style=dict(
-                        left='50%',
+                    html.Div(
+                        f'{min_bound}{suffix}',
+                        className='absolute left-0 bottom-3.5 text-xs text-gray-400',
                     ),
-                    className='absolute h-4 w-1 -translate-x-1/2 -translate-y-1 bg-gray-900 dark:bg-gray-100 rounded-full',
-                ),
-                html.Div(
-                    f'{min_bound}{suffix}',
-                    className='absolute left-0 bottom-3.5 text-xs text-gray-400',
-                ),
-                html.Div(
-                    f'{max_bound}{suffix}',
-                    className='absolute right-0 bottom-3.5 text-xs text-gray-400',
-                )
-            ]
-        ),
+                    html.Div(
+                        f'{max_bound}{suffix}',
+                        className='absolute right-0 bottom-3.5 text-xs text-gray-400',
+                    )
+                ]
+            ),
+            className='absolute bottom-0 left-3 right-3 h-full overflow-x-hidden'
+        )
     ]
 
     return layout
