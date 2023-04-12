@@ -626,7 +626,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const maxColor = rgbColors[maxColorIndex]
             const minColor = rgbColors[minColorIndex]
 
-            let percent = positionPercent - (minColorIndex / (rgbColors.length - 1))
+            let percent = (positionPercent - (minColorIndex / (rgbColors.length - 1))) / (1 / (rgbColors.length - 1))
 
             if (positionPercent < 0) {
                 percent = 0
