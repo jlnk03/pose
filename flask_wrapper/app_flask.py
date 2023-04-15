@@ -185,7 +185,7 @@ def upload_video(disabled=True, path=None):
 
                                 html.Div(
                                     id='edit_positions_div',
-                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-2xl px-2 py-2 hidden',
+                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
                                     children=[
                                         html.Button('Reset', id='edit_positions_reset',
                                                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
@@ -220,7 +220,7 @@ def slider_view(name, min_bound, max_bound, suffix='°'):
     layout = [
         html.Div(
             html.Div(
-                className='absolute h-2 bottom-3 left-0 right-0 bg-red-600 rounded-full',
+                className='absolute h-1.5 bottom-3 left-0 right-0 rounded-full',  # bg-red-600
                 children=[
                     html.Div(
                         id=f'green_bar_{name}',
@@ -228,14 +228,15 @@ def slider_view(name, min_bound, max_bound, suffix='°'):
                             left='0%',
                             right='0%',
                         ),
-                        className='absolute h-2 bg-green-600 rounded-full'),
+                        # className='absolute h-2 bg-green-600 rounded-full'),
+                        className='absolute h-1.5 gradient-slider-custom rounded-full'),
                     # Slider
                     html.Div(
                         id=f'slider_{name}',
                         style=dict(
                             left='50%',
                         ),
-                        className='relative h-4 w-1 -translate-x-1/2 -translate-y-1 bg-gray-900 dark:bg-gray-100 rounded-full',
+                        className='relative h-4 w-1 -translate-x-1/2 -translate-y-[5px] bg-gray-900 dark:bg-gray-100 rounded-full',
                     ),
                     html.Div(
                         f'{min_bound}{suffix}',
@@ -1349,7 +1350,7 @@ def init_dash(server):
                                 # Selection View background dismiss button
                                 html.Button(
                                     id='selection-view-dismiss',
-                                    className='fixed w-full h-full top-0 left-0 z-10 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                 ),
 
                                 # Selection view in center of screen
@@ -1547,7 +1548,7 @@ def init_dash(server):
                                             children=[
                                                 html.Div(
                                                     id='live-divs-container',
-                                                    className='flex xl:mb-5 mb-1 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-4 -mx-4',
+                                                    className='flex xl:mb-5 mb-2 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-2 -mx-2',
                                                     children=[
                                                         # First row
                                                         html.Div(
@@ -1561,7 +1562,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='pelvis_rot_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='pelvis_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1582,7 +1583,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='pelvis_tilt_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='pelvis_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1602,7 +1603,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='thorax_rot_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='thorax_rot_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1622,7 +1623,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='thorax_tilt_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='thorax_bend_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1663,7 +1664,7 @@ def init_dash(server):
                                                                         #     html.Img(src=app.get_asset_url('edit.svg'),
                                                                         #              className='h-4 w-4'),
                                                                         #     id='thorax_tilt_btn',
-                                                                        #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                        #     className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='pelvis_sway_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar
@@ -1691,7 +1692,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='head_rot_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='head_rot_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_rot', -100, 100)),
@@ -1709,7 +1710,7 @@ def init_dash(server):
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
                                                                             id='head_tilt_btn',
-                                                                            className='absolute right-3 w-fit h-fit top-3'),
+                                                                            className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='head_tilt_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('head_tilt', -60, 60)),
@@ -1748,7 +1749,7 @@ def init_dash(server):
                                                                 #         #     html.Img(src=app.get_asset_url('edit.svg'),
                                                                 #         #              className='h-4 w-4'),
                                                                 #         #     id='thorax_tilt_btn',
-                                                                #         #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                #         #     className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                 #         html.Div('- °', id='thorax_tilt_val',
                                                                 #                  className='mt-2'),
                                                                 #         # Slider bar
@@ -1768,7 +1769,7 @@ def init_dash(server):
                                                                         #     html.Img(src=app.get_asset_url('edit.svg'),
                                                                         #              className='h-4 w-4'),
                                                                         #     id='thorax_tilt_btn',
-                                                                        #     className='absolute right-3 w-fit h-fit top-3'),
+                                                                        #     className='absolute right-3 w-fit h-fit top-3 z-10'),
                                                                         html.Div('- °', id='thorax_sway_val',
                                                                                  className='mt-2'),
                                                                         # Slider bar

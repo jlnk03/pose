@@ -51,10 +51,6 @@
   background: #cbd5e1;
 }
 
-.overlay-scroll {
-  scrollbar-gutter: overlay;
-}
-
 /*#sequence[data-dash-is-loading="true"] {*/
 /*    visibility: hidden;*/
 /*}*/
@@ -119,16 +115,10 @@ body, html {
   background: linear-gradient(to right, #dc2626, #fde047, #84cc16, #84cc16, #fde047, #dc2626);
 }
 
-gradient-slider-custom {
+.gradient-slider-custom {
   background: linear-gradient(
-          to right,
-          #dc2626,
-          35%,
-          #fde047 40%,
-          #84cc16 45% 55%,
-          #fde047 60%,
-          65%,
-          #dc2626);
+    /*to right,*/ /*#f43f5e,*/ /*35%,*/ /*#fde047 40%,*/ /*#84cc16 45% 55%,*/ /*#fde047 60%,*/ /*65%,*/ /*#f43f5e*/ #84cc16 0% 100%
+  );
 }
 
 .heart {

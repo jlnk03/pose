@@ -45,29 +45,37 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 edit_positions.remove('hidden');
 
                 if (nclicks > 0) {
-                    green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
-                    green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[3])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[3])) / (240) * 100 + '%';
+                    green_bar_pelvis_rot.style.background = newGradient(80, 160, pelvis_rot_margins[2], pelvis_rot_margins[3]);
 
-                    green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[2])) / (60) * 100 + '%';
-                    green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[3])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[2])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[3])) / (60) * 100 + '%';
+                    green_bar_pelvis_bend.style.background = newGradient(30, 30, pelvis_bend_margins[2], pelvis_bend_margins[3]);
 
-                    green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[2])) / (280) * 100 + '%';
-                    green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[3])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[2])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[3])) / (280) * 100 + '%';
+                    green_bar_thorax_rot.style.background = newGradient(140, 140, thorax_rot_margins[2], thorax_rot_margins[3]);
 
-                    green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[2])) / (80) * 100 + '%';
-                    green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[3])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[2])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[3])) / (80) * 100 + '%';
+                    green_bar_thorax_bend.style.background = newGradient(20, 60, thorax_bend_margins[2], thorax_bend_margins[3]);
 
-                    green_bar_head_rot.style.left = (100 + Number(head_rot_margins[2])) / (200) * 100 + '%';
-                    green_bar_head_rot.style.right = (100 - Number(head_rot_margins[3])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.left = (100 + Number(head_rot_margins[2])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.right = (100 - Number(head_rot_margins[3])) / (200) * 100 + '%';
+                    green_bar_head_rot.style.background = newGradient(100, 100, head_rot_margins[2], head_rot_margins[3]);
 
-                    green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[2])) / (120) * 100 + '%';
-                    green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[3])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[2])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[3])) / (120) * 100 + '%';
+                    green_bar_head_tilt.style.background = newGradient(60, 60, head_tilt_margins[2], head_tilt_margins[3]);
 
-                    green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[2])) / (80) * 100 + '%';
-                    green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[3])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[2])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[3])) / (80) * 100 + '%';
+                    green_bar_pelvis_sway.style.background = newGradient(20, 60, pelvis_sway_margins[2], pelvis_sway_margins[3]);
 
-                    green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[2])) / (80) * 100 + '%';
-                    green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[3])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[2])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[3])) / (80) * 100 + '%';
+                    green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[2], thorax_sway_margins[3]);
 
                     return top_index;
                 }
@@ -93,29 +101,37 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 edit_positions.remove('hidden');
 
                 if (nclicks2 > 0) {
-                    green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[4])) / (240) * 100 + '%';
-                    green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[5])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[4])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[5])) / (240) * 100 + '%';
+                    green_bar_pelvis_rot.style.background = newGradient(80, 160, pelvis_rot_margins[4], pelvis_rot_margins[5]);
 
-                    green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[4])) / (60) * 100 + '%';
-                    green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[5])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[4])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[5])) / (60) * 100 + '%';
+                    green_bar_pelvis_bend.style.background = newGradient(30, 30, pelvis_bend_margins[4], pelvis_bend_margins[5]);
 
-                    green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[4])) / (280) * 100 + '%';
-                    green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[5])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[4])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[5])) / (280) * 100 + '%';
+                    green_bar_thorax_rot.style.background = newGradient(140, 140, thorax_rot_margins[4], thorax_rot_margins[5]);
 
-                    green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[4])) / (80) * 100 + '%';
-                    green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[5])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[4])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[5])) / (80) * 100 + '%';
+                    green_bar_thorax_bend.style.background = newGradient(20, 60, thorax_bend_margins[4], thorax_bend_margins[5]);
 
-                    green_bar_head_rot.style.left = (100 + Number(head_rot_margins[4])) / (200) * 100 + '%';
-                    green_bar_head_rot.style.right = (100 - Number(head_rot_margins[5])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.left = (100 + Number(head_rot_margins[4])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.right = (100 - Number(head_rot_margins[5])) / (200) * 100 + '%';
+                    green_bar_head_rot.style.background = newGradient(100, 100, head_rot_margins[4], head_rot_margins[5]);
 
-                    green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[4])) / (120) * 100 + '%';
-                    green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[5])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[4])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[5])) / (120) * 100 + '%';
+                    green_bar_head_tilt.style.background = newGradient(60, 60, head_tilt_margins[4], head_tilt_margins[5]);
 
-                    green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[4])) / (80) * 100 + '%';
-                    green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[5])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[4])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[5])) / (80) * 100 + '%';
+                    green_bar_pelvis_sway.style.background = newGradient(20, 60, pelvis_sway_margins[4], pelvis_sway_margins[5]);
 
-                    green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[4])) / (80) * 100 + '%';
-                    green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[5])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[4])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[5])) / (80) * 100 + '%';
+                    green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[4], thorax_sway_margins[5]);
 
                     return impact_index;
                 }
@@ -131,29 +147,38 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 edit_positions.remove('hidden');
 
                 if (nclicks3 > 0) {
-                    green_bar_pelvis_rot.style.left = '0%';
-                    green_bar_pelvis_rot.style.right = '0%';
+                    // green_bar_pelvis_rot.style.left = '0%';
+                    // green_bar_pelvis_rot.style.right = '0%';
+                    //
+                    // green_bar_pelvis_bend.style.left = '0%';
+                    // green_bar_pelvis_bend.style.right = '0%';
+                    //
+                    // green_bar_thorax_rot.style.left = '0%';
+                    // green_bar_thorax_rot.style.right = '0%';
+                    //
+                    // green_bar_thorax_bend.style.left = '0%';
+                    // green_bar_thorax_bend.style.right = '0%';
+                    //
+                    // green_bar_head_rot.style.left = '0%';
+                    // green_bar_head_rot.style.right = '0%';
+                    //
+                    // green_bar_head_tilt.style.left = '0%';
+                    // green_bar_head_tilt.style.right = '0%';
+                    //
+                    // green_bar_pelvis_sway.style.left = '0%';
+                    // green_bar_pelvis_sway.style.right = '0%';
+                    //
+                    // green_bar_thorax_sway.style.left = '0%';
+                    // green_bar_thorax_sway.style.right = '0%';
 
-                    green_bar_pelvis_bend.style.left = '0%';
-                    green_bar_pelvis_bend.style.right = '0%';
-
-                    green_bar_thorax_rot.style.left = '0%';
-                    green_bar_thorax_rot.style.right = '0%';
-
-                    green_bar_thorax_bend.style.left = '0%';
-                    green_bar_thorax_bend.style.right = '0%';
-
-                    green_bar_head_rot.style.left = '0%';
-                    green_bar_head_rot.style.right = '0%';
-
-                    green_bar_head_tilt.style.left = '0%';
-                    green_bar_head_tilt.style.right = '0%';
-
-                    green_bar_pelvis_sway.style.left = '0%';
-                    green_bar_pelvis_sway.style.right = '0%';
-
-                    green_bar_thorax_sway.style.left = '0%';
-                    green_bar_thorax_sway.style.right = '0%';
+                    green_bar_pelvis_rot.style.background = resetGradient()
+                    green_bar_pelvis_bend.style.background = resetGradient()
+                    green_bar_thorax_rot.style.background = resetGradient()
+                    green_bar_thorax_bend.style.background = resetGradient()
+                    green_bar_head_rot.style.background = resetGradient()
+                    green_bar_head_tilt.style.background = resetGradient()
+                    green_bar_pelvis_sway.style.background = resetGradient()
+                    green_bar_thorax_sway.style.background = resetGradient()
 
                     return end_index;
                 }
@@ -180,29 +205,37 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 // console.log(pelvis_rot_margins)
 
                 if (nclicks4 > 0) {
-                    green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[0])) / (240) * 100 + '%';
-                    green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[1])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[0])) / (240) * 100 + '%';
+                    // green_bar_pelvis_rot.style.right = (160 - Number(pelvis_rot_margins[1])) / (240) * 100 + '%';
+                    green_bar_pelvis_rot.style.background = newGradient(80, 160, pelvis_rot_margins[0], pelvis_rot_margins[1]);
 
-                    green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[0])) / (60) * 100 + '%';
-                    green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[1])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.left = (30 + Number(pelvis_bend_margins[0])) / (60) * 100 + '%';
+                    // green_bar_pelvis_bend.style.right = (30 - Number(pelvis_bend_margins[1])) / (60) * 100 + '%';
+                    green_bar_pelvis_bend.style.background = newGradient(30, 30, pelvis_bend_margins[0], pelvis_bend_margins[1]);
 
-                    green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[0])) / (280) * 100 + '%';
-                    green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[1])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.left = (140 + Number(thorax_rot_margins[0])) / (280) * 100 + '%';
+                    // green_bar_thorax_rot.style.right = (140 - Number(thorax_rot_margins[1])) / (280) * 100 + '%';
+                    green_bar_thorax_rot.style.background = newGradient(140, 140, thorax_rot_margins[0], thorax_rot_margins[1]);
 
-                    green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[0])) / (80) * 100 + '%';
-                    green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[1])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.left = (20 + Number(thorax_bend_margins[0])) / (80) * 100 + '%';
+                    // green_bar_thorax_bend.style.right = (60 - Number(thorax_bend_margins[1])) / (80) * 100 + '%';
+                    green_bar_thorax_bend.style.background = newGradient(20, 60, thorax_bend_margins[0], thorax_bend_margins[1]);
 
-                    green_bar_head_rot.style.left = (100 + Number(head_rot_margins[0])) / (200) * 100 + '%';
-                    green_bar_head_rot.style.right = (100 - Number(head_rot_margins[1])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.left = (100 + Number(head_rot_margins[0])) / (200) * 100 + '%';
+                    // green_bar_head_rot.style.right = (100 - Number(head_rot_margins[1])) / (200) * 100 + '%';
+                    green_bar_head_rot.style.background = newGradient(100, 100, head_rot_margins[0], head_rot_margins[1]);
 
-                    green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[0])) / (120) * 100 + '%';
-                    green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[1])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.left = (60 + Number(head_tilt_margins[0])) / (120) * 100 + '%';
+                    // green_bar_head_tilt.style.right = (60 - Number(head_tilt_margins[1])) / (120) * 100 + '%';
+                    green_bar_head_tilt.style.background = newGradient(60, 60, head_tilt_margins[0], head_tilt_margins[1]);
 
-                    green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[0])) / (80) * 100 + '%';
-                    green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[1])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.left = (20 + Number(pelvis_sway_margins[0])) / (80) * 100 + '%';
+                    // green_bar_pelvis_sway.style.right = (60 - Number(pelvis_sway_margins[1])) / (80) * 100 + '%';
+                    green_bar_pelvis_sway.style.background = newGradient(20, 60, pelvis_sway_margins[0], pelvis_sway_margins[1]);
 
-                    green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[0])) / (80) * 100 + '%';
-                    green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[1])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.left = (20 + Number(thorax_sway_margins[0])) / (80) * 100 + '%';
+                    // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[1])) / (80) * 100 + '%';
+                    green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[0], thorax_sway_margins[1]);
 
                     return setup_index;
                 }
@@ -344,6 +377,16 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             const margin_pelvis_sway = document.getElementById('pelvis_sway_store').innerHTML.split(', ')
             const margin_thorax_sway = document.getElementById('thorax_sway_store').innerHTML.split(', ')
 
+            // Gradient bars
+            const green_bar_pelvis_rot = document.getElementById('green_bar_pelvis_rot');
+            const green_bar_pelvis_bend = document.getElementById('green_bar_pelvis_bend');
+            const green_bar_thorax_rot = document.getElementById('green_bar_thorax_rot');
+            const green_bar_thorax_bend = document.getElementById('green_bar_thorax_bend');
+            const green_bar_head_rot = document.getElementById('green_bar_head_rot');
+            const green_bar_head_tilt = document.getElementById('green_bar_head_tilt');
+            const green_bar_pelvis_sway = document.getElementById('green_bar_pelvis_sway');
+            const green_bar_thorax_sway = document.getElementById('green_bar_thorax_sway');
+
             if (impact_button_time === undefined) {
                 impact_button_time = -1
             }
@@ -371,35 +414,57 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             // get the most recent button
             const button_recent_name = button_recent_sorted[button_recent_sorted.length - 1]
 
+            // TODO: make this a function
+
             if (button_recent_name === 'impact') {
-                pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[4]) || (value_pelvis_rotation > margin_pelvis_rot[5])) ? 'red' : 'green';
-                pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[4]) || (value_pelvis_bend > margin_pelvis_bend[5])) ? 'red' : 'green';
-                thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[4]) || (value_thorax_rotation > margin_thorax_rot[5])) ? 'red' : 'green';
-                thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[4]) || (value_thorax_bend > margin_thorax_bend[5])) ? 'red' : 'green';
-                head_rot_div.style.color = ((value_head_rotation < margin_head_rot[4]) || (value_head_rotation > margin_head_rot[5])) ? 'red' : 'green';
-                head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[4]) || (value_head_tilt > margin_head_tilt[5])) ? 'red' : 'green';
-                pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[4]) || (value_pelvis_sway > margin_pelvis_sway[5])) ? 'red' : 'green';
-                thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[4]) || (value_thorax_sway > margin_thorax_sway[5])) ? 'red' : 'green';
+                pelvis_rot_div.style.color = getColorFromGradient(green_bar_pelvis_rot, -80, 160, value_pelvis_rotation);
+                pelvis_bend_div.style.color = getColorFromGradient(green_bar_pelvis_bend, -30, 30, value_pelvis_bend);
+                thorax_rot_div.style.color = getColorFromGradient(green_bar_thorax_rot, -140, 140, value_thorax_rotation);
+                thorax_bend_div.style.color = getColorFromGradient(green_bar_thorax_bend, -20, 60, value_thorax_bend);
+                head_rot_div.style.color = getColorFromGradient(green_bar_head_rot, -100, 100, value_head_rotation);
+                head_tilt_div.style.color = getColorFromGradient(green_bar_head_tilt, -60, 60, value_head_tilt);
+                // pelvis_sway_div.style.color = getColorFromGradient(green_bar_pelvis_sway, -20, 60, value_pelvis_sway);
+                // thorax_sway_div.style.color = getColorFromGradient(green_bar_thorax_sway, -20, 60, value_thorax_sway);
+                // pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[4]) || (value_pelvis_rotation > margin_pelvis_rot[5])) ? 'red' : 'green';
+                // pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[4]) || (value_pelvis_bend > margin_pelvis_bend[5])) ? 'red' : 'green';
+                // thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[4]) || (value_thorax_rotation > margin_thorax_rot[5])) ? 'red' : 'green';
+                // thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[4]) || (value_thorax_bend > margin_thorax_bend[5])) ? 'red' : 'green';
+                // head_rot_div.style.color = ((value_head_rotation < margin_head_rot[4]) || (value_head_rotation > margin_head_rot[5])) ? 'red' : 'green';
+                // head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[4]) || (value_head_tilt > margin_head_tilt[5])) ? 'red' : 'green';
+                // pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[4]) || (value_pelvis_sway > margin_pelvis_sway[5])) ? 'red' : 'green';
+                // thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[4]) || (value_thorax_sway > margin_thorax_sway[5])) ? 'red' : 'green';
 
             } else if (button_recent_name === 'top') {
-                pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[2]) || (value_pelvis_rotation > margin_pelvis_rot[3])) ? 'red' : 'green';
-                pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[2]) || (value_pelvis_bend > margin_pelvis_bend[3])) ? 'red' : 'green';
-                thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[2]) || (value_thorax_rotation > margin_thorax_rot[3])) ? 'red' : 'green';
-                thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[2]) || (value_thorax_bend > margin_thorax_bend[3])) ? 'red' : 'green';
-                head_rot_div.style.color = ((value_head_rotation < margin_head_rot[2]) || (value_head_rotation > margin_head_rot[3])) ? 'red' : 'green';
-                head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[2]) || (value_head_tilt > margin_head_tilt[3])) ? 'red' : 'green';
-                pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[2]) || (value_pelvis_sway > margin_pelvis_sway[3])) ? 'red' : 'green';
-                thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[2]) || (value_thorax_sway > margin_thorax_sway[3])) ? 'red' : 'green';
+                pelvis_rot_div.style.color = getColorFromGradient(green_bar_pelvis_rot, -80, 160, value_pelvis_rotation);
+                pelvis_bend_div.style.color = getColorFromGradient(green_bar_pelvis_bend, -30, 30, value_pelvis_bend);
+                thorax_rot_div.style.color = getColorFromGradient(green_bar_thorax_rot, -140, 140, value_thorax_rotation);
+                thorax_bend_div.style.color = getColorFromGradient(green_bar_thorax_bend, -20, 60, value_thorax_bend);
+                head_rot_div.style.color = getColorFromGradient(green_bar_head_rot, -100, 100, value_head_rotation);
+                head_tilt_div.style.color = getColorFromGradient(green_bar_head_tilt, -60, 60, value_head_tilt);
+                // pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[2]) || (value_pelvis_rotation > margin_pelvis_rot[3])) ? 'red' : 'green';
+                // pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[2]) || (value_pelvis_bend > margin_pelvis_bend[3])) ? 'red' : 'green';
+                // thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[2]) || (value_thorax_rotation > margin_thorax_rot[3])) ? 'red' : 'green';
+                // thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[2]) || (value_thorax_bend > margin_thorax_bend[3])) ? 'red' : 'green';
+                // head_rot_div.style.color = ((value_head_rotation < margin_head_rot[2]) || (value_head_rotation > margin_head_rot[3])) ? 'red' : 'green';
+                // head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[2]) || (value_head_tilt > margin_head_tilt[3])) ? 'red' : 'green';
+                // pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[2]) || (value_pelvis_sway > margin_pelvis_sway[3])) ? 'red' : 'green';
+                // thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[2]) || (value_thorax_sway > margin_thorax_sway[3])) ? 'red' : 'green';
 
             } else if (button_recent_name === 'setup') {
-                pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[0]) || (value_pelvis_rotation > margin_pelvis_rot[1])) ? 'red' : 'green';
-                pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[0]) || (value_pelvis_bend > margin_pelvis_bend[1])) ? 'red' : 'green';
-                thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[0]) || (value_thorax_rotation > margin_thorax_rot[1])) ? 'red' : 'green';
-                thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[0]) || (value_thorax_bend > margin_thorax_bend[1])) ? 'red' : 'green';
-                head_rot_div.style.color = ((value_head_rotation < margin_head_rot[0]) || (value_head_rotation > margin_head_rot[1])) ? 'red' : 'green';
-                head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[0]) || (value_head_tilt > margin_head_tilt[1])) ? 'red' : 'green';
-                pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[0]) || (value_pelvis_sway > margin_pelvis_sway[1])) ? 'red' : 'green';
-                thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[0]) || (value_thorax_sway > margin_thorax_sway[1])) ? 'red' : 'green';
+                pelvis_rot_div.style.color = getColorFromGradient(green_bar_pelvis_rot, -80, 160, value_pelvis_rotation);
+                pelvis_bend_div.style.color = getColorFromGradient(green_bar_pelvis_bend, -30, 30, value_pelvis_bend);
+                thorax_rot_div.style.color = getColorFromGradient(green_bar_thorax_rot, -140, 140, value_thorax_rotation);
+                thorax_bend_div.style.color = getColorFromGradient(green_bar_thorax_bend, -20, 60, value_thorax_bend);
+                head_rot_div.style.color = getColorFromGradient(green_bar_head_rot, -100, 100, value_head_rotation);
+                head_tilt_div.style.color = getColorFromGradient(green_bar_head_tilt, -60, 60, value_head_tilt);
+                // pelvis_rot_div.style.color = ((value_pelvis_rotation < margin_pelvis_rot[0]) || (value_pelvis_rotation > margin_pelvis_rot[1])) ? 'red' : 'green';
+                // pelvis_bend_div.style.color = ((value_pelvis_bend < margin_pelvis_bend[0]) || (value_pelvis_bend > margin_pelvis_bend[1])) ? 'red' : 'green';
+                // thorax_rot_div.style.color = ((value_thorax_rotation < margin_thorax_rot[0]) || (value_thorax_rotation > margin_thorax_rot[1])) ? 'red' : 'green';
+                // thorax_bend_div.style.color = ((value_thorax_bend < margin_thorax_bend[0]) || (value_thorax_bend > margin_thorax_bend[1])) ? 'red' : 'green';
+                // head_rot_div.style.color = ((value_head_rotation < margin_head_rot[0]) || (value_head_rotation > margin_head_rot[1])) ? 'red' : 'green';
+                // head_tilt_div.style.color = ((value_head_tilt < margin_head_tilt[0]) || (value_head_tilt > margin_head_tilt[1])) ? 'red' : 'green';
+                // pelvis_sway_div.style.color = ((value_pelvis_sway < margin_pelvis_sway[0]) || (value_pelvis_sway > margin_pelvis_sway[1])) ? 'red' : 'green';
+                // thorax_sway_div.style.color = ((value_thorax_sway < margin_thorax_sway[0]) || (value_thorax_sway > margin_thorax_sway[1])) ? 'red' : 'green';
 
             } else {
                 pelvis_rot_div.style.color = '';
@@ -839,7 +904,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 tiltText(pelvis_t, pelvis_tilt_margins, 'pelvis', pelvis_report_text_tilt)
                 tiltText(pelvis_tilt_top, pelvis_tilt_margins.slice(2, 4), 'pelvis', pelvis_report_text_tilt_top)
                 tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis', pelvis_report_text_tilt_impact)
-                console.log(pelvis_tilt_margins.slice(4, 7))
+                // console.log(pelvis_tilt_margins.slice(4, 7))
 
             }
         }
@@ -934,4 +999,84 @@ function tiltText(angle, margin, body_part, element) {
     } else {
         element.innerHTML = `Your ${body_part} tilt is good.`
     }
+}
+
+function newGradient(low, high, marginLow, marginHigh, slackYellow = 5, slackRed = 10) {
+    const positionLow = (low + Number(marginLow)) / (high + low) * 100
+    const positionHigh = (low + Number(marginHigh)) / (high + low) * 100
+    const positionYL = positionLow - slackYellow
+    const positionYH = positionHigh + slackYellow
+    const positionRL = positionLow - slackRed
+    const positionRH = positionHigh + slackRed
+
+    // console.log(low, high, marginLow, marginHigh, slackYellow, slackRed)
+    // console.log(positionLow, positionHigh, positionYL, positionYH, positionRL, positionRH)
+
+    // `linear-gradient(to right, #f43f5e, 10%, #fde047 ${pelvisRotLow},#84cc16 ${pelvisRotLow} ${pelvisRotHigh}, #fde047 60%, 80%, #f43f5e)`
+    // console.log(`linear-gradient(to right, #f43f5e, ${positionRL}, #fde047 ${positionYL}%,#84cc16 ${positionLow}% ${positionHigh}%, #fde047 ${positionYH}%, ${positionRH}%, #f43f5e)`)
+
+    return `linear-gradient(to right, #f43f5e, ${positionRL}%, #fde047 ${positionYL}%,#84cc16 ${positionLow}% ${positionHigh}%, #fde047 ${positionYH}%, ${positionRH}%, #f43f5e)`
+}
+
+function resetGradient() {
+    return `linear-gradient(#84cc16 0% 100%)`
+}
+
+function getColorFromGradient(gradient, low, high, value) {
+    const computedStyle = getComputedStyle(gradient);
+    const regex = /rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)/g;
+    const rgbColors = computedStyle.backgroundImage.match(regex);
+    const colorPercents = computedStyle.backgroundImage.match(/(\d+(?:\.\d+)?)%/g)
+    const positionPercent = (value - low) / (high - low)
+
+    // Get closest colors by percentage
+    let colorIndex = colorPercents.length - 1
+    for (let i = colorPercents.length - 1; i >= 0; i--) {
+        if (positionPercent * 100 > colorPercents[i].replace('%', '')) {
+            break
+        }
+        colorIndex = i
+    }
+
+    const percentLimitUp = colorPercents[colorIndex].replace('%', '') / 100
+    let percentLimitDown = colorPercents[0].replace('%', '') / 100
+    if (colorIndex !== 0) {
+        percentLimitDown = colorPercents[colorIndex - 1].replace('%', '') / 100
+    }
+
+    // console.log(percentLimitUp, percentLimitDown)
+
+    const maxColorIndex = colorIndex
+    let minColorIndex = 0
+    if (colorIndex !== 0) {
+        minColorIndex = colorIndex - 1
+    }
+
+    const maxColor = rgbColors[maxColorIndex]
+    const minColor = rgbColors[minColorIndex]
+
+    let percent = (positionPercent - (percentLimitDown)) / (percentLimitUp - percentLimitDown)
+
+    if (percent < 0) {
+        percent = 0
+    }
+    if (percent > 1) {
+        percent = 1
+    }
+
+    // console.log(percent)
+    // console.log(positionPercent)
+
+    function blendColors(color1, color2, percent) {
+        // console.log(color1, color2, percent)
+        const [r1, g1, b1] = color1.match(/\d+/g).map(Number);
+        const [r2, g2, b2] = color2.match(/\d+/g).map(Number);
+        const r = Math.round(r1 + (r2 - r1) * percent);
+        const g = Math.round(g1 + (g2 - g1) * percent);
+        const b = Math.round(b1 + (b2 - b1) * percent);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    return blendColors(minColor, maxColor, percent)
+
 }
