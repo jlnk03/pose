@@ -115,7 +115,7 @@ def upload_video(disabled=True, path=None):
                 html.Button(
                     'Report',
                     id='show_overlay_mobile',
-                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 w-24 px-2 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 dark:shadow-slate-950 text-white font-bold text-sm disable-dbl-tap-zoom'
+                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 dark:shadow-slate-950 text-white font-bold text-xs disable-dbl-tap-zoom'
                 ),
 
                 html.Div(
@@ -125,35 +125,56 @@ def upload_video(disabled=True, path=None):
                         children=[
                             html.Div(
                                 children=[
-                                    html.Button('Setup', id='setup_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                    html.Button('Top', id='top_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                    html.Button('Impact', id='impact_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                    html.Button('Finish', id='end_pos_button',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                    html.Div(
+                                        className='flex-row sm:flex flex-col flex-nowrap items-center sm:border-b max-sm:border-r border-gray-300 gap-2 sm:pb-2 pr-2 sm:pr-0 justify-between',
+                                        children=[
+                                            html.Button('Setup', id='setup_pos_button',
+                                                        className='sm:w-24 px-4 py-2 rounded-full  bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
+                                            html.Button('Top', id='top_pos_button',
+                                                        className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
+                                            html.Button('Impact', id='impact_pos_button',
+                                                        className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
+                                            html.Button('Finish', id='end_pos_button',
+                                                        className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
+                                        ]
+                                    ),
+                                    # Edit button
+                                    html.Button('Edit', id='edit_positions',
+                                                disabled=True,
+                                                className='grow sm:w-24 px-4 py-2 rounded-full bg-indigo-300 dark:bg-indigo-800 text-white font-bold text-xs'),
+
+                                    # Save new positions
+                                    html.Div(
+                                        id='edit_positions_div',
+                                        className='absolute sm:bottom-0 sm:-right-24 bottom-16 right-0 z-20 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
+                                        children=[
+                                            html.Button('Reset', id='edit_positions_reset',
+                                                        className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
+                                            html.Button('Save', id='edit_positions_save',
+                                                        className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
+                                        ]
+                                    ),
                                 ],
-                                className='flex flex-row sm:flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='relative flex flex-row sm:flex-col flex-nowrap sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2'
                             ),
 
                             html.Div(
                                 children=[
                                     html.Button('Frame +', id='plus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
                                     html.Button('Frame -', id='minus_frame',
-                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'),
+                                                className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 sm:gap-4 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
                             ),
 
                             html.Div(
                                 html.Button(
                                     'Report',
                                     id='show_overlay',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm hidden sm:block disable-dbl-tap-zoom'
+                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'
                                 ),
-                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 sm:px-4 sm:py-4'
+                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
 
                             ),
 
@@ -183,19 +204,19 @@ def upload_video(disabled=True, path=None):
                                     intervalCurrentTime=70,
                                 ),
 
-                                html.Div(
-                                    id='edit_positions_div',
-                                    className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
-                                    children=[
-                                        html.Button('Reset', id='edit_positions_reset',
-                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                        html.Button('Save', id='edit_positions_save',
-                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                    ]
-                                ),
+                                # html.Div(
+                                #     id='edit_positions_div',
+                                #     className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
+                                #     children=[
+                                #         html.Button('Reset', id='edit_positions_reset',
+                                #                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                #         html.Button('Save', id='edit_positions_save',
+                                #                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
+                                #     ]
+                                # ),
 
-                                html.Button('⚙️', id='edit_positions',
-                                            className='text-base absolute bottom-4 right-4 hidden'),
+                                # html.Button('⚙️', id='edit_positions',
+                                #             className='text-base absolute bottom-4 right-4 hidden'),
                             ]
                         ), ]
                 ),
@@ -204,9 +225,9 @@ def upload_video(disabled=True, path=None):
                 html.Div(
                     children=[
                         html.Button('Frame -', id='minus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-xs disable-dbl-tap-zoom sm:hidden'),
                         html.Button('Frame +', id='plus_frame_mobile',
-                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-sm disable-dbl-tap-zoom sm:hidden'),
+                                    className='w-full h-fit px-4 py-2 rounded-full bg-indigo-500 text-white font-bold text-xs disable-dbl-tap-zoom sm:hidden'),
                     ],
                     className='flex flex-row justify-between mb-2 mt-2 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-none rounded-full px-2 py-2 sm:hidden'
                 ),
@@ -1222,7 +1243,7 @@ def init_dash(server):
                         html.Div(
                             id='sidebar',
                             # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-2xl hidden lg:flex',
-                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5] overflow-x-visible',
+                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 max-lg:z-30 hidden lg:flex border-r border-gray-200 dark:border-gray-600 dark:bg-slate-900 bg-[#FAF7F5] overflow-x-visible',
                             children=[
                                 html.Button(
                                     id='sidebar-header',
@@ -3514,7 +3535,7 @@ def init_callbacks(app):
             function_name='positionUpdate'
         ),
 
-        Output('video', 'seekTo'),
+        Output('video', 'seekTo'), Output('edit_positions', 'disabled'),
         [Input('top_pos_button', 'n_clicks'), Input('impact_pos_button', 'n_clicks'),
          Input('end_pos_button', 'n_clicks'), Input('setup_pos_button', 'n_clicks'),
          Input('minus_frame', 'n_clicks'), Input('plus_frame', 'n_clicks'),

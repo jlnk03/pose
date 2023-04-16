@@ -20,14 +20,21 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             let end_pos_button = document.getElementById('end_pos_button');
 
             // Settings
-            let edit_positions = document.getElementById('edit_positions').classList;
+            let edit_positions = document.getElementById('edit_positions');
+            const disabled = edit_positions.disabled;
 
             // console.log(window.dash_clientside.callback_context.triggered[0].prop_id)
             if (window.dash_clientside.callback_context.triggered[0].prop_id === 'top_pos_button.n_clicks') {
-                top_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
-                setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                top_pos_button.classList.replace('bg-transparent', 'bg-indigo-500');
+                setup_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                impact_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                end_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+
+                // text color white on pressed button
+                top_pos_button.classList.replace('text-gray-400', 'text-white');
+                setup_pos_button.classList.replace('text-white', 'text-gray-400');
+                impact_pos_button.classList.replace('text-white', 'text-gray-400');
+                end_pos_button.classList.replace('text-white', 'text-gray-400');
 
                 // console.log(nclicks)
                 const top_pos = document.getElementById('top_pos');
@@ -42,7 +49,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const pelvis_sway_margins = document.getElementById('pelvis_sway_store').innerHTML.split(', ');
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
-                edit_positions.remove('hidden');
+                edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
 
                 if (nclicks > 0) {
                     // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
@@ -77,13 +84,20 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[3])) / (80) * 100 + '%';
                     green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[2], thorax_sway_margins[3]);
 
-                    return top_index;
+                    // Video index and enable edit button
+                    return [top_index, false]
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'impact_pos_button.n_clicks') {
-                impact_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
-                setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                impact_pos_button.classList.replace('bg-transparent', 'bg-indigo-500');
+                setup_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                top_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                end_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+
+                // text color white on pressed button
+                impact_pos_button.classList.replace('text-gray-400', 'text-white');
+                setup_pos_button.classList.replace('text-white', 'text-gray-400');
+                top_pos_button.classList.replace('text-white', 'text-gray-400');
+                end_pos_button.classList.replace('text-white', 'text-gray-400');
 
                 // console.log(nclicks2)
                 const impact_pos = document.getElementById('impact_pos');
@@ -98,7 +112,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const pelvis_sway_margins = document.getElementById('pelvis_sway_store').innerHTML.split(', ');
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
-                edit_positions.remove('hidden');
+                edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
+                // edit_positions.disabled = false;
 
                 if (nclicks2 > 0) {
                     // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[4])) / (240) * 100 + '%';
@@ -133,43 +148,27 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[5])) / (80) * 100 + '%';
                     green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[4], thorax_sway_margins[5]);
 
-                    return impact_index;
+                    return [impact_index, false]
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'end_pos_button.n_clicks') {
-                end_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
-                setup_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                end_pos_button.classList.replace('bg-transparent', 'bg-indigo-500');
+                setup_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                top_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                impact_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+
+                // text color white on pressed button
+                end_pos_button.classList.replace('text-gray-400', 'text-white');
+                setup_pos_button.classList.replace('text-white', 'text-gray-400');
+                top_pos_button.classList.replace('text-white', 'text-gray-400');
+                impact_pos_button.classList.replace('text-white', 'text-gray-400');
 
                 const end_pos = document.getElementById('end_pos');
                 const end_index = end_pos.innerText;
 
-                edit_positions.remove('hidden');
+                edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
+                // edit_positions.disabled = false;
 
                 if (nclicks3 > 0) {
-                    // green_bar_pelvis_rot.style.left = '0%';
-                    // green_bar_pelvis_rot.style.right = '0%';
-                    //
-                    // green_bar_pelvis_bend.style.left = '0%';
-                    // green_bar_pelvis_bend.style.right = '0%';
-                    //
-                    // green_bar_thorax_rot.style.left = '0%';
-                    // green_bar_thorax_rot.style.right = '0%';
-                    //
-                    // green_bar_thorax_bend.style.left = '0%';
-                    // green_bar_thorax_bend.style.right = '0%';
-                    //
-                    // green_bar_head_rot.style.left = '0%';
-                    // green_bar_head_rot.style.right = '0%';
-                    //
-                    // green_bar_head_tilt.style.left = '0%';
-                    // green_bar_head_tilt.style.right = '0%';
-                    //
-                    // green_bar_pelvis_sway.style.left = '0%';
-                    // green_bar_pelvis_sway.style.right = '0%';
-                    //
-                    // green_bar_thorax_sway.style.left = '0%';
-                    // green_bar_thorax_sway.style.right = '0%';
 
                     green_bar_pelvis_rot.style.background = resetGradient()
                     green_bar_pelvis_bend.style.background = resetGradient()
@@ -180,13 +179,19 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     green_bar_pelvis_sway.style.background = resetGradient()
                     green_bar_thorax_sway.style.background = resetGradient()
 
-                    return end_index;
+                    return [end_index, false]
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'setup_pos_button.n_clicks') {
-                setup_pos_button.classList.replace('bg-indigo-500', 'bg-indigo-700');
-                top_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                impact_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
-                end_pos_button.classList.replace('bg-indigo-700', 'bg-indigo-500');
+                setup_pos_button.classList.replace('bg-transparent', 'bg-indigo-500');
+                top_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                impact_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+                end_pos_button.classList.replace('bg-indigo-500', 'bg-transparent');
+
+                // text color to white on pressed button
+                setup_pos_button.classList.replace('text-gray-400', 'text-white');
+                top_pos_button.classList.replace('text-white', 'text-gray-400');
+                impact_pos_button.classList.replace('text-white', 'text-gray-400');
+                end_pos_button.classList.replace('text-white', 'text-gray-400');
 
                 const setup_pos = document.getElementById('setup_pos');
                 const setup_index = setup_pos.innerText;
@@ -200,7 +205,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const pelvis_sway_margins = document.getElementById('pelvis_sway_store').innerHTML.split(', ');
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
-                edit_positions.remove('hidden');
+                edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
+                // edit_positions.disabled = false;
 
                 // console.log(pelvis_rot_margins)
 
@@ -237,7 +243,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                     // green_bar_thorax_sway.style.right = (60 - Number(thorax_sway_margins[1])) / (80) * 100 + '%';
                     green_bar_thorax_sway.style.background = newGradient(20, 60, thorax_sway_margins[0], thorax_sway_margins[1]);
 
-                    return setup_index;
+                    return [setup_index, false]
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'minus_frame.n_clicks') {
                 const fps_saved = document.getElementById('fps_saved');
@@ -245,9 +251,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 if (nclicks5 > 0) {
                     const time = (currentTime - 1 / fps) / duration
                     if (time < 0) {
-                        return 0;
+                        return [0, disabled];
                     }
-                    return time;
+                    return [time, disabled];
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'plus_frame.n_clicks') {
                 const fps_saved = document.getElementById('fps_saved');
@@ -255,9 +261,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 if (nclicks6 > 0) {
                     const time = (currentTime + 1 / fps) / duration
                     if (time > 1) {
-                        return 0.999;
+                        return [0.999, disabled];
                     }
-                    return time;
+                    return [time, disabled];
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'minus_frame_mobile.n_clicks') {
                 const fps_saved = document.getElementById('fps_saved');
@@ -265,9 +271,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 if (nclicks7 > 0) {
                     const time = (currentTime - 1 / fps) / duration
                     if (time < 0) {
-                        return 0;
+                        return [0, disabled];
                     }
-                    return time;
+                    return [time, disabled];
                 }
             } else if (window.dash_clientside.callback_context.triggered[0].prop_id === 'plus_frame_mobile.n_clicks') {
                 const fps_saved = document.getElementById('fps_saved');
@@ -275,12 +281,12 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 if (nclicks8 > 0) {
                     const time = (currentTime + 1 / fps) / duration
                     if (time > 1) {
-                        return 0.999;
+                        return [0.999, disabled];
                     }
-                    return time;
+                    return [time, disabled];
                 }
             } else {
-                return currentTime;
+                return [currentTime, disabled];
             }
 
         },
