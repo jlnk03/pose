@@ -141,7 +141,7 @@ def upload_video(disabled=True, path=None):
                                     # Edit button
                                     html.Button('Edit', id='edit_positions',
                                                 disabled=True,
-                                                className='grow sm:w-24 px-4 py-2 rounded-full bg-indigo-300 dark:bg-indigo-800 text-white font-bold text-xs'),
+                                                className='grow sm:w-24 px-4 py-2 rounded-full bg-indigo-300 dark:bg-indigo-800 text-white dark:text-gray-400 font-bold text-xs'),
 
                                     # Save new positions
                                     html.Div(

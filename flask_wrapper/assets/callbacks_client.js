@@ -50,6 +50,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
                 edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
+                edit_positions.classList.replace('dark:bg-indigo-800', 'dark:bg-indigo-500');
+                edit_positions.classList.replace('dark:text-gray-400', 'dark:text-white');
 
                 if (nclicks > 0) {
                     // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[2])) / (240) * 100 + '%';
@@ -113,7 +115,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
                 edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
-                // edit_positions.disabled = false;
+                edit_positions.classList.replace('dark:bg-indigo-800', 'dark:bg-indigo-500');
+                edit_positions.classList.replace('dark:text-gray-400', 'dark:text-white');
 
                 if (nclicks2 > 0) {
                     // green_bar_pelvis_rot.style.left = (80 + Number(pelvis_rot_margins[4])) / (240) * 100 + '%';
@@ -166,7 +169,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const end_index = end_pos.innerText;
 
                 edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
-                // edit_positions.disabled = false;
+                edit_positions.classList.replace('dark:bg-indigo-800', 'dark:bg-indigo-500');
+                edit_positions.classList.replace('dark:text-gray-400', 'dark:text-white');
 
                 if (nclicks3 > 0) {
 
@@ -206,7 +210,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const thorax_sway_margins = document.getElementById('thorax_sway_store').innerHTML.split(', ');
 
                 edit_positions.classList.replace('bg-indigo-300', 'bg-indigo-500');
-                // edit_positions.disabled = false;
+                edit_positions.classList.replace('dark:bg-indigo-800', 'dark:bg-indigo-500');
+                edit_positions.classList.replace('dark:text-gray-400', 'dark:text-white');
 
                 // console.log(pelvis_rot_margins)
 
@@ -852,6 +857,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const head_rot_margins = document.getElementById('head_rot_store').innerHTML.split(', ');
                 const head_tilt_margins = document.getElementById('head_tilt_store').innerHTML.split(', ');
                 const pelvis_tilt_margins = document.getElementById('pelvis_bend_store').innerHTML.split(', ');
+                const thorax_bend_margins = document.getElementById('thorax_bend_store').innerHTML.split(', ');
 
                 // console.log(head_tilt_margins)
 
@@ -860,36 +866,42 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const head_rot = head_rotation[Math.floor(setup * length)];
                 const head_t = head_tilt[Math.floor(setup * length)]
                 const pelvis_t = pelvis_tilt[Math.floor(setup * length)]
+                const thorax_b = thorax_bend[Math.floor(setup * length)]
 
                 const pelvis_rot_top = pelvis_rotation[Math.floor(top * length)];
                 const thorax_rot_top = thorax_rotation[Math.floor(top * length)];
                 const head_rot_top = head_rotation[Math.floor(top * length)];
                 const head_tilt_top = head_tilt[Math.floor(top * length)];
                 const pelvis_tilt_top = pelvis_tilt[Math.floor(top * length)]
+                const thorax_bend_top = thorax_bend[Math.floor(top * length)]
 
                 const pelvis_rot_impact = pelvis_rotation[Math.floor(impact * length)];
                 const thorax_rot_impact = thorax_rotation[Math.floor(impact * length)];
                 const head_rot_impact = head_rotation[Math.floor(impact * length)];
                 const head_tilt_impact = head_tilt[Math.floor(impact * length)]
                 const pelvis_tilt_impact = pelvis_tilt[Math.floor(impact * length)]
+                const thorax_bend_impact = thorax_bend[Math.floor(impact * length)]
 
                 let pelvis_report_text = document.getElementById('pelvis_report_text');
                 let thorax_report_text = document.getElementById('thorax_report_text');
                 let head_report_text = document.getElementById('head_report_text');
                 let head_report_text_tilt = document.getElementById('head_report_text_tilt')
                 let pelvis_report_text_tilt = document.getElementById('pelvis_report_text_tilt')
+                let thorax_report_text_bend = document.getElementById('thorax_report_text_bend')
 
                 let pelvis_report_text_top = document.getElementById('pelvis_report_text_top');
                 let thorax_report_text_top = document.getElementById('thorax_report_text_top');
                 let head_report_text_top = document.getElementById('head_report_text_top');
                 let head_report_text_tilt_top = document.getElementById('head_report_text_tilt_top')
                 let pelvis_report_text_tilt_top = document.getElementById('pelvis_report_text_tilt_top')
+                let thorax_report_text_bend_top = document.getElementById('thorax_report_text_bend_top')
 
                 let pelvis_report_text_impact = document.getElementById('pelvis_report_text_impact');
                 let thorax_report_text_impact = document.getElementById('thorax_report_text_impact');
                 let head_report_text_impact = document.getElementById('head_report_text_impact');
                 let head_report_text_tilt_impact = document.getElementById('head_report_text_tilt_impact')
                 let pelvis_report_text_tilt_impact = document.getElementById('pelvis_report_text_tilt_impact')
+                let thorax_report_text_bend_impact = document.getElementById('thorax_report_text_bend_impact')
 
                 rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
                 rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
@@ -912,6 +924,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis', pelvis_report_text_tilt_impact)
                 // console.log(pelvis_tilt_margins.slice(4, 7))
 
+                bendText(thorax_b, thorax_bend_margins, 'thorax', thorax_report_text_bend)
+                bendText(thorax_bend_top, thorax_bend_margins.slice(2, 4), 'thorax', thorax_report_text_bend_top)
+                bendText(thorax_bend_impact, thorax_bend_margins.slice(4, 7), 'thorax', thorax_report_text_bend_impact)
+
             }
         }
 
@@ -923,33 +939,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 function takeSnapshot(video, canvas, time) {
     return new Promise(function (resolve, reject) {
         const ctx = canvas.getContext("2d");
-
-        // Calculate the aspect ratio of the video
-        const aspectRatio = video.videoWidth / video.videoHeight;
-
-        const maxWidth = 384;
-        const maxHeight = 384;
-
-        const maxWidthMobile = 224;
-        const maxHeightMobile = 224;
-
-        // Calculate the maximum width and height of the canvas based on the aspect ratio
-        // var canvasWidth, canvasHeight, canvasWidthMobile, canvasHeightMobile;
-        // if (aspectRatio > 1) {
-        //     canvasWidth = Math.min(maxWidth, video.videoWidth);
-        //     // canvasHeight = canvasWidth / aspectRatio;
-        //     canvasWidthMobile = Math.min(maxWidthMobile, video.videoWidth);
-        //     // canvasHeightMobile = canvasWidthMobile / aspectRatio;
-        // } else {
-        //     canvasHeight = Math.min(maxHeight, video.videoHeight);
-        //     canvasWidth = canvasHeight * aspectRatio;
-        //     canvasHeightMobile = Math.min(maxHeightMobile, video.videoHeight);
-        //     canvasWidthMobile = canvasHeightMobile * aspectRatio;
-        // }
-        //
-        // let impact_report = document.getElementById('impact_report');
-        //
-        // impact_report.classList = `flex flex-col sm:w-[calc(100% - ${canvasWidth})] w-[calc(100% - ${canvasWidthMobile})]`
 
         // Set the width and height of the canvas
         canvas.width = video.videoWidth;
@@ -1006,6 +995,18 @@ function tiltText(angle, margin, body_part, element) {
         element.innerHTML = `Your ${body_part} tilt is good.`
     }
 }
+
+
+function bendText(angle, margin, body_part, element) {
+    if (angle < margin[0]) {
+        element.innerHTML = `Bend your ${body_part} a little less.`
+    } else if (angle > margin[1]) {
+        element.innerHTML = `Bend your ${body_part} a little more.`
+    } else {
+        element.innerHTML = `Your ${body_part} bend is good.`
+    }
+}
+
 
 function newGradient(low, high, marginLow, marginHigh, slackYellow = 5, slackRed = 10) {
     const positionLow = (low + Number(marginLow)) / (high + low) * 100
