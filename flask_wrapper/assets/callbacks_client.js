@@ -998,9 +998,9 @@ function tiltText(angle, margin, body_part, element) {
 
 
 function bendText(angle, margin, body_part, element) {
-    if (angle < margin[0]) {
+    if (angle > margin[0]) {
         element.innerHTML = `Bend your ${body_part} a little less.`
-    } else if (angle > margin[1]) {
+    } else if (angle < margin[1]) {
         element.innerHTML = `Bend your ${body_part} a little more.`
     } else {
         element.innerHTML = `Your ${body_part} bend is good.`
