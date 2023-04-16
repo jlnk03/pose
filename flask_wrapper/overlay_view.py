@@ -117,7 +117,7 @@ overlay = html.Div(
                                     className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4',
                                     children=[
                                         html.Canvas(id='impact_frame',
-                                                    className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
+                                                    className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
                                         html.Div(
                                             className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
                                             children=[
