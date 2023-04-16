@@ -20,7 +20,7 @@ overlay = html.Div(
                                           className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
                                 html.Div(
-                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x  gap-4',
+                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x snap-mandatory  gap-4',
                                     children=[
                                         html.Canvas(id='setup_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
@@ -67,7 +67,7 @@ overlay = html.Div(
                                 html.Span('Top',
                                           className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
                                 html.Div(
-                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x  gap-4',
+                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4',
                                     children=[
                                         html.Canvas(id='top_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
@@ -114,7 +114,7 @@ overlay = html.Div(
                                 html.Span('Impact',
                                           className='sm:text-2xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
                                 html.Div(
-                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x  gap-4',
+                                    className='flex flex-row flex-none sm:h-96 h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4',
                                     children=[
                                         html.Canvas(id='impact_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
