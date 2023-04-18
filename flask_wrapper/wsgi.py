@@ -1,7 +1,7 @@
 # import flask_wrapper as wrapper
-from flask_wrapper import create_app
-from flask_login import login_required
 from flask import render_template, send_from_directory, request
+
+from flask_wrapper import create_app
 
 app = create_app()
 

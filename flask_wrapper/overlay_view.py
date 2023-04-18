@@ -5,10 +5,10 @@ overlay = html.Div(
     children=[
         html.Button(id='hide_overlay', className='w-full h-32 bg-black bg-opacity-50'),
         html.Div(
-            className='fixed top-24 w-full bottom-0 dark:bg-slate-700 bg-[#FAF7F5] rounded-t-3xl',
+            className='fixed top-24 w-full bottom-0 dark:bg-slate-700 bg-[#FAF7F5] rounded-t-3xl justify-center flex flex-none',
             children=[
                 html.Div(
-                    className='relative h-full flex flex-col sm:mx-6 mx-2 py-6 ',
+                    className='relative h-full flex flex-col sm:mx-6 mx-2 py-6 max-w-8xl',
                     children=[
                         html.Div(
                             className='w-full h-full flex flex-col overflow-y-auto relative',
@@ -25,7 +25,7 @@ overlay = html.Div(
                                         html.Canvas(id='setup_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Pelvis',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -37,7 +37,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Thorax',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -50,7 +50,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col w-56 flex-none bg-white dark:bg-gray-800 rounded-2xl p-4 snap-start',
+                                            className='flex flex-col w-56 grow flex-none bg-white dark:bg-gray-800 rounded-2xl p-4 snap-start',
                                             children=[
                                                 html.Span('Head',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -72,7 +72,7 @@ overlay = html.Div(
                                         html.Canvas(id='top_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Pelvis',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -84,7 +84,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Thorax',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -96,7 +96,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Head',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -119,7 +119,7 @@ overlay = html.Div(
                                         html.Canvas(id='impact_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Pelvis',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -131,7 +131,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Thorax',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -143,7 +143,7 @@ overlay = html.Div(
                                             ]
                                         ),
                                         html.Div(
-                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 flex-none snap-start',
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
                                                 html.Span('Head',
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),

@@ -1,14 +1,15 @@
+import json
 import os
+import shutil
 import smtplib
 import ssl
+import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
-import time
 
 import stripe
-import json
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify, g
+from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -335,6 +336,10 @@ def delete_profile_final():
             if i == 19:
                 flash('Something went wrong, please try again', 'error')
                 return redirect(url_for('main.profile'))
+
+    # Delete user files in asset folder
+    if os.path.exists(url_for('static', filename=user.id)):
+        shutil.rmtree(url_for('static', filename=user.id))
 
     db.session.delete(user)
     db.session.commit()
