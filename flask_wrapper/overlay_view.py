@@ -8,7 +8,7 @@ overlay = html.Div(
             className='fixed top-24 w-full bottom-0 dark:bg-slate-700 bg-[#FAF7F5] rounded-t-3xl justify-center flex flex-none',
             children=[
                 html.Div(
-                    className='relative h-full flex flex-col sm:mx-6 mx-2 py-6 max-w-8xl',
+                    className='relative h-full flex flex-col sm:mx-6 mx-2 py-6 w-full',
                     children=[
                         html.Div(
                             className='w-full h-full flex flex-col overflow-y-auto relative',
@@ -24,6 +24,33 @@ overlay = html.Div(
                                     children=[
                                         html.Canvas(id='setup_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
+
+                                        html.Div(
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
+                                            children=[
+                                                html.Span('Focus',
+                                                          className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('1',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text',
+                                                                  className='flex justify-center items-center')
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('2',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text_2',
+                                                                  className='flex justify-center items-center')
+                                                    ]
+                                                ),
+                                            ]
+                                        ),
+
                                         html.Div(
                                             className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
@@ -71,6 +98,33 @@ overlay = html.Div(
                                     children=[
                                         html.Canvas(id='top_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
+
+                                        html.Div(
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
+                                            children=[
+                                                html.Span('Focus',
+                                                          className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('1',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text_top',
+                                                                  className='flex items-center')
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('2',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text_2_top',
+                                                                  className='flex items-center')
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+
                                         html.Div(
                                             className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[
@@ -118,6 +172,33 @@ overlay = html.Div(
                                     children=[
                                         html.Canvas(id='impact_frame',
                                                     className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
+
+                                        html.Div(
+                                            className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
+                                            children=[
+                                                html.Span('Focus',
+                                                          className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('1',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text_impact',
+                                                                  className='flex items-center')
+                                                    ]
+                                                ),
+                                                html.Div(
+                                                    className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                                                    children=[
+                                                        html.Span('2',
+                                                                  className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex items-center justify-center'),
+                                                        html.Span(id='focus_report_text_2_impact',
+                                                                  className='flex items-center')
+                                                    ]
+                                                )
+                                            ]
+                                        ),
+
                                         html.Div(
                                             className='flex flex-col bg-white dark:bg-gray-800 rounded-2xl p-4 w-56 grow flex-none snap-start',
                                             children=[

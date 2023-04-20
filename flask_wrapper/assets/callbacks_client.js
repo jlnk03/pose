@@ -903,36 +903,60 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 let pelvis_report_text_tilt_impact = document.getElementById('pelvis_report_text_tilt_impact')
                 let thorax_report_text_bend_impact = document.getElementById('thorax_report_text_bend_impact')
 
-                rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
-                rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
-                rotationText(head_rot, head_rot_margins, 'head', head_report_text)
+                // Focus
+                let focusReportText = document.getElementById('focus_report_text')
+                let focusReportText2 = document.getElementById('focus_report_text_2')
+                let focusReportTextTop = document.getElementById('focus_report_text_top')
+                let focusReportTextTop2 = document.getElementById('focus_report_text_2_top')
+                let focusReportTextImpact = document.getElementById('focus_report_text_impact')
+                let focusReportTextImpact2 = document.getElementById('focus_report_text_2_impact')
 
-                rotationText(pelvis_rot_top, pelvis_rot_margins.slice(2, 4), 'pelvis', pelvis_report_text_top)
-                rotationText(thorax_rot_top, thorax_rot_margins.slice(2, 4), 'thorax', thorax_report_text_top)
-                rotationText(head_rot_top, head_rot_margins.slice(2, 4), 'head', head_report_text_top)
+                const errorPelvis = rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
+                const errorThorax = rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
+                const errorHead = rotationText(head_rot, head_rot_margins, 'head', head_report_text)
+                const errorHeadTilt = tiltText(head_t, head_tilt_margins, 'head', head_report_text_tilt)
+                const errorPelvisTilt = tiltText(pelvis_t, pelvis_tilt_margins, 'pelvis', pelvis_report_text_tilt)
+                const errorThoraxBend = bendText(thorax_b, thorax_bend_margins, 'thorax', thorax_report_text_bend)
+                const focusText = getFocus([errorPelvis, errorThorax, errorHead, errorHeadTilt, errorPelvisTilt, errorThoraxBend])
 
-                rotationTextDown(pelvis_rot_impact, pelvis_rot_margins.slice(4, 7), 'pelvis', pelvis_report_text_impact)
-                rotationTextDown(thorax_rot_impact, thorax_rot_margins.slice(4, 6), 'thorax', thorax_report_text_impact)
-                rotationTextDown(head_rot_impact, head_rot_margins.slice(4, 6), 'head', head_report_text_impact)
+                focusReportText.innerHTML = focusText[0]
+                focusReportText2.innerHTML = focusText[1]
 
-                tiltText(head_t, head_tilt_margins, 'head', head_report_text_tilt)
-                tiltText(head_tilt_top, head_tilt_margins.slice(2, 4), 'head', head_report_text_tilt_top)
-                tiltText(head_tilt_impact, head_tilt_margins.slice(4, 7), 'head', head_report_text_tilt_impact)
+                const errorPelvisTop = rotationText(pelvis_rot_top, pelvis_rot_margins.slice(2, 4), 'pelvis', pelvis_report_text_top)
+                const errorThoraxTop = rotationText(thorax_rot_top, thorax_rot_margins.slice(2, 4), 'thorax', thorax_report_text_top)
+                const errorHeadTop = rotationText(head_rot_top, head_rot_margins.slice(2, 4), 'head', head_report_text_top)
+                const errorHeadTiltTop = tiltText(head_tilt_top, head_tilt_margins.slice(2, 4), 'head', head_report_text_tilt_top)
+                const errorPelvisTiltTop = tiltText(pelvis_tilt_top, pelvis_tilt_margins.slice(2, 4), 'pelvis', pelvis_report_text_tilt_top)
+                const errorThoraxBendTop = bendText(thorax_bend_top, thorax_bend_margins.slice(2, 4), 'thorax', thorax_report_text_bend_top)
+                const focusTextTop = getFocus([errorPelvisTop, errorThoraxTop, errorHeadTop, errorHeadTiltTop, errorPelvisTiltTop, errorThoraxBendTop])
 
-                tiltText(pelvis_t, pelvis_tilt_margins, 'pelvis', pelvis_report_text_tilt)
-                tiltText(pelvis_tilt_top, pelvis_tilt_margins.slice(2, 4), 'pelvis', pelvis_report_text_tilt_top)
-                tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis', pelvis_report_text_tilt_impact)
-                // console.log(pelvis_tilt_margins.slice(4, 7))
+                focusReportTextTop.innerHTML = focusTextTop[0]
+                focusReportTextTop2.innerHTML = focusTextTop[1]
 
-                bendText(thorax_b, thorax_bend_margins, 'thorax', thorax_report_text_bend)
-                bendText(thorax_bend_top, thorax_bend_margins.slice(2, 4), 'thorax', thorax_report_text_bend_top)
-                bendText(thorax_bend_impact, thorax_bend_margins.slice(4, 7), 'thorax', thorax_report_text_bend_impact)
+                const errorPelvisImpact = rotationTextDown(pelvis_rot_impact, pelvis_rot_margins.slice(4, 7), 'pelvis', pelvis_report_text_impact)
+                const errorThoraxImpact = rotationTextDown(thorax_rot_impact, thorax_rot_margins.slice(4, 6), 'thorax', thorax_report_text_impact)
+                const errorHeadImpact = rotationTextDown(head_rot_impact, head_rot_margins.slice(4, 6), 'head', head_report_text_impact)
+                const errorHeadTiltImpact = tiltText(head_tilt_impact, head_tilt_margins.slice(4, 7), 'head', head_report_text_tilt_impact)
+                const errorPelvisTiltImpact = tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis', pelvis_report_text_tilt_impact)
+                const errorThoraxBendImpact = bendText(thorax_bend_impact, thorax_bend_margins.slice(4, 7), 'thorax', thorax_report_text_bend_impact)
+                const focusTextImpact = getFocus([errorPelvisImpact, errorThoraxImpact, errorHeadImpact, errorHeadTiltImpact, errorPelvisTiltImpact, errorThoraxBendImpact])
+
+                focusReportTextImpact.innerHTML = focusTextImpact[0]
+                focusReportTextImpact2.innerHTML = focusTextImpact[1]
 
             }
         }
 
     }
 });
+
+
+function getFocus(errorArray) {
+    //     sort the array
+    errorArray.sort((a, b) => b[0] - a[0]);
+    //     get the first two elements
+    return [errorArray[0][1], errorArray[1][1]];
+}
 
 
 // Define the takeSnapshot function
@@ -968,42 +992,66 @@ function takeSnapshot(video, canvas, time) {
 
 function rotationText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        element.innerHTML = `Rotate your ${body_part} a little less.`
+        const text = `Rotate your ${body_part} a little less.`
+        element.innerHTML = text
+        return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        element.innerHTML = `Rotate your ${body_part} a little more.`
+        const text = `Rotate your ${body_part} a little more.`
+        element.innerHTML = text
+        return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        element.innerHTML = `Your ${body_part} rotation is good.`
+        const text = `Your ${body_part} rotation is good.`
+        element.innerHTML = text
+        return [0, text]
     }
 }
 
 function rotationTextDown(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        element.innerHTML = `Rotate your ${body_part} a little more.`
+        const text = `Rotate your ${body_part} a little more.`
+        element.innerHTML = text
+        return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        element.innerHTML = `Rotate your ${body_part} a little less.`
+        const text = `Rotate your ${body_part} a little less.`
+        element.innerHTML = text
+        return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        element.innerHTML = `Your ${body_part} rotation is good.`
+        const text = `Your ${body_part} rotation is good.`
+        element.innerHTML = text
+        return [0, text]
     }
 }
 
 function tiltText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        element.innerHTML = `Tilt your ${body_part} a little less.`
+        const text = `Tilt your ${body_part} a little less.`
+        element.innerHTML = text
+        return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        element.innerHTML = `Tilt your ${body_part} a little more.`
+        const text = `Tilt your ${body_part} a little more.`
+        element.innerHTML = text
+        return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        element.innerHTML = `Your ${body_part} tilt is good.`
+        const text = `Your ${body_part} tilt is good.`
+        element.innerHTML = text
+        return [0, text]
     }
 }
 
 
 function bendText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        element.innerHTML = `Bend your ${body_part} a little more.`
+        const text = `Bend your ${body_part} a little more.`
+        element.innerHTML = text
+        return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        element.innerHTML = `Bend your ${body_part} a little less.`
+        const text = `Bend your ${body_part} a little less.`
+        element.innerHTML = text
+        return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        element.innerHTML = `Your ${body_part} bend is good.`
+        const text = `Your ${body_part} bend is good.`
+        element.innerHTML = text
+        return [0, text]
     }
 }
 

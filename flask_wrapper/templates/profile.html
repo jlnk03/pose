@@ -10,15 +10,15 @@
 
 <script src="{{ url_for('static', filename='spinner.js') }}"></script>
 
-<div class="flex min-h-full pb-8 md:py-8 flex-col justify-center">
+<div class="flex min-h-full pb-8 md:py-8 flex-col justify-center relative">
     <div class="sm:grid grid-cols-3 grid-cols-2">
-  <h1 class="text-lg font-bold text-gray-900 sm:text-2xl block mb-5 dark:text-gray-100">
-    Welcome, {{ name }}!
-  </h1>
+        <h1 class="text-lg font-bold text-gray-900 sm:text-2xl block mb-5 dark:text-gray-100">
+            Welcome, {{ name }}!
+        </h1>
         <div>
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
             {% if category == "success" %}
             <div class="group relative flex w-full justify-center rounded-md border border-transparent bg-green-100 py-2 px-3 text-sm font-medium text-green-700">
                 {{message}}
@@ -28,106 +28,133 @@
                 {{message}}
             </div>
             {% endif %}
-        {% endfor %}
-      {% endif %}
-      {% endwith %}
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
         </div>
     </div>
 
-    <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">BETA</div>
+    <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">
+        BETA
+    </div>
 
-<div class="flex lg:flex-row flex-col pt-6">
-    <div class="lg:w-2/6 lg:pr-8 mb-3 text-justify">
+    <div class="flex lg:flex-row flex-col pt-6">
+        <div class="lg:w-2/6 lg:pr-8 mb-3 text-justify">
         <span class="text-base font-bold text-gray-900 sm:text-lg block mb-5 dark:text-gray-100">
             Your Profile
         </span>
-        <span class="text-base font-medium text-gray-500 dark:text-gray-300">
+            <span class="text-base font-medium text-gray-500 dark:text-gray-300">
             Update your profile information here.
         </span>
+        </div>
+        <div class="bg-white dark:bg-gray-700 shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900">
+            <form action="/update_profile" method="post">
+                <div class="relative">
+                    <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">Name</span>
+                    <div class="flex flex-row">
+                        <label class="sr-only" for="name">Name</label>
+                        <input class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" id="name" name="name" placeholder="Name"
+                               required
+                               type="text" value="{{name}}">
+                        <button class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800"
+                                type="submit">
+                            Update name
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <form action="/update_profile" class="w-full" method="post">
+                <div class="relative py-10 w-full">
+                    <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">E-mail</span>
+                    <div class="flex flex-row">
+                        <label class="sr-only" for="email">Email address</label>
+                        <input class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" id="email" name="email" placeholder="E-mail"
+                               required
+                               type="email" value="{{email}}">
+                        <button class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800"
+                                type="submit">
+                            Update email
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <form action="/update_profile" method="post">
+                <div class="relative">
+                    <div class="flex flex-col w-full">
+                        <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">Change Password</span>
+                        <div class="flex flex-row">
+                            <label class="sr-only" for="password">Password</label>
+                            <input autocomplete="current-password" class="mr-2 mb-2 block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" id="password" name="password"
+                                   placeholder="Old password"
+                                   required
+                                   type="password" value="">
+                            <div class="w-60 ml-1.5"></div>
+                        </div>
+                        <div class="flex flex-row">
+                            <label class="sr-only" for="password_new">Password</label>
+                            <input class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" id="password_new" name="password_new" placeholder="New password"
+                                   required
+                                   type="password" value="">
+                            <button class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800"
+                                    type="submit">
+                                Update password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-<div class="bg-white dark:bg-gray-700 shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900">
-<form method="post" action="/update_profile">
-  <div class="relative">
-      <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">Name</span>
-      <div class="flex flex-row">
-          <label for="name" class="sr-only">Name</label>
-      <input id="name" name="name" type="text" required class="dark:bg-gray-600 relative block w-full p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm" placeholder="Name" value="{{name}}">
-            <button type="submit" class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800">Update name</button>
-      </div>
-</div>
-</form>
-<form method="post" action="/update_profile" class="w-full">
-    <div class="relative py-10 w-full">
-        <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">E-mail</span>
-        <div class="flex flex-row">
-        <label for="email" class="sr-only">Email address</label>
-        <input id="email" name="email" type="email" required class="dark:bg-gray-600 relative block w-full p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm" placeholder="E-mail" value="{{email}}">
-    <button type="submit" class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800">Update email</button>
-            </div>
-   </div>
-</form>
-<form method="post" action="/update_profile">
-   <div class="relative">
-       <div class="flex flex-col w-full">
-           <span class="text-sm font-medium text-gray-500 block mb-2 dark:text-gray-300">Change Password</span>
-       <div class="flex flex-row">
-              <label for="password" class="sr-only">Password</label>
-              <input id="password" name="password" type="password" autocomplete="current-password" required class="mr-2 dark:bg-gray-600 relative block w-full p-3 appearance-none rounded-lg mb-2 border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm" placeholder="Old password" value="">
-            <div class="w-60 ml-1.5"></div>
-      </div>
-           <div class="flex flex-row">
-              <label for="password_new" class="sr-only">Password</label>
-              <input id="password_new" name="password_new" type="password" required class="dark:bg-gray-600 relative block w-full p-3 appearance-none rounded-lg border border-gray-300 text-gray-900 dark:border-gray-500 dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-400 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-sm" placeholder="New password" value="">
-             <button type="submit" class="ml-2 group relative flex justify-center rounded-lg w-60 border border-transparent bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 py-2 px-3 text-xs md:text-sm font-medium items-center text-white hover:bg-indigo-800">
-            Update password
-            </button>
-           </div>
-      </div>
-    </div>
-</form>
-</div>
-</div>
 
-<div class="flex lg:flex-row flex-col pt-10">
-<div class="lg:w-2/6 lg:pr-8 mb-3 text-justify">
+    <div class="flex lg:flex-row flex-col pt-10">
+        <div class="lg:w-2/6 lg:pr-8 mb-3 text-justify">
     <span class="text-base font-bold text-gray-900 sm:text-lg block mb-5 dark:text-gray-100">
         Feedback
     </span>
-    <span class="text-base font-medium text-gray-500 dark:text-gray-300">
+            <span class="text-base font-medium text-gray-500 dark:text-gray-300">
         Please give us feedback on your experience with our app and how we can improve our service. Your feedback is very important to us and will be sent anonymously.
     </span>
-</div>
+        </div>
 
-    <div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between bg-white dark:bg-gray-700 shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900">
-          <form action="/contact" method="post" class="space-y-8 w-full">
-          <div>
-              <label for="subject" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Subject</label>
-              <input type="text" id="subject" name="subject" class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" placeholder="Let us know how we can help you" required>
-          </div>
-          <div class="sm:col-span-2">
-              <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your message</label>
-              <textarea id="message" name="message" rows="6" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Leave a comment..."></textarea>
-          </div>
-          <button type="submit" class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-indigo-700 sm:w-fit hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800">Send message</button>
-      </form>
+        <div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between bg-white dark:bg-gray-700 shadow rounded-2xl px-10 py-10 lg:w-4/6 align-end backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900">
+            <form action="/contact" class="space-y-8 w-full" method="post">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                           for="subject">Subject</label>
+                    <input class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light" id="subject" name="subject"
+                           placeholder="Let us know how we can help you"
+                           required type="text">
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" for="message">Your
+                        message</label>
+                    <textarea class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" id="message" name="message"
+                              placeholder="Leave a comment..."
+                              rows="6"></textarea>
+                </div>
+                <button class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-indigo-700 sm:w-fit hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                        type="submit">
+                    Send message
+                </button>
+            </form>
+        </div>
+
     </div>
 
-    </div>
-
-<div class="flex lg:flex-row flex-col pt-10">
-    <div class="lg:w-2/6 lg:pr-8 m-b-3 text-justify">
+    <div class="flex lg:flex-row flex-col pt-10">
+        <div class="lg:w-2/6 lg:pr-8 m-b-3 text-justify">
         <span class="text-base font-bold text-gray-900 sm:text-lg block mb-5 dark:text-gray-100">
             Remaining Analyses
         </span>
-        <span class="text-base font-medium text-gray-500 dark:text-gray-300 hidden">
+            <span class="text-base font-medium text-gray-500 dark:text-gray-300 hidden">
             To add more analyses you will be redirected to our payment partner.
         </span>
-        <span class="text-base font-medium text-gray-500 dark:text-gray-300">
+            <span class="text-base font-medium text-gray-500 dark:text-gray-300">
             If you need more free analyses, please leave a short feedback message and add your email address. We will handle your request as soon as possible.
         </span>
-    </div>
+        </div>
 
-<div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between">
+        <div class="rounded-2xl lg:w-4/6 align-end flex flex-col 2xl:flex-row justify-between">
     <span class="dark:bg-gray-700 dark:border-gray-900 text-9xl text-font-bold text-indigo-700 dark:text-indigo-500 bg-white shadow rounded-2xl py-5 px-10 max-w-content 2xl:mr-6 mt-2 items-center flex justify-center backdrop-blur-md bg-opacity-60 border border-gray-100">
         {% if current_user.unlimited %}
         ∞
@@ -135,108 +162,119 @@
             {{current_user.n_analyses}}
         {% endif %}
     </span>
-    <div class="flex flex-col justify-center items-center w-full hidden">
-            <span class="font-medium text-sm bg-indigo-700 dark:bg-indigo-500 rounded-full text-white px-3 text-center -mb-4 py-1 z-10 mt-3 2xl:mt-0">Get more</span>
-    <div class="flex justify-between flex-end justify-end border-indigo-700 dark:border-indigo-500 rounded-2xl border-4 py-5 px-5 flex-col md:flex-row w-full gap-3">
-    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
-        <div class="flex flex-col h-full">
+            <div class="flex flex-col justify-center items-center w-full hidden">
+                <span class="font-medium text-sm bg-indigo-700 dark:bg-indigo-500 rounded-full text-white px-3 text-center -mb-4 py-1 z-10 mt-3 2xl:mt-0">Get more</span>
+                <div class="flex justify-between flex-end justify-end border-indigo-700 dark:border-indigo-500 rounded-2xl border-4 py-5 px-5 flex-col md:flex-row w-full gap-3">
+                    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
+                        <div class="flex flex-col h-full">
             <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Starter
             </span>
 
-            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
                 2 Analyses
             </span>
-            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
                 One time purchase
             </span>
 
-            <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
+                            <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
                 3€
             </span>
 
-            <a href="payment/starter/payment" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700">Buy</a>
-        </div>
-    </div>
+                            <a class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700"
+                               href="payment/starter/payment">Buy</a>
+                        </div>
+                    </div>
 
-        <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
-        <div class="flex flex-col h-full">
+                    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
+                        <div class="flex flex-col h-full">
             <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Essential
             </span>
 
-            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
                 10 Analyses
             </span>
 
-            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
                 One time purchase
             </span>
 
-            <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
+                            <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
                 10€
             </span>
 
-            <a href="/payment/essential/payment" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700">Buy</a>
-        </div>
-    </div>
+                            <a class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700"
+                               href="/payment/essential/payment">Buy</a>
+                        </div>
+                    </div>
 
-        <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
-        <div class="flex flex-col h-full">
+                    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-60 border border-gray-100">
+                        <div class="flex flex-col h-full">
             <span class="text-xl font-bold text-indigo-700 sm:text-2xl block mb-1 dark:text-indigo-500">
                 Professional
             </span>
 
-            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                            <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
                 Unlimited Analyses
             </span>
 
-            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                            <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
                 Subscription
             </span>
 
-            <div class="flex flex-row items-baseline">
+                            <div class="flex flex-row items-baseline">
                 <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
                     20€
                 </span>
-                <span class="font-medium text-gray-500 text-base block ml-1 dark:text-gray-400">
+                                <span class="font-medium text-gray-500 text-base block ml-1 dark:text-gray-400">
                     /month
                 </span>
+                            </div>
+
+                            {% if current_user.unlimited and not current_user.canceled %}
+                            <button class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700"
+                                    id="unsubscribe">
+                                <span id="button-text">Unsubscribe</span>
+                                <span class="hidden ml-3" id="spinner">
+                          <svg class="w-5 h-5 mr-2 text-gray-200 animate-spin fill-indigo-900" viewBox="0 0 100 100">
+                          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                  fill="currentFill"/>
+                        </svg>
+                      </span>
+                            </button>
+                            {% elif current_user.canceled %}
+                            <button class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700"
+                                    id="reactivate">
+                                <span id="reactivate-text">Reactivate</span>
+                                <span class=" hidden ml-3" id="spinner-reactivate">
+                          <svg class="w-5 h-5 mr-2 text-gray-200 animate-spin fill-indigo-900" viewBox="0 0 100 100">
+                          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                  fill="currentFill"/>
+                        </svg>
+                      </span>
+                            </button>
+                            {% else %}
+                            <a class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700"
+                               href="/payment/professional/subscription">Subscribe</a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            {% if current_user.unlimited and not current_user.canceled %}
-                <button id="unsubscribe" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700">
-                      <span id="button-text">Unsubscribe</span>
-                      <span id="spinner" class="hidden ml-3">
-                          <svg class="w-5 h-5 mr-2 text-gray-200 animate-spin fill-indigo-900" viewBox="0 0 100 100">
-                          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                        </svg>
-                      </span>
-                </button>
-            {% elif current_user.canceled %}
-                <button id="reactivate" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700">
-                      <span id="reactivate-text">Reactivate</span>
-                      <span id="spinner-reactivate" class=" hidden ml-3">
-                          <svg class="w-5 h-5 mr-2 text-gray-200 animate-spin fill-indigo-900" viewBox="0 0 100 100">
-                          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                        </svg>
-                      </span>
-                </button>
-            {% else %}
-                <a href="/payment/professional/subscription" class="inline-flex items-center mt-8 w-full justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-700 dark:bg-indigo-600 px-3 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-800 dark:hover:bg-indigo-700">Subscribe</a>
-            {% endif %}
-
         </div>
+
     </div>
-        </div>
-</div>
-</div>
-
-</div>
-    <a href="{{ url_for('auth.delete_profile') }}" class="inline-flex items-center w-40 mt-10 justify-center whitespace-nowrap rounded-lg border border-transparent bg-red-200 px-3 py-2 text-base font-medium text-red-900 shadow-sm hover:bg-red-300">Delete account</a>
-<!--    <a href="{{ url_for('auth.test') }}" class="inline-flex items-center w-40 mt-10 justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-200 px-3 py-2 text-base font-medium text-indigo-900 shadow-sm hover:bg-indigo-300">Test</a>-->
+    <a class="inline-flex items-center w-40 mt-10 justify-center whitespace-nowrap rounded-lg border border-transparent bg-red-200 px-3 py-2 text-base font-medium text-red-900 shadow-sm hover:bg-red-300"
+       href="{{ url_for('auth.delete_profile') }}">Delete
+        account</a>
+    <!--    <a href="{{ url_for('auth.test') }}" class="inline-flex items-center w-40 mt-10 justify-center whitespace-nowrap rounded-lg border border-transparent bg-indigo-200 px-3 py-2 text-base font-medium text-indigo-900 shadow-sm hover:bg-indigo-300">Test</a>-->
 </div>
 
 <!--&lt;!&ndash;unsubscribe&ndash;&gt;-->

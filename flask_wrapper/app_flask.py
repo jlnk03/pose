@@ -1243,7 +1243,7 @@ def init_dash(server):
                         html.Div(
                             id='sidebar',
                             # className='flex flex-col bg-slate-600 dark:bg-gray-700 fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 z-10 lg:rounded-2xl hidden lg:flex',
-                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 max-lg:z-30 hidden lg:flex overflow-x-visible bg-white dark:bg-gray-700 rounded-2xl shadow dark:shadow-slate-950',
+                            className='flex flex-col fixed lg:left-5 lg:top-5 lg:bottom-5 top-0 bottom-0 w-60 max-lg:z-30 hidden lg:flex overflow-x-visible bg-white dark:bg-gray-700 rounded-r-2xl lg:rounded-l-2xl shadow dark:shadow-slate-950',
                             # dark:bg - slate - 900
                             # bg - [  # FAF7F5
                             children=[
