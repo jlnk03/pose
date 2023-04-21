@@ -11,7 +11,7 @@ def report_text_view(id1, id2, img1, img2):
                     html.Img(src='assets/' + img1,
                              className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
                     html.Span(id=id1,
-                              className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
+                              className='flex justify-center items-center'),
                 ]
             ),
             html.Div(
@@ -20,7 +20,7 @@ def report_text_view(id1, id2, img1, img2):
                     html.Img(src='assets/' + img2,
                              className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
                     html.Span(id=id2,
-                              className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
+                              className='flex justify-center items-center'),
                 ]
             ),
         ]
@@ -104,29 +104,9 @@ overlay = html.Div(
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
 
                                                 html.Div(
-                                                    className='flex flex-col justify-center w-full h-full gap-4',
-                                                    children=[
-
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/rotation.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='pelvis_report_text',
-                                                                          className='flex justify-center items-center'),
-                                                            ]
-                                                        ),
-
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/tilt.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='pelvis_report_text_tilt',
-                                                                          className='flex justify-center items-center'),
-                                                            ]
-                                                        ),
-                                                    ]
+                                                    report_text_view('pelvis_report_text', 'pelvis_report_text_tilt',
+                                                                     'rotation.png', 'tilt.png'),
+                                                    className='w-full h-full'
                                                 )
                                             ]
                                         ),
@@ -137,29 +117,9 @@ overlay = html.Div(
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
 
                                                 html.Div(
-                                                    className='flex flex-col justify-center w-full h-full gap-4',
-                                                    children=[
-
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/rotation.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='thorax_report_text',
-                                                                          className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
-                                                            ]
-                                                        ),
-
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/bend.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='thorax_report_text_bend',
-                                                                          className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
-                                                            ]
-                                                        )
-                                                    ]
+                                                    report_text_view('thorax_report_text', 'thorax_report_text_bend',
+                                                                     'rotation.png', 'bend.png'),
+                                                    className='w-full h-full'
                                                 )
 
                                             ]
@@ -171,28 +131,11 @@ overlay = html.Div(
                                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
 
                                                 html.Div(
-                                                    className='flex flex-col justify-center w-full h-full gap-4',
-                                                    children=[
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/rotation.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='head_report_text',
-                                                                          className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
-                                                            ]
-                                                        ),
-                                                        html.Div(
-                                                            className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
-                                                            children=[
-                                                                html.Img(src='assets/tilt.png',
-                                                                         className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
-                                                                html.Span(id='head_report_text_tilt',
-                                                                          className='sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4'),
-                                                            ]
-                                                        ),
-                                                    ]
+                                                    report_text_view('head_report_text', 'head_report_text_tilt',
+                                                                     'rotation.png', 'tilt.png'),
+                                                    className='w-full h-full'
                                                 )
+
                                             ]
                                         ),
                                     ]
