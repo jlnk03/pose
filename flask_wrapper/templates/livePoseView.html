@@ -1,33 +1,12 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="utf-8">-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"-->
-<!--            crossorigin="anonymous"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils_3d/control_utils_3d.js"-->
-<!--            crossorigin="anonymous"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"-->
-<!--            crossorigin="anonymous"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>-->
-<!--    <title>Pose</title>-->
-<!--</head>-->
-
-<!--<body>-->
-<!--<div class="container">-->
-<!--    <video class="input_video hidden"></video>-->
-<!--    <canvas class="output_canvas" width="1280px" height="720px"></canvas>-->
-<!--    <div class="landmark-grid-container"></div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
-<!--<script type="module" src="../assets/process.js"></script>-->
-
-
 {% extends "base2.html" %}
 
 {% block content %}
+
+<script>
+    bod = document.body;
+    bod.classList.remove("h-full");
+    bod.classList.add("h-screen");
+</script>
 
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script crossorigin="anonymous"
@@ -39,12 +18,12 @@
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
 
-<div class="container w-full h-full relative min-h-screen rounded-2xl my-5 items-center justify-center" id="container"
+<div class="container w-full h-96 flex relative rounded-2xl my-5 items-center justify-center" id="container"
      style="background-color: #a3e635">
-    <video class="input_video hidden"></video>
-    <canvas class="output_canvas rounded-2xl relative top-5 left-5 w-fit" height="144px" width="256px"></canvas>
+    <video class="input_video"></video>
+    <canvas class="output_canvas rounded-2xl absolute top-5 right-5 w-fit" height="144px" width="256px"></canvas>
     <!--    <div class="landmark-grid-container"></div>-->
-    <span class="text-7xl font-bold absolute left-1/2 top-1/2 -translate-x-1/2" id="thorax-rotation">0°</span>
+    <span class="text-7xl font-bold relative" id="thorax-rotation">0°</span>
 </div>
 
 <script src="../assets/process.js" type="module"></script>
