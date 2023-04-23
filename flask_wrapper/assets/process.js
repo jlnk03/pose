@@ -1,4 +1,4 @@
-import {thorax_rotation} from "./angles.js";
+import {calc_angle, thorax_rotation} from "./angles.js";
 
 const videoElement = document.getElementById('video');
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
@@ -8,49 +8,11 @@ const container = document.getElementsByClassName('container')[0];
 
 const thoraxRotation = document.getElementById('thorax-rotation');
 
+let rotationMatrix = math.identity(3);
+let rotationMatrixBuffer = math.identity(3);
+
 // const grid = new LandmarkGrid(landmarkContainer);
 
-const pose = new Pose({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-    }
-});
-pose.setOptions({
-    modelComplexity: 2,
-    smoothLandmarks: true,
-    enableSegmentation: true,
-    smoothSegmentation: true,
-    minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5
-});
-pose.onResults(onResults);
-
-
-// camera
-function startCamera() {
-    navigator.mediaDevices
-        .getUserMedia({video: true, audio: false})
-        .then((stream) => {
-            videoElement.srcObject = stream;
-            videoElement.play()
-
-            // async function to update pose
-            async function updatePose() {
-                await pose.send({image: videoElement});
-                videoElement.requestVideoFrameCallback(updatePose)
-            }
-
-            videoElement.requestVideoFrameCallback(updatePose)
-
-        })
-        .catch((err) => {
-            console.log("An error occurred! " + err);
-        })
-}
-
-startCamera();
-
-// Pose detection
 function onResults(results) {
     if (!results.poseLandmarks) {
         // grid.updateLandmarks([]);
@@ -101,16 +63,17 @@ function onResults(results) {
     const foot_r = worldLndmrks[28];
 
     // Rotation matrix
-    // let theta = calc_angle(foot_l, foot_r);
-    // let c = Math.cos(theta), s = Math.sin(theta);
-    // let R = [[c, 0, -s], [0, 1, 0], [s, 0, c]];
-    // R = math.matrix(R);
-    //
-    // // Rotate shoulder vectors
-    // let shoulder_l_rot = math.multiply(R, shoulder_l);
-    // let shoulder_r_rot = math.multiply(R, shoulder_r);
+    let theta = calc_angle(foot_l, foot_r);
+    let c = Math.cos(theta), s = Math.sin(theta);
+    let R = [[c, 0, -s], [0, 1, 0], [s, 0, c]];
+    R = math.matrix(R);
+    rotationMatrixBuffer = R
 
-    const thorax_rot = thorax_rotation(shoulder_l, shoulder_r);
+    // Rotate shoulder vectors
+    let shoulder_l_rot = math.multiply(rotationMatrix, shoulder_l);
+    let shoulder_r_rot = math.multiply(rotationMatrix, shoulder_r);
+
+    const thorax_rot = thorax_rotation(shoulder_l_rot, shoulder_r_rot);
 
     thoraxRotation.innerText = `${thorax_rot}°`
 
@@ -126,11 +89,20 @@ function onResults(results) {
 
 }
 
-// videoElement.addEventListener('play', () => {
-//     setInterval(async () => {
-//         await pose.send({image: videoElement});
-//     }, 100);
-// });
+const pose = new Pose({
+    locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+    }
+});
+pose.setOptions({
+    modelComplexity: 1,
+    smoothLandmarks: true,
+    enableSegmentation: false,
+    smoothSegmentation: false,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+});
+pose.onResults(onResults);
 
 // const camera = new Camera(videoElement, {
 //     onFrame: async () => {
@@ -140,3 +112,45 @@ function onResults(results) {
 //     height: 144
 // });
 // camera.start();
+
+
+// camera
+function startCamera() {
+    navigator.mediaDevices
+        .getUserMedia({video: true, audio: false})
+        .then((stream) => {
+            videoElement.srcObject = stream;
+            videoElement.play()
+
+            // async function to update pose
+            async function updatePose() {
+                await pose.send({image: videoElement});
+                videoElement.requestVideoFrameCallback(updatePose)
+            }
+
+            videoElement.requestVideoFrameCallback(updatePose)
+
+        })
+        .catch((err) => {
+            console.log("An error occurred! " + err);
+        })
+}
+
+startCamera();
+
+
+let stop = document.getElementById('stop');
+stop.addEventListener('click', () => {
+    videoElement.srcObject.getTracks().forEach(track => track.stop());
+    videoElement.srcObject = null;
+});
+
+let start = document.getElementById('start');
+start.addEventListener('click', () => {
+    startCamera();
+});
+
+let setup = document.getElementById('setup');
+setup.addEventListener('click', () => {
+    rotationMatrix = rotationMatrixBuffer;
+});

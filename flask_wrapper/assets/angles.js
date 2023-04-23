@@ -40,7 +40,7 @@ export function back_angle(shoulder_l, shoulder_r) {
 
 export function thorax_rotation(shoulder_l, shoulder_r) {
     let shoulder_v = math.subtract(shoulder_l, shoulder_r);
-    // shoulder_v.toArray();
+    shoulder_v = shoulder_v.toArray();
 
     // angle between shoulder vector and normal with atan2
     let angle = Math.atan2(shoulder_v[0], shoulder_v[2]);
