@@ -1,6 +1,6 @@
 import {thorax_rotation} from "./angles.js";
 
-const videoElement = document.getElementsByClassName('input_video')[0];
+const videoElement = document.getElementById('video');
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d', {willReadFrequently: true});
 const container = document.getElementsByClassName('container')[0];
@@ -10,6 +10,49 @@ const thoraxRotation = document.getElementById('thorax-rotation');
 
 // const grid = new LandmarkGrid(landmarkContainer);
 
+const pose = new Pose({
+    locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+    }
+});
+pose.setOptions({
+    modelComplexity: 2,
+    smoothLandmarks: true,
+    enableSegmentation: true,
+    smoothSegmentation: true,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+});
+pose.onResults(onResults);
+
+
+// camera
+function startCamera() {
+    navigator.mediaDevices
+        .getUserMedia({video: true, audio: false})
+        .then((stream) => {
+            videoElement.srcObject = stream;
+            videoElement.play()
+
+            // async function to update pose
+            async function updatePose() {
+                await pose.send({image: videoElement});
+                // requestAnimationFrame(updatePose);
+                videoElement.requestVideoFrameCallback(updatePose)
+            }
+
+            videoElement.requestVideoFrameCallback(updatePose)
+            // requestAnimationFrame(updatePose)
+
+        })
+        .catch((err) => {
+            console.log("An error occurred! " + err);
+        })
+}
+
+startCamera();
+
+// Pose detection
 function onResults(results) {
     if (!results.poseLandmarks) {
         // grid.updateLandmarks([]);
@@ -85,26 +128,17 @@ function onResults(results) {
 
 }
 
-const pose = new Pose({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-    }
-});
-pose.setOptions({
-    modelComplexity: 2,
-    smoothLandmarks: true,
-    enableSegmentation: true,
-    smoothSegmentation: true,
-    minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5
-});
-pose.onResults(onResults);
+// videoElement.addEventListener('play', () => {
+//     setInterval(async () => {
+//         await pose.send({image: videoElement});
+//     }, 100);
+// });
 
-const camera = new Camera(videoElement, {
-    onFrame: async () => {
-        await pose.send({image: videoElement});
-    },
-    width: 256,
-    height: 144
-});
-camera.start();
+// const camera = new Camera(videoElement, {
+//     onFrame: async () => {
+//         await pose.send({image: videoElement});
+//     },
+//     width: 256,
+//     height: 144
+// });
+// camera.start();
