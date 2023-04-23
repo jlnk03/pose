@@ -1,18 +1,19 @@
 # Prediction interface for Cog ⚙️
 # https://github.com/replicate/cog/blob/main/docs/python.md
 
-from cog import BasePredictor, Input, Path, File, BaseModel
-import mediapipe as mp
-from scipy import signal
-import numpy as np
-import tempfile
-from moviepy.editor import AudioFileClip
-from collections import deque
+import base64
 import io
-import imageio.v3 as iio
+import tempfile
+from collections import deque
+
 import av
 import cv2
-import base64
+import imageio.v3 as iio
+import mediapipe as mp
+import numpy as np
+from cog import BasePredictor, Input, Path, BaseModel
+from moviepy.editor import AudioFileClip
+from scipy import signal
 
 
 def filter_data(data, fps):

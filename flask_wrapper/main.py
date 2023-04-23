@@ -1,27 +1,26 @@
-import gc
-import json
-
-import flask
-import numpy as np
-from flask import Blueprint, render_template, flash, redirect, url_for, request, abort, send_from_directory, jsonify
-from flask_login import login_required, current_user
-from . import db
-import stripe
-from .models import User, Transactions
 import datetime
+import json
 import os
-import pandas as pd
-import plotly.graph_objects as go
-import plotly.io as pio
-from code_b.process import process_motion
-from itsdangerous import URLSafeTimedSerializer
 import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
-import cProfile
-import pstats
+
+import flask
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.io as pio
+import stripe
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
+from flask_login import login_required, current_user
+from itsdangerous import URLSafeTimedSerializer
+
+from code_b.process import process_motion
+from . import db
+from .models import User, Transactions
+
 # import memory_profiler
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
@@ -237,6 +236,11 @@ def contact_post():
 
     # return render_template('contact.html', title='Contact Us – Swinglab')
     return redirect(request.referrer)
+
+
+@main.route('/practice')
+def practice():
+    return render_template('livePoseView.html', title='Practice – Swinglab')
 
 
 @main.route('/predict/<token>', methods=['POST'])

@@ -93,7 +93,6 @@ overlay = html.Div(
                                                     report_focus_view('focus_report_text', 'focus_report_text_2'),
                                                     className='w-full h-full'
                                                 )
-
                                             ]
                                         ),
 
