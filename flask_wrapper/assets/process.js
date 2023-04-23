@@ -35,14 +35,12 @@ function startCamera() {
             videoElement.play()
 
             // async function to update pose
-            async function updatePose() {
-                await pose.send({image: videoElement});
-                // requestAnimationFrame(updatePose);
-                videoElement.requestVideoFrameCallback(updatePose)
-            }
-
-            videoElement.requestVideoFrameCallback(updatePose)
-            // requestAnimationFrame(updatePose)
+            // async function updatePose() {
+            //     await pose.send({image: videoElement});
+            //     videoElement.requestVideoFrameCallback(updatePose)
+            // }
+            //
+            // videoElement.requestVideoFrameCallback(updatePose)
 
         })
         .catch((err) => {
