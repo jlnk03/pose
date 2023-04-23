@@ -10,20 +10,20 @@ const thoraxRotation = document.getElementById('thorax-rotation');
 
 // const grid = new LandmarkGrid(landmarkContainer);
 
-const pose = new Pose({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-    }
-});
-pose.setOptions({
-    modelComplexity: 2,
-    smoothLandmarks: true,
-    enableSegmentation: true,
-    smoothSegmentation: true,
-    minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5
-});
-pose.onResults(onResults);
+// const pose = new Pose({
+//     locateFile: (file) => {
+//         return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+//     }
+// });
+// pose.setOptions({
+//     modelComplexity: 2,
+//     smoothLandmarks: true,
+//     enableSegmentation: true,
+//     smoothSegmentation: true,
+//     minDetectionConfidence: 0.5,
+//     minTrackingConfidence: 0.5
+// });
+// pose.onResults(onResults);
 
 
 // camera
