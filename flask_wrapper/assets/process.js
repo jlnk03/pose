@@ -74,6 +74,16 @@ navigator.mediaDevices.enumerateDevices()
 
 function onResults(results) {
     if (!results.poseLandmarks) {
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+        // draw new frame
+        // Only overwrite missing pixels.
+        canvasCtx.globalCompositeOperation = 'destination-atop';
+        canvasCtx.drawImage(
+            results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+        canvasCtx.restore();
+
         // grid.updateLandmarks([]);
         return;
     }
@@ -196,6 +206,7 @@ function startCamera() {
             videoElement.height = settings.height;
             canvasElement.width = settings.width;
             canvasElement.height = settings.height;
+            canvasElement.aspectRatio = settings.width / settings.height;
             canvasLoader.style.display = 'none';
             videoElement.play()
 
