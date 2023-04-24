@@ -94,9 +94,9 @@ function onResults(results) {
     //     canvasElement.width, canvasElement.height);
     //
     // Only overwrite existing pixels.
-    canvasCtx.globalCompositeOperation = 'source-in';
-    canvasCtx.fillStyle = '#00FF00';
-    canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+    // canvasCtx.globalCompositeOperation = 'source-in';
+    // canvasCtx.fillStyle = '#00FF00';
+    // canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
     // Only overwrite missing pixels.
     canvasCtx.globalCompositeOperation = 'destination-atop';
@@ -243,3 +243,12 @@ let setup = document.getElementById('setup');
 setup.addEventListener('click', () => {
     rotationMatrix = rotationMatrixBuffer;
 });
+
+// camera selection
+const selectCamera = document.getElementById('camera-selection');
+selectCamera.addEventListener('change', () => {
+    videoElement.srcObject.getTracks().forEach(track => track.stop());
+    videoElement.srcObject = null;
+    canvasLoader.style.display = 'block';
+    startCamera();
+})
