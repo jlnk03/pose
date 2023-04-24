@@ -240,7 +240,7 @@ def contact_post():
 
 @main.route('/practice')
 def practice():
-    return render_template('livePoseView.html', title='Practice – Swinglab')
+    return render_template('livePoseView.html', title='Practice – Swinglab', hideFooter=True)
 
 
 @main.route('/predict/<token>', methods=['POST'])

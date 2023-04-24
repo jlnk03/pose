@@ -3,15 +3,74 @@ import {calc_angle, thorax_rotation} from "./angles.js";
 const videoElement = document.getElementById('video');
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d', {willReadFrequently: true});
-const container = document.getElementsByClassName('container')[0];
+const container = document.getElementById('container-pose');
 // const landmarkContainer = document.getElementsByClassName('landmark-grid-container')[0];
+const canvasLoader = document.getElementById('canvas-loader');
 
 const thoraxRotation = document.getElementById('thorax-rotation');
+const lowerMargin = document.getElementById('lower-margin')
+const upperMargin = document.getElementById('upper-margin')
+
+const save = document.getElementById('save');
 
 let rotationMatrix = math.identity(3);
 let rotationMatrixBuffer = math.identity(3);
 
+let upperMarginValue = 180;
+let lowerMarginValue = -180;
+
+function setMargins() {
+    try {
+        lowerMarginValue = lowerMargin.value;
+    } catch (e) {
+        console.log('Using default value')
+    }
+
+    try {
+        upperMarginValue = upperMargin.value;
+    } catch (e) {
+        console.log('Using default value')
+    }
+
+    if (lowerMarginValue > upperMarginValue) {
+        const temp = lowerMarginValue;
+        lowerMarginValue = upperMarginValue;
+        upperMarginValue = temp;
+    }
+}
+
+setMargins();
+
+save.addEventListener('click', () => {
+    setMargins()
+});
+
+
 // const grid = new LandmarkGrid(landmarkContainer);
+
+// Get the list of available media input devices and add to the select element
+navigator.mediaDevices.enumerateDevices()
+    .then(function (devices) {
+        // Filter the list to get only the video input devices (cameras)
+        const videoDevices = devices.filter(function (device) {
+            return device.kind === 'videoinput';
+        });
+
+        // Get a reference to the select element
+        const select = document.getElementById('camera-selection');
+
+        // Add an option element for each camera to the select element
+        videoDevices.forEach(function (device) {
+            const option = document.createElement('option');
+            option.value = device.deviceId;
+            option.text = device.label || `Camera ${select.options.length + 1}`;
+            select.add(option);
+        });
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+
 
 function onResults(results) {
     if (!results.poseLandmarks) {
@@ -78,7 +137,7 @@ function onResults(results) {
     thoraxRotation.innerText = `${thorax_rot}°`
 
     // Check range of values and change background color
-    if (thorax_rot > 70 || thorax_rot < -7) {
+    if (thorax_rot > upperMarginValue || thorax_rot < lowerMarginValue) {
         container.style.backgroundColor = "#f87171";
     } else {
         container.style.backgroundColor = "#a3e635";
@@ -116,10 +175,28 @@ pose.onResults(onResults);
 
 // camera
 function startCamera() {
+
+    const select = document.getElementById('camera-selection');
+    const selectedDeviceId = select.value;
+
     navigator.mediaDevices
-        .getUserMedia({video: true, audio: false})
+        .getUserMedia({
+            video: {deviceId: {exact: selectedDeviceId}},
+            audio: false
+        })
+        .catch(
+            function (err) {
+                alert("Access to the camera was denied. Please allow access to the camera and reload the page.")
+            }
+        )
         .then((stream) => {
             videoElement.srcObject = stream;
+            const settings = stream.getVideoTracks()[0].getSettings();
+            videoElement.width = settings.width;
+            videoElement.height = settings.height;
+            canvasElement.width = settings.width;
+            canvasElement.height = settings.height;
+            canvasLoader.style.display = 'none';
             videoElement.play()
 
             // async function to update pose
@@ -136,7 +213,7 @@ function startCamera() {
         })
 }
 
-startCamera();
+// startCamera();
 
 
 let stop = document.getElementById('stop');
@@ -147,6 +224,7 @@ stop.addEventListener('click', () => {
 
 let start = document.getElementById('start');
 start.addEventListener('click', () => {
+    canvasLoader.style.display = 'block';
     startCamera();
 });
 

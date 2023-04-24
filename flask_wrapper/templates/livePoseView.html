@@ -2,11 +2,11 @@
 
 {% block content %}
 
-<script>
-    bod = document.body;
-    bod.classList.remove("h-full");
-    bod.classList.add("h-screen");
-</script>
+<!--<script>-->
+<!--    bod = document.body;-->
+<!--    bod.classList.remove("h-full");-->
+<!--    bod.classList.add("h-screen");-->
+<!--</script>-->
 
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script crossorigin="anonymous"
@@ -18,24 +18,49 @@
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
 
-<div class="container w-full h-full flex flex-col relative rounded-2xl my-5 items-center justify-center"
-     id="container"
-     style="background-color: #9ca3af">
-    <video class="absolute top-5 left-5 hidden" height="144" id="video" muted playsinline width="256"></video>
+<div class="flex flex-row relative gap-4 mb-5">
+    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="start">Start</button>
+    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="stop">Stop</button>
+    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="setup">Setup</button>
+    <label class="sr-only" for="camera-selection">Camera</label>
+    <select
+            class="bg-indigo-600 text-white text-sm rounded-full px-4 py-1items-start justify-center"
+            id="camera-selection">
+    </select>
+</div>
 
-    <div class="flex flex-row absolute top-5 left-5 gap-4">
-        <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="stop">Stop</button>
-        <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="start">Start</button>
-        <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="setup">Setup</button>
+<div class="flex flex-row relative gap-4 mb-5 items-end">
+    <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-400" for="lower-margin-in">Lower Margin</label>
+        <input class="w-32 h-12 rounded-xl border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2" id="lower-margin-in"
+               type="number">
     </div>
 
-    <div class="absolute top-5 right-5 rounded-2xl bg-gray-300 animate-pulse"
-         style="height: 144px; width: 256px"></div>
+    <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-400" for="upper-margin-in">Upper Margin</label>
+        <input class="w-32 h-12 rounded-xl border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2" id="upper-margin-in"
+               type="number">
+    </div>
 
-    <canvas class="output_canvas rounded-2xl absolute top-5 right-5" height="144" width="256"></canvas>
+    <button class="bg-indigo-600 text-white text-sm rounded-full px-4 py-1" id="save">Save
+    </button>
+</div>
+
+<div class="container w-full grow flex flex-col relative rounded-2xl my-5 items-center justify-center"
+     id="container-pose"
+     style="background-color: #9ca3af">
+
+    <video class="absolute top-5 left-5 hidden" id="video" muted playsinline></video>
+
+    <div class="absolute top-5 right-5 rounded-2xl bg-gray-300 animate-pulse"
+         id="canvas-loader"
+         style="height: 144px; width: 256px; display: none"></div>
+
+    <canvas class="output_canvas rounded-2xl absolute top-5 right-5 sm:max-w-56 sm:max-h-56 max-w-32 max-h-32"></canvas>
 
     <!--    <div class="landmark-grid-container"></div>-->
     <span class="text-7xl font-bold relative" id="thorax-rotation">0°</span>
+
 </div>
 
 <script defer src="../assets/process.js" type="module"></script>

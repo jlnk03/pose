@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="min-h-full flex flex-col" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -19,7 +19,7 @@
 
 <!--background-color: rgba(246, 249, 255, 1)-->
 
-<body class="bg-[#FAF7F5] dark:bg-slate-800 flex flex-col justify-center h-full m-0 p-0 scroll-p-0 relative">
+<body class="bg-[#FAF7F5] dark:bg-slate-800 flex flex-col grow m-0 p-0 relative">
 
 <div class="py-4 mx-0 rounded-b-2xl z-20 w-full hidden md:flex">
     <div class="mx-4 md:mx-16 w-full justify-center">
@@ -47,8 +47,13 @@
 
 
                 {% if current_user.admin %}
+                {% if request.path == '/practice' %}
+                <a class="font-medium text-xs text-amber-500 hover:text-amber-400 border-2 border-amber-500 hover:border-amber-400 items-center justify-center rounded-3xl px-4 py-2 transition"
+                   href="{{ url_for('main.practice') }}">PRACTICE</a>
+                {% else %}
                 <a class="font-medium text-xs text-amber-500 hover:border-amber-400 border-2 border-transparent hover:text-amber-400 items-center justify-center px-4 py-2 rounded-3xl transition"
                    href="{{ url_for('main.practice') }}">PRACTICE</a>
+                {% endif %}
                 {% endif %}
 
                 {% if request.path == '/guide' %}
@@ -220,14 +225,14 @@
     </div>
 </div>
 
-
-<div class="mx-4 md:mx-16 justify-center relative grow" id="container">
+<div class="mx-4 md:mx-16 relative flex flex-col grow" id="container">
     <!--            <div class="container has-text-centered">-->
     {% block content %}
     {% endblock %}
     <!--            </div>-->
 </div>
 
+{% if not hideFooter %}
 <div class="w-full z-30 block hidden md:block">
     <div class="flex flex-col gap-4 bg-gray-700 h-32 flex items-start pl-16 justify-center">
 
@@ -246,6 +251,7 @@
 
     </div>
 </div>
+{% endif %}
 
 <script src="{{url_for('static', filename='menu.js')}}"></script>
 
