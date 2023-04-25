@@ -18,34 +18,53 @@
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
 
-<div class="flex flex-row relative gap-4 my-5">
-    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="start">Start</button>
-    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="stop">Stop</button>
-    <button class="bg-indigo-600 text-white text-sm rounded-full px-2 py-1" id="setup">Setup</button>
-    <label class="sr-only" for="camera-selection">Camera</label>
+<div class="flex flex-col sm:w-1/2 w-full">
+    <div class="flex flex-row relative gap-4 my-5">
+        <button class="bg-indigo-600 border border-gray-30 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
+                id="start">Start
+        </button>
+        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
+                id="stop">Stop
+        </button>
+        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
+                id="setup">Setup
+        </button>
+        <label class="sr-only" for="camera-selection">Camera</label>
+        <select
+                class="grow bg-indigo-600 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="camera-selection">
+        </select>
+    </div>
+
+    <div class="flex flex-row relative gap-4 mb-5 items-end">
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400" for="lower-margin-in">Lower Margin</label>
+            <input class="w-32 rounded-lg text-sm border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2.5"
+                   id="lower-margin-in"
+                   type="number"
+                   value="-180">
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-gray-400" for="upper-margin-in">Upper Margin</label>
+            <input class="w-32 rounded-lg text-sm border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2.5"
+                   id="upper-margin-in"
+                   type="number"
+                   value="180">
+        </div>
+
+        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
+                id="save">Save
+        </button>
+    </div>
+
+    <label class="sr-only" for="body-part-selection">Body Part</label>
     <select
-            class="bg-indigo-600 text-white text-sm rounded-full px-4 py-1items-start justify-center"
-            id="camera-selection">
+            class="bg-indigo-600 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            id="body-part-selection">
+        <option value="thoraxRotation">Thorax Rotation</option>
+        <option value="pelvisRotation">Pelvis Rotation</option>
     </select>
-</div>
-
-<div class="flex flex-row relative gap-4 mb-5 items-end">
-    <div class="flex flex-col gap-1">
-        <label class="text-xs text-gray-400" for="lower-margin-in">Lower Margin</label>
-        <input class="w-32 h-12 rounded-xl border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2"
-               id="lower-margin-in"
-               type="number">
-    </div>
-
-    <div class="flex flex-col gap-1">
-        <label class="text-xs text-gray-400" for="upper-margin-in">Upper Margin</label>
-        <input class="w-32 h-12 rounded-xl border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2"
-               id="upper-margin-in"
-               type="number">
-    </div>
-
-    <button class="bg-indigo-600 text-white text-sm rounded-full px-4 py-1" id="save">Save
-    </button>
 </div>
 
 <div class="container w-full grow flex flex-col relative rounded-2xl my-5 items-center justify-center"
@@ -58,10 +77,10 @@
          id="canvas-loader"
          style="height: 144px; width: 256px; display: none"></div>
 
-    <canvas class="output_canvas rounded-2xl absolute top-5 right-5 sm:max-w-56 sm:max-h-56 max-w-36 max-h-36"></canvas>
+    <canvas class="output_canvas rounded-2xl absolute top-5 right-5 sm:max-h-56 max-h-36"></canvas>
 
     <!--    <div class="landmark-grid-container"></div>-->
-    <span class="text-7xl font-bold relative" id="thorax-rotation">0°</span>
+    <span class="text-7xl font-bold relative" id="calculatedValue">0°</span>
 
 </div>
 

@@ -1,4 +1,4 @@
-import {calc_angle, thorax_rotation} from "./angles.js";
+import {angle_hip, calc_angle, thorax_rotation} from "./angles.js";
 
 const videoElement = document.getElementById('video');
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
@@ -7,9 +7,9 @@ const container = document.getElementById('container-pose');
 // const landmarkContainer = document.getElementsByClassName('landmark-grid-container')[0];
 const canvasLoader = document.getElementById('canvas-loader');
 
-const thoraxRotation = document.getElementById('thorax-rotation');
-const lowerMargin = document.getElementById('lower-margin')
-const upperMargin = document.getElementById('upper-margin')
+const calculatedValue = document.getElementById('calculatedValue');
+const lowerMargin = document.getElementById('lower-margin-in')
+const upperMargin = document.getElementById('upper-margin-in')
 
 const save = document.getElementById('save');
 
@@ -20,6 +20,7 @@ let upperMarginValue = 180;
 let lowerMarginValue = -180;
 
 function setMargins() {
+
     try {
         lowerMarginValue = lowerMargin.value;
     } catch (e) {
@@ -128,6 +129,8 @@ function onResults(results) {
     const worldLndmrks = results.poseWorldLandmarks;
     const shoulder_l = [worldLndmrks[11].x, worldLndmrks[11].y, worldLndmrks[11].z];
     const shoulder_r = [worldLndmrks[12].x, worldLndmrks[12].y, worldLndmrks[12].z];
+    const hip_l = [worldLndmrks[23].x, worldLndmrks[23].y, worldLndmrks[23].z]
+    const hip_r = [worldLndmrks[24].x, worldLndmrks[24].y, worldLndmrks[24].z]
     const foot_l = worldLndmrks[27];
     const foot_r = worldLndmrks[28];
 
@@ -138,16 +141,25 @@ function onResults(results) {
     R = math.matrix(R);
     rotationMatrixBuffer = R
 
-    // Rotate shoulder vectors
-    let shoulder_l_rot = math.multiply(rotationMatrix, shoulder_l);
-    let shoulder_r_rot = math.multiply(rotationMatrix, shoulder_r);
+    const bodyPart = document.getElementById('body-part-selection').value;
+    let displayValue = 0
 
-    const thorax_rot = thorax_rotation(shoulder_l_rot, shoulder_r_rot);
+    if (bodyPart == 'pelvisRotation') {
+        // Rotate hip vectors
+        let hip_l_rot = math.multiply(rotationMatrix, hip_l)
+        let hip_r_rot = math.multiply(rotationMatrix, hip_r)
+        displayValue = angle_hip(hip_l_rot, hip_r_rot);
+    } else {
+        // Rotate shoulder vectors
+        let shoulder_l_rot = math.multiply(rotationMatrix, shoulder_l);
+        let shoulder_r_rot = math.multiply(rotationMatrix, shoulder_r);
+        displayValue = thorax_rotation(shoulder_l_rot, shoulder_r_rot);
+    }
 
-    thoraxRotation.innerText = `${thorax_rot}°`
+    calculatedValue.innerText = `${displayValue}°`
 
     // Check range of values and change background color
-    if (thorax_rot > upperMarginValue || thorax_rot < lowerMarginValue) {
+    if (displayValue > upperMarginValue || displayValue < lowerMarginValue) {
         container.style.backgroundColor = "#f87171";
     } else {
         container.style.backgroundColor = "#a3e635";
@@ -249,6 +261,6 @@ const selectCamera = document.getElementById('camera-selection');
 selectCamera.addEventListener('change', () => {
     videoElement.srcObject.getTracks().forEach(track => track.stop());
     videoElement.srcObject = null;
-    canvasLoader.style.display = 'block';
+    // canvasLoader.style.display = 'block';
     startCamera();
 })
