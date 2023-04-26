@@ -9,12 +9,13 @@ export function calc_angle(landmark1, landmark2) {
 }
 
 export function angle_hip(hip_l, hip_r) {
-    const hip_v = [hip_l[0] - hip_r[0], hip_l[1] - hip_r[1], hip_l[2] - hip_r[2]];
+    let hip_v = math.subtract(hip_l, hip_r)
+    hip_v = hip_v.toArray()
     const normal = [0, 0, 1];
     const product = hip_v[0] * normal[0] + hip_v[1] * normal[1] + hip_v[2] * normal[2];
     const norm = Math.sqrt(hip_v[0] * hip_v[0] + hip_v[1] * hip_v[1] + hip_v[2] * hip_v[2]);
     const angle = Math.acos(product / norm);
-    return 90 - angle * 180 / Math.PI;
+    return Math.round(90 - angle * 180 / Math.PI)
 }
 
 export function angle_ground(left, right) {

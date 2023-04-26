@@ -18,69 +18,77 @@
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
 
-<div class="flex flex-col sm:w-1/2 w-full">
-    <div class="flex flex-row relative gap-4 my-5">
-        <button class="bg-indigo-600 border border-gray-30 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
-                id="start">Start
-        </button>
-        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
-                id="stop">Stop
-        </button>
-        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
-                id="setup">Setup
-        </button>
-        <label class="sr-only" for="camera-selection">Camera</label>
-        <select
-                class="grow bg-indigo-600 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="camera-selection">
-        </select>
+<!--hand gestures-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"-->
+<!--        crossorigin="anonymous"></script>-->
+
+<audio id="audio" loop src="../assets/soundOK.m4a"></audio>
+
+<div class="flex flex-row relative gap-2 mb-3 items-end w-full justify-center w-full mt-10">
+    <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-400" for="lower-margin-in">Lower Margin</label>
+        <input class="w-32 rounded-lg text-xl font-bold border-gray-600 border dark:bg-gray-500 dark:text-white px-2.5 h-12"
+               id="lower-margin-in"
+               type="number"
+               value="-180">
     </div>
 
-    <div class="flex flex-row relative gap-4 mb-5 items-end">
-        <div class="flex flex-col gap-1">
-            <label class="text-xs text-gray-400" for="lower-margin-in">Lower Margin</label>
-            <input class="w-32 rounded-lg text-sm border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2.5"
-                   id="lower-margin-in"
-                   type="number"
-                   value="-180">
-        </div>
-
-        <div class="flex flex-col gap-1">
-            <label class="text-xs text-gray-400" for="upper-margin-in">Upper Margin</label>
-            <input class="w-32 rounded-lg text-sm border-gray-300 border dark:bg-gray-600 dark:border-gray-500 dark:text-white p-2.5"
-                   id="upper-margin-in"
-                   type="number"
-                   value="180">
-        </div>
-
-        <button class="bg-indigo-600 border border-gray-300 text-sm rounded-lg block p-2.5  dark:border-gray-600 text-white grow"
-                id="save">Save
-        </button>
+    <div class="flex flex-col gap-1">
+        <label class="text-xs text-gray-400" for="upper-margin-in">Upper Margin</label>
+        <input class="w-32 rounded-lg text-xl font-bold border-gray-600 border dark:bg-gray-500 dark:text-white px-2.5 h-12"
+               id="upper-margin-in"
+               type="number"
+               value="180">
     </div>
 
-    <label class="sr-only" for="body-part-selection">Body Part</label>
-    <select
-            class="bg-indigo-600 border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="body-part-selection">
-        <option value="thoraxRotation">Thorax Rotation</option>
-        <option value="pelvisRotation">Pelvis Rotation</option>
-    </select>
+    <button class="bg-gray-700 border border-gray-600 text-sm rounded-lg block px-2.5 h-12  text-white w-32"
+            id="save">Save
+    </button>
 </div>
 
-<div class="container w-full grow flex flex-col relative rounded-2xl my-5 items-center justify-center"
+<!--main div containing video and color-->
+<div class="container w-full grow flex flex-col relative rounded-2xl mb-5 items-center justify-center"
      id="container-pose"
      style="background-color: #9ca3af">
 
     <video class="absolute top-5 left-5 hidden" id="video" muted playsinline></video>
 
-    <div class="absolute top-5 right-5 rounded-2xl bg-gray-300 animate-pulse"
+    <div class="absolute top-3 right-3 rounded-2xl bg-gray-300 animate-pulse"
          id="canvas-loader"
          style="height: 144px; width: 256px; display: none"></div>
 
-    <canvas class="output_canvas rounded-2xl absolute top-5 right-5 sm:max-h-56 max-h-36"></canvas>
+    <canvas class="output_canvas rounded-2xl absolute top-3 right-3 sm:max-h-56 max-h-36"></canvas>
 
     <!--    <div class="landmark-grid-container"></div>-->
     <span class="text-7xl font-bold relative" id="calculatedValue">0°</span>
+
+    <!--    controls-->
+    <div class="flex flex-row flex-wrap gap-2 bg-gray-900 rounded-xl p-2 absolute bottom-3 left-3 right-3 shadow">
+
+        <button class="bg-gray-700 border border-gray-600 text-sm rounded-lg block p-2.5   text-white grow"
+                id="start">Start
+        </button>
+        <button class="bg-gray-700 border border-gray-600 text-sm rounded-lg block p-2.5   text-white grow"
+                id="stop">Stop
+        </button>
+        <button class="bg-gray-700 border border-gray-600 text-sm rounded-lg block p-2.5   text-white grow"
+                id="setup">Setup
+        </button>
+        <label class="sr-only" for="camera-selection">Camera</label>
+        <select
+                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5   dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="camera-selection">
+        </select>
+
+        <label class="sr-only" for="body-part-selection">Body Part</label>
+        <select
+                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5   dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                id="body-part-selection">
+            <option value="thoraxRotation">Thorax Rotation</option>
+            <option value="pelvisRotation">Pelvis Rotation</option>
+        </select>
+
+    </div>
 
 </div>
 

@@ -1,5 +1,7 @@
 import {angle_hip, calc_angle, thorax_rotation} from "./angles.js";
 
+import {FilesetResolver, GestureRecognizer} from "https://cdn.skypack.dev/@mediapipe/tasks-vision@latest";
+
 const videoElement = document.getElementById('video');
 const canvasElement = document.getElementsByClassName('output_canvas')[0];
 const canvasCtx = canvasElement.getContext('2d', {willReadFrequently: true});
@@ -12,6 +14,29 @@ const lowerMargin = document.getElementById('lower-margin-in')
 const upperMargin = document.getElementById('upper-margin-in')
 
 const save = document.getElementById('save');
+
+const audio = document.getElementById('audio');
+
+let gestureRecognizer
+
+// Before we can use HandLandmarker class we must wait for it to finish
+// loading. Machine Learning models can be large and take a moment to
+// get everything needed to run.
+const createGestureRecognizer = async () => {
+    const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+    );
+    gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
+        baseOptions: {
+            modelAssetPath:
+                "https://storage.googleapis.com/mediapipe-tasks/gesture_recognizer/gesture_recognizer.task"
+        },
+        runningMode: 'VIDEO',
+        numHands: 2
+    });
+};
+createGestureRecognizer()
+
 
 let rotationMatrix = math.identity(3);
 let rotationMatrixBuffer = math.identity(3);
@@ -160,11 +185,33 @@ function onResults(results) {
 
     // Check range of values and change background color
     if (displayValue > upperMarginValue || displayValue < lowerMarginValue) {
-        container.style.backgroundColor = "#f87171";
+        container.style.backgroundColor = "#fca5a5";
+        audio.pause()
+        audio.currentTime = 0
     } else {
-        container.style.backgroundColor = "#a3e635";
+        container.style.backgroundColor = "#d9f99d";
+        audio.play()
     }
 
+
+    // Recognize open palm gesture and set the rotation matrix after 3seconds
+    let nowInMS = Date.now();
+    let gestureResults = gestureRecognizer.recognizeForVideo(results.image, nowInMS);
+    let gestureOne = gestureResults.gestures[0]
+    let gestureTwo = gestureResults.gestures[1]
+
+    if (gestureOne !== undefined) {
+        gestureOne = gestureOne[0].categoryName;
+    }
+
+    if (gestureTwo !== undefined) {
+        gestureTwo = gestureTwo[0].categoryName;
+    }
+    // console.log(gestureOne, gestureTwo)
+
+    if (gestureOne === 'Open_Palm' || gestureTwo === 'Open_Palm') {
+        rotationMatrix = rotationMatrixBuffer;
+    }
 
     // grid.updateLandmarks(results.poseWorldLandmarks);
 
@@ -241,6 +288,8 @@ function startCamera() {
 
 let stop = document.getElementById('stop');
 stop.addEventListener('click', () => {
+    audio.pause()
+    audio.currentTime = 0
     videoElement.srcObject.getTracks().forEach(track => track.stop());
     videoElement.srcObject = null;
 });
