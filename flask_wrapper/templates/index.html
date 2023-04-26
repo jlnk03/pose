@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<meta name="description" content="Your AI powered swing analysis. Simply upload a swing video and get instant feedback - no equipment needed">
+<meta content="Your AI powered swing analysis. Simply upload a swing video and get instant feedback - no equipment needed"
+      name="description">
 
 <script>
     bod = document.body
@@ -11,27 +12,25 @@
     if (darkMode) {
         bod.style.backgroundColor = "#000000"
         bod.className = "bgDark overflow-y-auto"
-    }
-    else {
+    } else {
         bod.style.backgroundColor = "#FAF7F5"
         bod.className = "bg overflow-y-auto"
     }
 
     window
-    .matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', e => {
-        darkMode = e.matches;
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', e => {
+            darkMode = e.matches;
 
-        // bg image in css class
-        if (darkMode) {
-            bod.style.backgroundColor = "#000000"
-            bod.className = "bgDark overflow-y-auto"
-        }
-        else {
-            bod.style.backgroundColor = "#FAF7F5"
-            bod.className = "bg overflow-y-auto"
-        }
-    })
+            // bg image in css class
+            if (darkMode) {
+                bod.style.backgroundColor = "#000000"
+                bod.className = "bgDark overflow-y-auto"
+            } else {
+                bod.style.backgroundColor = "#FAF7F5"
+                bod.className = "bg overflow-y-auto"
+            }
+        })
 
     // bod.style.backgroundImage = "url(assets/background.png)"
     // bod.style.backgroundRepeat = "no-repeat"
@@ -40,16 +39,16 @@
 
     bod.style.height = "100%"
 
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // console.log("loaded")
         const replay = document.getElementById("video-replay")
         const video = document.getElementById("video")
 
-        video.addEventListener('ended', function() {
+        video.addEventListener('ended', function () {
             replay.style.display = "block"
         })
 
-        replay.addEventListener('click', function() {
+        replay.addEventListener('click', function () {
             console.log("replay")
             video.pause()
             video.currentTime = 0
@@ -66,141 +65,156 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="text-transparent font-bold text-4xl sm:text-5xl xl:text-7xl">Swing Analysis</div>
     </div>
 
-    <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">BETA</div>
+    <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">
+        BETA
+    </div>
 
     <div class="flex-col flex mt-4">
-        <h1 class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium">Simply upload your swing video and get instant feedback – No equipment needed</h1>
+        <h1 class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium">Simply upload your swing video and
+            get instant feedback – No equipment needed</h1>
     </div>
 
     <div class="relative flex lg:flex-row flex-col mt-8 items-center">
-   {% if not current_user.is_authenticated %}
+        {% if not current_user.is_authenticated %}
         <div class="bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-1 py-1 hover:bg-indigo-600 mb-4 lg:mb-0">
-            <a href="{{ url_for('auth.signup') }}" class="bg-[#FAF7F5] dark:bg-slate-600 dark:bg-opacity-80 bg-opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition">GET STARTED</a>
+            <a class="bg-[#FAF7F5] dark:bg-slate-600 dark:bg-opacity-80 bg-opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition"
+               href="{{ url_for('auth.signup') }}">GET
+                STARTED</a>
         </div>
         <div class="flex flex-row">
-        <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10 lg:ml-6">With&nbsp;</div>
-        <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10">ten&nbsp;</div>
-        <div class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 lg:text-2xl text-lg font-medium z-10">free&nbsp;</div>
-        <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10">analyses</div>
+            <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10 lg:ml-6">It's&nbsp;</div>
+            <!--        <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10">ten&nbsp;</div>-->
+            <div class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 lg:text-2xl text-lg font-medium z-10">
+                free&nbsp;
+            </div>
+            <!--        <div class="lg:text-2xl text-lg text-gray-600 dark:text-gray-200 font-medium z-10">analyses</div>-->
         </div>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
 </div>
 
 <!--video-->
 <div class="flex relative w-full flex-row lg:justify-end">
-<div class="relative flex flex-col mt-40 mr-0 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-40 px-4 py-4 pb-14 pb-[31rem] lg:w-3/5 w-full justify-center">
+    <div class="relative flex flex-col mt-40 mr-0 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-40 px-4 py-4 pb-14 pb-[31rem] lg:w-3/5 w-full justify-center">
 
-   <div class="flex flex-row relative justify-center flex-wrap">
-        <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold">Get 3D data for your swing.&nbsp;</h1>
-       <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold mb-10">Anytime. Anywhere.</h1>
-   </div>
+        <div class="flex flex-row relative justify-center flex-wrap">
+            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold">Get 3D data for your
+                swing.&nbsp;</h1>
+            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold mb-10">Anytime. Anywhere.</h1>
+        </div>
 
-    <div class="relative flex justify-center xl:ml-32 lg:ml-8 sm:ml-24">
-        <img src="{{url_for('static', filename='sequence_rory.png')}}" class="rounded-2xl w-96 absolute top-24 left-24" alt="sequence Rory McIlroy">
-        <div class="absolute top-0 left-0">
-            <video class="w-60  rounded-2xl relative object-cover" autoplay muted playsinline id="video" src="{{url_for('static', filename='motion-2.mp4')}}"></video>
-            <button class="bg-gray-200 w-6 h-6 rounded-full hidden absolute top-2 right-2 py-1 px-1" id="video-replay">
-                <svg height="100%" stroke-miterlimit="10" style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;" viewBox="0 0 20 20" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <path d="M17.6795 11.3614C17.6795 15.6027 14.2413 19.0409 10 19.0409C5.7587 19.0409 2.32045 15.6027 2.32045 11.3614C2.32045 7.1201 5.7587 3.68185 10 3.68185C11.3614 3.68185 11.3614 3.68185 11.3614 3.68185  M11.3614 3.68185L8.6386 6.40465  M11.3614 3.68185L8.6386 0.959058" fill="none" opacity="1" stroke="#0e2640" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        <div class="relative flex justify-center xl:ml-32 lg:ml-8 sm:ml-24">
+            <img alt="sequence Rory McIlroy"
+                 class="rounded-2xl w-96 absolute top-24 left-24" src="{{url_for('static', filename='sequence_rory.png')}}">
+            <div class="absolute top-0 left-0">
+                <video autoplay class="w-60  rounded-2xl relative object-cover" id="video" muted playsinline
+                       src="{{url_for('static', filename='motion-2.mp4')}}"></video>
+                <button class="bg-gray-200 w-6 h-6 rounded-full hidden absolute top-2 right-2 py-1 px-1"
+                        id="video-replay">
+                    <svg height="100%" stroke-miterlimit="10"
+                         style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;"
+                         viewBox="0 0 20 20" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                         xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path d="M17.6795 11.3614C17.6795 15.6027 14.2413 19.0409 10 19.0409C5.7587 19.0409 2.32045 15.6027 2.32045 11.3614C2.32045 7.1201 5.7587 3.68185 10 3.68185C11.3614 3.68185 11.3614 3.68185 11.3614 3.68185  M11.3614 3.68185L8.6386 6.40465  M11.3614 3.68185L8.6386 0.959058"
+                      fill="none" opacity="1" stroke="#0e2640" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"/>
                 </svg>
-            </button>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <!--payment-->
 <div class="relative flex justify-center mb-20">
-<div class="flex  rounded-2xl flex-col w-full  z-20 mt-44 xl:mx-40 relative backdrop-blur-md rounded-2xl px-4 py-4 dark:bg-black dark:bg-opacity-40 bg-[#FAF7F5] bg-opacity-40">
+    <div class="flex  rounded-2xl flex-col w-full  z-20 mt-44 xl:mx-40 relative backdrop-blur-md rounded-2xl px-4 py-4 dark:bg-black dark:bg-opacity-40 bg-[#FAF7F5] bg-opacity-40">
 
-<div class="w-full flex flex-row relative justify-center flex-wrap mb-10">
-    <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">Start&nbsp;</h1>
-    <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">to&nbsp;</h1>
-    <div class="bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 flex flex-row flex-wrap">
-        <h1 class="text-transparent  md:text-4xl text-2xl font-bold justify-center">improve&nbsp;</h1>
-        <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">your&nbsp;</h1>
-        <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">game&nbsp;</h1>
-    </div>
-    <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">today</div>
-</div>
+        <div class="w-full flex flex-row relative justify-center flex-wrap mb-10">
+            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">Start&nbsp;</h1>
+            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">to&nbsp;</h1>
+            <div class="bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 flex flex-row flex-wrap">
+                <h1 class="text-transparent  md:text-4xl text-2xl font-bold justify-center">improve&nbsp;</h1>
+                <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">your&nbsp;</h1>
+                <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">game&nbsp;</h1>
+            </div>
+            <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">today</div>
+        </div>
 
-<div class="flex flex-col md:flex-row justify-between gap-3 hidden">
-<div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
-    <div class="flex flex-col h-full">
+        <div class="flex flex-col md:flex-row justify-between gap-3 hidden">
+            <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
+                <div class="flex flex-col h-full">
         <span class="text-xl font-bold text-indigo-700 md:text-2xl block mb-1 dark:text-indigo-500">
             Starter
         </span>
 
-        <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                    <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
             2 Analyses
         </span>
-        <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                    <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
             One time purchase
         </span>
 
-        <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
+                    <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
             3€
         </span>
 
-    </div>
-</div>
+                </div>
+            </div>
 
-    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
-    <div class="flex flex-col h-full">
+            <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
+                <div class="flex flex-col h-full">
         <span class="text-xl font-bold text-indigo-700 md:text-2xl block mb-1 dark:text-indigo-500">
             Essential
         </span>
 
-        <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                    <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
             10 Analyses
         </span>
 
-        <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                    <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
             One time purchase
         </span>
 
-        <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
+                    <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
             10€
         </span>
 
-    </div>
-</div>
+                </div>
+            </div>
 
-    <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
-    <div class="flex flex-col h-full">
+            <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
+                <div class="flex flex-col h-full">
         <span class="text-xl font-bold text-indigo-700 md:text-2xl block mb-1 dark:text-indigo-500">
             Professional
         </span>
 
-        <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
+                    <span class="text-sm text-gray-500 font-bold dark:text-gray-300">
             Unlimited Analyses
         </span>
 
-        <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
+                    <span class="text-xs text-gray-500 mb-4 dark:text-gray-300">
             Subscription
         </span>
 
-        <div class="flex flex-row items-baseline">
+                    <div class="flex flex-row items-baseline">
             <span class="font-medium text-gray-900 text-2xl block dark:text-gray-300">
                 20€
             </span>
-            <span class="font-medium text-gray-500 text-base block ml-1 dark:text-gray-400">
+                        <span class="font-medium text-gray-500 text-base block ml-1 dark:text-gray-400">
                 /month
             </span>
+                    </div>
+
+                </div>
+            </div>
         </div>
-
     </div>
-</div>
-</div>
-</div>
 
-<!--<div class="flex flex-row min-h-full w-full py-8 mx-auto inset-x-0 fixed inset-y-0 justify-center items-center z-0 bg-fixed">-->
-<!--     <img src="{{url_for('static', filename='background.png')}}" class="w-[45rem] z-0" alt="golfer">-->
-<!--</div>-->
-    
-</div>
+    <!--<div class="flex flex-row min-h-full w-full py-8 mx-auto inset-x-0 fixed inset-y-0 justify-center items-center z-0 bg-fixed">-->
+    <!--     <img src="{{url_for('static', filename='background.png')}}" class="w-[45rem] z-0" alt="golfer">-->
+    <!--</div>-->
 
+</div>
 
 
 {% endblock %}

@@ -1,5 +1,6 @@
 import {angle_hip, calc_angle, thorax_rotation} from "./angles.js";
 
+// import {Howl} from 'https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js';
 import {FilesetResolver, GestureRecognizer} from "https://cdn.skypack.dev/@mediapipe/tasks-vision@latest";
 
 const videoElement = document.getElementById('video');
@@ -18,6 +19,14 @@ const cameraAngle = document.getElementById('camera-angle')
 const save = document.getElementById('save');
 
 const audio = document.getElementById('audio');
+
+// const audio = new Howl({
+//     src: ['soundOK.mp4a'],
+//     autoplay: false,
+//     loop: true,
+// })
+//
+// audio.play();
 
 let gestureRecognizer
 
