@@ -19,8 +19,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.2/math.js"></script>
 
 <!--hand gestures-->
-<!--<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"-->
-<!--        crossorigin="anonymous"></script>-->
+<script crossorigin="anonymous"
+        src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js"></script>
 
 <audio id="audio" loop src="../assets/soundOK.m4a"></audio>
 
@@ -53,11 +53,18 @@
 
     <video class="absolute top-5 left-5 hidden" id="video" muted playsinline></video>
 
-    <div class="absolute top-3 right-3 rounded-2xl bg-gray-300 animate-pulse"
+    <div class="absolute top-3 right-3 rounded-2xl bg-gray-300 animate-pulse w-56"
          id="canvas-loader"
-         style="height: 144px; width: 256px; display: none"></div>
+         style="height: 144px; display: none"></div>
 
-    <canvas class="output_canvas rounded-2xl absolute top-3 right-3 sm:max-h-56 max-h-36"></canvas>
+    <div class="absolute top-3 right-3 flex flex-col gap-2" id="video-container" style="display: none">
+
+        <canvas class="output_canvas rounded-2xl mb-2"></canvas>
+
+        <div class="w-full rounded-lg bg-gray-900 p-2.5 text-white text-sm" id="camera-angle">Camera Angle: –
+        </div>
+
+    </div>
 
     <!--    <div class="landmark-grid-container"></div>-->
     <span class="text-7xl font-bold relative" id="calculatedValue">0°</span>
@@ -76,13 +83,13 @@
         </button>
         <label class="sr-only" for="camera-selection">Camera</label>
         <select
-                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5   dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 h-12  dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 id="camera-selection">
         </select>
 
         <label class="sr-only" for="body-part-selection">Body Part</label>
         <select
-                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5   dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="grow bg-gray-700 border border-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 h-12  dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 id="body-part-selection">
             <option value="thoraxRotation">Thorax Rotation</option>
             <option value="pelvisRotation">Pelvis Rotation</option>

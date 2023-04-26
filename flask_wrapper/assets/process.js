@@ -8,16 +8,34 @@ const canvasCtx = canvasElement.getContext('2d', {willReadFrequently: true});
 const container = document.getElementById('container-pose');
 // const landmarkContainer = document.getElementsByClassName('landmark-grid-container')[0];
 const canvasLoader = document.getElementById('canvas-loader');
+const videoContainer = document.getElementById('video-container');
 
 const calculatedValue = document.getElementById('calculatedValue');
 const lowerMargin = document.getElementById('lower-margin-in')
 const upperMargin = document.getElementById('upper-margin-in')
+const cameraAngle = document.getElementById('camera-angle')
 
 const save = document.getElementById('save');
 
 const audio = document.getElementById('audio');
 
 let gestureRecognizer
+
+// check device OS
+function iOS() {
+    return [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+}
+
+// const os = iOS()
 
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -164,6 +182,12 @@ function onResults(results) {
     let c = Math.cos(theta), s = Math.sin(theta);
     let R = [[c, 0, -s], [0, 1, 0], [s, 0, c]];
     R = math.matrix(R);
+
+    // Set first rotation matrix text
+    if (rotationMatrixBuffer._data[0][0] === 1 && rotationMatrixBuffer._data[2][2] === 1) {
+        cameraAngle.innerText = `Camera Angle: ${Math.round(theta * 180 / Math.PI)}°`
+    }
+
     rotationMatrixBuffer = R
 
     const bodyPart = document.getElementById('body-part-selection').value;
@@ -211,6 +235,7 @@ function onResults(results) {
 
     if (gestureOne === 'Open_Palm' || gestureTwo === 'Open_Palm') {
         rotationMatrix = rotationMatrixBuffer;
+        cameraAngle.innerText = `Camera Angle: ${Math.round(theta * 180 / Math.PI)}°`
     }
 
     // grid.updateLandmarks(results.poseWorldLandmarks);
@@ -232,15 +257,6 @@ pose.setOptions({
 });
 pose.onResults(onResults);
 
-// const camera = new Camera(videoElement, {
-//     onFrame: async () => {
-//         await pose.send({image: videoElement});
-//     },
-//     width: 256,
-//     height: 144
-// });
-// camera.start();
-
 
 // camera
 function startCamera() {
@@ -261,12 +277,9 @@ function startCamera() {
         .then((stream) => {
             videoElement.srcObject = stream;
             const settings = stream.getVideoTracks()[0].getSettings();
-            videoElement.width = settings.width;
-            videoElement.height = settings.height;
-            canvasElement.width = settings.width;
-            canvasElement.height = settings.height;
-            canvasElement.aspectRatio = settings.width / settings.height;
+            aspectRatio(settings, canvasElement)
             canvasLoader.style.display = 'none';
+            videoContainer.style.display = 'block';
             videoElement.play()
 
             // async function to update pose
@@ -313,3 +326,11 @@ selectCamera.addEventListener('change', () => {
     // canvasLoader.style.display = 'block';
     startCamera();
 })
+
+function aspectRatio(settings, canvas) {
+    let aspectRatio = settings.width / settings.height;
+    const width = 224;
+    const height = width / aspectRatio;
+    canvas.width = width;
+    canvas.height = height;
+}
