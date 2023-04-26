@@ -14,6 +14,7 @@ COPY ./assets/robots.txt /flask_wrapper/assets/robots.txt
 COPY ./assets/*.svg /flask_wrapper/assets/
 COPY ./assets/*.js /flask_wrapper/assets/
 COPY ./assets/*.otf /flask_wrapper/assets/
+COPY ./assets/*.m4a /flask_wrapper/assets/
 COPY ./code_b/*.py /code_b/
 
 RUN apt-get update
