@@ -64,9 +64,16 @@
 
 body, html {
   overflow-x: hidden;
-    margin: 0;
+  margin: 0;
   /*background-color: #4338ca;*/
   background-color: #F6F9FF
+}
+
+.bgImg {
+  background-image: url("background.svg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /*background image*/

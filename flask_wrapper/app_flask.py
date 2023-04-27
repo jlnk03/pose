@@ -2079,7 +2079,7 @@ def init_dash(server):
 
                                 html.Div(
                                     id='parent_sequence',
-                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                    className='hidden relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                     children=[
 
                                         # Row for sequences
@@ -2360,7 +2360,8 @@ def init_callbacks(app):
 
         # print(f'pathname: {pathname}')
 
-        if pathname.split('/')[2] == '':
+        if (pathname.split('/')[2] == '') and (contents is None) and (contents_add is None) and (
+                contents_initial is None):
             # print('No file selected')
             # exit function
             return no_update
