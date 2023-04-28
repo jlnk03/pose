@@ -1490,7 +1490,7 @@ def init_dash(server):
                                             ]
                                         )
                                     ],
-                                    className='fixed w-full h-full top-0 left-0 z-20 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
+                                    className='fixed w-full h-full top-0 left-0 z-40 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm hidden',
                                 ),
                                 # endregion delete file view
 
