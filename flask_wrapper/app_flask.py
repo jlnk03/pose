@@ -2904,6 +2904,11 @@ def init_callbacks(app):
         # Setup
         setup_pos = arm_index_s / len(save_wrist_angle)
 
+        # Check if setup is before top
+        if setup_pos > top_pos:
+            setup_pos = 0
+            arm_index_s = 0
+
         # Check if impact is before top
         if impact_pos < top_pos:
             top_pos = (impact_pos - setup_pos) / 2 + setup_pos
