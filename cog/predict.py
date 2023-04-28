@@ -102,7 +102,7 @@ class Predictor(BasePredictor):
 
             n_frames = duration * fps
 
-            if n_frames > 300:
+            if n_frames > 1000:
                 # Too many frames
                 # Comma required for tuple
                 return -1, 'Too many frames'
@@ -151,7 +151,7 @@ class Predictor(BasePredictor):
 
             for i, image in enumerate(frames):
 
-                print(f'Processing frame {i}')
+                # print(f'Processing frame {i}')
 
                 image = np.rot90(image, k=rot_angle // 90)
                 image = np.ascontiguousarray(image)

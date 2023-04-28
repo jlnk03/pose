@@ -230,14 +230,19 @@
 </div>
 
 {% if not hideFooter %}
-<div class="w-full z-30 block hidden md:block">
-    <div class="flex flex-col gap-4 bg-gray-700 h-32 flex items-start pl-16 justify-center">
+<div class="w-full z-30 block hidden md:block overflow-hidden">
+
+    <div class="bg-gray-700 origin-bottom-left skew-y-3 w-full -mb-44 bottom-0 h-44 z-0">
+        <!--        <div class="height-12 width-96 -top-6 left-24 bg-indigo-400 z-40"></div>-->
+    </div>
+
+    <div class="flex flex-col gap-4 h-32 flex items-start pl-16 justify-center z-40">
 
         <span class="text-amber-500 text-xs opacity-90 mb-4">© 2023 Swinglab. All rights reserved.</span>
 
         <div class="flex flex-row  gap-20 mx-0">
 
-            <div class="flex flex-row gap-10">
+            <div class="flex flex-row gap-10 z-40">
                 <a class="text-amber-500 text-xs hover:text-amber-400" href="/privacy">Privacy Policy</a>
                 <a class="text-amber-500 text-xs hover:text-amber-400" href="/terms">Terms of use</a>
                 <a href="/contact" class="text-amber-500 text-xs hover:text-amber-400">Contact</a>

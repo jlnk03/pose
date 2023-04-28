@@ -5,72 +5,36 @@
 <meta content="Your AI powered swing analysis. Simply upload a swing video and get instant feedback - no equipment needed"
       name="description">
 
-<script>
-    bod = document.body
-    // let darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    //
-    // if (darkMode) {
-    //     bod.style.backgroundColor = "#000000"
-    //     bod.className = "bgDark overflow-y-auto"
-    // } else {
-    //     bod.style.backgroundColor = "#FAF7F5"
-    //     bod.className = "bg overflow-y-auto"
-    // }
-    //
-    // window
-    //     .matchMedia('(prefers-color-scheme: dark)')
-    //     .addEventListener('change', e => {
-    //         darkMode = e.matches;
-    //
-    //         // bg image in css class
-    //         if (darkMode) {
-    //             bod.style.backgroundColor = "#000000"
-    //             bod.className = "bgDark overflow-y-auto"
-    //         } else {
-    //             bod.style.backgroundColor = "#FAF7F5"
-    //             bod.className = "bg overflow-y-auto"
-    //         }
-    //     })
-
-    bod.style.height = "100%"
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // console.log("loaded")
-        const replay = document.getElementById("video-replay")
-        const video = document.getElementById("video")
-
-        video.addEventListener('ended', function () {
-            replay.style.display = "block"
-        })
-
-        replay.addEventListener('click', function () {
-            console.log("replay")
-            video.pause()
-            video.currentTime = 0
-            video.play()
-        })
-    })
-
-</script>
-
 
 <!--diagonal div at top-->
-<div class="-mx-16 absolute -top-48 left-0 right-0 h-[26rem] bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 -skew-y-12">
-</div>
+<!--<div class="-mx-16 absolute left-0 right-0 h-[26rem] bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 -skew-y-12"-->
+<!--     style="transform-origin: 0">-->
+<!--</div>-->
 
-<div class="absolute top-0 left-0 right-0 h-[30rem] -mx-16 -my-16 backdrop-blur-md bg-[#FAF7F5] bg-opacity-30 dark:bg-black dark:bg-opacity-30"></div>
+<!--blue background-->
+<!--<div class="block-div -mx-16 right-0 left-0">-->
+<!--    <span></span>-->
+<!--    <span></span>-->
+<!--    <span></span>-->
+<!--    <span></span>-->
+<!--</div>-->
+
+<!--gradient animation-->
+<canvas class="md:-mx-16 -mx-4" id="gradient-canvas"></canvas>
+
+<!--<div class="absolute top-0 left-0 right-0 h-[30rem] -mx-16 -my-16 backdrop-blur-md bg-[#FAF7F5] bg-opacity-30 dark:bg-black dark:bg-opacity-30"></div>-->
 
 <div class="flex md:flex-row flex-col w-full">
     <!--    <div class="relative md:mx-12 md:w-1/2 flex flex-col mt-40 px-4 py-4 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-40">-->
-    <div class="relative md:mx-12 md:w-1/2 flex flex-col mt-40 px-4 py-4">
+    <div class="relative md:mx-12 md:w-1/2 w-full mx-0 flex flex-col sm:mt-40 mt-8">
         <!--        <div class="flex flex-col relative bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 pb-4">-->
         <!--            <div class="text-transparent font-bold text-4xl sm:text-5xl xl:text-7xl">Your AI powered</div>-->
         <!--            <div class="text-transparent font-bold text-4xl sm:text-5xl xl:text-7xl">Swing Analysis</div>-->
         <!--        </div>-->
 
-        <div class="flex flex-col relative pb-4">
-            <div class="opacity-0.5 font-bold text-7xl dark:text-white">Your AI powered</div>
-            <div class="opacity-0.5 font-bold text-7xl dark:text-white">Swing Analysis</div>
+        <div class="flex flex-col relative pb-4 mix-blend-difference opacity-70">
+            <div class="font-bold text-7xl text-slate-300">Your AI powered</div>
+            <div class="font-bold text-7xl text-slate-300">Swing Analysis</div>
         </div>
 
         <div class="text-sm bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-2 py-1 w-fit font-bold text-gray-100 dark:text-gray-600">
@@ -78,10 +42,12 @@
         </div>
 
         <div class="flex-col flex mt-4">
-            <h1 class="lg:text-lg text-base text-gray-600 dark:text-gray-200 font-normal">Receive detailed insights into
+            <div class="lg:text-lg text-base text-gray-600 dark:text-gray-200 font-normal">Receive detailed insights
+                into
                 your
                 swing patterns and start to improve your game today. Simply upload your swing video and
-                get instant feedback – No equipment needed</h1>
+                get instant feedback – No equipment needed
+            </div>
         </div>
 
         <div class="relative flex lg:flex-row flex-col mt-8 items-center">
@@ -112,56 +78,106 @@
 
 </div>
 
-<div class="w-full mt-24 h-96 bgImg">
+
+<div class="flex flex-col w-full md:px-12 mt-24">
+    <div class="flex flex-col relative mt-24 gap-4">
+        <div class="font-bold text-xl text-indigo-500">Practice assistant</div>
+
+        <div class="text-3xl  dark:text-white font-bold">Swing data, recommendations and practice tool</div>
+        <div class="lg:text-lg text-base text-gray-600 dark:text-gray-200 font-normal">
+            We combine a variety of tools to help you become the best golfer you can be. Our AI powered swing analysis
+            tool tracks your body motion in 3D space so you can analyze your swing patterns and improve your game.
+            Swinglab also provides personalized recommendations and highlights where you can adjust your swing. And the
+            best thing is: You can do all of this with your phone and even start a live practice session.
+        </div>
+    </div>
 </div>
 
-<!--video-->
-<!--<div class="flex relative w-full flex-row lg:justify-end">-->
-<!--    <div class="relative flex flex-col mt-40 mr-0 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-40 px-4 py-4 pb-14 pb-[31rem] lg:w-3/5 w-full justify-center">-->
 
-<!--        <div class="flex flex-row relative justify-center flex-wrap">-->
-<!--            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold">Get 3D data for your-->
-<!--                swing.&nbsp;</h1>-->
-<!--            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold mb-10">Anytime. Anywhere.</h1>-->
-<!--        </div>-->
+<div class="flex sm:flex-row flex-col w-full md:px-12 mt-24 justify-between">
+    <div class="flex flex-col relative mt-24 gap-4 sm:w-1/3">
+        <div class="font-bold text-xl text-indigo-500">3D measurement</div>
 
-<!--        <div class="relative flex justify-center xl:ml-32 lg:ml-8 sm:ml-24">-->
-<!--            <img alt="sequence Rory McIlroy"-->
-<!--                 class="rounded-2xl w-96 absolute top-24 left-24"-->
-<!--                 src="{{url_for('static', filename='sequence_rory.png')}}">-->
-<!--            <div class="absolute top-0 left-0">-->
-<!--                <video autoplay class="w-60  rounded-2xl relative object-cover" id="video" muted playsinline-->
-<!--                       src="{{url_for('static', filename='motion-2.mp4')}}"></video>-->
-<!--                <button class="bg-gray-200 w-6 h-6 rounded-full hidden absolute top-2 right-2 py-1 px-1"-->
-<!--                        id="video-replay">-->
-<!--                    <svg height="100%" stroke-miterlimit="10"-->
-<!--                         style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;"-->
-<!--                         viewBox="0 0 20 20" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"-->
-<!--                         xmlns:xlink="http://www.w3.org/1999/xlink">-->
+        <div class="text-3xl  dark:text-white font-bold">Stop guessing and start measuring</div>
+        <div class="lg:text-lg text-base text-gray-600 dark:text-gray-200 font-normal">
+            Now you can actually measure your movement. Golf can be a complicated sport and that's why we want to help
+            you by taking away any guessing work after taking a swing video, so you can concentrate on your game. And
+            coaches can now show their players measured data to back up their recommendations.
+        </div>
+    </div>
+
+    <div class="flex flex-col relative mt-24 gap-4 sm:w-1/3">
+        <div class="font-bold text-xl text-indigo-500">Train effectively</div>
+
+        <div class="text-3xl  dark:text-white font-bold">Immediate feedback during your swing</div>
+        <div class="lg:text-lg text-base text-gray-600 dark:text-gray-200 font-normal">
+            With our live practice tool you will get immediate visual and auditory feedback during your swing. This way
+            you can adjust your swing in real time and get the most out of your practice session.
+        </div>
+    </div>
+
+</div>
+
+
+<!--<div class="w-full flex flex-col mt-24 bgImg" id="imageContainer">-->
+
+<!--    &lt;!&ndash;video&ndash;&gt;-->
+<!--    <div class="flex relative h-full w-full flex-row lg:justify-end">-->
+<!--        <div class="relative h-full flex flex-col my-40 mr-0 backdrop-blur-md rounded-2xl bg-[#FAF7F5] bg-opacity-40 dark:bg-black dark:bg-opacity-40 px-4 py-4 pb-14 w-full justify-center">-->
+
+<!--            <div class="flex flex-row relative justify-center flex-wrap">-->
+<!--                <h1 class="text-black dark:text-gray-100 text-3xl font-bold">Get 3D data for your-->
+<!--                    swing.&nbsp;</h1>-->
+<!--                <h1 class="text-black dark:text-gray-100 text-3xl font-bold mb-10">Anytime. Anywhere.</h1>-->
+<!--            </div>-->
+
+<!--            <div class="relative flex justify-center">-->
+<!--                <img alt="sequence Rory McIlroy"-->
+<!--                     class="rounded-2xl w-96  top-24 left-24"-->
+<!--                     src="{{url_for('static', filename='sequence_rory.png')}}">-->
+<!--                <div class="relative top-0 left-0">-->
+<!--                    <video autoplay class="w-60  rounded-2xl relative object-cover" id="video" muted playsinline-->
+<!--                           src="{{url_for('static', filename='motion-2.mp4')}}"></video>-->
+<!--                    <button class="bg-gray-200 w-6 h-6 rounded-full hidden absolute top-2 right-2 py-1 px-1"-->
+<!--                            id="video-replay">-->
+<!--                        <svg height="100%" stroke-miterlimit="10"-->
+<!--                             style="fill-rule:nonzero;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;"-->
+<!--                             viewBox="0 0 20 20" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"-->
+<!--                             xmlns:xlink="http://www.w3.org/1999/xlink">-->
 <!--                <path d="M17.6795 11.3614C17.6795 15.6027 14.2413 19.0409 10 19.0409C5.7587 19.0409 2.32045 15.6027 2.32045 11.3614C2.32045 7.1201 5.7587 3.68185 10 3.68185C11.3614 3.68185 11.3614 3.68185 11.3614 3.68185  M11.3614 3.68185L8.6386 6.40465  M11.3614 3.68185L8.6386 0.959058"-->
 <!--                      fill="none" opacity="1" stroke="#0e2640" stroke-linecap="round" stroke-linejoin="round"-->
 <!--                      stroke-width="2"/>-->
 <!--                </svg>-->
-<!--                </button>-->
+<!--                    </button>-->
+<!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
+
 <!--</div>-->
 
 <!--payment-->
 <div class="relative flex justify-center mb-20">
-    <div class="flex  rounded-2xl flex-col w-full  z-20 mt-44 xl:mx-40 relative backdrop-blur-md rounded-2xl px-4 py-4 dark:bg-black dark:bg-opacity-40 bg-[#FAF7F5] bg-opacity-40">
+    <div class="flex items-center flex-col w-full mt-24">
 
         <div class="w-full flex flex-row relative justify-center flex-wrap mb-10">
-            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">Start&nbsp;</h1>
-            <h1 class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">to&nbsp;</h1>
+            <h1 class="text-black dark:text-gray-100  text-3xl font-bold justify-center">Ready&nbsp;</h1>
+            <h1 class="text-black dark:text-gray-100 text-3xl font-bold justify-center">to&nbsp;</h1>
             <div class="bg-gradient-to-br from-indigo-400 to-rose-600 bg-clip-text dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 flex flex-row flex-wrap">
-                <h1 class="text-transparent  md:text-4xl text-2xl font-bold justify-center">improve&nbsp;</h1>
-                <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">your&nbsp;</h1>
-                <h1 class="text-transparent md:text-4xl text-2xl font-bold justify-center">game&nbsp;</h1>
+                <h1 class="text-transparent  text-3xl font-bold justify-center">improve&nbsp;</h1>
+                <h1 class="text-transparent  text-3xl font-bold justify-center">your&nbsp;</h1>
+                <h1 class="text-transparent text-3xl font-bold justify-center">game?</h1>
             </div>
-            <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">today</div>
+            <!--            <div class="text-black dark:text-gray-100 md:text-4xl text-2xl font-bold justify-center">today</div>-->
         </div>
+
+        {% if not current_user.is_authenticated %}
+        <div class="bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-1 py-1 hover:bg-indigo-600 mb-4 lg:mb-0 w-fit">
+            <a class="bg-[#FAF7F5] dark:bg-slate-600 dark:bg-opacity-80 bg-opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition"
+               href="{{ url_for('auth.signup') }}">Get
+                started – It's free</a>
+        </div>
+        {% endif %}
 
         <div class="flex flex-col md:flex-row justify-between gap-3 hidden">
             <div class="dark:bg-gray-700 dark:border-gray-900 bg-white shadow h-full rounded-xl py-5 px-5 w-full backdrop-blur-md bg-opacity-70 border border-gray-100 dark:bg-opacity-80">
@@ -238,6 +254,61 @@
     <!--</div>-->
 
 </div>
+
+<script>
+    bod = document.body
+    let imageContainer = document.getElementById('imageContainer')
+    let darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+    if (darkMode) {
+        bod.style.backgroundColor = "#000000"
+        // bod.className = "bgDark overflow-y-auto"
+        imageContainer.className = "w-full my-24 bgImgDark flex flex-col"
+    } else {
+        bod.style.backgroundColor = "#FAF7F5"
+        // bod.className = "bg overflow-y-auto"
+        imageContainer.className = "w-full my-24 bgImg flex flex-col"
+    }
+
+    window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', e => {
+            darkMode = e.matches;
+
+            // bg image in css class
+            if (darkMode) {
+                bod.style.backgroundColor = "#000000"
+                // bod.className = "bgDark overflow-y-auto"
+                imageContainer.className = "w-full my-24 bgImgDark flex flex-col"
+            } else {
+                bod.style.backgroundColor = "#FAF7F5"
+                // bod.className = "bg overflow-y-auto"
+                imageContainer.className = "w-full my-24 bgImg flex flex-col"
+            }
+        })
+
+    bod.style.height = "100%"
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // console.log("loaded")
+        const replay = document.getElementById("video-replay")
+        const video = document.getElementById("video")
+
+        video.addEventListener('ended', function () {
+            replay.style.display = "block"
+        })
+
+        replay.addEventListener('click', function () {
+            console.log("replay")
+            video.pause()
+            video.currentTime = 0
+            video.play()
+        })
+    })
+
+</script>
+
+<script src="{{ url_for('static', filename='background_animation.js') }}"></script>
 
 
 {% endblock %}
