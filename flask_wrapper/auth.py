@@ -122,7 +122,7 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), active=False,
+    new_user = User(email=email, name=name, password=generate_password_hash(password, method='scrypt'), active=False,
                     n_analyses=0, unlimited=True, admin=False)
 
     # add the new user to the database
@@ -250,7 +250,7 @@ def reset_password_mail_post(token):
         abort(404)
 
     user = User.query.filter_by(email=email).first_or_404()
-    user.password = generate_password_hash(request.form.get('password'), method='sha256')
+    user.password = generate_password_hash(request.form.get('password'), method='scrypt')
     db.session.add(user)
     db.session.commit()
 
@@ -297,7 +297,7 @@ def update_profile():
     if (password_new is not None) and (password_old is not None):
         if check_password_hash(current_user.password, password_old):
             # flash('Please check your login details and try again.')
-            user.password = generate_password_hash(password_new, method='sha256')
+            user.password = generate_password_hash(password_new, method='scrypt')
             flash('Password updated successfully', 'success')
             # return redirect(url_for('main.profile'))
         else:
