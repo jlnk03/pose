@@ -992,15 +992,16 @@ function takeSnapshot(video, canvas, time) {
 
 function rotationText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        const text = `Rotate your ${body_part} a little less.`
+        const text = `Rotate your ${body_part} a little less to the right.`
         element.innerHTML = text
         return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        const text = `Rotate your ${body_part} a little more.`
+        const text = `Rotate your ${body_part} a little more to the right.`
         element.innerHTML = text
         return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        const text = `Your ${body_part} rotation is good.`
+        body_part = body_part.charAt(0).toUpperCase() + body_part.slice(1)
+        const text = `${body_part} rotation: 👍`
         element.innerHTML = text
         return [0, text]
     }
@@ -1008,15 +1009,16 @@ function rotationText(angle, margin, body_part, element) {
 
 function rotationTextDown(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        const text = `Rotate your ${body_part} a little more.`
+        const text = `Rotate your ${body_part} a little more to the left.`
         element.innerHTML = text
         return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        const text = `Rotate your ${body_part} a little less.`
+        const text = `Rotate your ${body_part} a little less to the left.`
         element.innerHTML = text
         return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        const text = `Your ${body_part} rotation is good.`
+        body_part = body_part.charAt(0).toUpperCase() + body_part.slice(1)
+        const text = `${body_part} rotation: 👍`
         element.innerHTML = text
         return [0, text]
     }
@@ -1024,15 +1026,16 @@ function rotationTextDown(angle, margin, body_part, element) {
 
 function tiltText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        const text = `Tilt your ${body_part} a little less.`
+        const text = `Tilt your ${body_part} a little less to the right.`
         element.innerHTML = text
         return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        const text = `Tilt your ${body_part} a little more.`
+        const text = `Tilt your ${body_part} a little more to the right.`
         element.innerHTML = text
         return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        const text = `Your ${body_part} tilt is good.`
+        body_part = body_part.charAt(0).toUpperCase() + body_part.slice(1)
+        const text = `${body_part} tilt: 👍`
         element.innerHTML = text
         return [0, text]
     }
@@ -1041,15 +1044,16 @@ function tiltText(angle, margin, body_part, element) {
 
 function bendText(angle, margin, body_part, element) {
     if (angle < margin[0]) {
-        const text = `Bend your ${body_part} a little more.`
+        const text = `Bend your ${body_part} a little more forward.`
         element.innerHTML = text
         return [Math.abs(margin[0] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else if (angle > margin[1]) {
-        const text = `Bend your ${body_part} a little less.`
+        const text = `Bend your ${body_part} a little less forward.`
         element.innerHTML = text
         return [Math.abs(margin[1] - angle) / Math.abs(margin[0] - margin[1]), text]
     } else {
-        const text = `Your ${body_part} bend is good.`
+        body_part = body_part.charAt(0).toUpperCase() + body_part.slice(1)
+        const text = `${body_part} bend: 👍`
         element.innerHTML = text
         return [0, text]
     }

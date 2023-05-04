@@ -175,6 +175,11 @@
                href="{{ url_for('auth.signup') }}">Get
                 started – It's free</a>
         </div>
+        {% else %}
+        <div class="bg-gradient-to-br from-indigo-400 to-rose-600 dark:bg-gradient-to-b dark:from-amber-300 dark:to-orange-500 rounded-full px-1 py-1 hover:bg-indigo-600 mb-4 lg:mb-0 w-fit">
+            <a class="bg-[#FAF7F5] dark:bg-slate-600 dark:bg-opacity-80 bg-opacity-90 inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-md font-bold text-slate-600 hover:border-slate-400 hover:text-slate-400 dark:text-gray-100 dark:border-gray-100 transition"
+               href="{{ url_for('main.dashboard') }}">Dashboard</a>
+        </div>
         {% endif %}
 
         <div class="flex flex-col md:flex-row justify-between gap-3 hidden">

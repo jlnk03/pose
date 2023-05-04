@@ -15,10 +15,17 @@ from flask_login import current_user
 from scipy import signal
 
 from code_b.angles_2 import calculate_angles
-from . import db
-from .loading_view import loader
-from .models import UserLikes
-from .overlay_view import overlay
+from flask_wrapper import db
+# from flask_wrapper.celery_app import celery_app
+from flask_wrapper.loading_view import loader
+from flask_wrapper.models import UserLikes
+from flask_wrapper.overlay_view import overlay
+
+# from . import db
+# from .celery_app import celery_app
+# from .loading_view import loader
+# from .models import UserLikes
+# from .overlay_view import overlay
 
 # import gc
 # import memory_profiler
@@ -1151,6 +1158,8 @@ def render_files(files):
 
 
 def init_dash(server):
+    # Background callback
+
     # Initialize the app
     app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
                     external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
@@ -2301,6 +2310,8 @@ def reformat_file(filename):
 
 
 def init_callbacks(app):
+    # background_callback_manager = CeleryManager(celery_app)
+
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
          Output('thorax_rotation', 'figure'), Output('thorax_displacement', 'figure'), Output('s_tilt', 'figure'),
@@ -2343,7 +2354,9 @@ def init_callbacks(app):
         [State('file_list', 'children'), State('upload-initial', 'className'), State('upload-video', 'className'),
          State('delete-file-name', 'children')],
         # progress=Output('upload-progress', 'style'),
-        prevent_initial_call=True
+        prevent_initial_call=True,
+        # background=True,
+        # manager=background_callback_manager
     )
     def process(contents, contents_add, contents_initial, pathname,  # n_clicks,
                 n_clicks_del, children, upload_initial_class,

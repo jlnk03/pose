@@ -177,7 +177,6 @@
                         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-100">Dashboard</span>
                     </a>
 
-                    {% if current_user.admin %}
                     <a class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-700"
                        href="{{ url_for('main.practice') }}">
                         <!-- Heroicon name: outline/chart-bar -->
@@ -190,7 +189,6 @@
                         </svg>
                         <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-100">Practice</span>
                     </a>
-                    {% endif %}
 
                     <a class="-m-3 flex items-center rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-700"
                        href="{{ url_for('main.guide') }}">
