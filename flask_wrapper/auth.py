@@ -143,7 +143,7 @@ def signup_post():
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='scrypt'), active=False,
-                    n_analyses=0, unlimited=True, signup_date=datetime.now(), admin=False)
+                    n_analyses=0, analyzed=0, unlimited=True, signup_date=datetime.now(), admin=False)
 
     # add the new user to the database
     db.session.add(new_user)

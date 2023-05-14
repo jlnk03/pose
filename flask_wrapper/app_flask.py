@@ -3039,6 +3039,7 @@ def init_callbacks(app):
             current_user.n_analyses -= 1
 
         # Log number of analyses
+        # Cant add value to None
         if current_user.analyzed is None:
             current_user.analyzed = 1
         else:
