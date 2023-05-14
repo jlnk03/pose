@@ -2,9 +2,18 @@ FROM python:3.10
 
 ENV PYTHONUNBUFFERED True
 
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev cmake -y
+
+RUN pip install --upgrade pip
+
 #ENV APP_HOME /app
 #WORKDIR $APP_HOME
 COPY requirements.txt ./
+
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY ./*.py /flask_wrapper/
 COPY ./templates/*.html /flask_wrapper/templates/
 COPY ./assets/*.png /flask_wrapper/assets/
@@ -16,14 +25,6 @@ COPY ./assets/*.js /flask_wrapper/assets/
 COPY ./assets/*.otf /flask_wrapper/assets/
 COPY ./assets/*.m4a /flask_wrapper/assets/
 COPY ./code_b/*.py /code_b/
-
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install ffmpeg libsm6 libxext6  libx264-dev x264 libavcodec-extra libmp3lame-dev libopus-dev libvpx-dev cmake -y
-
-RUN pip install --upgrade pip
-
-RUN pip install --no-cache-dir -r requirements.txt
 
 COPY /assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.10/site-packages/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite
 
