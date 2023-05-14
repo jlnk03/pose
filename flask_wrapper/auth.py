@@ -534,3 +534,16 @@ def reactivate():
 
     flash('You have successfully reactivated your subscription.', 'success')
     return redirect(url_for('main.profile'))
+
+
+@auth.route('/set_signup_date', methods=['POST'])
+def set_signup_date():
+    users = User.query.all()
+
+    for user in users:
+        if user.signup_date is None:
+            user.signup_date = datetime.now()
+
+    db.session.commit()
+
+    return jsonify(success=True)
