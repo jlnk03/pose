@@ -1,6 +1,10 @@
 /*
 ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com
 */
+.highlight-text {
+  font-weight: bolder;
+  color: #fcd34d;
+}
 
 /*scrollbar*/
 /* Hide the default scrollbar */

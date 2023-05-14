@@ -79,7 +79,9 @@ def send_email_pw(toaddr, subject, message):
 # send email to all users that are not active yet
 @auth.route('/console/send_verification_mails', methods=['POST'])
 def send_verification_mails():
+    # reverse order
     users = User.query.filter_by(active=False).all()
+    users.reverse()
     for user in users:
         ts = URLSafeTimedSerializer('key')
         token = ts.dumps(user.email, salt='email-confirm-key')

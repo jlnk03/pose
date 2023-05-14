@@ -57,6 +57,73 @@
         </div>
     </div>
 
+    <div class="text-2xl font-medium text-gray-900 dark:text-gray-100 mt-4 mb-4">Practice</div>
+
+    <span class="text-gray-900 dark:text-gray-100">
+        With our practice feature you can get realtime feedback on your swing. When you are inside the margins the diplay will turn green and a sound will play. If you are outside the margins the display will turn red. Please be aware that this feature requires sufficient computing power as the predictions are run locally on your device. Therefore, the video might be laggy. It is recommended to use a newer phone or a computer.
+    </span>
+
+    <span class="text-gray-900 dark:text-gray-100 mt-4">
+        To use the practice feature, you need to allow access to your camera in your device settings.
+    </span>
+
+    <div class="flex flex-row justify-between w-full mt-4 gap-4 bg-white rounded-2xl p-6 relative">
+        <div class="flex-col flex gap-6">
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    1
+                </div>
+                <span class="ml-6">
+                <span class="highlight-text">Select the body part</span> in the bottom right corner. Currently, only pelvis and thorax rotation are supported
+            </span>
+            </div>
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    2
+                </div>
+                <span class="ml-6">
+                <span class="highlight-text">Select the angle range</span> you want to set to track.
+            </span>
+            </div>
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    3
+                </div>
+                <span class="ml-6">
+                    If you have multiple cameras attached to your device, <span
+                        class="highlight-text">select the camera</span> to use. For your phone, this will either be the front- or rear-facing camera
+            </span>
+            </div>
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    4
+                </div>
+                <span class="ml-6">
+                Press the <span class="highlight-text">start</span> button to start the practice session.
+            </span>
+            </div>
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    5
+                </div>
+                <span class="ml-6">
+                To <span class="highlight-text">calibrate the camera</span>, the goal direction has to be determined. For this, you have to take your setup position with your feet pointing in the goal direction. If you have someone to assist you, they can press the setup button to finish the calibration. But don't worry if you're alone - just raise your hand with an open palm, and everything will be set up. The angle between the goal direction and the camera will be shown under 'camera angle'
+            </span>
+            </div>
+            <div class="flex flex-row items-center">
+                <div class="bg-indigo-600 rounded-full flex w-8 h-8 text-white items-center justify-center flex-none">
+                    6
+                </div>
+                <span class="ml-6">
+                If you want to <span class="highlight-text">stop</span> the practice session, press the stop button
+            </span>
+            </div>
+        </div>
+        <img alt="practice view" class="w-1/3 h-auto flex-none"
+             src="{{ url_for('static', filename='practice_view.png') }}">
+    </div>
+
+
 </div>
 
 {% endblock %}
