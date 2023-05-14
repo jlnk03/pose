@@ -1,9 +1,11 @@
+import datetime
 import json
 import os
 import shutil
 import smtplib
 import ssl
 import time
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
@@ -27,13 +29,16 @@ if 'flask_wrapper' not in os.getcwd():
     os.chdir('flask_wrapper')
 
 
-def send_mail_smtp(toaddr, subject, message, name=None):
+def send_mail_smtp(toaddr, subject, message, name=None, manual=False):
     # create message
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = formataddr(('Swinglab', 'info@swinglab.app'))
     msg['To'] = toaddr
-    html = render_template('mail_mail_verification.html', url=message, name=name)
+    if manual:
+        html = render_template('mail_mail_verification_failed.html', url=message, name=name)
+    else:
+        html = render_template('mail_mail_verification.html', url=message, name=name)
     msg.attach(MIMEText(message, 'plain'))
     msg.attach(MIMEText(html, 'html'))
 
@@ -69,6 +74,19 @@ def send_email_pw(toaddr, subject, message):
         server.starttls(context=context)
         server.login('info@swinglab.app', password)
         server.sendmail('info@swinglab.app', toaddr, msg.as_string())
+
+
+# send email to all users that are not active yet
+@auth.route('/console/send_verification_mails', methods=['POST'])
+def send_verification_mails():
+    users = User.query.filter_by(active=False).all()
+    for user in users:
+        ts = URLSafeTimedSerializer('key')
+        token = ts.dumps(user.email, salt='email-confirm-key')
+        confirm_url = url_for('auth.verify_mail', token=token, _external=True)
+        send_mail_smtp(user.email, 'Having trouble signing up?', confirm_url, user.name, manual=True)
+
+    return jsonify({'success': True})
 
 
 @auth.route('/test')
@@ -123,7 +141,7 @@ def signup_post():
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='scrypt'), active=False,
-                    n_analyses=0, unlimited=True, admin=False)
+                    n_analyses=0, unlimited=True, signup_date=datetime.now(), admin=False)
 
     # add the new user to the database
     db.session.add(new_user)
@@ -157,7 +175,11 @@ def send_mail():
     confirm_url = url_for('auth.verify_mail', token=token, _external=True)
 
     # send_email(email, subject, confirm_url)
-    send_mail_smtp(email, subject, confirm_url, name=current_user.name)
+    try:
+        send_mail_smtp(email, subject, confirm_url, name=current_user.name)
+    except Exception as e:
+        # flash('Something went wrong. Please try again.')
+        return render_template('mail_overload.html')
 
     return redirect(url_for('auth.verify'))
 
@@ -171,7 +193,8 @@ def verify():
 def verify_mail(token):
     ts = URLSafeTimedSerializer('key')
     try:
-        email = ts.loads(token, salt='email-confirm-key', max_age=86400)
+        # expires in 3 days
+        email = ts.loads(token, salt='email-confirm-key', max_age=259200)
     except:
         abort(404)
 
@@ -359,7 +382,12 @@ def console():
     # users = User.query
     # first 50 users
     users = User.query.limit(50)
-    return render_template('console.html', users=users)
+    total_users = User.query.count()
+    active_users = User.query.filter_by(active=True).count()
+    subscribers = User.query.filter_by(unlimited=True).count()
+
+    return render_template('console.html', users=users, total_users=total_users, active_users=active_users,
+                           subscribers=subscribers)
 
 
 @auth.route('/webhook', methods=['POST'])

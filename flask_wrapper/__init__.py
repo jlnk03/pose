@@ -1,14 +1,13 @@
-from flask import Flask, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, current_user
 from functools import wraps
 
+from flask import Flask, redirect
+from flask_login import LoginManager, login_required, current_user
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
 def active_required(func):
-
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if not current_user.active:
@@ -22,7 +21,8 @@ def active_required(func):
 def protect_dashviews(dashapp):
     for view_func in dashapp.server.view_functions:
         if view_func.startswith(dashapp.config.url_base_pathname):
-            dashapp.server.view_functions[view_func] = login_required(active_required(dashapp.server.view_functions[view_func]))
+            dashapp.server.view_functions[view_func] = login_required(
+                active_required(dashapp.server.view_functions[view_func]))
     return dashapp
 
 

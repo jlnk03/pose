@@ -15,7 +15,7 @@ import stripe
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from flask_login import login_required, current_user
 
-from . import db
+import db
 from .models import User, Transactions
 
 # import memory_profiler

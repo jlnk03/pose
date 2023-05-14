@@ -8,38 +8,74 @@
     bod.classList.add("h-screen");
 </script>
 
+<!--Total number of users-->
+<div class="flex flex-row w-full text-lg gap-4">
+    <div class="bg-white rounded-2xl shadow p-4 items-center justify-center">
+        total users: {{total_users}}
+    </div>
+    <div class="bg-white rounded-2xl shadow p-4 items-center justify-center">
+        active users: {{active_users}}
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-4 items-center justify-center">
+        subscribers: {{subscribers}}
+    </div>
+
+    <button class="bg-white rounded-2xl shadow p-4 items-center justify-center"
+            onclick="send_mail()">
+        Send emails to non-active users
+    </button>
+</div>
+
 
 <div class="relative overflow-x-auto mt-6 rounded-lg">
     <table id="users" class="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th class="px-6 py-3">id</th>
-                <th class="px-6 py-3">email</th>
-                <th class="px-6 py-3">name</th>
-                <th class="px-6 py-3">active</th>
-                <th class="px-6 py-3">email_new</th>
-                <th class="px-6 py-3">n_analyses</th>
-                <th class="px-6 py-3">analyzed</th>
-                <th class="px-6 py-3">last analyzed</th>
-                <th class="px-6 py-3">unlimited</th>
-            </tr>
+        <tr>
+            <th class="px-6 py-3">id</th>
+            <th class="px-6 py-3">email</th>
+            <th class="px-6 py-3">name</th>
+            <th class="px-6 py-3">active</th>
+            <!--                <th class="px-6 py-3">email_new</th>-->
+            <th class="px-6 py-3">n_analyses</th>
+            <th class="px-6 py-3">analyzed</th>
+            <th class="px-6 py-3">last analyzed</th>
+            <th class="px-6 py-3">unlimited</th>
+        </tr>
         </thead>
         <tbody>
-            {% for user in users %}
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-6 py-4">{{user.id}}</td>
-                    <td class="px-6 py-4">{{user.email}}</td>
-                    <td class="px-6 py-4">{{user.name}}</td>
-                    <td class="px-6 py-4">{{user.active}}</td>
-                    <td class="px-6 py-4">{{user.email_new}}</td>
-                    <td class="px-6 py-4">{{user.n_analyses}}</td>
-                    <td class="px-6 py-4">{{user.analyzed}}</td>
-                    <td class="px-6 py-4">{{user.last_analyzed}}</td>
-                    <td class="px-6 py-4">{{user.unlimited}}</td>
-                </tr>
-            {% endfor %}
+        {% for user in users %}
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="px-6 py-4">{{user.id}}</td>
+            <td class="px-6 py-4">{{user.email}}</td>
+            <td class="px-6 py-4">{{user.name}}</td>
+            <td class="px-6 py-4">{{user.active}}</td>
+            <!--                    <td class="px-6 py-4">{{user.email_new}}</td>-->
+            <td class="px-6 py-4">{{user.n_analyses}}</td>
+            <td class="px-6 py-4">{{user.analyzed}}</td>
+            <td class="px-6 py-4">{{user.last_analyzed}}</td>
+            <td class="px-6 py-4">{{user.unlimited}}</td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    <!--    background call to flask to send email with ajax-->
+    function send_mail() {
+        fetch('/console/send_verification_mails', {
+            method: 'POST',
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                    return response.json();
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            })
+    }
+</script>
 
 {% endblock %}

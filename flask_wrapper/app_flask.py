@@ -1,6 +1,7 @@
 import datetime
 import os
 import shutil
+import sys
 import urllib
 
 import dash_player as dp
@@ -10,9 +11,11 @@ import plotly.graph_objects as go
 import plotly.io as pio
 import replicate
 from dash import ctx, ALL, html, dcc, MATCH, ClientsideFunction, no_update
-from dash_extensions.enrich import DashProxy, NoOutputTransform, Output, Input, State
+from dash_extensions.enrich import Output, Input, State, NoOutputTransform, DashProxy
 from flask_login import current_user
 from scipy import signal
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from code_b.angles_2 import calculate_angles
 from flask_wrapper import db
@@ -21,14 +24,8 @@ from flask_wrapper.loading_view import loader
 from flask_wrapper.models import UserLikes
 from flask_wrapper.overlay_view import overlay
 
-# from . import db
-# from .celery_app import celery_app
-# from .loading_view import loader
-# from .models import UserLikes
-# from .overlay_view import overlay
-
-# import gc
-# import memory_profiler
+# background_callback_manager = CeleryManager(celery_app)
+# background_callback_manager = CeleryLongCallbackManager(celery_app)
 
 # Set theme for dash
 pio.templates.default = "plotly_white"
@@ -781,372 +778,372 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
 
 
 # Plots
-path_fig = go.Figure(
-    data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'],
-                      z=arm_position['z'], mode='lines',
-                      line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
-
-path_fig.update_layout(
-    scene=dict(
-        xaxis_title='Down the line',
-        # yaxis_title='Front on',
-        zaxis_title='Height',
-        xaxis_showticklabels=False,
-        yaxis_showticklabels=False,
-        zaxis_showticklabels=False,
-        camera=dict(
-            up=dict(x=0, y=0, z=1),
-            center=dict(x=0, y=0, z=-0.1),
-            eye=dict(x=-2.5, y=0.1, z=0.2)
-        ),
-    ),
-    font_color="#94a3b8",
-    margin=dict(r=10, b=10, l=10, t=10),
-    paper_bgcolor='rgba(0,0,0,0)',
-)
-
-fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
-
-fig.add_trace(
-    go.Scatter(
-        x=timeline,
-        y=save_thorax_rotation,
-        name=f'Thorax',
-        # legendrank=seq_sorted['Shoulder']
-    )
-)
-
-fig.add_trace(
-    go.Scatter(
-        x=timeline,
-        y=np.gradient(save_arm_rotation),
-        name=f'Arm',
-    )
-)
-
-add_vertical_line(fig)
-
-fig.update_layout(
-    # title='Angular velocity',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title="Angular velocity in °/s",
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°/s",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend_orientation="h",
-    legend=dict(y=1, yanchor="bottom"),
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-),
-
-fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis side bend'))
-
-fig3.add_trace(
-    go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
-)
-
-add_vertical_line(fig3)
-
-fig3.update_layout(
-    # title='Pelvis angles',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend_orientation="h",
-    legend=dict(y=1, yanchor="bottom"),
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
-
-fig4.add_trace(
-    go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis sway')
-)
-
-fig4.add_trace(
-    go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
-)
-
-add_vertical_line(fig4)
-
-fig4.update_layout(
-    # title='Pelvis displacement',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='Displacement in m',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="m",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend_orientation="h",
-    legend=dict(y=1, yanchor="bottom"),
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_rotation, name=f'Thorax rotation'))
-
-fig5.add_trace(
-    go.Scatter(x=timeline, y=save_thorax_bend, name=f'Thorax bend')
-)
-
-fig5.add_trace(
-    go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
-)
-
-add_vertical_line(fig5)
-
-fig5.update_layout(
-    # title='Thorax angles',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend_orientation="h",
-    legend=dict(y=1, yanchor="bottom"),
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_thrust, name=f'Thorax thrust'))
-
-fig6.add_trace(
-    go.Scatter(x=timeline, y=save_thorax_sway, name=f'Thorax sway')
-)
-
-fig6.add_trace(
-    go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
-)
-
-add_vertical_line(fig6)
-
-fig6.update_layout(
-    # title='Thorax displacement',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='Displacement in m',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="m",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    legend_orientation="h",
-    legend=dict(y=1, yanchor="bottom"),
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
-
-add_vertical_line(fig11)
-
-fig11.update_layout(
-    # title='Tilt between pelvis and shoulder',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
-
-add_vertical_line(fig12)
-
-fig12.update_layout(
-    # title='Head tilt',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
-
-add_vertical_line(fig13)
-
-fig13.update_layout(
-    # title='Head rotation',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
-
-add_vertical_line(fig14)
-
-fig14.update_layout(
-    # title='Left arm length',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='length in m',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="m",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
-
-add_vertical_line(fig15)
-
-fig15.update_layout(
-    # title='Spine rotation',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
-
-fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm rotation'))
-
-fig16.add_trace(
-    go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
-)
-
-fig16.update_layout(
-    # title='Wrist angles',
-    title_x=0.5,
-    font_size=12,
-    # yaxis_title='angle in °',
-    # xaxis_title="time in s",
-    yaxis_ticksuffix="°",
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    margin=dict(
-        l=10,
-        r=10,
-        t=20,
-        pad=5
-    ),
-    modebar=dict(
-        bgcolor='rgba(0,0,0,0)',
-        color='rgba(1,1,1,0.3)',
-        activecolor='rgba(58, 73, 99, 1)'
-    )
-)
+# path_fig = go.Figure(
+#     data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'],
+#                       z=arm_position['z'], mode='lines',
+#                       line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
+#
+# path_fig.update_layout(
+#     scene=dict(
+#         xaxis_title='Down the line',
+#         # yaxis_title='Front on',
+#         zaxis_title='Height',
+#         xaxis_showticklabels=False,
+#         yaxis_showticklabels=False,
+#         zaxis_showticklabels=False,
+#         camera=dict(
+#             up=dict(x=0, y=0, z=1),
+#             center=dict(x=0, y=0, z=-0.1),
+#             eye=dict(x=-2.5, y=0.1, z=0.2)
+#         ),
+#     ),
+#     font_color="#94a3b8",
+#     margin=dict(r=10, b=10, l=10, t=10),
+#     paper_bgcolor='rgba(0,0,0,0)',
+# )
+#
+# fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
+#
+# fig.add_trace(
+#     go.Scatter(
+#         x=timeline,
+#         y=save_thorax_rotation,
+#         name=f'Thorax',
+#         # legendrank=seq_sorted['Shoulder']
+#     )
+# )
+#
+# fig.add_trace(
+#     go.Scatter(
+#         x=timeline,
+#         y=np.gradient(save_arm_rotation),
+#         name=f'Arm',
+#     )
+# )
+#
+# add_vertical_line(fig)
+#
+# fig.update_layout(
+#     # title='Angular velocity',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title="Angular velocity in °/s",
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°/s",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     legend_orientation="h",
+#     legend=dict(y=1, yanchor="bottom"),
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# ),
+#
+# fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis side bend'))
+#
+# fig3.add_trace(
+#     go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
+# )
+#
+# add_vertical_line(fig3)
+#
+# fig3.update_layout(
+#     # title='Pelvis angles',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     legend_orientation="h",
+#     legend=dict(y=1, yanchor="bottom"),
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
+#
+# fig4.add_trace(
+#     go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis sway')
+# )
+#
+# fig4.add_trace(
+#     go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
+# )
+#
+# add_vertical_line(fig4)
+#
+# fig4.update_layout(
+#     # title='Pelvis displacement',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='Displacement in m',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="m",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     legend_orientation="h",
+#     legend=dict(y=1, yanchor="bottom"),
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_rotation, name=f'Thorax rotation'))
+#
+# fig5.add_trace(
+#     go.Scatter(x=timeline, y=save_thorax_bend, name=f'Thorax bend')
+# )
+#
+# fig5.add_trace(
+#     go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
+# )
+#
+# add_vertical_line(fig5)
+#
+# fig5.update_layout(
+#     # title='Thorax angles',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     legend_orientation="h",
+#     legend=dict(y=1, yanchor="bottom"),
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_thrust, name=f'Thorax thrust'))
+#
+# fig6.add_trace(
+#     go.Scatter(x=timeline, y=save_thorax_sway, name=f'Thorax sway')
+# )
+#
+# fig6.add_trace(
+#     go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
+# )
+#
+# add_vertical_line(fig6)
+#
+# fig6.update_layout(
+#     # title='Thorax displacement',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='Displacement in m',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="m",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     legend_orientation="h",
+#     legend=dict(y=1, yanchor="bottom"),
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
+#
+# add_vertical_line(fig11)
+#
+# fig11.update_layout(
+#     # title='Tilt between pelvis and shoulder',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
+#
+# add_vertical_line(fig12)
+#
+# fig12.update_layout(
+#     # title='Head tilt',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
+#
+# add_vertical_line(fig13)
+#
+# fig13.update_layout(
+#     # title='Head rotation',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
+#
+# add_vertical_line(fig14)
+#
+# fig14.update_layout(
+#     # title='Left arm length',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='length in m',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="m",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
+#
+# add_vertical_line(fig15)
+#
+# fig15.update_layout(
+#     # title='Spine rotation',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
+#
+# fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm rotation'))
+#
+# fig16.add_trace(
+#     go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
+# )
+#
+# fig16.update_layout(
+#     # title='Wrist angles',
+#     title_x=0.5,
+#     font_size=12,
+#     # yaxis_title='angle in °',
+#     # xaxis_title="time in s",
+#     yaxis_ticksuffix="°",
+#     paper_bgcolor='rgba(0,0,0,0)',
+#     plot_bgcolor='rgba(0,0,0,0)',
+#     margin=dict(
+#         l=10,
+#         r=10,
+#         t=20,
+#         pad=5
+#     ),
+#     modebar=dict(
+#         bgcolor='rgba(0,0,0,0)',
+#         color='rgba(1,1,1,0.3)',
+#         activecolor='rgba(58, 73, 99, 1)'
+#     )
+# )
 
 
 def render_files(files):
@@ -1158,13 +1155,20 @@ def render_files(files):
 
 
 def init_dash(server):
-    # Background callback
+    """
+    Initialize the dash app
 
+    :param server: Flask server to run the app on
+    :return: Dash app
+    """
     # Initialize the app
     app = DashProxy(__name__, server=server, url_base_pathname='/dashboard/',
                     external_scripts=["https://tailwindcss.com/", {"src": "https://cdn.tailwindcss.com"}],
                     transforms=[  # MultiplexerTransform(proxy_location=None),
-                        NoOutputTransform()], prevent_initial_callbacks=True,
+                        NoOutputTransform()],
+                    prevent_initial_callbacks=True,
+                    # background_callback_manager=background_callback_manager
+                    # long_callback_manager=background_callback_manager
                     )
     app.css.config.serve_locally = False
     app.css.append_css({'external_url': './assets/output.css'})
@@ -1175,7 +1179,56 @@ def init_dash(server):
     app.title = 'Analyze your swing – Swinglab'
     app.update_title = 'Analyze your swing – Swinglab'
 
+    # Initialize the plots
+    save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust, \
+        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust, \
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt, save_left_arm_length, \
+        save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground = rand(100, 20)
+
+    arm_position = {'x': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 'y': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    'z': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}
+
+    duration = 10
+
+    fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
+        save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
+        save_thorax_lift, save_thorax_bend, save_thorax_sway, save_thorax_rotation, save_thorax_thrust,
+        save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
+        save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
+        duration, filt=False)
+
+    path_fig = go.Figure(data=go.Scatter3d(x=arm_position['x'],
+                                           y=arm_position['y'],
+                                           z=arm_position['z'], mode='lines',
+                                           line=dict(color=np.linspace(0, 1, len(arm_position['x'])),
+                                                     width=6, colorscale='Viridis')))
+
+    path_fig.update_layout(
+        scene=dict(
+            xaxis_title='Down the line',
+            yaxis_title='Front on',
+            zaxis_title='Height',
+            xaxis_showticklabels=False,
+            yaxis_showticklabels=False,
+            zaxis_showticklabels=False,
+            camera=dict(
+                up=dict(x=0, y=0, z=1),
+                center=dict(x=0, y=0, z=-0.1),
+                eye=dict(x=-2.5, y=0.1, z=0.2)
+            ),
+        ),
+        font_color="#94a3b8",
+        margin=dict(r=10, b=10, l=10, t=10),
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
+
     def serve_layout():
+        """
+        Create the layout of the dash app
+
+        :return: Layout of the dash app
+        """
+
         disabled = True
         files = []
 
@@ -1366,19 +1419,6 @@ def init_dash(server):
                             className='lg:mx-16 mx-4 lg:pl-60 mt-0 2xl:w-[90rem] ',
                             children=[
 
-                                # Analyze/Compare
-                                # html.Div(
-                                #     className='flex flex-row justify-between bg-indigo-200 rounded-full h-fit w-fit gap-4 px-1 py-1  mt-5 left-1/2 transform -translate-x-1/2 absolute z-20',
-                                #     children=[
-                                #         html.Div(
-                                #             'Analyze',
-                                #             className=' bg-indigo-400 rounded-full w-24 px-4 py-1 text-gray-100',),
-                                #         html.Div(
-                                #             'Compare',
-                                #             className='bg-indigo-400 rounded-full w-24 px-4 py-1 text-gray-100', ),
-                                #     ]
-                                # ),
-
                                 # Selection View background dismiss button
                                 html.Button(
                                     id='selection-view-dismiss',
@@ -1398,12 +1438,7 @@ def init_dash(server):
                                                     id='new_margins_title',
                                                     className='w-fit text-lg font-medium text-slate-900 dark:text-gray-100 pt-4 absolute top-6 transform -translate-x-1/2 left-1/2'
                                                 ),
-                                                # html.Button(
-                                                #     html.Img(src=app.get_asset_url('cross_light.svg'),
-                                                #              className='h-5 w-5'),
-                                                #     id='new_margins_close',
-                                                #     className='h-5 w-5 absolute top-4 right-4 cursor-pointer',
-                                                # ),
+
                                                 html.Div(
                                                     'Setup',
                                                     className='relative justify-start text-sm font-medium text-slate-900 dark:text-gray-100 pt-4 flex flex-row'
@@ -1839,10 +1874,7 @@ def init_dash(server):
                                                         html.Div('Backswing',
                                                                  className='text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300'),
                                                         # TODO back text
-                                                        # html.Div(
-                                                        #     id='backswing_text',
-                                                        #     className='text-base text-gray-400 w-fit text-left mr-6'
-                                                        # ),
+
                                                         html.Div('- s', id='backswing',
                                                                  className='mr-6'),
                                                         html.Div('0.5', id='top_pos', className='hidden'),
@@ -1850,10 +1882,6 @@ def init_dash(server):
                                                         html.Div('0.5', id='end_pos', className='hidden'),
                                                         html.Div('0.5', id='setup_pos', className='hidden'),
                                                         html.Div('60', id='fps_saved', className='hidden'),
-
-                                                        # html.Div(
-                                                        #     gradient_slider_view('backswing_slider', 0, 1.5)
-                                                        # )
 
                                                     ],
                                                     className='relative flex flex-col items-start w-full pl-2 sm:pl-8 pt-2 my-2'
@@ -1865,16 +1893,9 @@ def init_dash(server):
                                                         html.Div('Downswing',
                                                                  className='text-base font-medium text-slate-900 dark:text-gray-100 dark:hover:text-gray-300 top-6 left-6'),
                                                         # TODO down text
-                                                        # html.Div(
-                                                        #     id='downswing_text',
-                                                        #     className='text-base text-gray-400 w-fit text-left mr-6'
-                                                        # ),
+
                                                         html.Div('- s', id='downswing',
                                                                  className='mr-6'),
-
-                                                        # html.Div(
-                                                        #     gradient_slider_view('downswing_slider', 0, 0.5)
-                                                        # )
 
                                                     ],
                                                     className='relative flex flex-col flex-none items-start w-full pl-2 sm:pl-8 md:pt-2 pt-0 my-2'
@@ -2280,10 +2301,8 @@ def init_dash(server):
                                     ]),
 
                                 html.Script('assets/dash.js'),
-                                # html.Script(src='video_update.js')
                             ]
                         ),
-
                     ]
                 ),
             ]
@@ -2295,22 +2314,37 @@ def init_dash(server):
 
     init_callbacks(app)
 
+    app.register_celery_tasks()
+
     return app
 
 
 def create_folder(name):
+    """
+    Create a folder if it does not exist
+    :param name: Folder name
+    :return: None
+    """
     if not os.path.exists(name):
         os.makedirs(name)
 
 
 def reformat_file(filename):
-    # print(filename)
+    """
+    Reformat the filename to a more readable format
+    :param filename: Filename to reformat (e.g. 2021-05-31_12-00-00)
+    :return: Formatted filename (e.g. 31.05.2021, 12:00)
+    """
     timestamp = datetime.datetime.strptime(filename, '%Y-%m-%d_%H-%M-%S')
     return timestamp.strftime('%d.%m.%Y, %H:%M')
 
 
 def init_callbacks(app):
-    # background_callback_manager = CeleryManager(celery_app)
+    """
+    Initialize callbacks for the dash app
+    :param app: dash app
+    :return: None
+    """
 
     @app.callback(
         [Output('sequence', 'figure'), Output('pelvis_rotation', 'figure'), Output('pelvis_displacement', 'figure'),
@@ -2361,22 +2395,33 @@ def init_callbacks(app):
     def process(contents, contents_add, contents_initial, pathname,  # n_clicks,
                 n_clicks_del, children, upload_initial_class,
                 upload_video_class, del_file_name):
+        """
+        Process the uploaded video and extract motion data
+        :param contents: Uploaded video from History page as base64 string
+        :param contents_add: Uploaded video from plus button on mobile devices as base64 string
+        :param contents_initial: Uploaded video from main page on first display as base64 string
+        :param pathname: URL pathname of the current page (current video)
+        :param n_clicks_del: Number of clicks on the delete button
+        :param children: List of all files in the History
+        :param upload_initial_class: Class of the upload component on the main page (will be changed to 'hidden' if a video is uploaded)
+        :param upload_video_class: Class of the video view component on the main page (will be changed to visible if a video is uploaded)
+        :param del_file_name: Name of the file to delete
+        :return: Figures for the graphs, list of all files in the History, class of the upload component on the main page, class of the video view component on the main page
+        """
 
         # Enable or Disable upload component
         disabled = False if (current_user.n_analyses > 0 or current_user.unlimited) else True
 
+        # Check if file was uploaded
         if contents is None:
             if contents_initial is None:
                 contents = contents_add
             else:
                 contents = contents_initial
 
-        # print(f'pathname: {pathname}')
-
+        # Check URL pathname
         if (pathname.split('/')[2] == '') and (contents is None) and (contents_add is None) and (
                 contents_initial is None):
-            # print('No file selected')
-            # exit function
             return no_update
 
         # Check if file exists
@@ -2631,17 +2676,11 @@ def init_callbacks(app):
                         child['props'][
                             'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 shadow-md dark:shadow-slate-950 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['children'][0]['props']['disabled'] = True
-                        # # Enabling the delete button
-                        # child['props']['children'][1]['props']['disabled'] = False
-                        # child['props']['children'][1]['props'][
-                        #     'className'] = 'visible hover:bg-red-300 rounded-full px-1 py-1 items-center justify-center absolute right-2'
+
                     else:
                         child['props'][
                             'className'] = 'relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md dark:hover:shadow-slate-950 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition'
                         child['props']['children'][0]['props']['disabled'] = False
-                        # # Disabling the delete button
-                        # child['props']['children'][1]['props']['disabled'] = True
-                        # child['props']['children'][1]['props']['className'] = 'invisible'
 
                 fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16 = update_plots(
                     save_pelvis_rotation,
@@ -3122,13 +3161,13 @@ def init_callbacks(app):
 
     # Write margins to hidden div
     @app.callback(
-        [Input('pelvis_rot_store', 'children'), Input('pelvis_bend_store', 'children'),
-         Input('thorax_rot_store', 'children'), Input('thorax_bend_store', 'children'),
-         Input('head_rot_store', 'children'), Input('head_tilt_store', 'children')],
         [Output('pelvis_rot_store', 'children'), Output('pelvis_bend_store', 'children'),
          Output('thorax_rot_store', 'children'), Output('thorax_bend_store', 'children'),
          Output('head_rot_store', 'children'), Output('head_tilt_store', 'children')
          ],
+        [Input('pelvis_rot_store', 'children'), Input('pelvis_bend_store', 'children'),
+         Input('thorax_rot_store', 'children'), Input('thorax_bend_store', 'children'),
+         Input('head_rot_store', 'children'), Input('head_tilt_store', 'children')],
         prevent_initial_call=False
     )
     def update_margins(pelvis_rot, pelvis_tilt, thorax_rot, thorax_tilt, head_rot, head_tilt):
@@ -3226,8 +3265,8 @@ def init_callbacks(app):
             db.session.commit()
 
     @app.callback(
-        Input('video', 'url'),
         Output('heart', 'className'),
+        Input('video', 'url'),
         [State('heart', 'className')],
         prevent_initial_call=False
     )
@@ -3245,6 +3284,13 @@ def init_callbacks(app):
 
     # TODO Save new positions
     @app.callback(
+        Output('backswing', 'children', allow_duplicate=True), Output('downswing', 'children', allow_duplicate=True),
+        Output('tempo', 'children', allow_duplicate=True),
+        Output('arm_path', 'children', allow_duplicate=True),
+        Output('swing_plane_angle', 'children', allow_duplicate=True),
+        Output('setup_pos', 'children', allow_duplicate=True), Output('top_pos', 'children', allow_duplicate=True),
+        Output('impact_pos', 'children', allow_duplicate=True),
+        Output('end_pos', 'children', allow_duplicate=True),
         Input('edit_positions_save', 'n_clicks'),
         State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
         State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
@@ -3253,13 +3299,7 @@ def init_callbacks(app):
         State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
         State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
-        Output('backswing', 'children', allow_duplicate=True), Output('downswing', 'children', allow_duplicate=True),
-        Output('tempo', 'children', allow_duplicate=True),
-        Output('arm_path', 'children', allow_duplicate=True),
-        Output('swing_plane_angle', 'children', allow_duplicate=True),
-        Output('setup_pos', 'children', allow_duplicate=True), Output('top_pos', 'children', allow_duplicate=True),
-        Output('impact_pos', 'children', allow_duplicate=True),
-        Output('end_pos', 'children', allow_duplicate=True),
+
         prevent_initial_call=True
     )
     def save_new_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
@@ -3359,6 +3399,10 @@ def init_callbacks(app):
 
     # Reset positions
     @app.callback(
+        Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
+        Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
+        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
+        Output('end_pos', 'children'),
         Input('edit_positions_reset', 'n_clicks'),
         State('setup_pos_button', 'n_clicks_timestamp'), State('top_pos_button', 'n_clicks_timestamp'),
         State('impact_pos_button', 'n_clicks_timestamp'), State('end_pos_button', 'n_clicks_timestamp'),
@@ -3367,10 +3411,7 @@ def init_callbacks(app):
         State('setup_pos', 'children'), State('top_pos', 'children'), State('impact_pos', 'children'),
         State('end_pos', 'children'), State('arm_path', 'children'), State('swing_plane_angle', 'children'),
         State('backswing', 'children'), State('downswing', 'children'), State('tempo', 'children'),
-        Output('backswing', 'children'), Output('downswing', 'children'), Output('tempo', 'children'),
-        Output('arm_path', 'children'), Output('swing_plane_angle', 'children'),
-        Output('setup_pos', 'children'), Output('top_pos', 'children'), Output('impact_pos', 'children'),
-        Output('end_pos', 'children'),
+
         prevent_initial_call=True
     )
     def reset_positions(n_clicks, setup_time, top_time, impact_time, end_time, current_time, duration, fps, url,
@@ -3481,10 +3522,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionView'
         ),
-        # Output('selection-view', 'className'),
         Input('submit-new-margins', 'n_clicks'),
-        # [State('selection-view', 'className'),
-        #  ],
         prevent_initial_call=True
     )
 
@@ -3494,10 +3532,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='hideSelectionViewCross'
         ),
-        # Output('selection-view', 'className'),
         Input('selection-view-dismiss', 'n_clicks'),
-        # [State('selection-view', 'className')
-        #  ],
         prevent_initial_call=True
     )
 
@@ -3615,26 +3650,6 @@ def init_callbacks(app):
         Output('tempo_slider', 'style'),
         Input('tempo', 'children'),
     )
-
-    # # Backswing slider position
-    # app.clientside_callback(
-    #     ClientsideFunction(
-    #         namespace='clientside',
-    #         function_name='backswingSlider'
-    #     ),
-    #     Output('backswing_slider', 'style'),
-    #     Input('backswing', 'children'),
-    # )
-    #
-    # # Downswing slider position
-    # app.clientside_callback(
-    #     ClientsideFunction(
-    #         namespace='clientside',
-    #         function_name='downswingSlider'
-    #     ),
-    #     Output('downswing_slider', 'style'),
-    #     Input('downswing', 'children'),
-    # )
 
     # Show heart
     app.clientside_callback(
@@ -3797,7 +3812,6 @@ def reset_plots(children, button_id, disabled):
                             ' ⛳️',
                         ],
                     ),
-                    # className='bg-[rgba(251, 252, 254, 1)] mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
                     className='mx-10 rounded-xl flex items-center justify-center py-10 mb-5 text-center inline-block text-sm border-dashed border-4 border-gray-400 h-60',
                     multiple=False,
                     max_size=20e6,
@@ -3812,13 +3826,10 @@ def reset_plots(children, button_id, disabled):
                         borderColor='bg-red-400',
                         borderRadius='12px',
                     )),
-                    # className='upload'
                 ),
                 className='w-full'
-                # className='bg-[rgba(251, 252, 254, 1)] mx-10 sm:rounded-2xl flex items-center justify-center my-10 text-center inline-block flex-col w-[95%] border-dashed border-4 border-gray-400'
             )
         ],
-            # className='container',
             className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-start justify-center mb-5 text-center inline-block flex-col w-full h-96 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900',
         ),
     ]

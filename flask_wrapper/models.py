@@ -1,10 +1,11 @@
 from flask_login import UserMixin
+
 # from flask_wrapper import db
 from flask_wrapper import db
 
 
 class Transactions(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
     session_id = db.Column(db.String(100), unique=True)
     time = db.Column(db.DateTime)
     amount = db.Column(db.Integer)
@@ -12,7 +13,7 @@ class Transactions(db.Model):
 
 
 class UserLikes(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
     user_id = db.Column(db.Integer)
     video_id = db.Column(db.Integer)
     like = db.Column(db.Boolean)
@@ -27,7 +28,7 @@ class UserLikes(db.Model):
 
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
@@ -40,6 +41,7 @@ class User(UserMixin, db.Model):
     canceled = db.Column(db.Boolean)
     analyzed = db.Column(db.Integer)
     last_analyzed = db.Column(db.DateTime)
+    signup_date = db.Column(db.DateTime)
 
     # Pelvis Rotation
     setup_low_pelvis_rot = db.Column(db.Integer)
