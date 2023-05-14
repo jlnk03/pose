@@ -3038,13 +3038,13 @@ def init_callbacks(app):
         print('here')
 
         if not current_user.unlimited:
-            print('here2')
             current_user.n_analyses -= 1
 
-        print('here3')
-        print(current_user.analyzed)
         # Log number of analyses
-        current_user.analyzed += 1
+        if current_user.analyzed is None:
+            current_user.analyzed = 1
+        else:
+            current_user.analyzed += 1
         current_user.last_analyzed = datetime.datetime.now()
         db.session.commit()
 
