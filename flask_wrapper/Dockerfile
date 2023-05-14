@@ -14,17 +14,17 @@ COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./*.py /flask_wrapper/
-COPY ./templates/*.html /flask_wrapper/templates/
 COPY ./assets/*.png /flask_wrapper/assets/
 COPY ./assets/*.mp4 /flask_wrapper/assets/
-COPY ./assets/output.css /flask_wrapper/assets/output.css
 COPY ./assets/robots.txt /flask_wrapper/assets/robots.txt
 COPY ./assets/*.svg /flask_wrapper/assets/
 COPY ./assets/*.js /flask_wrapper/assets/
 COPY ./assets/*.otf /flask_wrapper/assets/
 COPY ./assets/*.m4a /flask_wrapper/assets/
+COPY ./assets/output.css /flask_wrapper/assets/output.css
 COPY ./code_b/*.py /code_b/
+COPY ./templates/*.html /flask_wrapper/templates/
+COPY ./*.py /flask_wrapper/
 
 COPY /assets/pose_landmark_heavy.tflite ../usr/local/lib/python3.10/site-packages/mediapipe/modules/pose_landmark/pose_landmark_heavy.tflite
 
