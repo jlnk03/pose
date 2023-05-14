@@ -2425,10 +2425,10 @@ def init_callbacks(app):
             return no_update
 
         # Check if file exists
-        if not os.path.exists(f'assets/save_data/{current_user.id}/{pathname.split("/")[2]}'):
-            # print('File does not exist')
-            # exit function
-            return [no_update for _ in range(0, 51)] + ['/dashboard/']
+        # if not os.path.exists(f'assets/save_data/{current_user.id}/{pathname.split("/")[2]}'):
+        #     # print('File does not exist')
+        #     # exit function
+        #     return [no_update for _ in range(0, 51)] + ['/dashboard/']
 
         # Check if button was pressed or a file was uploaded
         if (ctx.triggered_id != 'upload-data') and (ctx.triggered_id != 'add-button') and (
