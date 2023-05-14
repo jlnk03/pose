@@ -366,9 +366,11 @@ def delete_profile_final():
                 return redirect(url_for('main.profile'))
 
     # Delete user files in asset folder
-    print(url_for('static', filename=f'save_data/{user.id}'))
+    # print(os.getcwd() + url_for('static', filename=f'save_data/{user.id}'))
+    # print(os.path.exists(os.getcwd() + url_for('static', filename=f'save_data/{user.id}')))
+    # print(os.getcwd())
     if os.path.exists(url_for('static', filename=f'save_data/{user.id}')):
-        shutil.rmtree(url_for('static', filename=f'save_data/{user.id}'))
+        shutil.rmtree(os.getcwd() + url_for('static', filename=f'save_data/{user.id}'))
 
     db.session.delete(user)
     db.session.commit()
