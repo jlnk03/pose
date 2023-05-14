@@ -3035,9 +3035,14 @@ def init_callbacks(app):
             className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row bg-slate-200 dark:bg-slate-500 shadow-md dark:shadow-slate-950 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
         children.insert(0, new_item)
 
+        print('here')
+
         if not current_user.unlimited:
+            print('here2')
             current_user.n_analyses -= 1
 
+        print('here3')
+        print(current_user.analyzed)
         # Log number of analyses
         current_user.analyzed += 1
         current_user.last_analyzed = datetime.datetime.now()
