@@ -127,12 +127,14 @@ window
     })
 
 // Add script to header
+// Web analytics using Plausible and a proxy
 webAnalytics = document.createElement("script")
-webAnalytics.setAttribute("src", "https://plausible.io/js/script.js")
+// webAnalytics.setAttribute("src", "https://plausible.io/js/script.js")
 webAnalytics.setAttribute('defer', 'defer')
 webAnalytics.setAttribute('data-domain', 'swinglab.app')
+webAnalytics.setAttribute('src', '/js/script.js')
+webAnalytics.setAttribute('data-api', '/api/event')
 document.head.appendChild(webAnalytics)
-
 
 document.addEventListener('DOMContentLoaded', function () {
     let interval = setInterval(function () {
