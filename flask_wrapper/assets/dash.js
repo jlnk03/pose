@@ -126,6 +126,13 @@ window
         switchColorMode()
     })
 
+// Add script to header
+webAnalytics = document.createElement("script")
+webAnalytics.setAttribute("src", "https://plausible.io/js/script.js")
+webAnalytics.setAttribute('defer', 'defer')
+webAnalytics.setAttribute('data-domain', 'swinglab.app')
+document.head.appendChild(webAnalytics)
+
 
 document.addEventListener('DOMContentLoaded', function () {
     let interval = setInterval(function () {
