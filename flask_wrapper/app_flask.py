@@ -1246,6 +1246,7 @@ def init_dash(server):
             id='main',
 
             children=[
+                html.Script(src='https://plausible.io/js/script.js', defer=True, **{'data-domain': 'swinglab.app'}),
                 dcc.Location(id='url', refresh=False),
 
                 # Loading state to show loading view
