@@ -188,7 +188,7 @@ def send_mail():
 
 @auth.route('/verify_mail')
 def verify():
-    return render_template('verify_mail.html', title='Verify your email-address – swinglab')
+    return render_template('verify_mail.html', title='Verify your email-address – swinglab', email=current_user.email)
 
 
 @auth.route('/verify/<token>')

@@ -13,12 +13,19 @@
 <body style="background-color: rgba(246, 249, 255, 1)">
 
 <div class="flex flex-col min-h-full items-center justify-center px-4 place-items-center h-screen sm:px-6 lg:px-8 text-center">
-    <h2 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl block">
-        <span class="block">Please check your inbox to verify your email-address</span>
+    <h2 class="text-lg font-bold tracking-tight text-gray-900 sm:text-2xl block">
+        <span class="block text-xl">A verification email has been sent to {{email}}</span>
+        <span class="block mt-8">Please check your inbox to verify your email-address</span>
     </h2>
-    <h2 class="mt-8 text-xl font-bold leading-6 text-gray-900 sm:text-3xl block">
+    <h2 class="mt-8 text-base leading-6 text-gray-900 sm:text-xl block">
         <a class="text-indigo-600 hover:text-indigo-700" href="/send_mail">Resend</a> verification email
     </h2>
+    <span class="text-base">
+        If the email is not in your inbox, please check your spam folder and make sure the email-address is correct.
+    </span>
+    <span class="text-base">
+        You can directly head to your <a class="text-indigo-600 hover:text-indigo-700" href="/profile">profile</a> and manage your account.
+    </span>
 </div>
 
 </body>
