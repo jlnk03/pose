@@ -1,9 +1,7 @@
-import base64
 import datetime
 import os
 import shutil
 import sys
-import tempfile
 import urllib
 
 import dash_player as dp
@@ -2857,33 +2855,33 @@ def init_callbacks(app):
 
         replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
-        # response = replicate.run(
-        #     "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-        #     input={"video": content_string},
-        # )
-        #
-        # shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
-        #     duration, fps, impact_ratio, \
-        #     out_path = response
+        response = replicate.run(
+            "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
+            input={"video": content_string},
+        )
 
-        # yolo + motionBERT
-        content_string = base64.b64decode(content_string)
-        # write video to temp file
-        with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
-            temp.write(content_string)
-
-            response = replicate.run(
-                "jlnk03/pose3d:1fa7d2fa06f168febf0fba41e776a501c3e5df021ca298effcfa0287ce4a566b",
-                input={"image": open(temp.name, "rb")},
-            )
-
-        shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, arm_v, \
+        shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
             duration, fps, impact_ratio, \
             out_path = response
 
-        # dummy pinky and index data
-        pinky_l_s = wrist_l_s
-        index_l_s = shoulder_l_s
+        # yolo + motionBERT
+        # content_string = base64.b64decode(content_string)
+        # # write video to temp file
+        # with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
+        #     temp.write(content_string)
+        #
+        #     response = replicate.run(
+        #         "jlnk03/pose3d:1fa7d2fa06f168febf0fba41e776a501c3e5df021ca298effcfa0287ce4a566b",
+        #         input={"image": open(temp.name, "rb")},
+        #     )
+        #
+        # shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, arm_v, \
+        #     duration, fps, impact_ratio, \
+        #     out_path = response
+        #
+        # # dummy pinky and index data
+        # pinky_l_s = wrist_l_s
+        # index_l_s = shoulder_l_s
 
         # Angles
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_sway, save_pelvis_thrust, save_pelvis_lift, \
@@ -2893,28 +2891,7 @@ def init_callbacks(app):
             calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s,
                              eye_r_s, pinky_l_s, index_l_s, arm_v, impact_ratio)
 
-        print(save_pelvis_rotation)
-        # remove all nan or inf values
-        save_pelvis_rotation = [x for x in save_pelvis_rotation if str(x) != 'nan']
-        save_pelvis_tilt = [x for x in save_pelvis_tilt if str(x) != 'nan']
-        save_pelvis_sway = [x for x in save_pelvis_sway if str(x) != 'nan']
-        save_pelvis_thrust = [x for x in save_pelvis_thrust if str(x) != 'nan']
-        save_pelvis_lift = [x for x in save_pelvis_lift if str(x) != 'nan']
-        save_thorax_rotation = [x for x in save_thorax_rotation if str(x) != 'nan']
-        save_thorax_bend = [x for x in save_thorax_bend if str(x) != 'nan']
-        save_thorax_tilt = [x for x in save_thorax_tilt if str(x) != 'nan']
-        save_thorax_sway = [x for x in save_thorax_sway if str(x) != 'nan']
-        save_thorax_thrust = [x for x in save_thorax_thrust if str(x) != 'nan']
-        save_thorax_lift = [x for x in save_thorax_lift if str(x) != 'nan']
-        save_spine_rotation = [x for x in save_spine_rotation if str(x) != 'nan']
-        save_spine_tilt = [x for x in save_spine_tilt if str(x) != 'nan']
-        save_head_rotation = [x for x in save_head_rotation if str(x) != 'nan']
-        save_head_tilt = [x for x in save_head_tilt if str(x) != 'nan']
-        save_wrist_angle = [x for x in save_wrist_angle if str(x) != 'nan']
-        save_wrist_tilt = [x for x in save_wrist_tilt if str(x) != 'nan']
-        save_left_arm_length = [x for x in save_left_arm_length if str(x) != 'nan']
-        save_arm_rotation = [x for x in save_arm_rotation if str(x) != 'nan']
-        save_arm_to_ground = [x for x in save_arm_to_ground if str(x) != 'nan']
+        # print(save_pelvis_rotation)
 
         # Check if folder was created and generate file name
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
