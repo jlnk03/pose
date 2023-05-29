@@ -32,6 +32,9 @@ pio.templates.default = "plotly_white"
 
 # Hide plotly logo
 config = dict({'displaylogo': False, 'displayModeBar': False, 'scrollZoom': False})
+config_3D = dict(
+    {'displaylogo': False, 'displayModeBar': True, 'scrollZoom': False,
+     'modeBarButtonsToRemove': ['zoom', 'pan', 'resetCameraDefault3d', 'orbitRotation', 'tableRotation', 'toImage']})
 
 
 def find_closest_zero_intersection_left_of_max(array):
@@ -325,7 +328,8 @@ def hand_path_3d(x, y, z, start, end, top, fps):
                           mode='lines',
                           line=dict(color=np.linspace(0, 1, len(x))[start:end], width=6, colorscale='Viridis'),
                           name='Hand Path',
-                          ))
+                          ),
+    )
 
     start_point = [x[start], z[start]]
     end_point = [x[top], z[top]]
@@ -363,7 +367,12 @@ def hand_path_3d(x, y, z, start, end, top, fps):
         margin=dict(r=10, b=10, l=10, t=10),
         paper_bgcolor='rgba(0,0,0,0)',
         # showlegend=True,
-        hovermode=False
+        hovermode=False,
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='#94a3b8',
+            activecolor='#94a3b9',
+        )
     )
 
     return path_fig, angle
@@ -1220,6 +1229,11 @@ def init_dash(server):
         font_color="#94a3b8",
         margin=dict(r=10, b=10, l=10, t=10),
         paper_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(
+            bgcolor='rgba(0,0,0,0)',
+            color='#94a3b8',
+            activecolor='#94a3b9',
+        )
     )
 
     def serve_layout():
@@ -2099,7 +2113,7 @@ def init_dash(server):
                                                         dcc.Graph(
                                                             id='arm_path_3d',
                                                             figure=path_fig,
-                                                            config=config,
+                                                            config=config_3D,
                                                             className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
                                                         )
                                                     ]),
@@ -2486,9 +2500,14 @@ def init_callbacks(app):
                         font_color="#94a3b8",
                         margin=dict(r=10, b=10, l=10, t=10),
                         paper_bgcolor='rgba(0,0,0,0)',
+                        modebar=dict(
+                            bgcolor='rgba(0,0,0,0)',
+                            color='#94a3b8',
+                            activecolor='#94a3b9',
+                        )
                     )
 
-                    path = dcc.Graph(figure=path_fig, config=config,
+                    path = dcc.Graph(figure=path_fig, config=config_3D,
                                      className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                     # Reset sequence colors
@@ -2714,7 +2733,7 @@ def init_callbacks(app):
                     children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
                               f'{int(angle_swing_plane)}°'])
 
-                path = dcc.Graph(figure=path_fig, config=config,
+                path = dcc.Graph(figure=path_fig, config=config_3D,
                                  className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                 return [fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16, children,
@@ -2794,9 +2813,14 @@ def init_callbacks(app):
                     font_color="#94a3b8",
                     margin=dict(r=10, b=10, l=10, t=10),
                     paper_bgcolor='rgba(0,0,0,0)',
+                    modebar=dict(
+                        bgcolor='rgba(0,0,0,0)',
+                        color='#94a3b8',
+                        activecolor='#94a3b9',
+                    )
                 )
 
-                path = dcc.Graph(figure=path_fig, config=config,
+                path = dcc.Graph(figure=path_fig, config=config_3D,
                                  className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
                 # Reset sequence colors
@@ -3009,7 +3033,7 @@ def init_callbacks(app):
                                                    arm_index_e,
                                                    arm_index, fps)
 
-        path = dcc.Graph(figure=path_fig, config=config,
+        path = dcc.Graph(figure=path_fig, config=config_3D,
                          className='w-[350px] lg:w-[500px] xl:w-full h-[500px] relative', )
 
         angle_swing_plane_text = html.Div(children=[html.Div('Swing Plane Angle:', className='text-base font-normal'),
@@ -3415,7 +3439,7 @@ def init_callbacks(app):
                 fig = dcc.Graph(
                     id='arm_path_3d',
                     figure=path,
-                    config=config,
+                    config=config_3D,
                     className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
                 )
 
@@ -3534,7 +3558,7 @@ def init_callbacks(app):
                 fig = dcc.Graph(
                     id='arm_path_3d',
                     figure=path,
-                    config=config,
+                    config=config_3D,
                     className='w-[350px] lg:w-[500px] xl:w-full h-fit relative',
                 )
 

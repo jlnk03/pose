@@ -6,12 +6,16 @@
   color: #fcd34d;
 }
 
+/*.modebar-group {*/
+/*  background: transparent;*/
+/*}*/
+
 /*scrollbar*/
 /* Hide the default scrollbar */
 #file_list::-webkit-scrollbar {
-    width: 0.4em;
-    /*background-color: #475569;*/
-    background-color: transparent;
+  width: 0.4em;
+  /*background-color: #475569;*/
+  background-color: transparent;
 }
 
 /*@media (prefers-color-scheme: dark) {*/
