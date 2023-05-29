@@ -917,7 +917,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const errorHeadTilt = tiltText(head_t, head_tilt_margins, 'head', head_report_text_tilt)
                 const errorPelvisTilt = tiltText(pelvis_t, pelvis_tilt_margins, 'pelvis', pelvis_report_text_tilt)
                 const errorThoraxBend = bendText(thorax_b, thorax_bend_margins, 'thorax', thorax_report_text_bend)
-                const focusText = getFocus([errorPelvis, errorThorax, errorHead, errorHeadTilt, errorPelvisTilt, errorThoraxBend])
+                const focusText = getFocus([errorPelvis, errorThorax, errorPelvisTilt, errorThoraxBend])
 
                 focusReportText.innerHTML = focusText[0]
                 focusReportText2.innerHTML = focusText[1]
@@ -928,7 +928,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const errorHeadTiltTop = tiltText(head_tilt_top, head_tilt_margins.slice(2, 4), 'head', head_report_text_tilt_top)
                 const errorPelvisTiltTop = tiltText(pelvis_tilt_top, pelvis_tilt_margins.slice(2, 4), 'pelvis', pelvis_report_text_tilt_top)
                 const errorThoraxBendTop = bendText(thorax_bend_top, thorax_bend_margins.slice(2, 4), 'thorax', thorax_report_text_bend_top)
-                const focusTextTop = getFocus([errorPelvisTop, errorThoraxTop, errorHeadTop, errorHeadTiltTop, errorPelvisTiltTop, errorThoraxBendTop])
+                const focusTextTop = getFocus([errorPelvisTop, errorThoraxTop, errorPelvisTiltTop, errorThoraxBendTop])
 
                 focusReportTextTop.innerHTML = focusTextTop[0]
                 focusReportTextTop2.innerHTML = focusTextTop[1]
@@ -939,7 +939,7 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 const errorHeadTiltImpact = tiltText(head_tilt_impact, head_tilt_margins.slice(4, 7), 'head', head_report_text_tilt_impact)
                 const errorPelvisTiltImpact = tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis', pelvis_report_text_tilt_impact)
                 const errorThoraxBendImpact = bendText(thorax_bend_impact, thorax_bend_margins.slice(4, 7), 'thorax', thorax_report_text_bend_impact)
-                const focusTextImpact = getFocus([errorPelvisImpact, errorThoraxImpact, errorHeadImpact, errorHeadTiltImpact, errorPelvisTiltImpact, errorThoraxBendImpact])
+                const focusTextImpact = getFocus([errorPelvisImpact, errorThoraxImpact, errorPelvisTiltImpact, errorThoraxBendImpact])
 
                 focusReportTextImpact.innerHTML = focusTextImpact[0]
                 focusReportTextImpact2.innerHTML = focusTextImpact[1]
