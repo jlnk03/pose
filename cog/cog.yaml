@@ -15,8 +15,7 @@ build:
   python_version: "3.10"
 
   python_packages:
-     - numpy
-     - numpy
+    - numpy
      - scipy
      - moviepy
      - imageio[pyav]
@@ -24,6 +23,7 @@ build:
      - mediapipe
      - av==9.2.0
      - opencv-python
+     - Pillow
 
 image: "r8.im/jlnk03/predict-pose"
 

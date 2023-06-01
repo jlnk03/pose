@@ -11,9 +11,11 @@ import cv2
 import imageio.v3 as iio
 import mediapipe as mp
 import numpy as np
-from cog import BasePredictor, Input, Path, BaseModel
+from PIL import Image
 from moviepy.editor import AudioFileClip
 from scipy import signal
+
+from cog import BasePredictor, Input, Path, BaseModel
 
 
 def filter_data(data, fps):
@@ -119,14 +121,33 @@ class Predictor(BasePredictor):
             if width % 2 != 0:
                 width += 1
 
+            # Downsample the frames to a maximum resolution of 720p
+            max_width = 720
+            max_height = 1280
+            print(f'Image shape: {frame.shape}')
+            if width > max_width or height > max_height:
+                scale_factor = min(max_width / width, max_height / height)
+                print(f'Scaling image by {scale_factor}')
+                new_width = int(width * scale_factor)
+                new_height = int(height * scale_factor)
+                frame = Image.fromarray(frame)
+                frame = frame.resize((new_width, new_height), resample=Image.BILINEAR)
+                frame = np.array(frame)
+                print(f'New image shape: {frame.shape}')
+
+            height_temp, width_temp, _ = frame.shape
+
             out_path = Path('/tmp/motion.mp4')
 
             container = av.open('/tmp/motion.mp4', 'w')
             stream = container.add_stream('libx264', rate=np.floor(fps))
             stream.options = {'preset': 'medium', 'crf': '20', 'profile': 'high'}
-            stream.width = width
-            stream.height = height
+            stream.width = width_temp
+            stream.height = height_temp
             stream.pix_fmt = 'yuv420p'
+
+            print('Stream width and height')
+            print(stream.width, stream.height)
 
             # Audio
             impact_ratio = impact_from_audio(vid_bytes)
@@ -155,6 +176,20 @@ class Predictor(BasePredictor):
 
                 image = np.rot90(image, k=rot_angle // 90)
                 image = np.ascontiguousarray(image)
+
+                # Downsample the frames to a maximum resolution of 720p
+                max_width = 720
+                max_height = 1280
+                print(f'Image shape: {image.shape}')
+                if width > max_width or height > max_height:
+                    scale_factor = min(max_width / width, max_height / height)
+                    print(f'Scaling image by {scale_factor}')
+                    new_width = int(width * scale_factor)
+                    new_height = int(height * scale_factor)
+                    image = Image.fromarray(image)
+                    image = image.resize((new_width, new_height), resample=Image.BILINEAR)
+                    image = np.array(image)
+                    print(f'New image shape: {image.shape}')
 
                 # Make detection
                 results = self.pose.process(image)
@@ -228,6 +263,8 @@ class Predictor(BasePredictor):
                     break
 
                 # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+                print(f'Image shape 2: {image.shape}')
 
                 # Write with pyav
                 frame = av.VideoFrame.from_ndarray(image, format='bgr24')
