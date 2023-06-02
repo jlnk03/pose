@@ -1,7 +1,9 @@
+import base64
 import datetime
 import os
 import shutil
 import sys
+import tempfile
 import urllib
 
 import dash_player as dp
@@ -2879,11 +2881,18 @@ def init_callbacks(app):
 
         replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
-        response = replicate.run(
-            # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-            "jlnk03/predict-pose:50477648adea6e70ecd6738e36444bb6eb342f1275d8936961ed52451b29b170",
-            input={"video": content_string},
-        )
+        content_string = base64.b64decode(content_string)
+        # write video to temp file
+        with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
+            temp.write(content_string)
+            print(tempfile.gettempdir())
+
+            response = replicate.run(
+                # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
+                "jlnk03/predict-pose:2ed9a6b074e4e121139ade523a151dbc7eecf9f0d2d72e04a1bf2d5fd54a6824",
+                # input={"video": open(temp.name, "rb")},
+                input={"video": f'https://swinglab.app/{tempfile.gettempdir()}/{temp.name}'},
+            )
 
         shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
             duration, fps, impact_ratio, \
