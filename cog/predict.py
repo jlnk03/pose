@@ -88,6 +88,7 @@ class Predictor(BasePredictor):
         # return postprocess(output)
 
         decoded = open(video, 'rb').read()
+        print(video)
 
         # decoded = base64.b64decode(video)
 

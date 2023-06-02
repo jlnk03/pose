@@ -2882,8 +2882,14 @@ def init_callbacks(app):
         replicate.Client(api_token=os.getenv('REPLICATE_API_TOKEN'))
 
         content_string = base64.b64decode(content_string)
+
+        # Create the directory if it doesn't exist
+        directory = f"assets/{current_user.id}"
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
         # write video to temp file
-        with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
+        with tempfile.NamedTemporaryFile(suffix=".mp4", dir=f'assets/{current_user.id}') as temp:
             temp.write(content_string)
             print(tempfile.gettempdir())
 
@@ -2891,7 +2897,7 @@ def init_callbacks(app):
                 # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
                 "jlnk03/predict-pose:fc75707463e712e0cd68b43b2bc771a08f3e7e3ca0f05253de25bc8404393f8a",
                 # input={"video": open(temp.name, "rb")},
-                input={"video": f'https://swinglab.app/{tempfile.gettempdir()}/{temp.name}'},
+                input={"video": f'https://swinglab.app/dashboard/assets/{current_user.id}/{temp.name}'},
             )
 
         shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \

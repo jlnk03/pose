@@ -28,7 +28,7 @@ build:
 image: "r8.im/jlnk03/predict-pose"
 
   # commands run after the environment is setup
-  # run:
+# run:
 # - "echo env is ready!"
 # - "echo another command if needed"
 
