@@ -2889,7 +2889,7 @@ def init_callbacks(app):
 
             response = replicate.run(
                 # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-                "jlnk03/predict-pose:5440c6f1aace22107e04de7eb61bd3c4b2030e998c32fb47509d75f6c3532775",
+                "jlnk03/predict-pose:fc75707463e712e0cd68b43b2bc771a08f3e7e3ca0f05253de25bc8404393f8a",
                 # input={"video": open(temp.name, "rb")},
                 input={"video": f'https://swinglab.app/{tempfile.gettempdir()}/{temp.name}'},
             )

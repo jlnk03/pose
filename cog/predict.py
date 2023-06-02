@@ -95,9 +95,9 @@ class Predictor(BasePredictor):
 
         with io.BytesIO(decoded) as vid_bytes:
 
-            frames = iio.imiter(video, plugin='pyav')
+            frames = iio.imiter(vid_bytes, plugin='pyav')
 
-            meta = iio.immeta(video, plugin='pyav')
+            meta = iio.immeta(vid_bytes, plugin='pyav')
             fps = meta['fps']
             duration = meta['duration']
 
