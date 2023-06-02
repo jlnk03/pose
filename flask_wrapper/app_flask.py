@@ -2894,8 +2894,8 @@ def init_callbacks(app):
             print(tempfile.gettempdir())
 
             response = replicate.run(
-                # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-                "jlnk03/predict-pose:3eb2bb8e4088f9ff155a85bd65b9445149f613a0ede865066df6bb35bbf0840d",
+                "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
+                # "jlnk03/predict-pose:3eb2bb8e4088f9ff155a85bd65b9445149f613a0ede865066df6bb35bbf0840d",
                 # input={"video": open(temp.name, "rb")},
                 input={"video": f'https://swinglab.app/dashboard/assets/{current_user.id}/{temp.name}'},
             )

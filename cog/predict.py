@@ -1,6 +1,5 @@
 # Prediction interface for Cog ⚙️
 # https://github.com/replicate/cog/blob/main/docs/python.md
-
 import io
 import tempfile
 from collections import deque
@@ -105,11 +104,20 @@ class Predictor(BasePredictor):
 
         # with io.BytesIO(decoded) as vid_bytes:
 
-        video = download_video(video, '/tmp/video.mp4')
+        # video = download_video(video, '/tmp/video.mp4')
+        video = open(video, 'rb').read()
+        video = io.BytesIO(video)
 
         frames = iio.imiter(video, plugin='pyav')
 
+        # frames = imageio.read(video, plugin='pyav')
+        print(type(frames))
+        for frame in frames:
+            print(type(frame))
+            print(frame.shape)
+
         meta = iio.immeta(video, plugin='pyav')
+        print(meta)
         fps = meta['fps']
         duration = meta['duration']
 
@@ -126,7 +134,8 @@ class Predictor(BasePredictor):
             rotation = 360
 
         rot_angle = 360 - rotation
-        frame = next(frames)
+        # frame = next(frames)
+        frame = frames[0]
         frame = np.rot90(frame, k=rot_angle // 90)
         height, width, _ = frame.shape
         if width % 2 != 0:
