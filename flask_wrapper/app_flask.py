@@ -2893,7 +2893,9 @@ def init_callbacks(app):
             temp.write(content_string)
             print(tempfile.gettempdir())
 
-            path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{temp.name}'
+            filename = temp.name.split('/')[-1]
+
+            path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
             print(path)
 
             response = replicate.run(
