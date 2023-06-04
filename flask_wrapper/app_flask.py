@@ -334,7 +334,9 @@ def hand_path_3d(x, y, z, start, end, top, fps):
     )
 
     start_point = [x[start], z[start]]
-    end_point = [x[top], z[top]]
+    # end_point = [x[top], z[top]]
+    # dummy end point
+    end_point = [x[0], z[0]]
     # print(start_point, end_point)
 
     slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
