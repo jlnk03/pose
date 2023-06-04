@@ -381,6 +381,8 @@ def hand_path_3d(x, y, z, start, end, top, fps):
         )
     )
 
+    angle = 60
+
     return path_fig, angle
 
 
