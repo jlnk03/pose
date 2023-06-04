@@ -334,10 +334,9 @@ def hand_path_3d(x, y, z, start, end, top, fps):
     )
 
     start_point = [x[start], z[start]]
-    # end_point = [x[top], z[top]]
-    # dummy end point
-    end_point = [x[0], z[0]]
+    end_point = [x[top], z[top]]
     # print(start_point, end_point)
+
     print(x)
     print(np.shape(x))
 
@@ -346,7 +345,7 @@ def hand_path_3d(x, y, z, start, end, top, fps):
 
     zero_intersect = start_point[1] - slope * start_point[0]
 
-    plane_x = np.linspace(x[0], x[1], 10)
+    plane_x = np.linspace(x[start], x[top], 10)
     plane_y = np.linspace(min(y), max(y), 10)
     plane_x, plane_y = np.meshgrid(plane_x, plane_y)
     plane_z = slope * plane_x + zero_intersect
@@ -380,8 +379,6 @@ def hand_path_3d(x, y, z, start, end, top, fps):
             activecolor='#94a3b9',
         )
     )
-
-    angle = 60
 
     return path_fig, angle
 
@@ -2925,7 +2922,7 @@ def init_callbacks(app):
             path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
 
             response = replicate.run(
-                "jlnk03/pose3d:6bd3abb79c7d7c11db41711a0e3911db1f829fcd6838b3cb19ef4e9cbe6a39aa",
+                "jlnk03/pose3d:8028798b056fce0ec4ed4dbaa0104c2859c0f97769ac63b634030fd1383314e8",
                 # input={"image": open(temp.name, "rb")},
                 input={"image": path},
             )
