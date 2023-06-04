@@ -2922,7 +2922,7 @@ def init_callbacks(app):
             path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
 
             response = replicate.run(
-                "jlnk03/pose3d:5f6cfbd2acf00092d3eea2b28154cdc14b8550313356f3c29379125da2f71720",
+                "jlnk03/pose3d:31e79f7213374dadfd4888bb691c4103c72d424ba3625610d0e090b75e66440a",
                 # input={"image": open(temp.name, "rb")},
                 input={"image": path},
             )
