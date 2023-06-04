@@ -423,7 +423,7 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
                  save_thorax_tilt, save_spine_rotation, save_spine_tilt, save_head_rotation, save_head_tilt,
                  save_left_arm_length, save_wrist_angle, save_wrist_tilt, save_arm_rotation, save_arm_to_ground,
                  duration, fps=1,
-                 filt=False):
+                 filt=True):
     if filt:
         converted = [filter_data(np.array(name), fps) for name in
                      [save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_pelvis_sway, save_pelvis_thrust,
@@ -2922,7 +2922,7 @@ def init_callbacks(app):
             path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
 
             response = replicate.run(
-                "jlnk03/pose3d:8028798b056fce0ec4ed4dbaa0104c2859c0f97769ac63b634030fd1383314e8",
+                "jlnk03/pose3d:5f6cfbd2acf00092d3eea2b28154cdc14b8550313356f3c29379125da2f71720",
                 # input={"image": open(temp.name, "rb")},
                 input={"image": path},
             )
