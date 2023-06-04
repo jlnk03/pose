@@ -2921,7 +2921,7 @@ def init_callbacks(app):
             response = replicate.run(
                 "jlnk03/pose3d:6bd3abb79c7d7c11db41711a0e3911db1f829fcd6838b3cb19ef4e9cbe6a39aa",
                 # input={"image": open(temp.name, "rb")},
-                input={"video": path},
+                input={"image": path},
             )
 
         shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, arm_v, \
