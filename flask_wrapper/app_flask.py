@@ -338,13 +338,15 @@ def hand_path_3d(x, y, z, start, end, top, fps):
     # dummy end point
     end_point = [x[0], z[0]]
     # print(start_point, end_point)
+    print(x)
+    print(np.shape(x))
 
     slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
     angle = np.arctan(slope) * 180 / np.pi
 
     zero_intersect = start_point[1] - slope * start_point[0]
 
-    plane_x = np.linspace(x[start], x[top], 10)
+    plane_x = np.linspace(x[0], x[1], 10)
     plane_y = np.linspace(min(y), max(y), 10)
     plane_x, plane_y = np.meshgrid(plane_x, plane_y)
     plane_z = slope * plane_x + zero_intersect
