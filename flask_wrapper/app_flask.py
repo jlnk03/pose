@@ -2911,7 +2911,7 @@ def init_callbacks(app):
         # yolo + motionBERT
         # content_string = base64.b64decode(content_string)
         # write video to temp file
-        with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
+        with tempfile.NamedTemporaryFile(suffix=".mp4", dir=f'assets/{current_user.id}') as temp:
             temp.write(content_string)
 
             filename = temp.name.split('/')[-1]
