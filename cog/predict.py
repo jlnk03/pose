@@ -90,20 +90,6 @@ class Predictor(BasePredictor):
             self,
             video: Path = Input(description="Input video to detect pose")
     ) -> tuple:
-        """Run a single prediction on the model"""
-        # processed_input = preprocess(image)
-        # output = self.model(processed_image, scale)
-        # return postprocess(output)
-        print(video)
-
-        # decoded = open(video, 'rb').read()
-
-        # decoded = base64.b64decode(video)
-
-        # decoded = video
-
-        # video = download_video(video, '/tmp/video.mp4')
-        # video = open(video, 'rb').read()
 
         with open(video, 'rb') as video:
             video = video.read()
@@ -113,14 +99,6 @@ class Predictor(BasePredictor):
             video_audio = io.BytesIO(video)
 
             frames = iio.imiter(video_iter, plugin='pyav')
-
-            # frames = imageio.read(video, plugin='pyav')
-            # print(type(frames))
-            # frame = next(frames)
-            # print(frame)
-            # for frame_it in frames:
-            #     print(type(frame_it))
-            #     print(frame_it.shape)
 
             meta = iio.immeta(video_meta, plugin='pyav')
             print(meta)
@@ -142,7 +120,6 @@ class Predictor(BasePredictor):
             rot_angle = 360 - rotation
 
             frame = next(frames)
-            # frame = frames[0]
 
             frame = np.rot90(frame, k=rot_angle // 90)
             height, width, _ = frame.shape
@@ -152,16 +129,13 @@ class Predictor(BasePredictor):
             # Downsample the frames to a maximum resolution of 720p
             max_width = 720
             max_height = 1280
-            print(f'Image shape: {frame.shape}')
             if width > max_width or height > max_height:
                 scale_factor = min(max_width / width, max_height / height)
-                print(f'Scaling image by {scale_factor}')
                 new_width = int(width * scale_factor)
                 new_height = int(height * scale_factor)
                 frame = Image.fromarray(frame)
                 frame = frame.resize((new_width, new_height), resample=Image.BILINEAR)
                 frame = np.array(frame)
-                print(f'New image shape: {frame.shape}')
 
             height_temp, width_temp, _ = frame.shape
 
@@ -173,9 +147,6 @@ class Predictor(BasePredictor):
             stream.width = width_temp
             stream.height = height_temp
             stream.pix_fmt = 'yuv420p'
-
-            print('Stream width and height')
-            print(stream.width, stream.height)
 
             # Audio
             # impact_ratio = impact_from_audio(io.BytesIO(open(video, 'rb').read()))
@@ -200,11 +171,8 @@ class Predictor(BasePredictor):
             index_l_s = deque()
 
             R = np.identity(3)
-            print('Starting pose estimation')
 
             for i, image in enumerate(frames):
-
-                print(f'Processing frame {i}')
 
                 image = np.rot90(image, k=rot_angle // 90)
                 image = np.ascontiguousarray(image)
@@ -212,16 +180,13 @@ class Predictor(BasePredictor):
                 # Downsample the frames to a maximum resolution of 720p
                 max_width = 720
                 max_height = 1280
-                print(f'Image shape: {image.shape}')
                 if width > max_width or height > max_height:
                     scale_factor = min(max_width / width, max_height / height)
-                    print(f'Scaling image by {scale_factor}')
                     new_width = int(width * scale_factor)
                     new_height = int(height * scale_factor)
                     image = Image.fromarray(image)
                     image = image.resize((new_width, new_height), resample=Image.BILINEAR)
                     image = np.array(image)
-                    print(f'New image shape: {image.shape}')
 
                 # Make detection
                 results = self.pose.process(image)
@@ -294,11 +259,6 @@ class Predictor(BasePredictor):
                     # shutil.rmtree(location)
                     break
 
-                # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-                print(f'Image shape 2: {image.shape}')
-                print(f'Frame {i} processed')
-
                 # Write with pyav
                 frame = av.VideoFrame.from_ndarray(image, format='bgr24')
                 for packet in stream.encode(frame):
@@ -309,8 +269,6 @@ class Predictor(BasePredictor):
                 container.mux(packet)
             stream.close()
             container.close()
-
-            print(f'Video saved')
 
             # Rotate data
             shoulder_l_s = filter_data(R @ np.array(shoulder_l_s).T, fps)
@@ -326,9 +284,6 @@ class Predictor(BasePredictor):
             index_l_s = filter_data(R @ np.array(index_l_s).T, fps)
             arm_v = foot_l_s - wrist_l_s
             arm_v = filter_data(arm_v, fps)
-            # arm_v = np.array(foot_l_s) - np.array(wrist_l_s)
-
-            print(f'Arm shape: {arm_v.shape}')
 
             return shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
                 duration, fps, impact_ratio, \

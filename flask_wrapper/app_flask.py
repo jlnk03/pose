@@ -2888,45 +2888,49 @@ def init_callbacks(app):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
+        # # write video to temp file
+        # with tempfile.NamedTemporaryFile(suffix=".mp4", dir=f'assets/{current_user.id}') as temp:
+        #     temp.write(content_string)
+        #
+        #     filename = temp.name.split('/')[-1]
+        #
+        #     path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
+        #     # print(path)
+        #
+        #     response = replicate.run(
+        #         # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
+        #         "jlnk03/predict-pose:6d555b04c4e7032a1e20e5012d1babad7af6dfc12e392ebffb9d5af7bd067021",
+        #         # input={"video": open(temp.name, "rb")},
+        #         input={"video": path},
+        #     )
+        #
+        # shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+        #     duration, fps, impact_ratio, \
+        #     out_path = response
+
+        # yolo + motionBERT
+        # content_string = base64.b64decode(content_string)
         # write video to temp file
-        with tempfile.NamedTemporaryFile(suffix=".mp4", dir=f'assets/{current_user.id}') as temp:
+        with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
             temp.write(content_string)
-            print(tempfile.gettempdir())
 
             filename = temp.name.split('/')[-1]
 
             path = f'https://swinglab.app/dashboard/assets/{current_user.id}/{filename}'
-            print(path)
 
             response = replicate.run(
-                # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-                "jlnk03/predict-pose:6d555b04c4e7032a1e20e5012d1babad7af6dfc12e392ebffb9d5af7bd067021",
-                # input={"video": open(temp.name, "rb")},
+                "jlnk03/pose3d:6bd3abb79c7d7c11db41711a0e3911db1f829fcd6838b3cb19ef4e9cbe6a39aa",
+                # input={"image": open(temp.name, "rb")},
                 input={"video": path},
             )
 
-        shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+        shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, arm_v, \
             duration, fps, impact_ratio, \
             out_path = response
 
-        # yolo + motionBERT
-        # content_string = base64.b64decode(content_string)
-        # # write video to temp file
-        # with tempfile.NamedTemporaryFile(suffix=".mp4") as temp:
-        #     temp.write(content_string)
-        #
-        #     response = replicate.run(
-        #         "jlnk03/pose3d:1fa7d2fa06f168febf0fba41e776a501c3e5df021ca298effcfa0287ce4a566b",
-        #         input={"image": open(temp.name, "rb")},
-        #     )
-        #
-        # shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, arm_v, \
-        #     duration, fps, impact_ratio, \
-        #     out_path = response
-        #
-        # # dummy pinky and index data
-        # pinky_l_s = wrist_l_s
-        # index_l_s = shoulder_l_s
+        # dummy pinky and index data
+        pinky_l_s = wrist_l_s
+        index_l_s = shoulder_l_s
 
         # Angles
         save_pelvis_rotation, save_pelvis_tilt, save_pelvis_sway, save_pelvis_thrust, save_pelvis_lift, \
