@@ -1313,7 +1313,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Pelvis Rotation',
-                                                                                 className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='absolute w-fit left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left flex-nowrap', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1354,7 +1354,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Thorax Rotation',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left flex-nowrap', ),
                                                                         html.Button(
                                                                             html.Img(src=app.get_asset_url('edit.svg'),
                                                                                      className='h-4 w-4'),
@@ -1489,7 +1489,7 @@ def init_dash(server):
                                                                 html.Div(
                                                                     children=[
                                                                         html.Div('Arm To Ground',
-                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left', ),
+                                                                                 className='w-fit absolute left-1/2 -translate-x-1/2 top-2 text-base font-medium text-slate-900 dark:text-gray-100 text-left flex-nowrap', ),
                                                                         html.Div('- °', id='arm_ground_val',
                                                                                  className='mt-2'),
                                                                         html.Div(slider_view('arm_ground', -90, 90)),
