@@ -815,12 +815,14 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             if (url !== null) {
                 console.log('showVideoFrames')
                 var videoContainer = document.getElementById('video')
+                console.log(videoContainer.childElementCount)
 
                 // check if video element is already present in the DOM otherwise wait for it to load
                 if (videoContainer.childElementCount === 0) {
                     // check every 100ms if video is loaded
                     var checkExist = setInterval(function () {
                         if (videoContainer.childElementCount > 0) {
+                            console.log("Exists!");
 
                             let video = videoContainer.getElementsByTagName('video')[0]
                             clearInterval(checkExist);
