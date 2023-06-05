@@ -801,11 +801,16 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
         showFigures: function (value) {
             let figureContainer = document.getElementById('figures-container').classList
+            let liveDivs = document.getElementById('live-divs').classList
+            let video = document.getElementById('video-view').classList
             let expertToggleBG = document.getElementById('expert-toggle-bg').classList
             let expertTogggleCircle = document.getElementById('expert-toggle-circle').classList
             figureContainer.toggle('hidden')
+            liveDivs.toggle('hidden')
             expertToggleBG.toggle('bg-indigo-400')
+            expertToggleBG.toggle('dark:bg-indigo-600')
             expertTogggleCircle.toggle('left-auto')
+            video.toggle('mb-10')
         },
 
         // showVideoFrames: function (n_clicks, n_clicks2, setup, impact, top) {

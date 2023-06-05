@@ -118,7 +118,7 @@ def upload_video(disabled=True, path=None):
     layout = [
         html.Div(
             id='video-view',
-            className='flex flex-col sm:flex-row w-full h-full',
+            className='flex flex-col sm:flex-row w-full h-full mb-10',
             children=[
 
                 # Report button mobile (deprecated)
@@ -190,12 +190,12 @@ def upload_video(disabled=True, path=None):
                             # ),
 
                         ],
-                        className='flex flex-col justify-between'
+                        className='flex flex-col gap-5 justify-center'  # justify-between'
                     ),
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl xl:mr-5 sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
+                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
                                 # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
                                 #            className="h-full w-full object-cover"),
@@ -209,7 +209,7 @@ def upload_video(disabled=True, path=None):
                                     url=path,
                                     controls=True,
                                     playsinline=True,
-                                    className="h-full w-full flex",
+                                    className="h-full w-full",
                                     width='100%',
                                     height='100%',
                                     intervalCurrentTime=70,
@@ -229,7 +229,8 @@ def upload_video(disabled=True, path=None):
                                 # html.Button('⚙️', id='edit_positions',
                                 #             className='text-base absolute bottom-4 right-4 hidden'),
                             ]
-                        ), ]
+                        ),
+                    ]
                 ),
 
                 # Controls for the video player mobile (+, -)
@@ -1228,7 +1229,7 @@ def init_dash(server):
 
                                 # Start video view
                                 html.Div(
-                                    className='flex flex-col xl:flex-row justify-between',
+                                    className='flex flex-col justify-between',
                                     children=[
 
                                         html.Div(
@@ -1299,15 +1300,15 @@ def init_dash(server):
                                         # region Live updating divs based on position in video
                                         html.Div(
                                             id='live-divs',
-                                            className='flex flex-nowrap px-4 -mx-4 xl:mt-5 relative',
+                                            className='flex flex-nowrap px-4 -mx-4 relative hidden',
                                             children=[
                                                 html.Div(
                                                     id='live-divs-container',
-                                                    className='flex mb-10 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-2 -mx-2',
+                                                    className='flex mb-10 gap-2 flex-col w-fit h-fit relative overflow-y-hidden overflow-x-auto py-2 px-2 -mx-2',
                                                     children=[
                                                         # First row
                                                         html.Div(
-                                                            className='flex flex-row xl:flex-col w-full gap-2',
+                                                            className='flex flex-row w-full gap-2',
                                                             children=[
                                                                 html.Div(
                                                                     children=[
@@ -1437,7 +1438,7 @@ def init_dash(server):
 
                                                         # Second row
                                                         html.Div(
-                                                            className='flex flex-row xl:flex-col gap-2',
+                                                            className='flex flex-row gap-2',
                                                             children=[
                                                                 html.Div(
                                                                     children=[
