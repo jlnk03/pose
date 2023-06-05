@@ -24,7 +24,7 @@ from flask_wrapper import db
 # from flask_wrapper.celery_app import celery_app
 from flask_wrapper.loading_view import loader
 from flask_wrapper.models import UserLikes
-from flask_wrapper.overlay_view import overlay
+from flask_wrapper.overlay_view import report_view
 
 # background_callback_manager = CeleryManager(celery_app)
 # background_callback_manager = CeleryLongCallbackManager(celery_app)
@@ -121,11 +121,12 @@ def upload_video(disabled=True, path=None):
             className='flex flex-col sm:flex-row w-full h-full',
             children=[
 
-                html.Button(
-                    'Report',
-                    id='show_overlay_mobile',
-                    className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 dark:shadow-slate-950 text-white font-bold text-xs disable-dbl-tap-zoom'
-                ),
+                # Report button mobile (deprecated)
+                # html.Button(
+                #     'Report',
+                #     id='show_overlay_mobile',
+                #     className='sm:hidden absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-indigo-500 shadow-sm shadow-indigo-400 dark:shadow-slate-950 text-white font-bold text-xs disable-dbl-tap-zoom'
+                # ),
 
                 html.Div(
                     className='flex flex-col-reverse sm:flex-row w-full h-full',
@@ -174,18 +175,19 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 mb-5 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
                             ),
 
-                            html.Div(
-                                html.Button(
-                                    'Report',
-                                    id='show_overlay',
-                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'
-                                ),
-                                className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
+                            # Report button desktop (deprecated)
+                            # html.Div(
+                            #     html.Button(
+                            #         'Report',
+                            #         id='show_overlay',
+                            #         className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'
+                            #     ),
+                            #     className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
 
-                            ),
+                            # ),
 
                         ],
                         className='flex flex-col justify-between'
@@ -337,8 +339,8 @@ def hand_path_3d(x, y, z, start, end, top, fps):
     end_point = [x[top], z[top]]
     # print(start_point, end_point)
 
-    print(x)
-    print(np.shape(x))
+    # print(x)
+    # print(np.shape(x))
 
     slope = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
     angle = np.arctan(slope) * 180 / np.pi
@@ -791,374 +793,6 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     return fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16
 
 
-# Plots
-# path_fig = go.Figure(
-#     data=go.Scatter3d(x=arm_position['x'], y=arm_position['y'],
-#                       z=arm_position['z'], mode='lines',
-#                       line=dict(color=arm_position['y'], width=6, colorscale='Viridis')))
-#
-# path_fig.update_layout(
-#     scene=dict(
-#         xaxis_title='Down the line',
-#         # yaxis_title='Front on',
-#         zaxis_title='Height',
-#         xaxis_showticklabels=False,
-#         yaxis_showticklabels=False,
-#         zaxis_showticklabels=False,
-#         camera=dict(
-#             up=dict(x=0, y=0, z=1),
-#             center=dict(x=0, y=0, z=-0.1),
-#             eye=dict(x=-2.5, y=0.1, z=0.2)
-#         ),
-#     ),
-#     font_color="#94a3b8",
-#     margin=dict(r=10, b=10, l=10, t=10),
-#     paper_bgcolor='rgba(0,0,0,0)',
-# )
-#
-# fig = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis'))
-#
-# fig.add_trace(
-#     go.Scatter(
-#         x=timeline,
-#         y=save_thorax_rotation,
-#         name=f'Thorax',
-#         # legendrank=seq_sorted['Shoulder']
-#     )
-# )
-#
-# fig.add_trace(
-#     go.Scatter(
-#         x=timeline,
-#         y=np.gradient(save_arm_rotation),
-#         name=f'Arm',
-#     )
-# )
-#
-# add_vertical_line(fig)
-#
-# fig.update_layout(
-#     # title='Angular velocity',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title="Angular velocity in °/s",
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°/s",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     legend_orientation="h",
-#     legend=dict(y=1, yanchor="bottom"),
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# ),
-#
-# fig3 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_tilt, name=f'Pelvis side bend'))
-#
-# fig3.add_trace(
-#     go.Scatter(x=timeline, y=save_pelvis_rotation, name=f'Pelvis rotation')
-# )
-#
-# add_vertical_line(fig3)
-#
-# fig3.update_layout(
-#     # title='Pelvis angles',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     legend_orientation="h",
-#     legend=dict(y=1, yanchor="bottom"),
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig4 = go.Figure(data=go.Scatter(x=timeline, y=save_pelvis_lift, name=f'Pelvis lift'))
-#
-# fig4.add_trace(
-#     go.Scatter(x=timeline, y=save_pelvis_sway, name=f'Pelvis sway')
-# )
-#
-# fig4.add_trace(
-#     go.Scatter(x=timeline, y=save_pelvis_thrust, name=f'Pelvis thrust')
-# )
-#
-# add_vertical_line(fig4)
-#
-# fig4.update_layout(
-#     # title='Pelvis displacement',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='Displacement in m',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="m",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     legend_orientation="h",
-#     legend=dict(y=1, yanchor="bottom"),
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig5 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_rotation, name=f'Thorax rotation'))
-#
-# fig5.add_trace(
-#     go.Scatter(x=timeline, y=save_thorax_bend, name=f'Thorax bend')
-# )
-#
-# fig5.add_trace(
-#     go.Scatter(x=timeline, y=save_thorax_tilt, name=f'Thorax tilt')
-# )
-#
-# add_vertical_line(fig5)
-#
-# fig5.update_layout(
-#     # title='Thorax angles',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     legend_orientation="h",
-#     legend=dict(y=1, yanchor="bottom"),
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig6 = go.Figure(data=go.Scatter(x=timeline, y=save_thorax_thrust, name=f'Thorax thrust'))
-#
-# fig6.add_trace(
-#     go.Scatter(x=timeline, y=save_thorax_sway, name=f'Thorax sway')
-# )
-#
-# fig6.add_trace(
-#     go.Scatter(x=timeline, y=save_thorax_lift, name=f'Thorax lift')
-# )
-#
-# add_vertical_line(fig6)
-#
-# fig6.update_layout(
-#     # title='Thorax displacement',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='Displacement in m',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="m",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     legend_orientation="h",
-#     legend=dict(y=1, yanchor="bottom"),
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig11 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_tilt))
-#
-# add_vertical_line(fig11)
-#
-# fig11.update_layout(
-#     # title='Tilt between pelvis and shoulder',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig12 = go.Figure(data=go.Scatter(x=timeline, y=save_head_tilt))
-#
-# add_vertical_line(fig12)
-#
-# fig12.update_layout(
-#     # title='Head tilt',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig13 = go.Figure(data=go.Scatter(x=timeline, y=save_head_rotation))
-#
-# add_vertical_line(fig13)
-#
-# fig13.update_layout(
-#     # title='Head rotation',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig14 = go.Figure(data=go.Scatter(x=timeline, y=save_left_arm_length))
-#
-# add_vertical_line(fig14)
-#
-# fig14.update_layout(
-#     # title='Left arm length',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='length in m',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="m",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig15 = go.Figure(data=go.Scatter(x=timeline, y=save_spine_rotation))
-#
-# add_vertical_line(fig15)
-#
-# fig15.update_layout(
-#     # title='Spine rotation',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-#
-# fig16 = go.Figure(data=go.Scatter(x=timeline, y=save_arm_rotation, name=f'Arm rotation'))
-#
-# fig16.add_trace(
-#     go.Scatter(x=timeline, y=save_arm_to_ground, name=f'Arm to ground')
-# )
-#
-# fig16.update_layout(
-#     # title='Wrist angles',
-#     title_x=0.5,
-#     font_size=12,
-#     # yaxis_title='angle in °',
-#     # xaxis_title="time in s",
-#     yaxis_ticksuffix="°",
-#     paper_bgcolor='rgba(0,0,0,0)',
-#     plot_bgcolor='rgba(0,0,0,0)',
-#     margin=dict(
-#         l=10,
-#         r=10,
-#         t=20,
-#         pad=5
-#     ),
-#     modebar=dict(
-#         bgcolor='rgba(0,0,0,0)',
-#         color='rgba(1,1,1,0.3)',
-#         activecolor='rgba(58, 73, 99, 1)'
-#     )
-# )
-
 
 def render_files(files):
     if files is None:
@@ -1279,11 +913,11 @@ def init_dash(server):
                 ),
 
                 # overlay
-                html.Div(
-                    id='overlay',
-                    className='w-full hidden z-50 fixed top-0 left-0 bottom-0 right-0',
-                    children=overlay
-                ),
+                # html.Div(
+                #     id='overlay',
+                #     className='w-full hidden z-50 fixed top-0 left-0 bottom-0 right-0',
+                #     children=overlay
+                # ),
 
                 # Main wrapper
                 html.Div(
@@ -1373,7 +1007,7 @@ def init_dash(server):
                                 ),
 
                                 html.Div(
-                                    className='flex flex-col mb-4 mt-1 h-full overflow-y-auto border-b border-gray-200 dark:border-gray-600',
+                                    className='flex flex-col mt-1 h-full overflow-y-auto border-b border-gray-200 dark:border-gray-600',
                                     children=[
                                         html.Div(
                                             # disabled=True,
@@ -1399,6 +1033,41 @@ def init_dash(server):
                                             className='relative font-base max-w-full text-xs text-gray-800 dark:text-gray-100 flex flex-row hover:bg-slate-200 dark:hover:bg-slate-500 hover:shadow-md dark:hover:shadow-slate-950 px-4 py-2 rounded-lg mb-2 mx-4 items-center justify-between h-12 transition')
                                         for file in files],
                                     id='file_list',
+                                ),
+                                html.Div(
+                                    className='flex flex-col border-b border-gray-200 dark:border-gray-600 justify-center w-full px-8 py-2',
+                                    children=[
+                                        html.Label(
+                                            className='inline-flex items-center cursor-pointer dark:text-gray-100 justify-between',
+                                            children=[
+                                                html.Span(
+                                                    'Expert Mode',
+                                                    className='font-normal text-xs',
+                                                ),
+                                                html.Span(
+                                                    className='relative',
+                                                    children=[
+                                                        dcc.Checklist(
+                                                            ['expert-mode'],
+                                                            id='expert-mode',
+                                                            # type='checkbox',
+                                                            className='hidden peer',
+                                                        ),
+                                                        html.Div(
+                                                            id='expert-toggle-bg',
+                                                            className='w-10 h-6 rounded-full shadow-inner dark:bg-gray-400 bg-gray-200',
+                                                            # peer-checked:bg-indigo-400
+                                                        ),
+                                                        html.Div(
+                                                            id='expert-toggle-circle',
+                                                            className='absolute inset-y-0 left-0 w-4 h-4 m-1 rounded-full shadow right-0 bg-gray-800',
+                                                            # peer-checked:left-auto
+                                                        ),
+                                                    ],
+                                                ),
+                                            ],
+                                        )
+                                    ]
                                 ),
                                 html.Div(
                                     className='flex flex-col gap-2 mx-4 mb-4 justify-end',
@@ -2185,17 +1854,30 @@ def init_dash(server):
                                     ]
                                 ),
 
-                                html.Div(
-                                    className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('pelvis_rotation'), className='relative w-full'),
+                                html.Span(
+                                    'Summary',
+                                    className='text-3xl font-medium text-slate-900 dark:text-gray-100'
+                                ),
 
-                                        dcc.Graph(
-                                            id='pelvis_rotation',
-                                            figure=fig3,
-                                            config=config,
-                                            className='w-full h-[500px]',
-                                        ),
+                                html.Div(
+                                    report_view
+                                ),
+
+                                html.Div(
+                                    id='figures-container',
+                                    className='w-full h-full hidden',
+                                    children=[
+                                        html.Div(
+                                            className='relative bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('pelvis_rotation'), className='relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='pelvis_rotation',
+                                                    figure=fig3,
+                                                    config=config,
+                                                    className='w-full h-[500px]',
+                                                ),
                                     ]),
 
                                 html.Div(
@@ -2319,6 +2001,8 @@ def init_dash(server):
                                             className='w-full h-[500px]'
                                         )
                                     ]),
+                                    ]
+                                ),
 
                                 html.Script('assets/dash.js'),
                             ]
@@ -3789,7 +3473,8 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='showVideoFrames'
         ),
-        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
+        Input('video', 'url'),
+        # Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('setup_pos', 'children'), State('impact_pos', 'children'), State('top_pos', 'children'),
         prevent_initial_call=True
     )
@@ -3800,7 +3485,8 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='reportText'
         ),
-        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
+        Input('video', 'url'),
+        # Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
         State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
         State('h_tilt', 'figure'), State('h_rotation', 'figure'), State('arm_length', 'figure'),
@@ -3811,12 +3497,22 @@ def init_callbacks(app):
 
     # TODO overlay
     # Show overlay
+    # app.clientside_callback(
+    #     ClientsideFunction(
+    #         namespace='clientside',
+    #         function_name='showOverlay'
+    #     ),
+    #     Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'), Input('hide_overlay', 'n_clicks'),
+    #     prevent_initial_call=True
+    # )
+
+    # Show figures
     app.clientside_callback(
         ClientsideFunction(
             namespace='clientside',
-            function_name='showOverlay'
+            function_name='showFigures'
         ),
-        Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'), Input('hide_overlay', 'n_clicks'),
+        Input('expert-mode', 'value'),
         prevent_initial_call=True
     )
 

@@ -799,40 +799,68 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
-        showVideoFrames: function (n_clicks, n_clicks2, setup, impact, top) {
-            if (n_clicks === 1 || n_clicks2 === 1) {
-                let video = document.getElementById('video').children[0]
-                var canvas = document.getElementById("setup_frame");
+        showFigures: function (value) {
+            let figureContainer = document.getElementById('figures-container').classList
+            let expertToggleBG = document.getElementById('expert-toggle-bg').classList
+            let expertTogggleCircle = document.getElementById('expert-toggle-circle').classList
+            figureContainer.toggle('hidden')
+            expertToggleBG.toggle('bg-indigo-400')
+            expertTogggleCircle.toggle('left-auto')
+        },
 
-                var canvas_impact = document.getElementById("impact_frame");
+        // showVideoFrames: function (n_clicks, n_clicks2, setup, impact, top) {
+        //     if (n_clicks === 1 || n_clicks2 === 1) {
+        showVideoFrames: function (url, setup, impact, top) {
+            if (url !== null) {
+                var videoContainer = document.getElementById('video')
 
-                var canvas_top = document.getElementById("top_frame");
+                // check if video element is already present in the DOM otherwise wait for it to load
+                if (videoContainer.childElementCount === 0) {
+                    // check every 100ms if video is loaded
+                    var checkExist = setInterval(function () {
+                        if (videoContainer.childElementCount > 0) {
 
-                const duration = video.duration;
+                            let video = videoContainer.getElementsByTagName('video')[0]
+                            clearInterval(checkExist);
 
-                const previousTime = video.currentTime;
+                            var canvas = document.getElementById("setup_frame");
 
-                // Take the first snapshot
-                takeSnapshot(video, canvas, setup * duration).then(function () {
-                    // Wait for the first snapshot to finish loading before taking the second one
-                    return takeSnapshot(video, canvas_top, top * duration);
-                }).then(function () {
-                    // Wait for the second snapshot to finish loading before taking the third one
-                    return takeSnapshot(video, canvas_impact, impact * duration);
-                }).then(function () {
-                    // Wait for the third snapshot to finish loading before resetting the video
-                    video.currentTime = previousTime;
-                    // All snapshots have finished loading
-                    // console.log("All snapshots taken");
-                }).catch(function (error) {
-                    // Handle any errors that may occur
-                    console.error(error);
-                });
+                            var canvas_impact = document.getElementById("impact_frame");
+
+                            var canvas_top = document.getElementById("top_frame");
+
+                            // wait for the video to load
+                            video.onloadeddata = function () {
+                                const duration = video.duration;
+
+                                const previousTime = video.currentTime;
+
+                                // Take the first snapshot
+                                takeSnapshot(video, canvas, setup * duration).then(function () {
+                                    // Wait for the first snapshot to finish loading before taking the second one
+                                    return takeSnapshot(video, canvas_top, top * duration);
+                                }).then(function () {
+                                    // Wait for the second snapshot to finish loading before taking the third one
+                                    return takeSnapshot(video, canvas_impact, impact * duration);
+                                }).then(function () {
+                                    // Wait for the third snapshot to finish loading before resetting the video
+                                    video.currentTime = previousTime;
+                                    // All snapshots have finished loading
+                                    // console.log("All snapshots taken");
+                                }).catch(function (error) {
+                                    // Handle any errors that may occur
+                                    console.error(error);
+                                });
+
+                            }
+                        }
+                    }, 100);
+                }
             }
         },
 
-        reportText: function (n_clicks, n_clicks2, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, setup, impact, top) {
-            if (n_clicks === 1 || n_clicks2 === 1) {
+        reportText: function (url, fig1, fig2, fig3, fig4, fig5, fig6, fig7, fig8, fig9, fig10, fig11, setup, impact, top) {
+            if (url !== null) {
                 // console.log('here')
                 const pelvis_rotation = fig2.data[1].y;
                 const pelvis_tilt = fig2.data[0].y
@@ -949,6 +977,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
     }
 });
+
+
+// Helper functions
 
 
 function getFocus(errorArray) {
