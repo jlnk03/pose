@@ -1549,8 +1549,22 @@ def init_dash(server):
                                     ]),
                                 # End of video view
 
+                                html.Span(
+                                    'Summary',
+                                    className='text-3xl font-medium text-slate-900 dark:text-gray-100'
+                                ),
+
                                 html.Div(
-                                    className=('flex md:flex-row flex-col w-full h-full relative gap-2 mb-5'),
+                                    report_view
+                                ),
+
+                                html.Span(
+                                    'Key Metrics',
+                                    className='text-3xl font-medium text-slate-900 dark:text-gray-100'
+                                ),
+
+                                html.Div(
+                                    className=('flex md:flex-row flex-col w-full h-full relative gap-2 my-5'),
                                     children=[
                                         # Tempo divs
                                         html.Div(
@@ -1851,15 +1865,6 @@ def init_dash(server):
                                             className='h-[500px] w-full relative',
                                         ),
                                     ]
-                                ),
-
-                                html.Span(
-                                    'Summary',
-                                    className='text-3xl font-medium text-slate-900 dark:text-gray-100'
-                                ),
-
-                                html.Div(
-                                    report_view
                                 ),
 
                                 html.Div(
