@@ -811,7 +811,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         // showVideoFrames: function (n_clicks, n_clicks2, setup, impact, top) {
         //     if (n_clicks === 1 || n_clicks2 === 1) {
         showVideoFrames: function (url, setup, impact, top) {
+            console.log(url)
             if (url !== null) {
+                console.log('showVideoFrames')
                 var videoContainer = document.getElementById('video')
 
                 // check if video element is already present in the DOM otherwise wait for it to load

@@ -793,7 +793,6 @@ def update_plots(save_pelvis_rotation, save_pelvis_tilt, save_pelvis_lift, save_
     return fig, fig3, fig4, fig5, fig6, fig11, fig12, fig13, fig14, fig15, fig16
 
 
-
 def render_files(files):
     if files is None:
         return []
@@ -1878,129 +1877,131 @@ def init_dash(server):
                                                     config=config,
                                                     className='w-full h-[500px]',
                                                 ),
-                                    ]),
+                                            ]),
 
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('pelvis_displacement'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='pelvis_displacement',
-                                            figure=fig4,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        ),
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('thorax_angles'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='thorax_rotation',
-                                            figure=fig5,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        ),
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('thorax_displacement'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='thorax_displacement',
-                                            figure=fig6,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        ),
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('head_tilt'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='h_tilt',
-                                            figure=fig12,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        ),
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('head_rotation'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='h_rotation',
-                                            figure=fig13,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        ),
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('spine_tilt'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='s_tilt',
-                                            figure=fig11,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        )
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('left_arm'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='arm_length',
-                                            figure=fig14,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        )
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
-                                        html.Div(info_text('spine_rotation'), className=' relative w-full'),
-
-                                        dcc.Graph(
-                                            id='spine_rotation',
-                                            figure=fig15,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        )
-                                    ]),
-
-                                html.Div(
-                                    className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
-                                    children=[
                                         html.Div(
-                                            className='text-base font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
                                             children=[
-                                                'Arm Angles'
-                                            ]
-                                        ),
+                                                html.Div(info_text('pelvis_displacement'),
+                                                         className=' relative w-full'),
 
-                                        dcc.Graph(
-                                            id='arm_angle',
-                                            figure=fig16,
-                                            config=config,
-                                            className='w-full h-[500px]'
-                                        )
-                                    ]),
+                                                dcc.Graph(
+                                                    id='pelvis_displacement',
+                                                    figure=fig4,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                ),
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('thorax_angles'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='thorax_rotation',
+                                                    figure=fig5,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                ),
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('thorax_displacement'),
+                                                         className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='thorax_displacement',
+                                                    figure=fig6,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                ),
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('head_tilt'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='h_tilt',
+                                                    figure=fig12,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                ),
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('head_rotation'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='h_rotation',
+                                                    figure=fig13,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                ),
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('spine_tilt'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='s_tilt',
+                                                    figure=fig11,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                )
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('left_arm'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='arm_length',
+                                                    figure=fig14,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                )
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(info_text('spine_rotation'), className=' relative w-full'),
+
+                                                dcc.Graph(
+                                                    id='spine_rotation',
+                                                    figure=fig15,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                )
+                                            ]),
+
+                                        html.Div(
+                                            className='bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-2xl flex items-center justify-center mb-5 backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900 flex-col w-full',
+                                            children=[
+                                                html.Div(
+                                                    className='text-base font-medium text-slate-900 dark:text-gray-100 pt-10 px-4 sm:px-10 w-full',
+                                                    children=[
+                                                        'Arm Angles'
+                                                    ]
+                                                ),
+
+                                                dcc.Graph(
+                                                    id='arm_angle',
+                                                    figure=fig16,
+                                                    config=config,
+                                                    className='w-full h-[500px]'
+                                                )
+                                            ]),
                                     ]
                                 ),
 
@@ -3473,7 +3474,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='showVideoFrames'
         ),
-        Input('video', 'url'),
+        Input('video', 'duration'),
         # Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('setup_pos', 'children'), State('impact_pos', 'children'), State('top_pos', 'children'),
         prevent_initial_call=True
@@ -3485,7 +3486,7 @@ def init_callbacks(app):
             namespace='clientside',
             function_name='reportText'
         ),
-        Input('video', 'url'),
+        Input('video', 'duration'),
         # Input('show_overlay', 'n_clicks'), Input('show_overlay_mobile', 'n_clicks'),
         State('sequence', 'figure'), State('pelvis_rotation', 'figure'), State('pelvis_displacement', 'figure'),
         State('thorax_rotation', 'figure'), State('thorax_displacement', 'figure'), State('s_tilt', 'figure'),
