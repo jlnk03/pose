@@ -175,7 +175,7 @@ def upload_video(disabled=True, path=None):
                                     html.Button('Frame -', id='minus_frame',
                                                 className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
                                 ],
-                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 mb-5 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
+                                className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 mb-10 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
                             ),
 
                             # Report button desktop (deprecated)
@@ -1303,7 +1303,7 @@ def init_dash(server):
                                             children=[
                                                 html.Div(
                                                     id='live-divs-container',
-                                                    className='flex xl:mb-5 mb-2 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-2 -mx-2',
+                                                    className='flex mb-10 gap-2 flex-col xl:flex-row w-fit relative max-xl:overflow-x-auto xl:h-[29.5rem] overflow-y-auto overflow-x-hidden px-2 -mx-2',
                                                     children=[
                                                         # First row
                                                         html.Div(

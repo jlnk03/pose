@@ -318,7 +318,7 @@ overlay = html.Div(
 )
 
 report_view = html.Div(
-    className='flex flex-col my-5',
+    className='flex flex-col mt-5 mb-10',
     children=[
         html.Span('Setup',
                   className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
