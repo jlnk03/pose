@@ -1,7 +1,7 @@
 bod = document.body
 // bod.className = "bg-gradient-to-br from-amber-50 to-violet-50"
 // bod.style.backgroundColor = "rgba(250, 247, 245, 1)"
-bod.className = "dark:bg-slate-900 bg-[#FAF7F5]"
+bod.className = "dark:bg-slate-900 bg-[#FAF7F5] h-full"
 
 switchColorMode = () => {
     let interval = setInterval(function () {

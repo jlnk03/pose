@@ -98,10 +98,12 @@
 /*}*/
 
 body, html {
-  overflow-x: hidden;
-  margin: 0;
-  /*background-color: #4338ca;*/
-  background-color: #F6F9FF
+    overflow-x: hidden;
+    margin: 0;
+    /*background-color: #4338ca;*/
+    /* background-color: #F6F9FF */
+    background-color: #faf7f5;
+    height: 100%;
 }
 
 .block-div {

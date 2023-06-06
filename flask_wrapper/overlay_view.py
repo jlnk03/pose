@@ -327,11 +327,11 @@ report_view = html.Div(
             className='flex flex-row gap-4 w-full',
             children=[
                 html.Canvas(id='setup_frame',
-                            className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96'),
+                            className='rounded-2xl max-h-56 max-w-56 sm:max-w-96 bg-gray-200 dark:bg-gray-800'),
 
                 html.Div(
                     id='setup_report',
-                    className='flex flex-row bg-white dark:bg-gray-700 sm:h-96 h-56 overflow-x-auto grow rounded-2xl snap-x snap-mandatory  gap-4 pr-4 py-4',
+                    className='flex flex-row bg-white dark:bg-gray-700 h-56 overflow-x-auto grow rounded-2xl snap-x snap-mandatory  gap-4 pr-4 py-4',
                     children=[
 
                         html.Div(
@@ -403,11 +403,11 @@ report_view = html.Div(
             className='flex flex-row gap-4 w-full',
             children=[
                 html.Canvas(id='top_frame',
-                            className='rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
+                            className='rounded-2xl max-h-56 max-w-56 sm:max-w-96 snap-start bg-gray-200 dark:bg-gray-800'),
 
                 html.Div(
                     id='top_report',
-                    className='flex flex-row sm:h-96 h-56 overflow-x-auto grow snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
+                    className='flex flex-row h-56 overflow-x-auto grow snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
                     children=[
 
                         html.Div(
@@ -484,11 +484,11 @@ report_view = html.Div(
             className='flex flex-row gap-4 w-full',
             children=[
                 html.Canvas(id='impact_frame',
-                            className=' rounded-2xl max-h-56 max-w-56 sm:max-h-96 sm:max-w-96 snap-start'),
+                            className=' rounded-2xl max-h-56 max-w-56 sm:max-w-96 snap-start bg-gray-200 dark:bg-gray-800'),
 
                 html.Div(
                     id='impact_report',
-                    className='flex flex-row sm:h-96 h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
+                    className='flex flex-row h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
                     children=[
 
                         html.Div(

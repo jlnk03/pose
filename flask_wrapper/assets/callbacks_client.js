@@ -949,9 +949,28 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 focusReportTextImpact2.innerHTML = focusTextImpact[1]
 
             }
-        }
+        },
 
-    }
+
+        uploadComponent: function (children) {
+            var uploadDataInitial = document.getElementById('upload-initial').children[0].children[1]
+            if (uploadDataInitial.childElementCount > 0) {
+                console.log(uploadDataInitial);
+                uploadDataInitial.children[0].classList.add('h-full');
+                console.log(uploadDataInitial);
+            } else {
+                // wait for the element to be created
+                setInterval(function () {
+                        if (uploadDataInitial.childElementCount > 0) {
+                            uploadDataInitial.children[0].classList.add('h-full');
+                        }
+                    }
+                )
+            }
+        },
+
+    },
+
 });
 
 
