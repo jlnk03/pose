@@ -137,7 +137,7 @@ def upload_video(disabled=True, path=None):
                         html.Div(
                             children=[
                                 html.Button(id='heart',
-                                            className='z-30 heart absolute sm:bottom-0 sm:right-0 sm:translate-x-1/2 sm:translate-y-1/2 max-sm:left-0 max-sm:top-0 -translate-x-1/2 -translate-y-1/2 bg-indigo-100 dark:bg-indigo-900 rounded-full flex justify-center items-center shadow-sm shadow-indigo-200 dark:shadow-slate-950'),
+                                            className='heart absolute sm:bottom-0 sm:right-0 sm:translate-x-1/2 sm:translate-y-1/2 max-sm:left-0 max-sm:top-0 -translate-x-1/2 -translate-y-1/2 bg-indigo-100 dark:bg-indigo-900 rounded-full flex justify-center items-center shadow-sm shadow-indigo-200 dark:shadow-slate-950'),
 
                                 html.Div(
                                     children=[
@@ -211,7 +211,7 @@ def upload_video(disabled=True, path=None):
                                         # ),
 
                                     ],
-                                    className='flex flex-col gap-5 justify-center absolute top-1/2 left-0 z-30 -translate-y-1/2 -translate-x-1/2'
+                                    className='flex flex-col gap-5 justify-center absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2'
                                     # justify-between'
                                 ),
 
