@@ -969,6 +969,166 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             }
         },
 
+        changeBallflightBtnBorder: function (high_time, low_time, mid_time, left_time, right_time, straight_time, topped_time, fat_time, socket_time, airshot_time, center_time) {
+            var highBtn = document.getElementById('high_btn').classList
+            var lowBtn = document.getElementById('low_btn').classList
+            var midBtn = document.getElementById('mid_btn').classList
+            var leftBtn = document.getElementById('left_btn').classList
+            var rightBtn = document.getElementById('right_btn').classList
+            var straightBtn = document.getElementById('straight_btn').classList
+            var toppedBtn = document.getElementById('topped_btn').classList
+            var fatBtn = document.getElementById('fat_btn').classList
+            var socketBtn = document.getElementById('socket_btn').classList
+            var airshotBtn = document.getElementById('air_shot_btn').classList
+            var centerBtn = document.getElementById('center_btn').classList
+
+            highBtn.remove('border-slate-900')
+            lowBtn.remove('border-slate-900')
+            midBtn.remove('border-slate-900')
+            leftBtn.remove('border-slate-900')
+            rightBtn.remove('border-slate-900')
+            straightBtn.remove('border-slate-900')
+            toppedBtn.remove('border-slate-900')
+            fatBtn.remove('border-slate-900')
+            socketBtn.remove('border-slate-900')
+            airshotBtn.remove('border-slate-900')
+            centerBtn.remove('border-slate-900')
+
+            highBtn.remove('dark:border-gray-100')
+            lowBtn.remove('dark:border-gray-100')
+            midBtn.remove('dark:border-gray-100')
+            leftBtn.remove('dark:border-gray-100')
+            rightBtn.remove('dark:border-gray-100')
+            straightBtn.remove('dark:border-gray-100')
+            toppedBtn.remove('dark:border-gray-100')
+            fatBtn.remove('dark:border-gray-100')
+            socketBtn.remove('dark:border-gray-100')
+            airshotBtn.remove('dark:border-gray-100')
+            centerBtn.remove('dark:border-gray-100')
+
+
+            // check height (get highest timestamp)
+            const height_dict = {highBtn: high_time, lowBtn: low_time, midBtn: mid_time};
+            // replace null with 0
+            Object.keys(height_dict).forEach(key => {
+                if (height_dict[key] === undefined) {
+                    height_dict[key] = 0;
+                }
+            });
+            const height = Object.keys(height_dict).reduce((a, b) => height_dict[a] > height_dict[b] ? a : b);
+
+            switch (height) {
+                case 'highBtn':
+                    if (high_time > 0) {
+                        highBtn.add('border-slate-900');
+                        highBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'lowBtn':
+                    if (low_time > 0) {
+                        lowBtn.add('border-slate-900');
+                        lowBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'midBtn':
+                    if (mid_time > 0) {
+                        midBtn.add('border-slate-900');
+                        midBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                default:
+                    // Handle unexpected value of height
+                    break;
+            }
+
+            // check direction
+            const direction_dict = {leftBtn: left_time, rightBtn: right_time, straightBtn: straight_time};
+            // replace null with 0
+            Object.keys(direction_dict).forEach(key => {
+                if (direction_dict[key] === undefined) {
+                    direction_dict[key] = 0;
+                }
+            });
+            const direction = Object.keys(direction_dict).reduce((a, b) => direction_dict[a] > direction_dict[b] ? a : b);
+
+            switch (direction) {
+                case 'leftBtn':
+                    if (left_time > 0) {
+                        leftBtn.add('border-slate-900');
+                        leftBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'rightBtn':
+                    if (right_time > 0) {
+                        rightBtn.add('border-slate-900');
+                        rightBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'straightBtn':
+                    if (straight_time > 0) {
+                        straightBtn.add('border-slate-900');
+                        straightBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                default:
+                    // Handle unexpected value of direction
+                    break;
+            }
+
+            // check contact
+            const contact_dict = {
+                toppedBtn: topped_time,
+                fatBtn: fat_time,
+                socketBtn: socket_time,
+                airshotBtn: airshot_time,
+                centerBtn: center_time
+            };
+            // replace null with 0
+            Object.keys(contact_dict).forEach(key => {
+                if (contact_dict[key] === undefined) {
+                    contact_dict[key] = 0;
+                }
+            });
+            const contact = Object.keys(contact_dict).reduce((a, b) => contact_dict[a] > contact_dict[b] ? a : b);
+
+            switch (contact) {
+                case 'toppedBtn':
+                    if (topped_time > 0) {
+                        toppedBtn.add('border-slate-900');
+                        toppedBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'fatBtn':
+                    if (fat_time > 0) {
+                        fatBtn.add('border-slate-900');
+                        fatBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'socketBtn':
+                    if (socket_time > 0) {
+                        socketBtn.add('border-slate-900');
+                        socketBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'airshotBtn':
+                    if (airshot_time > 0) {
+                        airshotBtn.add('border-slate-900');
+                        airshotBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                case 'centerBtn':
+                    if (center_time > 0) {
+                        centerBtn.add('border-slate-900');
+                        centerBtn.add('dark:border-gray-100')
+                    }
+                    break;
+                default:
+                    // Handle unexpected value of contact
+                    break;
+            }
+
+        }
+
     },
 
 });

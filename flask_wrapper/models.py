@@ -90,3 +90,13 @@ class User(UserMixin, db.Model):
     top_high_head_tilt = db.Column(db.Integer)
     impact_low_head_tilt = db.Column(db.Integer)
     impact_high_head_tilt = db.Column(db.Integer)
+
+
+class BallFlight(db.Model):
+    id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
+    user_id = db.Column(db.Integer)
+    video_id = db.Column(db.String(100))
+    club = db.Column(db.String(100))
+    height = db.Column(db.Integer)
+    direction = db.Column(db.Integer)
+    contact = db.Column(db.Integer)

@@ -23,7 +23,7 @@ from code_b.angles_2 import calculate_angles
 from flask_wrapper import db
 # from flask_wrapper.celery_app import celery_app
 from flask_wrapper.loading_view import loader
-from flask_wrapper.models import UserLikes
+from flask_wrapper.models import UserLikes, BallFlight
 from flask_wrapper.overlay_view import report_view
 
 # background_callback_manager = CeleryManager(celery_app)
@@ -129,107 +129,113 @@ def upload_video(disabled=True, path=None):
                 # ),
 
                 html.Div(
-                    className='flex flex-col-reverse sm:flex-row w-full h-full',
+                    className='relative flex flex-col-reverse sm:flex-row w-full h-full pl-5',
                     # Controls for the video player (top, impact, end)
                     children=[
-                        html.Div(
-                            children=[
-                                html.Div(
-                                    children=[
-                                        html.Div(
-                                            className='flex-row sm:flex flex-col flex-nowrap items-center sm:border-b max-sm:border-r border-gray-300 gap-2 sm:pb-2 pr-2 sm:pr-0 justify-between',
-                                            children=[
-                                                html.Button('Setup', id='setup_pos_button',
-                                                            className='sm:w-24 px-4 py-2 rounded-full  bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
-                                                html.Button('Top', id='top_pos_button',
-                                                            className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
-                                                html.Button('Impact', id='impact_pos_button',
-                                                            className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
-                                                html.Button('Finish', id='end_pos_button',
-                                                            className='sm:w-24 px-4 py-2 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs'),
-                                            ]
-                                        ),
-                                        # Edit button
-                                        html.Button('Edit', id='edit_positions',
-                                                    disabled=True,
-                                                    className='grow sm:w-24 px-4 py-2 rounded-full bg-indigo-300 dark:bg-indigo-800 text-white dark:text-gray-400 font-bold text-xs'),
-
-                                        # Save new positions
-                                        html.Div(
-                                            id='edit_positions_div',
-                                            className='absolute sm:bottom-0 sm:-right-24 bottom-16 right-0 z-20 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
-                                            children=[
-                                                html.Button('Reset', id='edit_positions_reset',
-                                                            className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
-                                                html.Button('Save', id='edit_positions_save',
-                                                            className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
-                                            ]
-                                        ),
-                                    ],
-                                    className='relative flex flex-row sm:flex-col flex-nowrap sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2'
-                                ),
-
-                                html.Div(
-                                    children=[
-                                        html.Button('Frame +', id='plus_frame',
-                                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
-                                        html.Button('Frame -', id='minus_frame',
-                                                    className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
-                                    ],
-                                    className='hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 mb-10 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
-                                ),
-
-                                # Report button desktop (deprecated)
-                                # html.Div(
-                                #     html.Button(
-                                #         'Report',
-                                #         id='show_overlay',
-                                #         className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'
-                                #     ),
-                                #     className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
-
-                                # ),
-
-                            ],
-                            className='flex flex-col gap-5 justify-center'  # justify-between'
-                        ),
 
                         # Video player
                         html.Div(
-                            className="relative overflow-hidden sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm backdrop-blur-md bg-opacity-80 border border-gray-100 dark:border-gray-900",
                             children=[
-                                # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
-                                #            className="h-full w-full object-cover"),
+                                html.Button(id='heart',
+                                            className='z-30 heart absolute sm:bottom-0 sm:right-0 sm:translate-x-1/2 sm:translate-y-1/2 max-sm:left-0 max-sm:top-0 -translate-x-1/2 -translate-y-1/2 bg-indigo-100 dark:bg-indigo-900 rounded-full flex justify-center items-center shadow-sm shadow-indigo-200 dark:shadow-slate-950'),
 
-                                html.Button(id='heart', className='heart absolute top-4 left-4'),
+                                html.Div(
+                                    children=[
+                                        html.Div(
+                                            children=[
+                                                html.Div(
+                                                    className='flex flex-col flex-nowrap items-center border-b border-gray-300 gap-2 pb-2 justify-between',
+                                                    children=[
+                                                        html.Button(  # 'S',
+                                                            html.Img(src='assets/setup_icon.png',
+                                                                     className='w-8 h-8 m-0'),
+                                                            id='setup_pos_button',
+                                                            className='w-10 h-10 rounded-full  bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs items-center justify-center'),
+                                                        html.Button(  # 'T',
+                                                            html.Img(src='assets/top_icon.png',
+                                                                     className='w-8 h-8 items-center justify-center'),
+                                                            id='top_pos_button',
+                                                            className='w-10 h-10 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs items-center justify-center'),
+                                                        html.Button(  # 'I',
+                                                            html.Img(src='assets/impact_icon.png',
+                                                                     className='w-8 h-8 items-center justify-center'),
+                                                            id='impact_pos_button',
+                                                            className='w-10 h-10 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs items-center justify-center'),
+                                                        html.Button(  # 'F',
+                                                            html.Img(src='assets/finish_icon.png',
+                                                                     className='w-8 h-8 items-center justify-center'),
+                                                            id='end_pos_button',
+                                                            className='w-10 h-10 rounded-full bg-transparent hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-gray-400 hover:text-white font-bold text-xs items-center justify-center'),
+                                                    ]
+                                                ),
+                                                # Edit button
+                                                html.Button('E',
+                                                            id='edit_positions',
+                                                            disabled=True,
+                                                            className='grow w-10 h-10 rounded-full bg-indigo-300 dark:bg-indigo-800 text-white dark:text-gray-400 font-bold text-xs'),
 
-                                # TODO: video
+                                                # Save new positions
+                                                html.Div(
+                                                    id='edit_positions_div',
+                                                    className='absolute bottom-0 -right-24 z-20 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
+                                                    children=[
+                                                        html.Button('Reset', id='edit_positions_reset',
+                                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
+                                                        html.Button('Save', id='edit_positions_save',
+                                                                    className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs'),
+                                                    ]
+                                                ),
+                                            ],
+                                            className='relative flex flex-col flex-nowrap items-end justify-center sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full px-2 py-2'
+                                        ),
 
-                                dp.DashPlayer(
-                                    id='video',
-                                    url=path,
-                                    controls=True,
-                                    playsinline=True,
-                                    className="h-full w-full",
-                                    width='100%',
-                                    height='100%',
-                                    intervalCurrentTime=70,
+                                        html.Div(
+                                            children=[
+                                                html.Button('+', id='plus_frame',
+                                                            className='w-10 h-10 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
+                                                html.Button('-', id='minus_frame',
+                                                            className='w-10 h-10 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'),
+                                            ],
+                                            className='hidden sm:flex flex-col items-end justify-center mt-2 sm:mt-0 gap-2 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full px-2 py-2 '
+                                        ),
+
+                                        # Report button desktop (deprecated)
+                                        # html.Div(
+                                        #     html.Button(
+                                        #         'Report',
+                                        #         id='show_overlay',
+                                        #         className='w-24 px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-sm dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-xs hidden sm:block disable-dbl-tap-zoom'
+                                        #     ),
+                                        #     className='mb-5 hidden sm:flex flex-col sm:items-end sm:justify-center justify-between sm:mr-5 mt-2 sm:mt-0 bg-indigo-100 dark:bg-indigo-900 shadow-sm shadow-indigo-200 dark:shadow-slate-950 rounded-full sm:rounded-3xl px-2 py-2 '
+
+                                        # ),
+
+                                    ],
+                                    className='flex flex-col gap-5 justify-center absolute top-1/2 left-0 z-30 -translate-y-1/2 -translate-x-1/2'
+                                    # justify-between'
                                 ),
 
-                                # html.Div(
-                                #     id='edit_positions_div',
-                                #     className='absolute bottom-12 right-4 flex flex-col gap-2 bg-indigo-100 dark:bg-indigo-900 rounded-3xl px-2 py-2 hidden',
-                                #     children=[
-                                #         html.Button('Reset', id='edit_positions_reset',
-                                #                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                #         html.Button('Save', id='edit_positions_save',
-                                #                     className='text-base py-2 px-4 rounded-full bg-indigo-500 hover:bg-indigo-600 hover:shadow-md dark:hover:shadow-slate-800 hover:shadow-indigo-400 text-white font-bold text-sm'),
-                                #     ]
-                                # ),
+                                html.Div(
+                                    children=[
+                                        # html.Video(src=f'{path}#t=0.001', id='video', controls=True,
+                                        #            className="h-full w-full object-cover"),
 
-                                # html.Button('⚙️', id='edit_positions',
-                                #             className='text-base absolute bottom-4 right-4 hidden'),
-                            ]
+                                        # TODO: video
+
+                                        dp.DashPlayer(
+                                            id='video',
+                                            url=path,
+                                            controls=True,
+                                            playsinline=True,
+                                            className="h-full w-full",
+                                            width='100%',
+                                            height='100%',
+                                            intervalCurrentTime=70,
+                                        ),
+                                    ]
+                                ),
+                            ],
+                            className="justify-center relative sm:h-[29.5rem] h-96 w-full flex shadow rounded-2xl sm:mb-2 bg-white dark:bg-gray-700 dark:shadow-slate-950 dark:shadow-sm border border-gray-100 dark:border-gray-900",
                         ),
                     ]
                 ),
@@ -1559,10 +1565,115 @@ def init_dash(server):
                                         ),
                                         # endregion End of updating divs
 
-                                        html.Span(
-                                            'Summary',
-                                            className='text-3xl font-medium text-slate-900 dark:text-gray-100'
+                                        html.Div(
+                                            className='flex flex-row w-full justify-between',
+                                            children=[
+                                                html.Span(
+                                                    'Recommendations',
+                                                    className='text-3xl font-medium text-slate-900 dark:text-gray-100'
+                                                ),
+                                                html.Button(
+                                                    'Save',
+                                                    id='save_ball_btn',
+                                                    className='hidden text-sm w-fit px-2 bg-indigo-600 dark:bg-indigo-700 shadow dark:shadow-slate-950 rounded-full text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                ),
+                                            ]
                                         ),
+
+                                        html.Div(
+                                            className=' hidden flex flex-col w-full relative justify-between mt-3 text-xs font-normal text-slate-900 dark:text-gray-100',
+                                            children=[
+                                                html.Div(
+                                                    'Ball Flight Height',
+                                                ),
+
+                                                html.Div(
+                                                    className='flex flex-row gap-2 text-xs font-normal text-slate-900 dark:text-gray-100 mb-2',
+                                                    children=[
+
+                                                        html.Button(
+                                                            'High',
+                                                            id='high_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Mid',
+                                                            id='mid_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Low',
+                                                            id='low_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                    ]
+                                                ),
+
+                                                html.Div(
+                                                    'Ball Flight Direction',
+                                                ),
+
+                                                html.Div(
+                                                    className='flex flex-row gap-2 text-xs font-normal text-slate-900 dark:text-gray-100 mb-2',
+                                                    children=[
+
+                                                        html.Button(
+                                                            'Left',
+                                                            id='left_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Straight',
+                                                            id='straight_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Right',
+                                                            id='right_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                    ]
+                                                ),
+
+                                                html.Div(
+                                                    'Contact'
+                                                ),
+
+                                                html.Div(
+                                                    className='flex flex-row gap-2 text-xs font-normal text-slate-900 dark:text-gray-100',
+                                                    children=[
+
+                                                        html.Button(
+                                                            'Topped',
+                                                            id='topped_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Fat',
+                                                            id='fat_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Socket',
+                                                            id='socket_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Air Shot',
+                                                            id='air_shot_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                        html.Button(
+                                                            'Center',
+                                                            id='center_btn',
+                                                            className='w-full py-2 bg-white dark:bg-gray-700 shadow dark:shadow-slate-950 rounded-lg text-slate-900 dark:text-gray-100 hover:border-slate-900 dark:hover:border-gray-100 border-2 box-border border-transparent'
+                                                        ),
+                                                    ]
+                                                ),
+                                            ]
+                                        ),
+
+                                        html.Div(id='recommendation_text'),
 
                                         html.Div(
                                             report_view
@@ -1574,7 +1685,7 @@ def init_dash(server):
                                         ),
 
                                         html.Div(
-                                            className=('flex md:flex-row flex-col w-full h-full relative gap-2 my-5'),
+                                            className=('flex md:flex-row flex-col w-full h-full relative gap-5 my-5'),
                                             children=[
                                                 # Tempo divs
                                                 html.Div(
@@ -3314,6 +3425,131 @@ def init_callbacks(app):
                 db.session.commit()
 
         return time_back, time_down, temp, fig, angle_text, setup_pos, top_pos, impact_pos, end_pos
+
+    # Save Ballflight
+    @app.callback(
+        Input('save_ball_btn', 'n_clicks'),
+        State('high_btn', 'n_clicks_timestamp'), State('low_btn', 'n_clicks_timestamp'),
+        State('mid_btn', 'n_clicks_timestamp'), State('left_btn', 'n_clicks_timestamp'),
+        State('right_btn', 'n_clicks_timestamp'), State('straight_btn', 'n_clicks_timestamp'),
+        State('topped_btn', 'n_clicks_timestamp'), State('fat_btn', 'n_clicks_timestamp'),
+        State('socket_btn', 'n_clicks_timestamp'),
+        State('air_shot_btn', 'n_clicks_timestamp'), State('center_btn', 'n_clicks_timestamp'),
+        State('video', 'url'),
+    )
+    def save_ballflight(n_clicks, high, low, mid, left, right, straight, topped, fat, socket, air_shot, center, url):
+        # check height (get highest timestamp)
+        height_dict = {'high': high, 'low': low, 'mid': mid}
+        # replace None with 0
+        [height_dict.update({key: 0}) for key, value in height_dict.items() if value is None]
+        height = max(height_dict, key=height_dict.get)
+
+        # check direction (get highest timestamp)
+        direction_dict = {'left': left, 'right': right, 'straight': straight, 'center': center}
+        # replace None with 0
+        [direction_dict.update({key: 0}) for key, value in direction_dict.items() if value is None]
+        direction = max(direction_dict, key=direction_dict.get)
+
+        # check contact (get highest timestamp)
+        contact_dict = {'topped': topped, 'fat': fat, 'socket': socket, 'air_shot': air_shot}
+        # replace None with 0
+        [contact_dict.update({key: 0}) for key, value in contact_dict.items() if value is None]
+        contact = max(contact_dict, key=contact_dict.get)
+
+        vid = url.split('/')[-2]
+
+        # check if ballflight is already saved
+        ballflight = db.session.query(BallFlight).filter_by(video_id=vid, user_id=current_user.id).first()
+
+        if ballflight is None:
+            # create new ballflight
+            ballflight = BallFlight(video_id=vid, user_id=current_user.id, height=height, direction=direction,
+                                    contact=contact)
+            db.session.add(ballflight)
+            db.session.commit()
+
+        else:
+            # update ballflight
+            ballflight.height = height
+            ballflight.direction = direction
+            ballflight.contact = contact
+            db.session.commit()
+
+        lookup = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+                  [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                  [-1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, -1],
+                  [0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                  [-1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+                  [-1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, -1],
+                  [0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 1, 0, 0],
+                  [-1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  ]
+
+        # ballflight vector
+        ballflight_vector = np.zeros(13)
+        match direction:
+            case 'left':
+                match height:
+                    case 'high':
+                        ballflight_vector[0] = 1
+                    case 'mid':
+                        ballflight_vector[1] = 1
+                    case 'low':
+                        ballflight_vector[2] = 1
+            case 'right':
+                match height:
+                    case 'high':
+                        ballflight_vector[3] = 1
+                    case 'mid':
+                        ballflight_vector[4] = 1
+                    case 'low':
+                        ballflight_vector[5] = 1
+            case 'straight':
+                match height:
+                    case 'high':
+                        ballflight_vector[6] = 1
+                    case 'mid':
+                        ballflight_vector[7] = 1
+                    case 'low':
+                        ballflight_vector[8] = 1
+
+        match contact:
+            case 'topped':
+                ballflight_vector[9] = 1
+            case 'fat':
+                ballflight_vector[10] = 1
+            case 'socket':
+                ballflight_vector[11] = 1
+            case 'air_shot':
+                ballflight_vector[12] = 1
+
+        result = lookup @ ballflight_vector.T
+        print(result)
+
+    # Chang ballflight button border on click
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace='clientside',
+            function_name='changeBallflightBtnBorder'
+        ),
+        [
+            Input('high_btn', 'n_clicks_timestamp'), Input('low_btn', 'n_clicks_timestamp'),
+            Input('mid_btn', 'n_clicks_timestamp'), Input('left_btn', 'n_clicks_timestamp'),
+            Input('right_btn', 'n_clicks_timestamp'), Input('straight_btn', 'n_clicks_timestamp'),
+            Input('topped_btn', 'n_clicks_timestamp'), Input('fat_btn', 'n_clicks_timestamp'),
+            Input('socket_btn', 'n_clicks_timestamp'),
+            Input('air_shot_btn', 'n_clicks_timestamp'), Input('center_btn', 'n_clicks_timestamp'),
+        ],
+        prevent_initial_call=True
+    )
 
     # Hide selection view with save
     app.clientside_callback(

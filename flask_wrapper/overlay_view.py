@@ -3,22 +3,22 @@ from dash import html
 
 def report_text_view(id1, id2, img1, img2):
     layout = html.Div(
-        className='flex flex-col justify-center w-full h-full gap-4',
+        className='flex flex-col justify-end w-full h-full gap-4',
         children=[
             html.Div(
                 className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
                 children=[
                     html.Img(src='assets/' + img1,
-                             className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
+                             className='rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
                     html.Span(id=id1,
                               className='flex justify-center items-center'),
                 ]
             ),
             html.Div(
-                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-2 gap-2',
                 children=[
                     html.Img(src='assets/' + img2,
-                             className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
+                             className='rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
                     html.Span(id=id2,
                               className='flex justify-center items-center'),
                 ]
@@ -31,22 +31,22 @@ def report_text_view(id1, id2, img1, img2):
 
 def report_focus_view(id1, id2):
     layout = html.Div(
-        className='flex flex-col justify-center w-full h-full gap-4',
+        className='flex flex-col justify-end w-full h-full gap-4',
         children=[
             html.Div(
                 className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
                 children=[
                     html.Span('1',
-                              className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex-none flex items-center justify-center'),
+                              className='h-8 w-8 text-center flex-none flex items-center justify-center text-gray-500 font-bold text-xl'),
                     html.Span(id=id1,
                               className='flex justify-center items-center')
                 ]
             ),
             html.Div(
-                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-2 gap-2',
                 children=[
                     html.Span('2',
-                              className='dark:border-indigo-400 border-indigo-600 border-2 rounded-full h-8 w-8 text-center flex flex-none items-center justify-center'),
+                              className='h-8 w-8 text-center flex-none flex items-center justify-center text-gray-500 font-bold text-xl'),
                     html.Span(id=id2,
                               className='flex justify-center items-center')
                 ]
@@ -318,24 +318,29 @@ overlay = html.Div(
 )
 
 report_view = html.Div(
-    className='flex flex-col mt-5 mb-10',
+    # className='flex flex-col mt-5 mb-10',
+    className='grid md:grid-cols-2 grid-cols-1 mt-14 mb-10 gap-5',
     children=[
-        html.Span('Setup',
-                  className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
         html.Div(
-            className='flex flex-row gap-4 w-full',
+            className='flex flex-col relative ',
             children=[
                 html.Canvas(id='setup_frame',
-                            className='rounded-2xl max-h-56 max-w-56 sm:max-w-96 bg-gray-200 dark:bg-gray-800'),
+                            className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),
+
+                html.Img(src='assets/page_dots.png',
+                         className='absolute bottom-0 right-1/2 transform translate-x-1/2 z-20 h-10 w-10'),
+
+                html.Span('Setup',
+                          className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
                 html.Div(
                     id='setup_report',
-                    className='flex flex-row bg-white dark:bg-gray-700 h-56 overflow-x-auto grow rounded-2xl snap-x snap-mandatory  gap-4 pr-4 py-4',
+                    className='flex flex-row h-60 gap-4 overflow-x-auto snap-x snap-mandatory  w-full relative',
                     children=[
 
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Focus',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -349,7 +354,7 @@ report_view = html.Div(
                         ),
 
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Pelvis',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -363,7 +368,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col  p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none  snap-start',
                             children=[
                                 html.Span('Thorax',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -378,7 +383,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col sm:w-96 w-56 grow flex-none p-4 snap-start ',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Head',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -397,21 +402,25 @@ report_view = html.Div(
             ]
         ),
 
-        html.Span('Top',
-                  className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
         html.Div(
-            className='flex flex-row gap-4 w-full',
+            className='flex flex-col relative md:mt-0 mt-14 ',
             children=[
                 html.Canvas(id='top_frame',
-                            className='rounded-2xl max-h-56 max-w-56 sm:max-w-96 snap-start bg-gray-200 dark:bg-gray-800'),
+                            className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),
+
+                html.Img(src='assets/page_dots.png',
+                         className='absolute bottom-0 right-1/2 transform translate-x-1/2 z-20 h-10 w-10'),
+
+                html.Span('Top',
+                          className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
                 html.Div(
                     id='top_report',
-                    className='flex flex-row h-56 overflow-x-auto grow snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
+                    className='flex flex-row h-60 gap-4 overflow-x-auto snap-x snap-mandatory  w-full relative',
                     children=[
 
                         html.Div(
-                            className='flex flex-col  p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Focus',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -426,7 +435,7 @@ report_view = html.Div(
                         ),
 
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Pelvis',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -440,7 +449,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Thorax',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -456,7 +465,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Head',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -477,22 +486,25 @@ report_view = html.Div(
             ]
         ),
 
-        html.Span('Impact',
-                  className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1 mt-6'),
-
         html.Div(
-            className='flex flex-row gap-4 w-full',
+            className='flex flex-col relative mt-14 ',
             children=[
                 html.Canvas(id='impact_frame',
-                            className=' rounded-2xl max-h-56 max-w-56 sm:max-w-96 snap-start bg-gray-200 dark:bg-gray-800'),
+                            className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),
+
+                html.Img(src='assets/page_dots.png',
+                         className='absolute bottom-0 right-1/2 transform translate-x-1/2 z-20 h-10 w-10'),
+
+                html.Span('Impact',
+                          className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
 
                 html.Div(
                     id='impact_report',
-                    className='flex flex-row h-56 overflow-x-auto w-full snap-x snap-mandatory gap-4 bg-white dark:bg-gray-700 rounded-2xl pr-4 py-4',
+                    className='flex flex-row h-60 gap-4 overflow-x-auto snap-x snap-mandatory  w-full relative',
                     children=[
 
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Focus',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -507,7 +519,7 @@ report_view = html.Div(
                         ),
 
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Pelvis',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -522,7 +534,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col p-4 sm:w-96 w-56 grow flex-none snap-start border-r-2 border-gray-200 dark:border-gray-600',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Thorax',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
@@ -537,7 +549,7 @@ report_view = html.Div(
                             ]
                         ),
                         html.Div(
-                            className='flex flex-col bg-white dark:bg-gray-800 p-4 sm:w-96 w-56 grow flex-none snap-start',
+                            className='flex flex-col p-4  w-full bg-white dark:bg-gray-700 rounded-2xl flex-none snap-start',
                             children=[
                                 html.Span('Head',
                                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
