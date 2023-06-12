@@ -386,7 +386,7 @@ def console():
 
     # users = User.query
     # first 50 users
-    users = User.query.limit(50)
+    users = User.query.limit(150)
     total_users = User.query.count()
     active_users = User.query.filter_by(active=True).count()
     subscribers = User.query.filter_by(unlimited=True).count()

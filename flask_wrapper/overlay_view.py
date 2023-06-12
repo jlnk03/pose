@@ -325,6 +325,25 @@ report_view = html.Div(
         html.Div(
             className='flex flex-col relative ',
             children=[
+
+                html.Span('Summary',
+                          className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
+
+                html.Div(
+                    className='flex flex-col p-4 h-60 w-full bg-white dark:bg-gray-700 rounded-2xl flex-none',
+                    children=[
+                        html.Span('Focus',
+                                  className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+
+                    ]
+                ),
+
+            ]
+        ),
+
+        html.Div(
+            className='flex flex-col relative ',
+            children=[
                 html.Canvas(id='setup_frame',
                             className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),
 
@@ -403,7 +422,7 @@ report_view = html.Div(
         ),
 
         html.Div(
-            className='flex flex-col relative md:mt-0 mt-14 ',
+            className='flex flex-col relative mt-14 ',
             children=[
                 html.Canvas(id='top_frame',
                             className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),
