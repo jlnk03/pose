@@ -58,6 +58,45 @@ def report_focus_view(id1, id2):
     return layout
 
 
+def report_focus_view_sum(id1, id2, id3):
+    layout = html.Div(
+        className='flex flex-col justify-end w-full h-full gap-4',
+        children=[
+            html.Div(
+                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-4 gap-2',
+                children=[
+                    html.Span('1',
+                              className='h-8 w-8 text-center flex-none flex items-center justify-center text-gray-500 font-bold text-xl'),
+                    html.Span(id=id1,
+                              className='flex justify-center items-center')
+                ]
+            ),
+            html.Div(
+                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-2 gap-2',
+                children=[
+                    html.Span('2',
+                              className='h-8 w-8 text-center flex-none flex items-center justify-center text-gray-500 font-bold text-xl'),
+                    html.Span(id=id2,
+                              className='flex justify-center items-center')
+                ]
+            ),
+
+            html.Div(
+                className='flex flex-row sm:text-base text-sm text-left text-gray-900 dark:text-gray-100 mb-2 gap-2',
+                children=[
+                    html.Span('3',
+                              className='h-8 w-8 text-center flex-none flex items-center justify-center text-gray-500 font-bold text-xl'),
+                    html.Span(id=id3,
+                              className='flex justify-center items-center')
+                ]
+            ),
+
+        ]
+    ),
+
+    return layout
+
+
 overlay = html.Div(
     className='w-full h-full z-50',
     children=[
@@ -319,27 +358,35 @@ overlay = html.Div(
 
 report_view = html.Div(
     # className='flex flex-col mt-5 mb-10',
-    className='grid md:grid-cols-2 grid-cols-1 mt-14 mb-10 gap-5',
+    className='grid md:grid-cols-2 grid-cols-1 md:mt-14 mt-5 mb-10 gap-5',
     children=[
 
-        # html.Div(
-        #     className='flex flex-col relative ',
-        #     children=[
-        #
-        #         html.Span('Summary',
-        #                   className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
-        #
-        #         html.Div(
-        #             className='flex flex-col p-4 h-60 w-full bg-white dark:bg-gray-700 rounded-2xl flex-none',
-        #             children=[
-        #                 html.Span('Focus',
-        #                           className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
-        #
-        #             ]
-        #         ),
-        #
-        #     ]
-        # ),
+        html.Div(
+            className='flex flex-col relative md:mb-0 mb-14',
+            children=[
+
+                html.Span('Summary',
+                          className='sm:text-xl text-lg text-left font-bold text-gray-900 dark:text-gray-100 mb-1'),
+
+                html.Div(
+                    className='flex flex-col p-4 h-60 w-full bg-white dark:bg-gray-700 rounded-2xl flex-none',
+                    children=[
+                        html.Span('Top Recommendations',
+                                  className='sm:text-xl text-left font-medium text-gray-900 dark:text-gray-100 mb-2'),
+
+                        html.Div(
+                            report_focus_view_sum('focus_report_text_sum',
+                                                  'focus_report_text_2_sum',
+                                                  'focus_report_text_3_sum'
+                                                  ),
+                            className='w-full h-full'
+                        )
+
+                    ]
+                ),
+
+            ]
+        ),
 
         html.Div(
             className='flex flex-col relative ',
@@ -422,7 +469,7 @@ report_view = html.Div(
         ),
 
         html.Div(
-            className='flex flex-col relative mt-14 md:mt-0',
+            className='flex flex-col relative mt-14 ',
             children=[
                 html.Canvas(id='top_frame',
                             className='rounded-2xl max-h-40 max-w-40 bg-gray-200 dark:bg-gray-800 absolute top-0 right-0 z-30 transform -translate-x-1/2 -translate-y-1/4'),

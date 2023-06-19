@@ -2964,7 +2964,7 @@ def init_callbacks(app):
                 disabled, disabled, disabled,
                 upload_initial_class, upload_video_class,
                 emoji_start, emoji_transition, '', tempo_text,  # backswing_text, downswing_text,
-                f'/dashboard/{filename}', analysis_view_class
+                f'/dashboard/{filename}', analysis_view_class, video_view_class
                 ]
 
     # Set pathname on button press

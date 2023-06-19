@@ -915,6 +915,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 let focusReportTextImpact = document.getElementById('focus_report_text_impact')
                 let focusReportTextImpact2 = document.getElementById('focus_report_text_2_impact')
 
+                let focusReportTextSum = document.getElementById('focus_report_text_sum')
+                let focusReportTextSum2 = document.getElementById('focus_report_text_2_sum')
+                let focusReportTextSum3 = document.getElementById('focus_report_text_3_sum')
+
                 const errorPelvis = rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis', pelvis_report_text)
                 const errorThorax = rotationText(thorax_rot, thorax_rot_margins, 'thorax', thorax_report_text)
                 const errorHead = rotationText(head_rot, head_rot_margins, 'head', head_report_text)
@@ -947,6 +951,35 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
 
                 focusReportTextImpact.innerHTML = focusTextImpact[0]
                 focusReportTextImpact2.innerHTML = focusTextImpact[1]
+
+
+                //     summary
+                const errorPelvisSum = rotationText(pelvis_rot, pelvis_rot_margins, 'pelvis at setup', pelvis_report_text)
+                const errorThoraxSum = rotationText(thorax_rot, thorax_rot_margins, 'thorax at setup', thorax_report_text)
+                const errorHeadSum = rotationText(head_rot, head_rot_margins, 'head at setup', head_report_text)
+                const errorHeadTiltSum = tiltText(head_t, head_tilt_margins, 'head at setup', head_report_text_tilt)
+                const errorPelvisTiltSum = tiltText(pelvis_t, pelvis_tilt_margins, 'pelvis at setup', pelvis_report_text_tilt)
+                const errorThoraxBendSum = bendText(thorax_b, thorax_bend_margins, 'thorax at setup', thorax_report_text_bend)
+
+                const errorPelvisTopSum = rotationText(pelvis_rot_top, pelvis_rot_margins.slice(2, 4), 'pelvis at the top', pelvis_report_text_top)
+                const errorThoraxTopSum = rotationText(thorax_rot_top, thorax_rot_margins.slice(2, 4), 'thorax at the top', thorax_report_text_top)
+                const errorHeadTopSum = rotationText(head_rot_top, head_rot_margins.slice(2, 4), 'head at the top', head_report_text_top)
+                const errorHeadTiltTopSum = tiltText(head_tilt_top, head_tilt_margins.slice(2, 4), 'head at the top', head_report_text_tilt_top)
+                const errorPelvisTiltTopSum = tiltText(pelvis_tilt_top, pelvis_tilt_margins.slice(2, 4), 'pelvis at the top', pelvis_report_text_tilt_top)
+                const errorThoraxBendTopSum = bendText(thorax_bend_top, thorax_bend_margins.slice(2, 4), 'thorax at the top', thorax_report_text_bend_top)
+
+                const errorPelvisImpactSum = rotationTextDown(pelvis_rot_impact, pelvis_rot_margins.slice(4, 7), 'pelvis at impact', pelvis_report_text_impact)
+                const errorThoraxImpactSum = rotationTextDown(thorax_rot_impact, thorax_rot_margins.slice(4, 6), 'thorax at impact', thorax_report_text_impact)
+                const errorHeadImpactSum = rotationTextDown(head_rot_impact, head_rot_margins.slice(4, 6), 'head at impact', head_report_text_impact)
+                const errorHeadTiltImpactSum = tiltText(head_tilt_impact, head_tilt_margins.slice(4, 7), 'head at impact', head_report_text_tilt_impact)
+                const errorPelvisTiltImpactSum = tiltText(pelvis_tilt_impact, pelvis_tilt_margins.slice(4, 7), 'pelvis at impact', pelvis_report_text_tilt_impact)
+                const errorThoraxBendImpactSum = bendText(thorax_bend_impact, thorax_bend_margins.slice(4, 7), 'thorax at impact', thorax_report_text_bend_impact)
+
+                const focusTextSum = getFocus([errorPelvisSum, errorThoraxSum, errorPelvisTiltSum, errorThoraxBendSum, errorPelvisTopSum, errorThoraxTopSum, errorPelvisTiltTopSum, errorThoraxBendTopSum, errorPelvisImpactSum, errorThoraxImpactSum, errorPelvisTiltImpactSum, errorThoraxBendImpactSum])
+
+                focusReportTextSum.innerHTML = focusTextSum[0]
+                focusReportTextSum2.innerHTML = focusTextSum[1]
+                focusReportTextSum3.innerHTML = focusTextSum[2]
 
             }
         },
@@ -1141,7 +1174,7 @@ function getFocus(errorArray) {
     //     sort the array
     errorArray.sort((a, b) => b[0] - a[0]);
     //     get the first two elements
-    return [errorArray[0][1], errorArray[1][1]];
+    return [errorArray[0][1], errorArray[1][1], errorArray[2][1]];
 }
 
 
