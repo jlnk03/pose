@@ -1,0 +1,29 @@
+{
+  "upload-video": "Video hochladen",
+  "uploadVideoText": "Ziehe ein Video in dieses Feld oder klicke, um ein Video hochzuladen.",
+  "history": "Verlauf",
+  "navigation": {
+    "home": "Startseite",
+    "profile": "Profil",
+    "dashboard": "Dashboard",
+    "logout": "Abmelden"
+  },
+  "analysis": {
+    "recommendations": "Empfehlungen",
+    "bodyParts": [
+      "Fokus",
+      "Hüfte",
+      "Schultern",
+      "Kopf"
+    ],
+    "keyMetrics": "Übersicht",
+    "graphs": "Graphen"
+  },
+  "metrics": {
+    "shoulderRotation": "Schulter Rotation",
+    "shoulderTilt": "Schulter Seitliche Neigung",
+    "shoulderBend": "Schulter Beugung",
+    "hipRotation": "Hüfte Rotation",
+    "hipTilt": "Hüfte Seitliche Neigung"
+  }
+}

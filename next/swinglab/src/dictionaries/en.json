@@ -1,0 +1,29 @@
+{
+  "upload-video": "Upload your video",
+  "uploadVideoText": "Drag or click here to upload your video",
+  "history": "History",
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "logout": "Logout"
+  },
+  "analysis": {
+    "recommendations": "Recommendations",
+    "bodyParts": [
+      "Focus",
+      "Hips",
+      "Shoulders",
+      "Head"
+    ],
+    "keyMetrics": "Key Metrics",
+    "graphs": "Graphs"
+  },
+  "metrics": {
+    "shoulderRotation": "Shoulder Rotation",
+    "shoulderTilt": "Shoulder Tilt",
+    "shoulderBend": "Shoulder Bend",
+    "hipRotation": "Hip Rotation",
+    "hipTilt": "Hip Tilt"
+  }
+}

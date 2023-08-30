@@ -1,0 +1,120 @@
+/* page background dark black if media is dark */
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #111827;
+    }
+}
+
+/* four way gradient */
+/* body {
+    background: linear-gradient(90deg, rgb(113, 139, 255), rgb(78, 137, 240));
+    min-height: 100%;
+    
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      mask-image: linear-gradient(to bottom, transparent, black);
+      background: linear-gradient(90deg, rgb(133, 211, 247), rgba(9, 49, 122, 0.801)); 
+    }
+  } */
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+:root {
+    height: 100%;
+    width: 100%;
+}
+
+body > section {
+    height: 100%;
+    width: 100%;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.heart {
+    width: 50px;
+    height: 50px;
+    background: url("../public/assets/heart.png") no-repeat;
+    background-position: 0 0;
+    background-size: cover;
+    cursor: pointer;
+    transition: background-position 1s steps(28);
+    transition-duration: 0s;
+}
+
+.is-active {
+    transition-duration: 1s;
+    background-position: -1400px 0;
+}
+
+.item-enter {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.item-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 500ms, transform 500ms;
+}
+
+.item-exit {
+    opacity: 1;
+}
+
+.item-exit-active {
+    opacity: 0;
+    transition: opacity 500ms;
+}
+
+.blob {
+    filter: blur(40px);
+    position: absolute;
+    z-index: -1; /* to keep it at below everything else */
+    top: 0; /* to align it at top */
+    left: 0; /* to align it at left */
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* to make it circular */
+    background: rgb(255, 255, 255, 0.5);
+}
+
+.fakeblob {
+    position: absolute;
+    z-index: -1; /* to keep it at below everything else */
+    top: 0; /* to align it at top */
+    left: 0; /* to align it at left */
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* to make it circular */
+}
+
+
+.card {
+    position: relative;
+
+    transform-style: preserve-3d;
+
+    transform: perspective(1000px) rotateY(var(--rotate-y, 0deg)) rotateX(var(--rotate-x, 0deg))
+
+}
