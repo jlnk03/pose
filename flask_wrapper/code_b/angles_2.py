@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def calc_angle(landmark1, landmark2):
@@ -328,8 +327,8 @@ def arm_to_ground(wrist_l, shoulder_l):
     return 90 - np.degrees(angle)
 
 
-def calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, impact_ratio):
-
+def calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s,
+                     pinky_l_s, index_l_s, arm_v, impact_ratio):
     # Calculate angles
     pelvis_r = pelvis_rotation(hip_l_s, hip_r_s)
     pelvis_t = pelvis_tilt(hip_l_s, hip_r_s)

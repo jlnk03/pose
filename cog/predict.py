@@ -11,9 +11,11 @@ import mediapipe as mp
 import numpy as np
 import requests
 from PIL import Image
-from moviepy.editor import AudioFileClip
+from moviepy.editor import AudioFileClip, VideoFileClip
+from pydub import AudioSegment
 from scipy import signal
 
+from angles_2 import calculate_angles
 from cog import BasePredictor, Input, Path, BaseModel
 
 
@@ -36,7 +38,7 @@ def impact_from_audio(audio_bytes):
     """Calculate the impact ratio from an audio file in BytesIO format.
 
        Args:
-           audio_bytes (BytesIO): A BytesIO object containing the audio file.
+           audio_bytes (BytesIO): A BytesIO object containing the video file.
 
        Returns:
            float: The impact ratio, defined as the position of the highest-amplitude
@@ -48,11 +50,27 @@ def impact_from_audio(audio_bytes):
     with tempfile.NamedTemporaryFile(suffix='.mp4') as temp_file:
         temp_file.write(audio_bytes.getvalue())
 
-        # Extract the audio using moviepy
-        audio = AudioFileClip(temp_file.name)
+        temp_file_path = temp_file.name
 
-        # Convert the audio to a numpy array
-        audio_data = audio.to_soundarray()[:, 0]
+        ### pydub version
+        # Load the video file using pydub
+        audio = AudioSegment.from_file(temp_file_path, format="mp4")
+
+        # Convert audio to mono for simplification
+        mono_audio = audio.set_channels(1)
+
+        # Get the raw audio data as numpy array
+        audio_data = np.array(mono_audio.get_array_of_samples())
+
+        ### moviepy version
+
+        # video = VideoFileClip(temp_file.name)
+
+        # # Extract the audio using moviepy
+        # audio = video.audio
+
+        # # Convert the audio to a numpy array
+        # audio_data = audio.to_soundarray()[:, 0]
 
         if len(audio_data) == 0:
             return -1
@@ -88,7 +106,8 @@ class Predictor(BasePredictor):
 
     def predict(
             self,
-            video: Path = Input(description="Input video to detect pose")
+            video: Path = Input(description="Input video to detect pose"),
+            calc_angles: bool = Input(default=False, description="Calculate angles"),
     ) -> tuple:
 
         with open(video, 'rb') as video:
@@ -123,8 +142,12 @@ class Predictor(BasePredictor):
 
             frame = np.rot90(frame, k=rot_angle // 90)
             height, width, _ = frame.shape
+
             if width % 2 != 0:
                 width += 1
+
+            if height % 2 != 0:
+                height += 1
 
             # Downsample the frames to a maximum resolution of 720p
             max_width = 720
@@ -133,6 +156,13 @@ class Predictor(BasePredictor):
                 scale_factor = min(max_width / width, max_height / height)
                 new_width = int(width * scale_factor)
                 new_height = int(height * scale_factor)
+
+                if new_width % 2 != 0:
+                    new_width += 1
+
+                if new_height % 2 != 0:
+                    new_height += 1
+
                 frame = Image.fromarray(frame)
                 frame = frame.resize((new_width, new_height), resample=Image.BILINEAR)
                 frame = np.array(frame)
@@ -285,6 +315,15 @@ class Predictor(BasePredictor):
             arm_v = foot_l_s - wrist_l_s
             arm_v = filter_data(arm_v, fps)
 
-            return shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+            if not calc_angles:
+                return shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s, eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, \
+                    duration, fps, impact_ratio, \
+                    out_path
+
+            # Calculate angles
+            angles = calculate_angles(shoulder_l_s, shoulder_r_s, wrist_l_s, wrist_r_s, hip_l_s, hip_r_s, foot_l_s,
+                                      eye_l_s, eye_r_s, pinky_l_s, index_l_s, arm_v, impact_ratio)
+
+            return angles, arm_v, \
                 duration, fps, impact_ratio, \
                 out_path

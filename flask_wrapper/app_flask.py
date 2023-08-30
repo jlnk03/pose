@@ -2732,7 +2732,7 @@ def init_callbacks(app):
 
             response = replicate.run(
                 # "jlnk03/predict-pose:5f362416d56970a2e7e483fdddabd47778b54500724442be0bbb219e526fef76",
-                "jlnk03/predict-pose:6d555b04c4e7032a1e20e5012d1babad7af6dfc12e392ebffb9d5af7bd067021",
+                "jlnk03/predict-pose:40e95a0ce71067bffcf81a826da74aa039d52213e2af9157ddc2702e6a257df3",
                 # input={"video": open(temp.name, "rb")},
                 input={"video": path},
             )

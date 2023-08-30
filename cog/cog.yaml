@@ -17,13 +17,14 @@ build:
   python_packages:
     - numpy
     - scipy
-    - moviepy
+    - moviepy==1.0.2
     - imageio[pyav]
     - cog
     - mediapipe
     - av==9.2.0
     - opencv-python
     - Pillow
+    - pydub
 
 image: "r8.im/jlnk03/predict-pose"
 
